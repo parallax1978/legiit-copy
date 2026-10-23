@@ -70,7 +70,7 @@ All tenant tables carry `workspace_id` and are protected by RLS (`exists (select
 | `generations` | One job: offer_id, format, purpose, options, status, current_step, progress_message, selected_angle_id, cost, token totals, prompt_version_set |
 | `generation_steps` | One row per step attempt: step, attempt, status, input_hash, output (jsonb), model, tokens, cost, duration, error |
 | `angles` | All candidate arguments per generation with gate results and rubric scores; the three finalists, the winning thesis, and the two kept losers |
-| `controls` | Control intake: the customer's (and at first the founder's) existing promotions with format, traffic, diagnosed awareness and sophistication, argument sentence, lead type, mechanism, proof placement, offer devices, results with dates and sample sizes, losing variants |
+| `controls` | Documented controls sourced by the build from public records (split-test libraries, published and annotated promotions, award lists, archived emails and webinars): format, traffic, diagnosed awareness and sophistication, argument sentence, lead type, mechanism, proof placement, offer devices, results with dates and sample sizes, losing variants, rights status. Customers may add their own later; nothing depends on it |
 | `generation_predictions` | The reviewer's beat/lose/unsure prediction against the control, and the reported result and refund rate when known |
 | `drafts` | Versions of the copy: generation_id, version, origin (system/user/rewrite), blocks (jsonb) with inline ledger IDs, markdown, skim-path extract, created_by |
 | `draft_flags` | Factual and editorial flags on a draft version: quote, issue, severity, suggested fix, resolved |
@@ -166,4 +166,4 @@ The engine is only "done" when it wins blind. The harness lives in admin screens
 4. `judge`: Opus 5.5 with the rubric scores the same pairs; the report shows human–judge agreement. The judge pre-screens drafts in production only once agreement is at least 75% on the latest 40 comparisons.
 5. Every correction the user records becomes a critique candidate for the library.
 6. The reviewer's prediction scorecard: every beat/lose/unsure prediction is stored and scored against reported results; this, not the blind score alone, is what calibrates the editorial reviewer over time.
-7. Tell thresholds (`04-copy-standard.md` Section 7) are recalibrated by counting every tell in the founder's winners and the library controls before they are enforced; the shipped numbers were measured on Claude-only drafts.
+7. Tell thresholds (`04-copy-standard.md` Section 7) are recalibrated by counting every tell in the assembled human control corpus and the library examples before they are enforced; the shipped numbers were measured on Claude-only drafts.

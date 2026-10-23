@@ -1,6 +1,6 @@
 # Execution plan
 
-One developer with Claude Code, plus the user's judgment time. Weeks are planning estimates. Each phase has a gate; quality of the engine, not the calendar, decides when Phase 2 starts.
+One developer with Claude Code. The teaching material, controls and calibration data are sourced by the build, not supplied by the user. Weeks are planning estimates. Each phase has a gate; quality of the engine, not the calendar, decides when Phase 2 starts.
 
 ## Phase 0: Foundations (week 1)
 
@@ -22,7 +22,7 @@ Gate: a user can sign up, land in a workspace, and an edge function can make one
 
 Goal: prove the pipeline beats a good single prompt on unseen offers, using the CLI only. The step contracts, rubric, tell detector, claims rules and format specs come from `docs/04-copy-standard.md`; do not reinvent them in prompts.
 
-- [ ] 1.0 Control intake: the founder's ten best and five worst promotions with results, tagged per the control-intake spec (`controls` table). This calibrates the library, the tell thresholds and the eval briefs to his markets rather than to Agora's
+- [ ] 1.0 Corpus acquisition, done by Claude Code sessions with no input from the user. Targets: 60 or more documented controls across the v1 formats with recorded results or documented longevity; 150 or more split-test pairs with known winners (the ground truth for judge calibration); 100 or more human DR documents per format for tell calibration, including financial and info-product promotions and emails. Sources are listed in `03-copy-research.md` Section 12: public-domain texts (Hopkins, Caples-era ads), NextAfter's experiment library, Conversion Rate Experts and Copyhackers case studies and teardowns, Unbounce and VWO published tests, swiped.co annotations, Agora-family promotions posted publicly, Hatch's *Million Dollar Mailings* and the Axel Andersson award list, *Who's Mailing What*, publicly posted webinars and VSLs, archived practitioner emails. Every item gets a rights status; full text is stored only for public-domain or licensed items, otherwise structural annotations, brief excerpts and the URL. A counsel review of the storage policy is scheduled before beta
 
 - [ ] 1.1 Format specs: `email_single`, `email_sequence`, `sales_page`, `order_form` (sections, length bands, musts, must-nots from the standard Section 9; zod output schema)
 - [ ] 1.2 Schemas for every step input/output; `generation_steps` output contracts
@@ -34,16 +34,16 @@ Goal: prove the pipeline beats a good single prompt on unseen offers, using the 
 - [ ] 1.7 Steps 5–9: cold read on a different model with skim-path readback; editorial gates A–D with control prediction and the critique format; mechanical tell detector and format hard gates ported from `research/tells/analyze.py`; ten-step factual review with `line → rule → rewrite` output and cross-asset consistency; revise under DO NOT TOUCH; loop control
 - [ ] 1.8 CLI: `deno task engine run --brief briefs/x.json --format sales_page` writes every step output to a folder; `engine baseline` runs a single-prompt generator for comparison
 - [ ] 1.9 Teaching set v0: collect 30–50 examples across v1 formats; Claude Code drafts annotations (lesson, why the argument works, where proof lands, what keeps the reader moving); user validates in batches of 10
-- [ ] 1.10 Critique pairs: load the 36 in `research/critique_pairs_v0.json`, add pairs from the founder's own edits of prototype output; the library gets a loser flag and separately retrievable sections
+- [ ] 1.10 Critique pairs: load the 36 in `research/critique_pairs_v0.json` and grow the set from the acquisition sources toward 150 documented split-test pairs; the library gets a loser flag and separately retrievable sections
 - [ ] 1.11 Migration 003: `examples`, `critiques`, embeddings via `embed` function; retrieval implemented
 - [ ] 1.12 Eval briefs: 15 unseen offers across markets; `eval_runs` tables; CLI `engine eval --prompt-set v1`
-- [ ] 1.13 Minimal admin page (behind `app_admins`): blind pairwise comparison and results table (this is the first UI built, because the gate needs it)
+- [ ] 1.13 Minimal admin page (behind `app_admins`): eval results table and the judge calibration report (accuracy at picking the documented winner on held-out split-test pairs); a blind pairwise screen for optional human spot-checks
 - [ ] 1.14 Prompt tuning rounds against the rubric; record each round's win rate
 - [ ] 1.15 Cost and latency per step measured; `max_tokens` and effort per step set from data
-- [ ] 1.16 Tell-threshold calibration: count every tell in the founder's controls and the library examples against engine drafts; re-run `gen_ai_corpus.py` with at least one non-Claude model; set the Tier weights and the per-format cadence floor from that data
+- [ ] 1.16 Tell-threshold calibration: count every tell in the assembled control corpus and the library examples against engine drafts; re-run `gen_ai_corpus.py` with at least one non-Claude model; set the Tier weights and the per-format cadence floor from that data
 - [ ] 1.17 Reviewer prediction scorecard: every editorial verdict stores a beat/lose/unsure prediction against the control; results are logged as they come in
 
-Gate: engine output wins at least 70% of blind pairwise comparisons against the baseline across the eval briefs, judged by the user, and the editorial reviewer's gate verdicts agree with the user's on at least 75% of a 40-draft sample. Measured cost per sales page is within the budget in `00-requirements.md` § 7 or the budget is revised deliberately.
+Gate: the judge first picks the documented winner on at least 70% of held-out split-test pairs; then engine output wins at least 70% of blind pairwise comparisons against the baseline across the eval briefs as adjudicated by that judge. Human spot-checks are optional and never block. Measured cost per sales page is within the budget in `00-requirements.md` § 7 or the budget is revised deliberately.
 
 ## Phase 2: Core product (weeks 4–6)
 
@@ -121,8 +121,7 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 | Product name and domain | Work under the repo name until chosen |
 | First market for the beta (e.g. course creators, agencies, ecommerce, info products) | Info products and online courses |
 | Sign-in methods | Magic link + Google |
-| Where examples come from and any copyright constraints | Public-domain texts (Hopkins, pre-1929 ads), the user's own promotions and controls, licensed or permitted material; a rights status per item; study only, never reproduce |
-| Which of the founder's promotions go into the control intake (ten best, five worst, with results) | Blocks calibration until supplied |
+| Storage policy for copyrighted examples | Full text only for public-domain or licensed items; otherwise structural annotations, brief excerpts and the URL; study only, never reproduce; counsel review before beta |
 | Prohibited claims policy | Income guarantees, medical cures, and fabricated testimonials are always prohibited |
-| Who judges evals | The user, roughly one hour per round |
+| Who judges evals | A judge model calibrated on documented split-test pairs; human spot-checks optional |
 | Default model set | Opus 5.5 for every step; Sonnet 5.5 trial on research synthesis, extraction, and factual review after Phase 1 |

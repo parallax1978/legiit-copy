@@ -103,8 +103,8 @@ Each format is defined by a **format spec**: structure, length band, required su
 ## 6. Inputs only the user can provide
 
 - **Product name, domain, and first target market** (which kind of seller the beta is for; the first teaching set and eval briefs are chosen to match)
-- **Swipe file access**: 30 to 50 strong promotions across the v1 formats, plus any documented critiques or before/after edits. Claude Code can collect public material and draft annotations; the user validates the annotations and the standard. Examples are studied, never reproduced.
-- **Judgment time**: roughly 20 blind pairwise comparisons per eval round during Phase 1 and after each major prompt change (about an hour per round). This is the human dependency identified in the design conversation; it is concentrated here and nowhere else.
+- **Nothing from the teaching material.** The build sources the teaching library, the control corpus, the critique pairs and the eval briefs itself from public and licensable material (`02-plan.md` Phase 1, item 1.0). The user's own promotions are never required and are never the template.
+- **No required judging.** The eval judge is calibrated on documented split-test pairs with known winners, so it is held to real results rather than to anyone's taste. The user can look at blind comparisons when they feel like it; nothing in the plan blocks on it.
 - **Claims policy**: what claim types are always prohibited in generated copy (e.g. income guarantees, medical cures) regardless of what an offer's documents say
 - **Decisions** listed in `02-plan.md` § Open decisions
 

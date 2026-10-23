@@ -16,4 +16,4 @@ Backend is Supabase (Postgres, Auth, Storage, Edge Functions, Queues). Frontend 
 - `CLAUDE.md` conventions for Claude Code sessions
 
 ## Status
-Planning and the copywriting research pass are complete; Phase 0 (foundations) is next, with the founder's control intake as the first Phase 1 item. Monetization is intentionally out of scope for now.
+Planning and the copywriting research pass are complete; Phase 0 (foundations) is next, with corpus acquisition by the build as the first Phase 1 item. Monetization is intentionally out of scope for now.

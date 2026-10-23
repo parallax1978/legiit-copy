@@ -162,7 +162,7 @@ Reviewer instructions: start with what works, briefly. Quote, name the failure, 
 
 ## 7. AI tell checklist
 
-Score = sum of weights per 300 words. Review flag at 6; hard fail at 10 or any Tier 0 hit. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were measured on Claude drafts and must be recalibrated on the founder's winners.
+Score = sum of weights per 300 words. Review flag at 6; hard fail at 10 or any Tier 0 hit. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were measured on Claude drafts and must be recalibrated on the assembled human control corpus.
 
 Tier 0, hard reject
 
