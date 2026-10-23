@@ -1,0 +1,85 @@
+PROMPT: Write the first two minutes of a video sales letter script for meal-prep delivery service for busy parents, $89/week.
+
+# VSL Script: First Two Minutes
+**Product:** Meal-prep delivery for busy parents | **Price:** $89/week | **Runtime:** ~2:00
+
+---
+
+**[0:00–0:12] COLD OPEN**
+*[VISUAL: Kitchen at 6:47 PM. Kid's backpack on the floor. Phone buzzing with a "what's for dinner?" text. Parent staring into an open fridge.]*
+
+**NARRATOR (V.O.):**
+It's 6:47 p.m. The kids are starving, you're exhausted, and you're standing in front of an open fridge wondering how you're supposed to make dinner from *this*.
+
+*[VISUAL: Parent closes fridge, sighs, grabs phone.]*
+
+---
+
+**[0:12–0:35] THE PROBLEM**
+*[VISUAL: Quick cuts: takeout receipts, a grocery list with three items crossed out, a sink of dishes.]*
+
+**NARRATOR (V.O.):**
+If you're a busy parent, you already know the cycle. Monday you promise yourself you'll cook real meals this week. By Wednesday it's drive-thru again. The grocery run takes an hour, half the produce goes bad, and you're still the one planning, shopping, chopping, and cleaning up.
+
+And somehow it's still 6:47 every single night.
+
+*[VISUAL: Parent nods, rubs eyes.]*
+
+---
+
+**[0:35–0:58] THE COST OF STAYING STUCK**
+*[VISUAL: Bank statement scrolling. Takeout app notifications. Clock showing 9:30 PM.]*
+
+**NARRATOR (V.O.):**
+Most families are spending more than they realize on takeout, impulse orders, and food that gets thrown out. And the bigger cost isn't money. It's the nights you don't get back, the family dinners you keep meaning to have, and the guilt that comes with feeling like you're failing at the one thing you're trying hardest to do well.
+
+*[VISUAL: Parent sitting at a table with kids, finally relaxed, laughing.]*
+
+---
+
+**[0:58–1:20] THE SOLUTION INTRODUCED**
+*[VISUAL: Branded logo reveal. Insulated box arriving at a front door. Hands unpacking labeled containers.]*
+
+**NARRATOR (V.O.):**
+That's why we built [BRAND NAME]. We deliver fully prepared, chef-designed meals to your door every week, built for busy parents who want dinner handled without the grind.
+
+Here's how it works. Every Sunday, you choose your meals from a rotating menu. Every week, a fresh box arrives. Each meal is portioned, labeled, and ready in [X] minutes. Open the container, heat, serve, done.
+
+*[VISUAL: Split screen: a plate of food on one side, a clock showing 15 minutes on the other.]*
+
+---
+
+**[1:20–1:42] THE OFFER**
+*[VISUAL: Price card animates in.]*
+
+**NARRATOR (V.O.):**
+Our family plan is **$89 a week**. That covers [NUMBER] dinners for [NUMBER] people, with [INCLUDED DETAILS: e.g., free delivery, kid-friendly options, dietary filters]. No grocery lists. No planning. No standing in the store wondering what to make.
+
+And you can pause, skip, or cancel anytime from your account. No contracts, no hassle.
+
+*[VISUAL: On-screen text: "Pause • Skip • Cancel Anytime"]*
+
+---
+
+**[1:42–2:00] PROOF + BRIDGE**
+*[VISUAL: Video testimonial clip. Parent on camera, kids in background.]*
+
+**PARENT TESTIMONIAL (on camera):**
+"I used to dread 6 o'clock. Now I actually sit down and eat with my kids. It's the best $89 we spend every week."
+
+**NARRATOR (V.O.):**
+Hundreds of families have already made the switch. [INSERT SOCIAL PROOF: e.g., number of families, rating, review count]. Stay with me, because in the next few minutes I'm going to show you exactly how the first week works, what's on this week's menu, and how to get your first box at [INTRO OFFER, if applicable].
+
+*[VISUAL: Next-step arrow. "Keep watching ↓"]*
+
+---
+
+## Production Notes
+
+- **Pacing:** About 300 spoken words total at a natural pace, leaving room for visual beats.
+- **Placeholders:** Replace every `[BRACKETED]` item with verified details. Don't air unverified numbers, ratings, or testimonials.
+- **Claims:** "Ready in X minutes," "no contracts," and the included features must match your actual terms. Check cancellation and pause policies before filming.
+- **Pain-point angle:** The opening leans on the 6:47 p.m. dinner scramble. If your data points to a different pain (grocery waste, budgeting, picky eaters), swap the cold open and problem sections and keep the same structure.
+- **Price framing:** $89/week is shown after the value is established, which is the usual VSL order. If you want to anchor it against takeout spend, add a cost comparison in the 0:35–0:58 section once you have your own numbers.
+
+Want me to write the next segment (the mechanism and how-it-works section), or adjust the tone to be more humorous or more clinical?

@@ -1,0 +1,56 @@
+PROMPT: Write the first two minutes of a video sales letter script for a local HVAC company's $89 fall furnace tune-up.
+
+# VSL Script: First 2 Minutes
+**Fall Furnace Tune-Up, $89** | Target runtime: ~2:00 (about 300 spoken words)
+
+Bracketed items are placeholders. Swap in your real details before recording.
+
+---
+
+**[0:00–0:15] HOOK**
+*(VISUAL: Host in a home, standing by the furnace. Thermostat in the background reads 58°.)*
+
+"It's going to be 28 degrees this week. The first time you turn on your furnace, you're going to find out whether it works. I'd rather you find out now, for $89, than at 11 p.m. on a Saturday, when every HVAC company in [City] is booked solid."
+
+**[0:15–0:40] PROBLEM**
+*(VISUAL: B-roll of a dusty, neglected furnace, then a family bundled in blankets.)*
+
+"Here's what most people in [City] do. They ignore the furnace all summer. The first cold night, they flip the switch and hope.
+
+"Sometimes it works. Sometimes it blows cold air. Sometimes it makes a noise that makes your stomach drop.
+
+"And it almost always happens on the coldest night of the year, when emergency rates are highest and the wait is longest."
+
+**[0:40–1:05] CAUSE**
+*(VISUAL: Animated graphic: dust, worn parts, a dirty filter.)*
+
+"A furnace that sits for six months collects dust. Parts wear down. Small problems you can't see turn into big ones the moment the system has to run hard.
+
+"These problems don't show up until the furnace is under load. By then, you're not scheduling maintenance. You're making an emergency call."
+
+**[1:05–1:30] CREDIBILITY**
+*(VISUAL: Host on camera, with a branded truck behind them.)*
+
+"I'm [Name] with [Company]. We've been heating homes in [City] for [X] years. Every fall, we see the same thing. The homeowners who call us in October have a quiet winter. The ones who wait until January often have a very expensive one.
+
+"So we built a simple fix."
+
+**[1:30–2:00] OFFER TEASE**
+*(VISUAL: Checklist graphic animates in. Price appears on screen: $89.)*
+
+"It's our Fall Furnace Tune-Up. One visit, $89. A certified technician [inspects, cleans, and tests the key components of your system — list your actual checklist here] and tells you plainly whether you're ready for winter.
+
+"If something's wrong, you'll know now, while it's cheap to fix and we can get to you this week.
+
+"In the next few minutes, I'll show you exactly what's included, and how to grab one of the limited tune-up slots we have left this season."
+
+---
+
+## Notes for production
+
+- **Fill in the checklist.** The 1:30 beat works best with 3–5 specific items, such as the blower, the ignition, a safety check, and the filter. Use only what your techs actually do.
+- **Don't invent urgency.** "Limited slots" should be true. Cap the schedule and say the real number. A false claim will hurt you more than it helps.
+- **Add a guarantee if you have one.** If you offer one, such as a credit toward repairs, mention it right after the offer tease. It removes the main objection.
+- **Pacing.** Cut to a new visual every 4–6 seconds. The script runs about 300 words, which is 2 minutes at a relaxed pace. Trim the Cause section first if you run long.
+
+I can write the next section (offer stack, guarantee, and call to action) or a 60-second cutdown for ads if you want either.

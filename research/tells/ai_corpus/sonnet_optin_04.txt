@@ -1,0 +1,27 @@
+PROMPT: Write an opt-in page for a free 'winter energy bill checklist': headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Cut Your Winter Energy Bill Before the Cold Hits
+
+**Subheadline:**
+Get the free 1-page checklist homeowners use to find easy savings on heating costs, with no contractors or expensive upgrades needed.
+
+**Bullets:**
+- **Seal the leaks that waste heat:** Find the 7 most common drafts in doors, windows, and attics, and fix them for under $25.
+- **Set your thermostat for savings:** Use the right temperature schedule for when you're home, away, and asleep.
+- **Heat the rooms you use:** Learn which vents, curtains, and rugs hold in warmth and which ones work against you.
+- **Do the 15-minute furnace check:** Run through the quick tune-up steps that help your system work less and last longer.
+- **Spot rebates and credits:** Learn where to look for utility programs that can cover part of your upgrades.
+
+**Button text:**
+Send Me the Free Checklist
+
+**Optional supporting line under the button:**
+Free instant download. No spam, unsubscribe anytime.
+
+---
+
+A few notes:
+- The "$25" and "7 drafts" figures are placeholders. Match them to what your checklist actually contains.
+- Alternative button options: "Get My Free Checklist" or "Yes, Help Me Save This Winter."
+- If you want a stronger hook, try a specific promise in the headline, such as "Lower Your Winter Energy Bill by Up to 15%." Only use it if you can back the number up.

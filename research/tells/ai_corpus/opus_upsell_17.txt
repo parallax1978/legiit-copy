@@ -1,0 +1,118 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys a summer coding camp for kids ages 9-14, $899. The upsell is a $199 take-home robotics kit.
+
+# One-Time Offer Page: Take-Home Robotics Kit
+
+*Shown right after checkout. Anything in [brackets] needs your real details.*
+
+---
+
+**[Progress bar: ✅ Camp Enrollment Confirmed → Step 2 of 2: Customize Your Order]**
+
+## Wait, your order isn't quite finished.
+
+### Your camper's spot is locked in. Here's how to keep what they learn going after camp ends.
+
+---
+
+**You just gave your kid a summer they'll talk about for years.**
+
+For [number] weeks they'll write real code, solve real problems and find out they can build things that work.
+
+Then camp ends, and for a lot of kids the momentum goes with it.
+
+They get home excited, but there's nothing to build. By September, "I want to be an engineer" has turned back into "can I have more screen time?"
+
+**It doesn't have to go that way.**
+
+---
+
+## Introducing the [Kit Name] Take-Home Robotics Kit
+
+**The same kind of hardware your camper uses at camp, delivered to your door, so they can keep building at home.**
+
+This isn't a generic toy-store kit. It's matched to our camp curriculum, so on day one at home your child already knows how to use it. They'll pick up right where camp left off and keep going.
+
+### What's inside:
+
+- 🤖 **[Programmable controller board]**, the "brain" your camper learns to code at camp
+- ⚙️ **[#] motors, wheels and chassis parts** to build a robot that drives, turns and responds
+- 📡 **[#] sensors** (distance, light, line-following) so their robot can "see" and react
+- 🔌 **All wiring, connectors and a rechargeable battery pack.** No trips to the hardware store.
+- 📘 **[#] step-by-step at-home projects**, from "make it move" to "make it think," for ages 9–14
+- 💻 **Works with the same coding tools taught at camp** ([Scratch / Python / etc.])
+
+---
+
+## Why parents add this now
+
+✔ **It turns one week of camp into a year of learning.** Every new project builds on skills from camp, so those skills stick instead of fading.
+
+✔ **It's screen time you'll actually feel good about.** Your kid is building and debugging instead of scrolling.
+
+✔ **Camp happens with friends. The kit is something to build together.** Many families tell us their favorite part is the weekend Mom, Dad or a sibling gets pulled into "just one more test run."
+
+✔ **It's ready when camp ends.** [Kits ship to arrive before camp starts / are handed out on the last day], while your camper is still at peak excitement.
+
+---
+
+## Your one-time price: **$199**
+
+~~[Regular price: $XXX]~~ *(include only if the kit is actually sold at this price elsewhere)*
+
+**This price is only for families who just enrolled, and only on this page.** If you leave, you won't see this offer again.
+
+No extra checkout. It's added to the order you just placed with one click.
+
+---
+
+### [ BIG GREEN BUTTON ]
+## **YES! Add the Robotics Kit to My Order: $199**
+*One click. Uses the payment method you just entered.*
+
+---
+
+### 🛡️ The [Camp Name] "They'll Love It" Guarantee
+
+If your camper isn't excited to build with this kit, return it within [30] days for a full refund. No hassle and no hard feelings. Your camp enrollment isn't affected either way.
+
+---
+
+### Common questions
+
+**Does my child need to finish camp before using it?**
+No. Camp just makes it easier to start, since they'll already know the basics. Complete beginners can use it too; the project guide starts from zero.
+
+**Is it right for both a 9-year-old and a 14-year-old?**
+Yes. Younger kids start with guided builds, and older kids can move on to open-ended challenges and more advanced code.
+
+**Do I need to buy anything else?**
+No. Everything is included except a computer or tablet for coding [confirm device requirements].
+
+**Can I buy it later?**
+The kit may be sold separately later, but this $199 price is only offered here, right after enrollment.
+
+**What if I have more than one camper?**
+[Option: "Add a second kit for $X" / "Each camper gets their own kit, so siblings don't have to share."]
+
+---
+
+### [ BIG GREEN BUTTON — repeated ]
+## **YES! Add the Robotics Kit to My Order: $199**
+
+---
+
+<small>[ No thanks. I'll skip the kit and let the learning stop when camp ends. → ]</small>
+
+*(Make this a plain text link, smaller and gray, under the button. It should be easy to find. Just don't style it as a second button.)*
+
+---
+
+## Notes before you publish
+
+1. **Fill in the real kit contents.** The parts list above is a typical setup. Don't promise sensors or projects the kit doesn't include, because parents will check, and so will chargebacks.
+2. **Only show a crossed-out price if it's real.** If the kit isn't sold for more elsewhere, delete that line. It's illegal in many places otherwise, and the $199 offer works fine without it.
+3. **Keep the "one-time" claim true.** If you'll sell the kit at $199 later (say, in a post-camp email), soften it to "best price we offer."
+4. **Add real proof if you have it.** One genuine parent quote or a photo of a kid with a finished robot, placed right above the first button, usually beats more copy. Don't make up testimonials.
+5. **Test a downsell.** For people who click "No thanks," a $99 "Starter Kit" (fewer sensors, same controller) often brings back a good share of them.
+
+If you'd like this built as a styled HTML page you can preview and share, I can do that.

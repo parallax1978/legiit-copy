@@ -1,0 +1,47 @@
+PROMPT: Write the first two minutes of a video sales letter script for an electric standing desk, $399.
+
+# VSL Script: First 2 Minutes
+**Product:** Electric Standing Desk, $399
+**Length:** about 2:00 (roughly 310 spoken words)
+
+---
+
+### [0:00–0:15] HOOK
+**VISUAL:** Close-up of someone rubbing their lower back at a cluttered desk, 6:47 PM, the office dark behind them.
+
+**VO:** "If you sit at a desk for a living, you already know this feeling. It's 3 PM, your back is tight, your focus is gone, and you've got four more hours of work to go."
+
+### [0:15–0:40] PROBLEM
+**VISUAL:** Quick cuts: slumped posture, a third coffee, a clock ticking, a stretching break that never happens.
+
+**VO:** "You tell yourself you'll stretch more. Sit up straighter. Take more breaks. But you don't, because you're busy. So you sit for eight, nine, ten hours a day, and your body pays for it. Most people just accept it as the cost of having a desk job."
+
+### [0:40–1:05] AGITATE
+**VISUAL:** The viewer's own "home office" setup. A wobbly folding table, a kitchen chair, a laptop propped on books.
+
+**VO:** "So you look into standing desks, and you hit a wall. The good ones cost $800, sometimes $1,200. The cheap ones wobble, groan, and sag the second you set a monitor on them. You're stuck choosing between a desk that hurts you and a desk that hurts your wallet."
+
+### [1:05–1:25] TURN
+**VISUAL:** Beat of silence. Cut to a bright, clean workspace. A desk smoothly rises at the touch of a button.
+
+**VO:** "What if there were a third option? A fully electric standing desk that's sturdy, quiet, and costs $399."
+
+### [1:25–1:50] INTRODUCE + PROOF
+**VISUAL:** Product hero shot. Overlay text: *One touch. Sit. Stand. Done.* Then a close-up of the desk holding a heavy monitor setup without shaking.
+
+**VO:** "It's called [PRODUCT NAME]. One touch, and it glides from sitting to standing in seconds. Programmable height presets mean it remembers your perfect position. And the frame stays rock-steady at full height, even with dual monitors on top."
+
+### [1:50–2:00] BRIDGE
+**VISUAL:** Customer testimonial montage, smiling faces, then back to the desk.
+
+**VO:** "Over the next few minutes, I'll show you exactly how it works, why it costs half what you'd expect, and how to try it with zero risk. But first, let me show you what changes when you stop sitting all day."
+
+---
+
+### Notes for production
+- **Placeholders to fill:** product name, real specs (weight capacity, lift speed, noise level), and the real guarantee terms. I kept the claims general so they match what you can actually back up.
+- **Health claims:** I stuck to comfort and focus rather than medical outcomes. If you want to go further, cite a source on screen and run it past compliance.
+- **Price anchor:** the "$800–$1,200" comparison should match the competitors you're actually up against.
+- **Pacing:** the hook and the turn each get a beat of silence or a hard visual cut. Don't rush them.
+
+I can write the next section (benefits and demonstration), a version aimed at a specific buyer such as remote workers or gamers, or alternate hooks to A/B test.

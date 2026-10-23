@@ -1,0 +1,20 @@
+PROMPT: Write an opt-in page for a free 'desk ergonomics' guide: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Stop the Back Pain, Neck Strain, and Afternoon Slump Caused by Your Desk Setup
+
+**Subheadline:**
+Get the free Desk Ergonomics Guide and learn how to set up your workspace in 15 minutes, with no new furniture and no expensive gear.
+
+**Bullets:**
+- **The 5-point setup check:** Adjust your chair, monitor, keyboard, mouse, and feet to the right positions, so you can sit comfortably for hours.
+- **Quick fixes with things you already own:** Use books, towels, and boxes to get the same results as pricey ergonomic gear.
+- **Pain-point troubleshooting chart:** Find your symptom, such as a stiff neck, sore wrists, or lower back ache, and see which setup change fixes it.
+- **The 2-minute desk stretch routine:** Do these simple moves between meetings to release tension and keep your energy up.
+- **Laptop and home-office adjustments:** Work comfortably from a kitchen table, couch, or coffee shop.
+
+**Button text:**
+Send Me the Free Guide
+
+**Optional microcopy under the button:**
+Instant download. No spam. Unsubscribe anytime.

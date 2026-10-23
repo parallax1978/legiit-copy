@@ -1,0 +1,29 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for a probiotic supplement for bloating, $39 per bottle.
+
+**Headline:**
+Stop Feeling Like You Swallowed a Balloon. Support a Flatter, Calmer Gut.
+
+**Subheadline:**
+[Product Name] pairs [X] billion CFU from [X] research-backed probiotic strains with a simple daily routine, for $39 a bottle.
+
+---
+
+You know the feeling. Your waistband tightens by lunch. You cut the bread, skipped the dairy, and still you're reaching for the stretchy pants. Bloating is one of the most common digestive complaints there is, and it wears on more than your comfort. It affects what you wear, what you eat, and whether you feel like going out at all.
+
+Most of us were told to "eat better" and wait it out. But for many people, bloating is tied to what's happening inside the gut, specifically the balance of bacteria that live there. When that balance shifts, whether from stress, travel, a course of antibiotics, a rushed diet, or simply the passing years, digestion can feel slower, gassier, and less predictable.
+
+That's where [Product Name] comes in. We built it on a simple idea: give your gut the friendly bacteria it needs to keep things moving and feeling comfortable. Each daily capsule contains [X] billion CFU from [X] probiotic strains, chosen for their research in digestive comfort. [Optional: It also includes prebiotic fiber to help those good bacteria thrive.]
+
+Just as important is what isn't in it. No artificial colors. No unnecessary fillers. And because it's shelf-stable, you don't need to keep it in the fridge, so it goes wherever your routine does. Take one capsule a day, with or without food.
+
+At $39 a bottle, that's [$X] a day, less than a daily coffee, for a routine you can actually stick with. Each bottle lasts [X] days.
+
+*Results vary. [Product Name] is designed to support digestive comfort as part of a healthy lifestyle. It is not intended to diagnose, treat, cure, or prevent any disease. If you have a medical condition, are pregnant or nursing, or take medication, talk with your doctor before starting any new supplement.*
+
+---
+
+**Notes before this goes live:**
+- **Fill in the brackets.** I didn't have your strain names, CFU count, bottle size, or any prebiotic or enzyme ingredients, so I left placeholders rather than invent them.
+- **Substantiate the strain claims.** "Research-backed" and "chosen for their research" need to point to studies on those specific strains at those doses. If that evidence doesn't exist, cut the phrase.
+- **Keep the claims soft.** Words like "support" and "comfort" are safer than "relieves," "fixes," or "eliminates." Avoid promising timelines like "feel better in 3 days" unless you have data behind them.
+- **Add a guarantee and reviews only if they're real.** A money-back guarantee strengthens the close, but it should be a real policy with real terms.

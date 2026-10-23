@@ -1,0 +1,59 @@
+PROMPT: Write a promotional email to my email list selling a summer coding camp for kids ages 9-14, $899. Include a subject line.
+
+**Subject line:** Your kid's best summer yet starts with one line of code
+
+**Preview text:** Summer coding camp for ages 9–14. They'll build real games, apps, and websites, and spots are limited.
+
+---
+
+Hi [First Name],
+
+Every summer it's the same question: *how do I keep my kid busy, learning, and away from mindless scrolling?*
+
+This year, they can make the games instead of just playing them.
+
+**Introducing [Camp Name]: Summer Coding Camp for Kids Ages 9–14**
+
+Over [X] weeks, your child will go from "what's code?" to showing you something they built themselves. That could be a video game, an animated story, a website, or even a simple app.
+
+**Here's what they'll do:**
+
+- 🎮 **Build their own video game** and share it with friends and family
+- 🌐 **Design and launch a personal website**
+- 🤖 **Explore robotics, AI, and creative tech projects** suited to their age and skill level
+- 🧠 **Practice problem-solving, logic, and teamwork**, skills that help in every school subject
+- 🏆 **Show off their work** to parents at a Demo Day on the final day
+
+**Built for every level.** Some kids have never written a line of code, and some are already tinkering with Scratch or Python. Either way, our instructors meet them where they are. Small groups mean real attention, so no one gets lost or bored.
+
+**Why parents love it:**
+
+- Experienced, background-checked instructors
+- Small class sizes of [X] students per instructor
+- All learning materials included
+- Your kid has screen time you can feel good about
+
+---
+
+**📅 Dates:** [Session dates]
+**📍 Location:** [Location / Online]
+**⏰ Hours:** [Daily schedule]
+**💰 Tuition:** $899 per camper
+
+👉 **[Reserve Your Child's Spot Now]**
+
+---
+
+Seats are capped at [X] per session to keep groups small, and they go quickly. If you've been thinking about it, now's the time.
+
+At the end of the summer, your kid won't just say "camp was fun." They'll say **"look what I made."**
+
+See you this summer,
+[Your Name]
+[Camp Name]
+
+**P.S.** Have more than one child, or a friend who wants to join? Reply to this email and ask about our [sibling / bring-a-friend discount].
+
+---
+
+**Fill in before sending:** the camp name, dates, location, hours, class size, and the signup link. Since it's October, you could also turn this into an early-bird offer, for example "lock in $899 before [date]." I can write that version, a shorter follow-up email, or a "last chance" reminder if you'd like.

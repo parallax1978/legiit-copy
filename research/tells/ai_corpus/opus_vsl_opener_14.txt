@@ -1,0 +1,93 @@
+PROMPT: Write the first two minutes of a video sales letter script for an SEO agency for law firms, free strategy call.
+
+# VSL Script: SEO for Law Firms, First 2 Minutes
+
+**Runtime:** about 2:00, roughly 310 spoken words at a normal pace
+**Goal:** Hook the viewer, make the problem hurt, build credibility, and set up the free strategy call
+
+---
+
+**[0:00–0:12] HOOK**
+
+*[VISUAL: Black screen. White text appears word by word as it's spoken.]*
+
+**VO:**
+Right now, someone in your city is typing "car accident lawyer near me" into Google.
+
+They're hurt. They're scared. And they're about to call the first firm they see.
+
+The question is: is that firm yours?
+
+---
+
+**[0:12–0:40] THE PROBLEM**
+
+*[VISUAL: Screen recording of a Google search. The map pack loads and three competitor firms appear. Cursor hovers over the top result.]*
+
+**VO:**
+Here's what most attorneys don't realize. Over [X]% of people looking for a lawyer start with a search engine. And most of them never scroll past the first few results.
+
+So if your firm isn't in that top three, you're not losing *some* cases.
+
+You're invisible.
+
+And the firm that *is* showing up? They might not be better lawyers than you. They might have half your experience. They just figured out how Google decides who gets the call.
+
+---
+
+**[0:40–1:05] AGITATE**
+
+*[VISUAL: Montage: a phone ringing at a competitor's front desk, an empty intake calendar, a credit card bill for "Legal Lead Gen Service."]*
+
+**VO:**
+Maybe you've already tried to fix this.
+
+You paid an agency that sent you reports full of "impressions" and "keyword movement," but the phone didn't ring any more often.
+
+Maybe you're buying shared leads that get sold to five other firms before you can even call back.
+
+Or maybe you're pouring money into ads, and the second you stop paying, the cases stop coming.
+
+That's not a marketing strategy. That's renting your clients from Google.
+
+---
+
+**[1:05–1:35] CREDIBILITY + TURN**
+
+*[VISUAL: Presenter on camera, in an office or studio. Lower-third: "[Name], Founder, [Agency Name]"]*
+
+**PRESENTER:**
+My name is [Name], and for the past [X] years my team has done one thing: help law firms own the top of Google in their market.
+
+Not dentists. Not plumbers. Law firms.
+
+We've worked with [personal injury / family law / criminal defense] firms across [X] states, and we've seen the same pattern over and over. The firms that win online aren't spending the most. They're doing three specific things their competitors aren't.
+
+*[VISUAL: Text overlay: "[Client Firm]: [verified result, e.g. 'signed cases up X% in Y months']"]*
+
+---
+
+**[1:35–2:00] BRIDGE TO OFFER**
+
+*[VISUAL: Presenter, tighter shot.]*
+
+**PRESENTER:**
+In the next few minutes, I'll walk you through those three things, so you can see exactly why your firm isn't ranking and what it would take to change that.
+
+And at the end, I'll show you how to get a free, no-obligation strategy call where we look at *your* market, *your* competitors, and *your* website, and hand you a custom plan to start getting more signed cases from search.
+
+Even if you never work with us.
+
+So let's start with the first one, the mistake costing most firms [X] cases a month…
+
+*[TRANSITION to Section 2]*
+
+---
+
+### Notes before production
+- **Fill every bracket with real data.** Use only verified statistics and client results you have permission to share. Firms are a skeptical audience, and invented numbers will hurt you.
+- **Don't promise rankings or case volumes.** Google can't be guaranteed, and your audience knows that better than most.
+- **Change the search in the hook** to fit the practice area you're targeting, for example "DUI lawyer near me" or "divorce attorney [city]." One niche per VSL converts best.
+- **The "three things" open loop** needs a payoff. A good fit for those three would be Google Business Profile and map pack dominance, practice-area content depth, and reviews plus local authority signals.
+
+I can write the next section covering the three things, or the full close and call-to-action, if you'd like.

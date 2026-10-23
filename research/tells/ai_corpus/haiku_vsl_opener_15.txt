@@ -1,0 +1,40 @@
+PROMPT: Write the first two minutes of a video sales letter script for a free lead magnet: 7 email subject line templates.
+
+# VSL Opening (0:00–2:00): "7 Subject Line Templates"
+
+*Bracketed text is visual direction. Fill in the [placeholders] before recording. Read at about 150 words per minute, so this runs about two minutes.*
+
+**[0:00–0:12] HOOK**
+*[Screen: a crowded inbox, most rows grey, one row highlighted]*
+
+"Your last email was deleted in under two seconds. Not because it was bad. Because the subject line gave nobody a reason to open it."
+
+**[0:12–0:30] PROBLEM**
+
+"If you send emails to a list, you know this feeling. You write something good, you hit send, and the open rate comes in flat. Most people fix the body. They rewrite paragraphs, add images, change the offer. But the subject line decides whether any of that gets read."
+
+**[0:30–0:55] CREDIBILITY**
+*[Screen: talking head with name card]*
+
+"I'm [Name], and I run SuperStar SEO. We help [type of business] get found and win clients through search and email. Over the last [X] years, we've tested [X] subject lines across [X] campaigns. The same patterns kept doing most of the work."
+
+**[0:55–1:20] PROMISE**
+
+"So we turned those patterns into templates. Seven of them. Fill in the blanks with your own details, and you'll have a subject line ready to send in about a minute. No guessing, and no staring at a blank box."
+
+**[1:20–1:45] OPEN LOOPS**
+*[Screen: a grid of seven numbered slots, with slots 1, 4 and 6 flagged]*
+
+"Template one is the one we use most, and it works in almost every industry. Template four is what we reach for when a list has gone quiet. And template six looks like a typo. That's exactly why people open it."
+
+**[1:45–2:00] CALL TO ACTION**
+*[Screen: button reading "Get the 7 Templates — Free," with an arrow pointing to it]*
+
+"The templates are free. Click the button below the video, enter your email, and they'll land in your inbox [timing from your delivery setup]. Once you have them, I'll show you how to test them, so you know which one works for your audience. Let's start with template one."
+
+---
+
+**Notes for the script:**
+- The seven templates are held back on purpose. The script names only three, so the download carries the value. Keep the full list off the page.
+- Replace every [placeholder] with real figures. I didn't invent client numbers or test counts, and the script shouldn't go out with made-up ones.
+- Check the delivery timing against your email tool before recording, since "in a few minutes" is a promise.

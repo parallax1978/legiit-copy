@@ -1,0 +1,72 @@
+PROMPT: Write a Facebook/Instagram ad for AI bookkeeping software for Shopify store owners, $99/month.
+
+Here's a complete ad set. I used **[Brand]** as a placeholder for the product name.
+
+---
+
+## Version A: Pain-point hook (main ad)
+
+**Primary text:**
+You started a Shopify store to sell, not to spend Sunday nights matching Stripe payouts to spreadsheets. 😩
+
+[Brand] is AI bookkeeping built for Shopify sellers. It:
+
+✅ Syncs your Shopify, PayPal, Shop Pay and bank accounts automatically
+✅ Categorizes every sale, refund, fee and ad spend
+✅ Reconciles payouts so your numbers actually match
+✅ Shows your real profit (after COGS, fees and ads) in real time
+✅ Keeps your books ready for tax time, all year long
+
+No more guessing whether you made money last month. No more $500+ bookkeeper invoices.
+
+All of it for **$99/month**. Setup takes minutes.
+
+👉 Start your free trial today.
+
+**Headline:** Your Shopify Books, Done by AI: $99/mo
+**Description:** Real-time profit. Zero spreadsheets.
+**CTA button:** Start Free Trial (or "Learn More" if there's no trial)
+
+---
+
+## Version B: Short (best for Instagram feed and Stories)
+
+**Primary text:**
+Sold $40K last month. Profit? 🤷
+
+If you can't answer that in 5 seconds, you need [Brand].
+
+AI bookkeeping for Shopify stores. Auto-synced, auto-categorized, always tax-ready.
+$99/month. Cancel anytime.
+
+**Headline:** Know Your Real Profit
+**CTA button:** Sign Up
+
+---
+
+## Version C: Cost comparison
+
+**Primary text:**
+Traditional bookkeeper: $400–$800/month, books updated once a month (if you're lucky).
+[Brand]: $99/month, books updated every day.
+
+Our AI connects to Shopify, reads every order, fee, refund and payout, and keeps your books clean around the clock. When tax season comes, you just export and send.
+
+Built for Shopify sellers. Priced for Shopify sellers.
+
+**Headline:** Bookkeeping for 1/5 the Cost
+**CTA button:** Get Started
+
+---
+
+### Creative ideas
+- **Image:** Split screen. On the left, a messy spreadsheet with red cells. On the right, a clean [Brand] dashboard with a big "Net Profit: $12,480" number. Add a text overlay: "Shopify books on autopilot. $99/mo."
+- **Video (15s Reel or Story):** A frustrated store owner at a laptop late at night, then they connect Shopify in one click and the dashboard fills in, then they close the laptop with a smile. End card: price and CTA.
+
+### Before you launch
+- **Check every claim against the product.** Only list integrations, a free trial or "cancel anytime" if they're true. Meta reviews financial-services ads closely.
+- **Make sure the bookkeeper price range holds up** for your market, or just say "a fraction of the cost."
+- **Testing:** Run A and B against each other first. Pain-point hooks usually do best with cold audiences, and the cost comparison tends to convert well for retargeting.
+- **Targeting ideas:** Interests in Shopify, ecommerce, dropshipping or Shopify apps. Lookalikes of current customers. Retarget site visitors.
+
+If you give me the product name, any real features or proof points (such as customer count or a testimonial), and whether there's a free trial, I can tighten these up.

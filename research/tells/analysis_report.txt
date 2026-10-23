@@ -1,0 +1,231 @@
+AI docs=107 words=35857 | HUMAN docs=341 words=653384 | AI docs with assistant residue: 88
+  human/belgray: docs=95 words=120585
+  human/carlton: docs=21 words=28629
+  human/halbert: docs=157 words=430453
+  human/settle: docs=68 words=73717
+
+tell                          AI/1kw   HUM/1kw    ratio  AI%docs HUM%docs
+md_heading                      4.94      0.00   6468.8       50        0
+self_posed_q_header             1.00      0.00   1330.2        7        0
+cancel_anytime                  0.56      0.00    747.1       11        0
+hey_there                       0.50      0.00    674.2       17        0
+bold_leadin_sentence            2.93      0.01    427.2       28        1
+bracket_placeholder             5.66      0.02    353.2       59        2
+youve_tried                     0.25      0.00    346.2        7        0
+in_this_video                   0.25      0.00    346.2        8        0
+youre_not                       0.20      0.00    273.3        7        0
+not_because_a_because_b         0.14      0.00    200.4        5        0
+youre_not_alone                 0.14      0.00    200.4        5        0
+bold_label_colon               14.06      0.07    185.7       88       14
+thats_why_we                    0.39      0.00    176.1       13        0
+with_without_contrast           0.11      0.00    164.0        3        0
+ps                              0.33      0.00    151.8       11        0
+quick_question                  0.08      0.00    127.6        3        0
+sound_familiar                  0.08      0.00    127.6        3        0
+most_people                     0.25      0.00    115.4        8        0
+less_than_a_cup                 0.20      0.00     91.1        7        0
+say_goodbye                     0.03      0.00     54.7        1        0
+if_that_sounds_like_you         0.03      0.00     54.7        1        0
+without_the_fluff               0.08      0.00     42.5        3        0
+no_no_just                      0.14      0.00     40.1        5        1
+wait_opener                     0.14      0.00     40.1        4        1
+so_opener                       0.25      0.01     31.5        7        1
+thats_where_comes_in            0.06      0.00     30.4        2        0
+designed_to                     1.25      0.05     27.2       35        7
+emoji_check                     4.91      0.20     24.3       33        4
+scroll_down                     0.20      0.01     21.0        6        2
+stick_with_me                   0.42      0.02     20.9       12        4
+bullet_md                      10.85      0.53     20.5       70       13
+stop_verbing                    0.28      0.01     20.1        9        2
+deserve_better                  0.00      0.00     18.2        0        0
+nothing_to_lose                 0.03      0.00     18.2        1        0
+join_thousands                  0.00      0.00     18.2        0        0
+introducing                     0.00      0.00     18.2        0        0
+they_x_they_y_they_z            0.03      0.00     18.2        1        0
+dear_friend                     0.00      0.00     18.2        0        0
+the_best_part_q                 0.00      0.00     18.2        0        0
+we_get_it                       0.03      0.00     18.2        1        0
+nobody_tells_you                0.11      0.01     18.2        4        1
+thats_it                        0.06      0.00     13.0        2        1
+tired_of                        0.06      0.00     13.0        2        1
+heres_the_thing                 0.06      0.01     10.1        2        1
+no_gimmicks                     0.08      0.01      8.5        3        2
+the_old_way                     0.03      0.00      7.8        1        1
+real_people_real                0.03      0.00      7.8        1        1
+thats_why                       0.59      0.08      7.8       18       11
+ready_to_q                      0.06      0.01      7.0        2        1
+you_already                     0.25      0.04      6.8        8        6
+real_noun                       0.28      0.05      6.3        8        7
+let_that_sink                   0.00      0.00      6.1        0        0
+spoiler                         0.00      0.00      6.1        0        0
+peace_of_mind                   0.03      0.01      6.1        1        1
+plus_opener                     0.00      0.00      6.1        0        0
+thats_the_real                  0.00      0.00      6.1        0        0
+ive_been_there                  0.00      0.00      6.1        0        0
+dont_miss_out                   0.00      0.00      6.1        0        0
+fast_paced                      0.00      0.00      6.1        0        0
+enter_product                   0.00      0.00      6.1        0        0
+triple_no                       0.06      0.01      5.4        2        2
+guarantee                       1.14      0.23      5.1       20       22
+what_if                         0.14      0.03      4.9        4        5
+heres_what                      0.98      0.22      4.4       33       28
+its_not_x_its_y                 0.06      0.02      4.3        2        3
+im_going_to_show                0.14      0.04      4.3        5        5
+one_thing                       0.36      0.10      3.9        8       16
+no_more                         0.08      0.02      3.9        2        4
+exactly                         1.03      0.27      3.8       28       33
+trailing_participle             0.78      0.22      3.7       21       32
+game_changer                    0.00      0.00      3.6        0        1
+heres_the_kicker                0.00      0.00      3.6        0        1
+reclaim                         0.00      0.00      3.6        0        1
+next_level                      0.00      0.00      3.6        0        1
+heres_what_i_mean               0.00      0.00      3.6        0        1
+imagine                         0.06      0.02      3.4        2        4
+x_not_y_clip                    0.17      0.06      2.9        6       10
+the_part_where                  0.03      0.01      2.9        1        3
+every_single                    1.03      0.36      2.9       27       39
+feel_like                       0.33      0.12      2.8       11       16
+actually                        1.59      0.58      2.8       38       52
+whether_youre                   0.06      0.02      2.8        2        4
+worth_it                        0.06      0.02      2.8        2        4
+rule_of_three                   3.99      1.45      2.8       70       76
+elevate                         0.00      0.00      2.6        0        1
+heres_the_truth                 0.03      0.02      2.6        1        3
+hi_im_name                      0.00      0.00      2.6        0        1
+empower                         0.00      0.00      2.6        0        1
+caps_word                      18.55      8.50      2.2       68       87
+i_know_because                  0.00      0.01      2.0        0        1
+stress_free                     0.00      0.01      2.0        0        1
+lets_dive                       0.00      0.01      2.0        0        1
+honestly_opener                 0.00      0.01      2.0        0        1
+fast_forward                    0.00      0.01      2.0        0        1
+first_second_finally            0.06      0.04      1.8        2        7
+anaphora_3plus                  1.39      0.83      1.7       43       58
+hedge_copy                      0.67      0.41      1.7       19       40
+wouldnt_it_be                   0.00      0.01      1.7        0        1
+think_of_it_as                  0.00      0.01      1.4        0        2
+i_get_it                        0.00      0.01      1.4        0        2
+colon_reveal                    0.06      0.05      1.4        2        8
+seamless                        0.00      0.01      1.2        0        1
+no_brainer                      0.00      0.01      1.2        0        2
+the_result_q                    0.00      0.01      1.2        0        2
+picture_this                    0.00      0.01      1.1        0        2
+effortless                      0.00      0.01      1.1        0        2
+the_problem_isnt                0.11      0.15      0.8        4       21
+fragment_rows                   1.92      2.42      0.8       38       71
+you_deserve                     0.00      0.02      0.8        0        1
+and_more                        0.00      0.02      0.8        0        3
+rather_than                     0.03      0.05      0.8        1        8
+what_this_means                 0.06      0.09      0.7        2       13
+more_than_just                  0.00      0.02      0.7        0        3
+short_question_frag             0.28      0.47      0.6        9       45
+most_of_the_time                0.00      0.02      0.6        0        4
+unlock                          0.00      0.02      0.6        0        3
+its_time_to                     0.00      0.02      0.6        0        3
+lets_be_honest                  0.00      0.02      0.6        0        4
+em_dash                         0.70      1.57      0.5       11       50
+but_heres                       0.00      0.04      0.3        0        8
+the_truth_is                    0.00      0.05      0.3        0        6
+the_catch_q                     0.03      0.15      0.3        1       20
+not_just_but                    0.00      0.08      0.2        0       13
+transform                       0.00      0.09      0.2        0        3
+ai_vocab                        0.03      0.34      0.1        1       32
+ellipsis                        0.47      9.74      0.1       11       83
+exclaim                         0.25      6.10      0.0        5       82
+
+CADENCE (means):
+  para_cv          AI=0.90  HUMAN=1.04
+  para_mean        AI=21.58  HUMAN=22.01
+  pct_para_1sent   AI=0.58  HUMAN=0.64
+  pct_sent_ge25    AI=0.10  HUMAN=0.11
+  pct_sent_le5     AI=0.29  HUMAN=0.34
+  sent_cv          AI=0.83  HUMAN=0.86
+  sent_mean        AI=12.21  HUMAN=12.52
+  sent_sd          AI=9.95  HUMAN=11.74
+
+PER-FORMAT AI rates per 1k words (top tells):
+tell                             email     meta_ad       optin sales_page_      upsell  vsl_opener
+md_heading                        0.79        7.04        0.65        3.56       14.55        3.45
+self_posed_q_header               0.16        0.00        0.00        0.15        6.34        0.00
+cancel_anytime                    0.79        1.37        0.00        0.15        0.56        0.43
+hey_there                         2.85        0.00        0.00        0.00        0.00        0.00
+bold_leadin_sentence              6.82        0.39       11.11        1.63        2.24        0.32
+bracket_placeholder              12.05        4.89        0.33        3.86        5.22        5.07
+youve_tried                       0.00        0.20        0.00        0.15        0.00        0.75
+in_this_video                     0.00        0.00        0.00        0.00        0.00        0.97
+youre_not                         0.48        0.20        0.00        0.15        0.00        0.22
+not_because_a_because_b           0.32        0.00        0.00        0.15        0.19        0.11
+youre_not_alone                   0.48        0.00        0.00        0.00        0.00        0.22
+bold_label_colon                 15.22       25.82       31.04        4.30        4.48       13.80
+thats_why_we                      1.11        0.00        0.00        0.15        0.00        0.65
+with_without_contrast             0.00        0.00        0.00        0.30        0.37        0.00
+ps                                1.90        0.00        0.00        0.00        0.00        0.00
+quick_question                    0.48        0.00        0.00        0.00        0.00        0.00
+sound_familiar                    0.00        0.39        0.00        0.00        0.00        0.11
+most_people                       0.48        0.39        0.00        0.30        0.00        0.22
+less_than_a_cup                   0.16        0.20        0.00        0.44        0.00        0.22
+say_goodbye                       0.16        0.00        0.00        0.00        0.00        0.00
+if_that_sounds_like_you           0.00        0.00        0.00        0.00        0.00        0.11
+without_the_fluff                 0.16        0.20        0.00        0.00        0.00        0.11
+no_no_just                        0.16        0.39        0.00        0.15        0.00        0.11
+wait_opener                       0.00        0.00        0.00        0.00        0.93        0.00
+so_opener                         0.00        0.20        0.00        0.30        0.19        0.54
+thats_where_comes_in              0.00        0.00        0.00        0.30        0.00        0.00
+designed_to                       1.74        1.56        1.31        2.08        0.37        0.65
+emoji_check                       4.60       20.93        0.00        0.00        6.72        0.43
+scroll_down                       0.00        0.00        0.00        0.44        0.00        0.43
+stick_with_me                     0.00        0.00        0.00        0.44        0.00        1.29
+
+PER-MODEL (rate/1k): tell haiku sonnet opus
+md_heading                     1.30     4.10     7.70
+self_posed_q_header            0.00     0.10     2.17
+cancel_anytime                 0.90     0.00     0.68
+hey_there                      0.60     0.72     0.31
+bold_leadin_sentence           0.90     4.00     3.54
+bracket_placeholder            7.60     4.61     5.09
+youve_tried                    0.20     0.31     0.25
+in_this_video                  0.10     0.31     0.31
+youre_not                      0.40     0.21     0.06
+not_because_a_because_b        0.20     0.00     0.19
+youre_not_alone                0.30     0.10     0.06
+bold_label_colon              14.89    15.27    12.80
+thats_why_we                   0.50     0.62     0.19
+with_without_contrast          0.10     0.00     0.19
+ps                             0.20     0.62     0.25
+quick_question                 0.00     0.10     0.12
+sound_familiar                 0.10     0.00     0.12
+most_people                    0.50     0.10     0.19
+less_than_a_cup                0.10     0.31     0.19
+say_goodbye                    0.10     0.00     0.00
+
+PER-SOURCE HUMAN (rate/1k): ['belgray', 'carlton', 'halbert', 'settle']
+md_heading                     0.00     0.00     0.00     0.00
+self_posed_q_header            0.00     0.00     0.00     0.00
+cancel_anytime                 0.00     0.00     0.00     0.00
+hey_there                      0.00     0.00     0.00     0.00
+bold_leadin_sentence           0.03     0.00     0.00     0.00
+bracket_placeholder            0.07     0.00     0.00     0.01
+youve_tried                    0.00     0.00     0.00     0.00
+in_this_video                  0.00     0.00     0.00     0.00
+youre_not                      0.00     0.00     0.00     0.00
+not_because_a_because_b        0.00     0.00     0.00     0.00
+youre_not_alone                0.00     0.00     0.00     0.00
+bold_label_colon               0.06     0.73     0.01     0.20
+thats_why_we                   0.01     0.00     0.00     0.00
+with_without_contrast          0.00     0.00     0.00     0.00
+ps                             0.00     0.03     0.00     0.00
+quick_question                 0.00     0.00     0.00     0.00
+sound_familiar                 0.00     0.00     0.00     0.00
+most_people                    0.00     0.00     0.00     0.00
+less_than_a_cup                0.00     0.00     0.00     0.00
+say_goodbye                    0.00     0.00     0.00     0.00
+if_that_sounds_like_you        0.00     0.00     0.00     0.00
+without_the_fluff              0.00     0.00     0.00     0.00
+no_no_just                     0.02     0.00     0.00     0.00
+wait_opener                    0.01     0.00     0.00     0.00
+so_opener                      0.01     0.00     0.01     0.00
+thats_where_comes_in           0.00     0.00     0.00     0.01
+designed_to                    0.04     0.03     0.05     0.04
+emoji_check                    1.09     0.00     0.00     0.00
+scroll_down                    0.02     0.00     0.01     0.00
+stick_with_me                  0.04     0.00     0.02     0.01

@@ -1,0 +1,70 @@
+PROMPT: Write the first two minutes of a video sales letter script for a probiotic supplement for bloating, $39 per bottle.
+
+# VSL Script: First Two Minutes
+**Product:** [PRODUCT NAME] Probiotic | **Price:** $39 per bottle
+**Runtime:** ~2:00 (about 300 spoken words)
+
+---
+
+**[0:00 – 0:12] COLD OPEN**
+*(Close-up: a person sitting on a couch, hand resting on their stomach, looking uncomfortable. Soft piano.)*
+
+**NARRATOR (V.O.):**
+"It's 3 p.m. You had a normal lunch. Now your jeans feel like they're two sizes too small, and you're wondering if you can make it through the afternoon without loosening your belt."
+
+---
+
+**[0:12 – 0:35] THE PROBLEM**
+*(Cut to a montage: someone checking their reflection, a bathroom scale, a "Do Not Disturb" sign on a desk.)*
+
+**NARRATOR (V.O.):**
+"If that sounds familiar, you're not alone. Bloating is one of the most common complaints people bring up with friends, coworkers, and doctors. And most people just learn to live with it. They skip the dinner party. They wear the loose shirt. They stop mentioning it."
+
+*(Beat.)*
+
+"But bloating isn't a personality trait. It's often a sign that something in your gut is out of balance."
+
+---
+
+**[0:35 – 1:05] THE CAUSE**
+*(Animated graphic: a simple illustration of the gut with friendly bacteria and a few unfriendly ones.)*
+
+**NARRATOR (V.O.):**
+"Your gut is home to trillions of microorganisms. The helpful ones break down food, support digestion, and help keep things moving. When the balance shifts, whether from stress, a change in diet, travel, or antibiotics, digestion can slow down and gas builds up.
+
+Most people never think about their gut until it starts causing problems. By then, they've usually tried everything from fiber powders to fasting to cutting out entire food groups. Some of those things help a little. Many of them just take the fun out of eating."
+
+---
+
+**[1:05 – 1:35] THE TURN**
+*(Product shot: bottle on a clean kitchen counter, morning light.)*
+
+**NARRATOR (V.O.):**
+"That's why we created [PRODUCT NAME]. It's a daily probiotic formula with [NUMBER] billion CFU of [STRAIN NAMES], selected to support a healthy gut environment and comfortable digestion.
+
+It's a single capsule, taken once a day, with no special diet required. Many people add it to their morning routine in under ten seconds."
+
+*(On-screen text: "Daily probiotic. One capsule. No restrictions.")*
+
+---
+
+**[1:35 – 2:00] THE OFFER HOOK**
+*(Bottle rotates. Price appears on screen.)*
+
+**NARRATOR (V.O.):**
+"Right now, a bottle of [PRODUCT NAME] is $39. That's a [30]-day supply, about [$1.30] a day, less than a cup of coffee.
+
+Stay with me, because in a moment I'll show you exactly how to get started, and why so many people say the hardest part was remembering to take it at first."
+
+*(On-screen text: "Keep watching. The offer is coming up.")*
+
+---
+
+## Production Notes
+
+- **Claims:** I kept the language around "supporting" digestion and "comfortable" gut function rather than saying it treats, cures, or prevents bloating or any condition. Health claims need substantiation, and the FTC and FDA hold supplement advertising to that standard. Any specific benefit, such as "reduces bloating by 40%," needs clinical evidence for that exact strain and dose. If you have a study, share it and I'll work it in. If you don't, the script stays on support language.
+- **Placeholders:** Fill in the product name, CFU count, strain names, and the bottle count. The "$1.30 a day" figure assumes a 30-day supply. Check the math against your actual count.
+- **Disclaimer:** Add the standard "These statements have not been evaluated by the FDA..." line and a disclaimer on screen. A "consult your doctor" line is also a good idea, especially if the audience includes people with IBS, IBD, or who are pregnant.
+- **Testimonials:** Don't add any in this section without real, documented customers. Fabricated reviews are a legal risk.
+
+Want me to draft minutes 2:00–4:00 (the mechanism, social proof, and the offer), or adjust the tone to be more clinical or more conversational?

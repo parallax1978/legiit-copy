@@ -1,0 +1,46 @@
+PROMPT: Write a promotional email to my email list selling a membership delivering weekly stock trading alerts, $97/month. Include a subject line.
+
+**Subject line:** Weekly stock alerts for $97/month. Here's what's included.
+
+---
+
+Hi {{First Name}},
+
+Most investors don't lose money because they picked the wrong stocks. They lose it because they miss the moves, or they act on noise.
+
+That's why I started the **[Membership Name]**, a weekly stock alert service for investors who want clear, actionable ideas without spending hours a week on research.
+
+**Every week, you get:**
+
+- **Weekly stock alerts** with the ticker, suggested entry range, target, and stop-loss
+- **The reasoning behind each pick**, so you understand the thesis, not just the trade
+- **Mid-week updates** if a position needs attention
+- **A simple weekly summary** you can read in under 10 minutes
+
+**Membership is $97/month.** Cancel anytime from your account dashboard.
+
+[**Join the Membership →**]({{Link}})
+
+Markets move fast, and the investors who do well are usually the ones who stay organized and consistent. This is built to help you do that.
+
+To your trading,
+
+{{Your Name}}
+{{Business Name}}
+
+---
+
+*Important: Trading stocks involves risk, including the possible loss of principal. Past performance does not guarantee future results. Alerts are provided for educational purposes and are not personalized investment advice. Please do your own research and consult a licensed financial professional before making investment decisions.*
+
+*{{Business Name}} · {{Physical Mailing Address}} · [Unsubscribe]({{Link}})*
+
+---
+
+**Before you send, please check these with a securities attorney or compliance advisor:**
+
+- **Don't add performance claims unless you can document them.** Phrases like "returns of X%" or "beat the market" need verifiable, net-of-fee track records. Otherwise, leave them out.
+- **Your registration status matters.** Selling personalized or ongoing stock recommendations for a fee can trigger investment adviser registration requirements (SEC or state), and the SEC Marketing Rule governs testimonials and hypothetical results.
+- **Disclosures should be specific.** Disclose any positions you hold in recommended stocks, and any compensation or affiliate relationships.
+- **Add a physical address and working unsubscribe link** to meet CAN-SPAM requirements.
+
+I can adjust the tone, add a launch-week bonus, or write a short follow-up sequence if you tell me more about the service, such as how long you've been trading and how the alerts are selected.

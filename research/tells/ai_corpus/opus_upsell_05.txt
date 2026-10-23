@@ -1,0 +1,111 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys AI bookkeeping software for Shopify store owners, $99/month. The upsell is a $49 one-time 'books cleanup' service.
+
+# Books Cleanup: One-Time Offer Page
+
+---
+
+**[Progress bar: ✔ Order Complete → ● One Last Step → Access Your Dashboard]**
+
+### Wait! Your order is confirmed, but your books might not be ready yet.
+
+## Start [Product Name] With Clean Books, So Your Numbers Are Right From Day One
+
+**For one time only, our bookkeeping team will clean up and reconcile your past Shopify books for $49. Most firms charge [$X] or more for this.**
+
+[ YES, CLEAN UP MY BOOKS FOR $49 → ]
+*One-click add. Your card on file is charged once. No subscription.*
+
+---
+
+### Here's something most Shopify owners don't know
+
+[Product Name] keeps your books accurate **from today forward**. But AI learns from the data you give it. If your past records are messy, it starts from a bad base, and every report it builds sits on top of that.
+
+And for most Shopify stores, the past records *are* messy:
+
+- **Payouts don't match sales.** Shopify sends one lump deposit after fees, refunds, and chargebacks, so your bank account and your revenue never agree.
+- **Fees are hidden or miscategorized.** Payment processing, app subscriptions, and Shopify fees are scattered across statements or lumped into "Other."
+- **Refunds and chargebacks never got recorded.** That makes your revenue look higher than it really was.
+- **Sales tax is a guess.** Collected tax mixed in with revenue is a common and expensive mistake.
+- **Personal and business spending got mixed.** It happens to almost everyone in year one.
+
+If any of that sounds familiar, your profit number is probably wrong. You can't make good decisions about ad spend, inventory, or pricing with a profit number you can't trust.
+
+---
+
+### What the $49 Books Cleanup covers
+
+A real bookkeeper (not just software) goes through your history and gets it squared away:
+
+✔ **Reconciles your Shopify payouts** against orders, fees, refunds, and chargebacks
+✔ **Recategorizes past transactions** so expenses land in the right buckets
+✔ **Separates sales tax collected** from actual revenue
+✔ **Flags personal or duplicate transactions** for you to review
+✔ **Sets up your opening balances** so [Product Name] starts from accurate numbers
+✔ **Sends you a Cleanup Summary** showing what was fixed and what your real profit looked like
+
+**Scope:** Covers up to [12] months of history and up to [X] transactions. Done within [X] business days.
+
+---
+
+### What changes for you
+
+**Without the cleanup:** [Product Name] runs fine going forward, but your year-to-date P&L, tax estimates, and trend reports still carry the old errors. You end up fixing it at tax time, usually in a rush and at a much higher price.
+
+**With the cleanup:** Your very first dashboard shows your *real* margins. Your reports are accurate going back months, and you'll be ready for tax season before it shows up.
+
+---
+
+### Why only $49, and why only now?
+
+A cleanup normally takes a lot of back-and-forth to get access to your accounts. You just connected your store, so we already have what we need. That cuts our time a lot, and we're passing the savings to you.
+
+This price is only available on this page, during checkout. After you leave, cleanup is billed at our standard rate of [$X].
+
+---
+
+### Our guarantee
+
+If your Cleanup Summary doesn't show clear fixes to your books, tell us within [30] days and we'll refund the $49. No hassle.
+
+---
+
+## Add the Books Cleanup for a one-time $49
+
+~~[$X standard price]~~ **$49 today, one time**
+
+[ YES, ADD THE BOOKS CLEANUP → ]
+
+*Charged once to the card you just used. This does not change your $99/month plan.*
+
+[No thanks, I'll start with my books as they are](#)
+
+---
+
+### Quick questions
+
+**Is this a recurring charge?**
+No. It's a one-time $49 payment. Your $99/month [Product Name] subscription stays the same.
+
+**Do I need to do anything?**
+Usually not. We'll email you if we need to ask about a few transactions, like whether a charge was personal or business.
+
+**What if I have more than [12] months or [X] transactions?**
+We'll clean up the most recent [12] months for $49 and send you a quote for the rest. You never have to accept it.
+
+**My books are already pretty clean. Do I need this?**
+Maybe not! If you already reconcile payouts, track refunds, and separate sales tax, you can skip it. Most store owners we talk to don't do all three.
+
+**Will a human actually look at my books?**
+Yes. A bookkeeper on our team does the cleanup and reviews it before you get your summary.
+
+---
+
+**Before you publish:**
+
+- **Fill in the brackets:** product name, months and transaction limits, turnaround time, standard price, and refund window.
+- **Make sure the claims are true.** "Only available on this page" and "a real bookkeeper" have to be accurate. FTC rules and payment processors look closely at fake scarcity and at post-purchase one-click charges.
+- **One-click charging:** the button promises to charge the card on file. Make sure your checkout tool (ThriveCart, CartHook, ReConvert, etc.) supports that and shows the charge clearly.
+- **Social proof:** I didn't include any testimonials or stats, because they'd have to be real. If you have a quote like "We found $4,200 in miscategorized fees," put it right above the final button.
+
+I can also write a shorter version, a lower-priced "downsell" page for people who click "No thanks," or A/B headline options.

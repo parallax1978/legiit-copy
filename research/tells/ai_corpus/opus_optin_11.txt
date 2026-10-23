@@ -1,0 +1,28 @@
+PROMPT: Write an opt-in page for a free 'ADHD-friendly weekly planner' template: headline, subheadline, 3 to 5 bullets, and button text.
+
+# Opt-In Page Copy: ADHD-Friendly Weekly Planner
+
+**Headline:**
+The Weekly Planner Built for Brains That Don't Do "Normal" Planners
+
+**Subheadline:**
+Most planners hand you a pile of empty boxes and expect you to fill them. This free template gives you just enough structure to see your week clearly, without the guilt when things don't go to plan.
+
+**Bullets:**
+- **One page, one week.** You see everything at a glance, so tasks don't vanish the moment you turn the page.
+- **A "Top 3" focus box for each day.** You pick what matters most so a 40-item to-do list doesn't freeze you up.
+- **A brain-dump zone.** Get the stray thoughts out of your head and onto paper, then sort them later.
+- **Time blocks with buffers built in.** The spare space allows for transitions, distractions and real life.
+- **No dates, so you can start any week.** If you miss a week, you skip nothing and just pick it back up.
+
+**Button text:**
+Send Me the Free Planner
+
+---
+
+**Other options:**
+- Headlines: "Finally, a Planner You'll Actually Keep Using" / "Plan Your Week in 10 Minutes, Even on a Scattered Day"
+- Buttons: "Get My Free Template" / "Yes, I Want the Planner"
+- Text under the button: "Instant download. Printable and digital versions. No spam, ever."
+
+Make sure the bullets match what's actually in your template. Edit or cut any feature it doesn't include.

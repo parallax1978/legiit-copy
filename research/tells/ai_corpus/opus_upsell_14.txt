@@ -1,0 +1,152 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys an SEO agency for law firms, free strategy call. The upsell is a $1,500 Google Business Profile optimization.
+
+# One-Time Offer Page: Google Business Profile Optimization
+
+---
+
+**[Top bar]**
+✅ **You're booked. Your strategy call is confirmed for [DATE/TIME].** Check your inbox for the calendar invite.
+
+*Don't close this page yet. There's one thing we'd like to offer you before the call, and you'll only see it here.*
+
+---
+
+## Headline
+
+# The Client Calling You Today Probably Found a Lawyer in the Map Pack, Not on Page One
+
+### For a one-time $1,500, we'll fully optimize your Google Business Profile before your strategy call, so we spend the call on growth instead of cleanup.
+
+---
+
+## Opening
+
+When someone searches "car accident lawyer near me" or "divorce attorney [city]," Google usually shows three firms in a map before any regular website results.
+
+Those three firms get the calls. The firms listed below them often don't.
+
+What decides who gets those three spots isn't always the size of the firm, how long it has been around, or how good its lawyers are. Often it's whether the firm's Google Business Profile is complete, accurate, in the right categories, and active.
+
+Most law firm profiles we audit have at least one of these problems:
+
+- **Wrong or missing primary category.** "Law Firm" when it should be "Personal Injury Attorney"
+- **Name, address, and phone that don't match** across the web, which weakens Google's trust in the listing
+- **No services, no practice-area descriptions, no Q&A.** That leaves empty space for competitors to fill
+- **Old or stock photos**, or no photos at all
+- **No posting activity** in months
+- **Reviews with no responses**, or no system for asking for reviews that fits bar rules
+
+Each of these is fixable. You just need someone to do it properly.
+
+---
+
+## The Offer
+
+## Google Business Profile Optimization for Law Firms
+### ~~Regular price: $[2,500]~~ → **$1,500 today only**
+
+**Here's what we do:**
+
+**1. Full profile audit and competitor teardown**
+We look at the firms currently holding the map pack in your city and practice area and show you exactly what they're doing that you aren't.
+
+**2. Category and service setup**
+The right primary and secondary categories, plus every relevant practice area added as a service with a keyword-rich description.
+
+**3. Business description rewrite**
+Written for searchers and for Google, and kept within your state's attorney advertising rules.
+
+**4. NAP consistency cleanup**
+We find and fix mismatched name, address, and phone listings across [up to XX] major directories and legal citation sites (Avvo, Justia, FindLaw, Super Lawyers, Yelp, BBB, and others).
+
+**5. Photo and media optimization**
+Guidance on what to shoot, plus upload of up to [XX] optimized images (office, team, exterior, logo, cover).
+
+**6. Q&A seeding**
+We write and post [10] of the questions your prospective clients actually ask, with compliant answers.
+
+**7. Launch posts**
+[4] Google Posts written and scheduled so your profile shows fresh activity from day one.
+
+**8. Review request system**
+A bar-compliant review request template and process your intake staff can use the same day.
+
+**9. Before-and-after report**
+Shows where your profile started, what we changed, and where you rank in the local map grid when we finish.
+
+**Turnaround:** completed within [10] business days, and usually before your strategy call.
+
+---
+
+## Why This Is Only Offered Here
+
+Your strategy call is about building a long-term plan: content, links, local SEO, and lead flow.
+
+If your Google Business Profile is broken going into that call, half the hour goes to basics. If it's already fixed, we get to spend the time on what actually grows your caseload.
+
+We'd like to start your engagement from a clean foundation, so this price is only offered at this step. **If you leave this page, the offer goes back to our standard rate of $[2,500].**
+
+---
+
+## Our Guarantee
+
+**[Choose one and make sure you can honor it]:**
+
+> **Option A (completion guarantee):** If we don't deliver every item listed above within [10] business days, you get a full refund. No argument.
+
+> **Option B (satisfaction guarantee):** Review the before-and-after report. If you don't feel the work was worth $1,500, tell us within [14] days and we'll refund you.
+
+*We don't guarantee specific rankings, and you shouldn't trust any agency that does. Google controls the map pack. We control how strong your profile is when Google evaluates it.*
+
+---
+
+## CTA Block
+
+### [ YES — Optimize My Google Business Profile for $1,500 → ]
+
+*One-click add. We'll charge the card you used to book. [Or: "You'll be taken to a secure checkout."]*
+
+<small>[No thanks, I'll handle my Google Business Profile myself. Take me to my confirmation →]</small>
+
+---
+
+## FAQ
+
+**Is this the same thing you'll talk about on the strategy call?**
+No. The call covers your full SEO strategy. This is a done-for-you fix for one specific asset, the profile that shows up in Google Maps.
+
+**What if I already have a Google Business Profile?**
+Good, most firms do. We optimize the profile you already have. If you have duplicate or unverified listings, we help sort those out too.
+
+**Do you need access to my account?**
+Yes. We'll send simple instructions for adding us as a manager. You keep full ownership.
+
+**What if I have multiple office locations?**
+This price covers one location. Additional locations are $[XXX] each. Just tell us on the call.
+
+**Will this get me into the top 3?**
+We can't promise that, and no one honestly can. What we can promise is that your profile will be complete, accurate, and competitive with the firms that are currently ranking.
+
+**Do I have to sign up for ongoing SEO to get this?**
+No. It's a one-time project with no contract.
+
+---
+
+## Final CTA
+
+### Your next client is searching right now. Make sure your firm shows up.
+
+### [ YES — Add GBP Optimization for $1,500 → ]
+
+<small>[No thanks, skip this offer →]</small>
+
+---
+
+## Notes before you publish
+
+- **Keep the scarcity true.** If the $1,500 price is ever offered again later, change "today only / only here" to something accurate, like "available to new strategy-call clients." Fake scarcity hurts trust, and in some places it's an FTC issue.
+- **Anchor price:** only show a crossed-out "regular price" if you actually sell the service at that price.
+- **Social proof:** the page has no testimonials because I didn't want to invent any. If you have a real law firm result (for example, "went from #9 to #2 in the map pack for 'DUI lawyer Tampa'"), put it right under the offer section. That's usually the single biggest boost to conversions.
+- **Bar compliance:** the review and description language deliberately avoids incentives and outcome promises, since many state bars restrict both. Keep it that way if you edit.
+
+I can also write a shorter mobile-first version, a video sales script for the top of the page, or a downsell page (for example, a $497 GBP audit only) for people who decline.

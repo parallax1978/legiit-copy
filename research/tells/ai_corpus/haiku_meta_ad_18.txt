@@ -1,0 +1,29 @@
+PROMPT: Write a Facebook/Instagram ad for a mortgage refinance broker offering a free rate quote.
+
+**Facebook / Instagram Ad: Mortgage Refinance Free Rate Quote**
+
+**Primary text:**
+Rates have moved. Is your refinance still working for you?
+
+Find out in minutes, at no cost. We'll compare today's refinance rates against your current loan and show you what you could save each month. No pressure, no obligation.
+
+✅ Free, no-obligation rate quote
+✅ Lower monthly payment options
+✅ Licensed local experts who explain every step
+
+Tap "Get Quote" and see your numbers today.
+
+**Headline:** Get Your Free Refinance Rate Quote
+
+**Description:** See today's rates and savings in minutes. No obligation.
+
+**CTA button:** Get Quote
+
+**Creative direction:** A homeowner reviewing a simple monthly payment comparison on a phone or at a kitchen table, with a bold "$ Savings?" or "Lower Payment?" text overlay. Use a clean, trustworthy look: blues and whites, a real person, no stock-photo handshake.
+
+**Compliance placeholders (add before running):**
+- Your broker name, NMLS number, and state license information
+- The Equal Housing Lender logo
+- Meta's financial-products special ad category, which limits some targeting options. Rate and savings claims must be accurate and not imply guaranteed savings.
+
+If you want a shorter version for Instagram Stories or a more urgent angle (for example, tied to a specific rate drop), tell me and I'll write it.

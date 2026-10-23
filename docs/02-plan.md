@@ -20,25 +20,30 @@ Gate: a user can sign up, land in a workspace, and an edge function can make one
 
 ## Phase 1: Engine prototype and teaching set (weeks 2–4)
 
-Goal: prove the pipeline beats a good single prompt on unseen offers, using the CLI only.
+Goal: prove the pipeline beats a good single prompt on unseen offers, using the CLI only. The step contracts, rubric, tell detector, claims rules and format specs come from `docs/04-copy-standard.md`; do not reinvent them in prompts.
 
-- [ ] 1.1 Format specs: `email_single`, `email_sequence`, `sales_page` (structure, zod output schema, rubric notes, length bands)
+- [ ] 1.0 Control intake: the founder's ten best and five worst promotions with results, tagged per the control-intake spec (`controls` table). This calibrates the library, the tell thresholds and the eval briefs to his markets rather than to Agora's
+
+- [ ] 1.1 Format specs: `email_single`, `email_sequence`, `sales_page`, `order_form` (sections, length bands, musts, must-nots from the standard Section 9; zod output schema)
 - [ ] 1.2 Schemas for every step input/output; `generation_steps` output contracts
-- [ ] 1.3 Step 0 intake: sources → brief + claims ledger + questions (structured output)
-- [ ] 1.4 Step 1 research with web search/fetch; dossier schema with sources
-- [ ] 1.5 Step 2 argument: three candidates, scoring, selection rationale
-- [ ] 1.6 Step 3 draft, including section-by-section drafting for sales pages
-- [ ] 1.7 Steps 4–6 editorial review, factual review, revise; loop control
+- [ ] 1.3 Step 0 intake: sources → brief + typed, graded claims ledger + per-offer config + questions (structured output)
+- [ ] 1.4 Step 1 research with web search/fetch: tagged verbatims with sources, competitor table and logo-swap test, awareness and sophistication per segment, proof inventory graded A–F, objection map, story inventory
+- [ ] 1.4b Step 2 offer construction: options sheet, chosen variant, denominated guarantee, deadline mechanism, promise/delivery gap; terms become ledger rows pending approval
+- [ ] 1.5 Step 3 argument: twenty candidates by search, desire and proof gates, anchored rubric C1–C14 (port `research/rubric/magnitude.py` and `agree.py` to TypeScript), three finalists, thesis sentence, two losers kept
+- [ ] 1.6 Step 4 draft in the standard's order (offer block and order form, bullets and proof, body, three leads, headline last), per-section prompts, inline ledger IDs, pre-draft interrogation; section-by-section drafting for long formats
+- [ ] 1.7 Steps 5–9: cold read on a different model with skim-path readback; editorial gates A–D with control prediction and the critique format; mechanical tell detector and format hard gates ported from `research/tells/analyze.py`; ten-step factual review with `line → rule → rewrite` output and cross-asset consistency; revise under DO NOT TOUCH; loop control
 - [ ] 1.8 CLI: `deno task engine run --brief briefs/x.json --format sales_page` writes every step output to a folder; `engine baseline` runs a single-prompt generator for comparison
 - [ ] 1.9 Teaching set v0: collect 30–50 examples across v1 formats; Claude Code drafts annotations (lesson, why the argument works, where proof lands, what keeps the reader moving); user validates in batches of 10
-- [ ] 1.10 Critique pairs v0: 15–20 (brief, weak draft, strong revision, reasons) seeded from published critiques and from the user's edits of prototype output
+- [ ] 1.10 Critique pairs: load the 36 in `research/critique_pairs_v0.json`, add pairs from the founder's own edits of prototype output; the library gets a loser flag and separately retrievable sections
 - [ ] 1.11 Migration 003: `examples`, `critiques`, embeddings via `embed` function; retrieval implemented
 - [ ] 1.12 Eval briefs: 15 unseen offers across markets; `eval_runs` tables; CLI `engine eval --prompt-set v1`
 - [ ] 1.13 Minimal admin page (behind `app_admins`): blind pairwise comparison and results table (this is the first UI built, because the gate needs it)
 - [ ] 1.14 Prompt tuning rounds against the rubric; record each round's win rate
 - [ ] 1.15 Cost and latency per step measured; `max_tokens` and effort per step set from data
+- [ ] 1.16 Tell-threshold calibration: count every tell in the founder's controls and the library examples against engine drafts; re-run `gen_ai_corpus.py` with at least one non-Claude model; set the Tier weights and the per-format cadence floor from that data
+- [ ] 1.17 Reviewer prediction scorecard: every editorial verdict stores a beat/lose/unsure prediction against the control; results are logged as they come in
 
-Gate: engine output wins at least 70% of blind pairwise comparisons against the baseline across the eval briefs, judged by the user. Measured cost per sales page is within the budget in `00-requirements.md` § 7 or the budget is revised deliberately.
+Gate: engine output wins at least 70% of blind pairwise comparisons against the baseline across the eval briefs, judged by the user, and the editorial reviewer's gate verdicts agree with the user's on at least 75% of a 40-draft sample. Measured cost per sales page is within the budget in `00-requirements.md` § 7 or the budget is revised deliberately.
 
 ## Phase 2: Core product (weeks 4–6)
 
@@ -46,13 +51,13 @@ Goal: a customer completes the whole flow without help.
 
 - [ ] 2.1 Migration 004: `offers`, `offer_sources`, `offer_claims`, `offer_research`, `offer_questions`, `voice_profiles`
 - [ ] 2.2 `ingest-source` function: URL fetch, PDF/DOCX/TXT parsing, text stored; Storage bucket and signed uploads
-- [ ] 2.3 Offer screens: create (URL / upload / describe), extraction review, claims ledger editor, questions, research dossier view with refresh, voice profile
+- [ ] 2.3 Offer screens: create (URL / upload / describe), extraction review, claims ledger editor (typed rows, evidence grade, approval), offer options sheet with approval, questions, research dossier view with refresh, voice profile (measured parameters, idiom bank, exemplar paragraphs, story inventory)
 - [ ] 2.4 Migration 005: `generations`, `generation_steps`, `angles`, `drafts`, `draft_flags`, `draft_feedback`; pgmq queue, cron schedule, `run-step` function wired to the engine
 - [ ] 2.5 Generation wizard (format → purpose → options → confirm with cost estimate)
 - [ ] 2.6 Progress page with Realtime timeline; resumable after reload; failure states with retry
 - [ ] 2.7 Draft view: structured blocks rendered per format; side panel (argument, sources, flags, alternatives); "try another angle"
 - [ ] 2.8 Editor: TipTap on markdown, user versions, compare versions, `rewrite-passage` function for targeted rewrites
-- [ ] 2.9 Exports: copy, Markdown, HTML, TXT, DOCX (`export` function); sequence export per email
+- [ ] 2.9 Exports: copy, Markdown, HTML, TXT, DOCX (`export` function); sequence export per email; order form and close exported together so the deal is stated identically
 - [ ] 2.10 Dashboard, offer list, generation list, workspace settings, members and invites, profile
 - [ ] 2.11 Transactional email via Resend (auth SMTP, invites, draft-ready notification)
 - [ ] 2.12 Playwright smoke test: sign up → offer → email → export
@@ -80,7 +85,8 @@ For each format: spec, 8–10 examples, 3–5 eval briefs, prompt tuning, gate a
 - [ ] 4.4 Organic social posts (LinkedIn, X, Facebook, Instagram)
 - [ ] 4.5 Opt-in page, upsell/OTO, order bump
 - [ ] 4.6 Product description, SMS, advertorial, cold email
-- [ ] 4.7 "Campaign" grouping: generate a coordinated set (e.g. launch: page + 5 emails + 3 ads) from one argument
+- [ ] 4.7 "Campaign" (funnel) object: one argument carried across ad, opt-in, email, page, order form and upsell, with the cross-asset consistency check and a reviewer pass that reads only the first screen of each asset
+- [ ] 4.8 Formats still without a spec: downsell, application and call-booking page, quiz funnel, webinar invitation emails, cancellation flow, UGC video script, X thread, replay page
 
 ## Phase 5: Hardening and private beta (weeks 10–12)
 
@@ -92,6 +98,7 @@ For each format: spec, 8–10 examples, 3–5 eval briefs, prompt tuning, gate a
 - [ ] 5.6 Security review pass (RLS tests per table, secrets audit, dependency audit)
 - [ ] 5.7 Backups verified; point-in-time recovery enabled
 - [ ] 5.8 PostHog events for the funnel; beta cohort of 10–20 users; weekly eval round with their briefs (anonymized, with consent)
+- [ ] 5.9 First three one-variable A/B tests against real controls (engine lead, email and ad), sample sizes computed in advance; results and 30-day refunds logged against the reviewer's predictions
 
 Gate: beta users reuse output with limited rewriting (self-reported and measured by edit distance between system draft and exported version).
 
@@ -114,7 +121,8 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 | Product name and domain | Work under the repo name until chosen |
 | First market for the beta (e.g. course creators, agencies, ecommerce, info products) | Info products and online courses |
 | Sign-in methods | Magic link + Google |
-| Where examples come from and any copyright constraints | Public swipe files and the user's own past promotions; study only, never reproduce |
+| Where examples come from and any copyright constraints | Public-domain texts (Hopkins, pre-1929 ads), the user's own promotions and controls, licensed or permitted material; a rights status per item; study only, never reproduce |
+| Which of the founder's promotions go into the control intake (ten best, five worst, with results) | Blocks calibration until supplied |
 | Prohibited claims policy | Income guarantees, medical cures, and fabricated testimonials are always prohibited |
 | Who judges evals | The user, roughly one hour per round |
 | Default model set | Opus 5.5 for every step; Sonnet 5.5 trial on research synthesis, extraction, and factual review after Phase 1 |

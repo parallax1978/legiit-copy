@@ -1,0 +1,55 @@
+PROMPT: Write the first two minutes of a video sales letter script for an ebook on keto for people over 50, $27.
+
+# VSL Script: First 2 Minutes
+**Working title:** *The Keto Reset After 50* ($27 ebook)
+**Length:** about 320 spoken words, roughly 2:05 at a natural pace
+
+---
+
+**[0:00–0:15] HOOK**
+*(Visual: close-up of a woman or man pinching their waistline, then turning away from the mirror)*
+
+If you're over 50, and the diet that worked in your 30s now does *nothing*... please don't blame yourself. And don't quit yet. Because it was never your willpower.
+
+**[0:15–0:40] PROBLEM**
+*(Visual: scale, untouched salads, a calendar flipping)*
+
+You're eating "better." You're skipping dessert. Maybe you're even walking every morning.
+
+And the scale still won't move.
+
+Meanwhile, you're tired by 2 p.m., your belly fat won't budge, and your clothes fit differently than they used to. Nobody warned you it would feel like this.
+
+**[0:40–1:05] AGITATE**
+*(Visual: stack of diet books, a "calories in, calories out" graphic crossed out)*
+
+So you try what everyone says. Cut calories. Eat less. Do more cardio.
+
+But after 50, your body plays by different rules. Hormones shift. Muscle gets harder to keep. Hunger signals get louder. The advice written for a 25-year-old simply doesn't fit you.
+
+And the more you follow it, the more frustrated you get.
+
+**[1:05–1:30] SHIFT**
+*(Visual: soft light, a new face appears on screen)*
+
+Hi, I'm [Name]. I've spent [X years] helping people in their 50s, 60s, and beyond take back their energy and their waistline, using a low-carb, keto-style approach built for *mature* bodies.
+
+Here's what I found: keto can work well after 50, **but only if you adjust it.** The standard plans leave out three things that matter more as we age.
+
+**[1:30–1:55] PROMISE + PROOF TEASE**
+*(Visual: ebook cover, then three short text bullets)*
+
+In the next few minutes, I'll show you those three adjustments. I'll also show you the exact 28-day roadmap inside *The Keto Reset After 50*, with simple meals, no weird ingredients, and no starving yourself.
+
+You'll also meet people just like you who finally saw the scale move.
+
+**[1:55–2:05] BRIDGE**
+
+But first, I need to explain why the *first* mistake most people make on keto after 50 is the one that quietly stalls their results. Stay with me, because this next part changes everything.
+
+---
+
+**Notes before you shoot or publish**
+- **Compliance:** Weight-loss and health claims draw scrutiny from the FTC and ad platforms. Avoid guaranteed results and specific numbers unless you can substantiate them. Add "results not typical" wherever testimonials appear, and a line advising viewers to talk to their doctor, since keto can interact with medications for diabetes and blood pressure.
+- **Placeholders:** Fill in `[Name]` and `[X years]` with real credentials. If you have none, swap the authority line for a story of your own or a customer's.
+- **The three adjustments:** Name them in the next section of the script. I can draft minutes 2–5, covering the three adjustments, the testimonials, and the $27 offer reveal, if you'd like.

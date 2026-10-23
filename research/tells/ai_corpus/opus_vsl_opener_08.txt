@@ -1,0 +1,88 @@
+PROMPT: Write the first two minutes of a video sales letter script for a free live webinar on starting an Amazon FBA business.
+
+# VSL Script: Free Amazon FBA Live Webinar (0:00–2:00)
+
+**Runtime:** about 2:00 at a natural pace (~150 words per minute)
+**Format:** host on camera, with B-roll and on-screen text
+
+---
+
+**[0:00–0:10] HOOK**
+
+*VISUAL: Black screen. White text appears one word at a time: "What if your next paycheck came from a product you never touched?"*
+
+**HOST (V.O.):**
+Right now, while you're watching this, someone is buying a product on Amazon. The seller didn't pack the box, print the label, or drive to the post office. Amazon did all of that.
+
+---
+
+**[0:10–0:30] PATTERN INTERRUPT + IDENTIFICATION**
+
+*VISUAL: Cut to HOST on camera, relaxed, in a home office. Lower third: [HOST NAME], [Credential, e.g., "Amazon Seller Since 20XX"]*
+
+**HOST:**
+Hey, I'm [HOST NAME]. If you've ever thought, "I want a business of my own, but I don't know where to start," or you've watched a dozen YouTube videos on Amazon FBA and came away more confused than when you started, this video is for you.
+
+Give me the next few minutes and I'll show you why so many beginners get stuck, and what to do instead.
+
+---
+
+**[0:30–0:55] AGITATE THE PROBLEM**
+
+*VISUAL: Quick B-roll cuts: a cluttered browser with 30 tabs open, a "guru" thumbnail with a Lamborghini, a frustrated person staring at a spreadsheet.*
+
+**HOST:**
+Here's the problem. Most people who try FBA quit before they ever launch a product. That's not because the model doesn't work. It's because they're buried in conflicting advice.
+
+One person says private label. Another says wholesale. Someone else is selling a $2,000 course that's mostly hype. So you end up stuck: you overthink product research, you're scared to order inventory, and you're worried you'll lose money on your very first try.
+
+Sound familiar?
+
+---
+
+**[0:55–1:20] THE TURN / BIG PROMISE**
+
+*VISUAL: Back to HOST, leaning in slightly. On-screen text: "FREE LIVE TRAINING"*
+
+**HOST:**
+That's exactly why I'm hosting a **free live webinar** on [DATE] at [TIME + TIME ZONE].
+
+In about 60 minutes, I'll walk you step by step through how a total beginner can go from "no idea" to a clear, realistic plan for launching their first Amazon FBA product. No fluff, no rented-Lamborghini nonsense. Just the actual process.
+
+---
+
+**[1:20–1:50] WHAT THEY'LL LEARN (OPEN LOOPS)**
+
+*VISUAL: Animated checklist, each item ticking in as the host says it.*
+
+**HOST:**
+On this live training, you'll discover:
+
+✔ **The 3-filter product test** I use to spot products worth selling, and the one "obvious" category that quietly drains beginners' bank accounts.
+
+✔ **How to find and vet a supplier** without getting burned, even if you've never talked to a manufacturer before.
+
+✔ **What it really costs to get started**, with honest numbers, so you can decide whether this fits your budget *before* you spend a dime.
+
+✔ And the **listing mistake that keeps most new products invisible**, plus the simple fix.
+
+---
+
+**[1:50–2:00] FIRST CTA + TRANSITION**
+
+*VISUAL: Button graphic pulses below the video: "SAVE MY FREE SEAT"*
+
+**HOST:**
+Seats are limited because I stay for live Q&A at the end and answer as many questions as I can. Click the button below to save your free spot.
+
+And stick with me, because next I'll show you [TEASE: e.g., "the exact product that taught me the most important lesson of my first year"]...
+
+---
+
+### Production notes
+
+- **Compliance:** If you add earnings figures or student results, use only real, documented numbers with a typical-results disclaimer. The FTC treats income claims in business-opportunity marketing very strictly. Because of that, I kept this section focused on the process rather than promised income.
+- **Placeholders:** Fill in everything in [BRACKETS] before recording. That includes the 1:50 teaser, which should be a real story from your own selling experience.
+- **Next section (2:00 onward):** This usually covers the host's origin story, social proof, a pass at the main objection ("Isn't Amazon too saturated?"), and a second CTA.
+
+I can write the next 2–3 minutes or give you a shorter 60-second version for ads if you'd like.

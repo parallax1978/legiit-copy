@@ -1,0 +1,35 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for AI bookkeeping software for Shopify store owners, $99/month.
+
+# Your Shopify Store Makes Money. Do You Know How Much?
+
+### AI bookkeeping for Shopify owners. It matches every payout and categorizes every expense, and you get a clean P&L every month. $99/month, no spreadsheets.
+
+---
+
+It's 11:40 p.m. You've shipped the last order of the day, and now your second job starts.
+
+You export the Shopify payouts. You log into Stripe, then PayPal, then Shop Pay. You try to work out why the deposit in your bank is $312.48 short of what Shopify says you sold. You dig for the Meta ad receipt. You guess which Amazon order was inventory and which one was paper towels for the house. Then you promise yourself you'll categorize the rest this weekend.
+
+You won't, and almost nobody does. That's how a three-month backlog becomes a panicked call to your accountant in March, followed by a bill for the cleanup.
+
+What most store owners miss is that bookkeeping isn't hard. It's tedious. Every sale, refund, fee, chargeback and payout follows a pattern, and software is very good at patterns.
+
+[Product Name] connects to your Shopify store, your payment processors and your bank accounts. After that, it handles the work you've been putting off:
+
+- **Reconciles every payout** against the actual bank deposit, with fees and refunds broken out line by line
+- **Categorizes expenses automatically** and gets more accurate each time you correct it
+- **Tracks cost of goods sold**, so you see real profit per product instead of just revenue
+- **Flags anything that doesn't add up** before it turns into a problem
+
+You get a clean profit-and-loss statement every month without opening a spreadsheet. Your accountant gets books they can actually use, and you get your evenings back.
+
+It's $99 a month. That's less than most bookkeepers charge for two hours, and it runs every day instead of only when you remember to send receipts.
+
+If your sales dashboard looks great but you still can't say whether you made money last month, read on.
+
+---
+
+**Before this goes live:**
+- **Product name:** I left `[Product Name]` as a placeholder.
+- **Things to verify:** Make sure the product actually supports the listed processors (Stripe, PayPal, Shop Pay). Also check that "less than two hours of a bookkeeper" holds up for your market.
+- **Optional addition:** If setup is genuinely fast, a specific claim like "set up in 10 minutes" would make the connection paragraph stronger. I left it out because it depends on your onboarding.

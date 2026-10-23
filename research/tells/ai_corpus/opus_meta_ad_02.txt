@@ -1,0 +1,63 @@
+PROMPT: Write a Facebook/Instagram ad for CRM software for real estate agents, $49/month.
+
+Here's a ready-to-run ad with a short variant for A/B testing. Swap in your product name wherever you see **[Brand]**.
+
+---
+
+## Version A: Pain-point hook
+
+**Primary text:**
+
+You didn't get into real estate to chase sticky notes. 📝
+
+Leads in your inbox. Follow-ups in your head. Client birthdays… somewhere?
+
+Meanwhile, the agent down the street just texted *your* open-house lead back first.
+
+**[Brand]** keeps your whole business in one place:
+✅ Capture leads from Zillow, Realtor.com, your website and social automatically
+✅ Follow-up reminders and drip campaigns that run while you're showing homes
+✅ Track every deal from first call to closing
+✅ Works on your phone, so it goes where you go
+
+No IT team needed and no long contracts.
+
+**Just $49/month.** That's less than one dinner with a client.
+
+👉 Start your free trial today. Your next closing is already in your pipeline.
+
+**Headline:** The CRM Built for Real Estate Agents
+**Description:** $49/mo · Cancel anytime
+**CTA button:** Sign Up *(or "Learn More" for colder audiences)*
+
+---
+
+## Version B: Short and punchy (better for Instagram)
+
+**Primary text:**
+
+Stop losing leads to slow follow-up. 🏡
+
+**[Brand]** is the CRM made for real estate agents. It handles automated follow-ups, deal tracking and every lead source in one app.
+
+$49/month. No contracts. Set up in minutes.
+
+Tap to start free 👇
+
+**Headline:** Close More Deals for $49/mo
+**CTA button:** Sign Up
+
+---
+
+## Creative suggestions
+
+- **Image:** An agent smiling at their phone outside a home with a "SOLD" sign. Overlay the text "Never miss a follow-up again."
+- **Video (Reels/Stories, 15 sec):** Split screen. On the left, a messy desk covered in sticky notes. On the right, a clean dashboard in the app with a "New lead!" notification. End card: "$49/mo · Start free."
+- **Carousel:** One feature per card: Lead capture → Auto follow-up → Pipeline view → Mobile app → Pricing.
+
+**Before you launch:**
+- Only list the integrations (Zillow, Realtor.com) that your product actually supports.
+- If you don't offer a free trial, change the CTA to "Book a demo."
+- Adding a real customer testimonial or a concrete stat, like "Agents respond 3x faster," usually improves results. Only use numbers you can back up.
+
+I can also write versions for specific audiences, such as new agents, team leaders or brokerages, or adjust the tone.

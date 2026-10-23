@@ -1,0 +1,64 @@
+PROMPT: Write the first two minutes of a video sales letter script for a golf swing training aid, $149.
+
+# VSL Script: [PRODUCT NAME] Golf Swing Trainer, First 2:00
+
+*Bracketed items are placeholders. Swap in your real product name, core feature, and proof before production.*
+
+---
+
+**0:00–0:15: HOOK**
+
+*[VISUAL: Slow-motion downswing. The club flattens at the top and the ball slices hard right.]*
+
+**VO:** If you've been playing golf for more than a year and your score still won't drop, I'm going to guess it's not your effort. You've taken the lessons. You've watched the videos. You've tried the grip changes. And you still hit the same slice on the first tee.
+
+---
+
+**0:15–0:40: THE PROBLEM**
+
+*[VISUAL: Golfer on a driving range. A coach's hands adjust a club. Then a mirror, which shows the posture but not the club path.]*
+
+**VO:** Here's what's really going on. Your swing takes less than two seconds, and by the time you see the ball go right, your body has already made the mistake. You can't feel your club path. You can't see your swing plane. So you guess, you overcorrect, and you spend years chasing the same miss.
+
+And if you're hitting 200 balls a week with the same flaw, you're not practicing. You're getting very good at the wrong swing.
+
+---
+
+**0:40–1:05: THE COST**
+
+*[VISUAL: Scorecard with the double bogeys circled. Then a lesson booking page with the price visible.]*
+
+**VO:** Every round, those are strokes you don't get back. Lessons run [$X to $Y] an hour, and one lesson rarely fixes the swing you take home. You're paying for feedback you only get once a week, when you need it on every swing.
+
+---
+
+**1:05–1:30: THE TURN**
+
+*[VISUAL: Product reveal. Hands lift it from a clean surface. The label is clearly readable.]*
+
+**VO:** That's why we built [PRODUCT NAME]. It [does its core job, e.g., shows your club path and gives feedback at impact]. It isn't a gadget you use once and then toss in the garage. It's a training aid you can use on the range, in the backyard, or in the living room, whenever you want to groove a better swing.
+
+---
+
+**1:30–1:55: HOW IT WORKS**
+
+*[VISUAL: Three quick cuts. Setup in under 30 seconds. A full swing. An on-screen overlay tracing the path, with the off-line section highlighted.]*
+
+**VO:** Step one: [attach or set it up in about 30 seconds]. Step two: take your normal swing. Step three: [feedback mechanism] shows you exactly where the club left your target line. So you fix it on the next swing, not three months from now.
+
+---
+
+**1:55–2:00: BRIDGE**
+
+*[ON-SCREEN TEXT: "Stay until the end. The price will surprise you."]*
+
+**VO:** Stick with me. In a minute I'll show you what [PRODUCT NAME] costs, which is $149, and why that's about the price of a single lesson. But first, let me show you what happened when [tester name or "a 14-handicapper"] used it for 30 days.
+
+---
+
+**Production notes**
+
+- **Pacing:** About 300 spoken words for two minutes, at roughly 150 words per minute. Read it aloud once with a timer before recording.
+- **Claims:** Don't air score-improvement numbers or "X strokes" claims unless you have documented testing behind them. Regulators expect substantiation for performance claims, and a real tester's result is stronger than a made-up stat anyway.
+- **Price:** The script says $149 in the first two minutes to set up the payoff at 2:00. If you'd rather hold the price until later, remove the number from the bridge and keep the "price will surprise you" hook.
+- **Lesson comparison:** Only keep the "about the price of a single lesson" line if your local lesson rates are at or above $149. Otherwise, use a different anchor, such as the cost of a round of golf.

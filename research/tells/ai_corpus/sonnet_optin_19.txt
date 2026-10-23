@@ -1,0 +1,20 @@
+PROMPT: Write an opt-in page for a free 'wedding day timeline' template: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Stop Stressing About the Schedule. Get Your Wedding Day Timeline, Done.
+
+**Subheadline:**
+Download the free, fill-in-the-blank timeline that keeps your wedding day running on time, from getting ready to the last dance.
+
+**Bullets:**
+- **Hour-by-hour layout:** Covers getting ready, the ceremony, photos, the reception, and the send-off, so nothing gets missed.
+- **Built-in buffer time:** Realistic padding for hair and makeup running late, travel, and family photos.
+- **Easy to share:** Send one clear schedule to your photographer, planner, DJ, and wedding party so everyone is on the same page.
+- **Fully editable:** Adjust start times and swap events to fit your ceremony, venue, and traditions.
+- **Sample timelines included:** See how a morning, afternoon, and evening wedding can flow.
+
+**Button text:**
+Send Me the Free Timeline
+
+**Optional microcopy under the button:**
+No spam. Just your template, plus a few planning tips. Unsubscribe anytime.

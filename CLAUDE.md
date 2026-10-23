@@ -9,6 +9,9 @@ Docs:
 - `docs/00-requirements.md` scope, functional and non-functional requirements, what the user supplies
 - `docs/01-architecture.md` stack, repo layout, data model, pipeline steps, job orchestration, security, eval harness
 - `docs/02-plan.md` phased checklist with gates; update checkboxes as work lands
+- `docs/03-copy-research.md` the evidence: what makes DR copy convert, fact-checked, with the AI failure taxonomy
+- `docs/04-copy-standard.md` the operational standard: writer rules, argument rubric, lead selection, copy chief gates, tell detector, claims taxonomy, per-format specs. Prompts and reviewers are built from this file, not from memory
+- `research/` calibration data and scripts behind the standard (see its README)
 
 ## Stack
 Next.js 15 (App Router, TS, Tailwind, shadcn/ui) on Vercel. Supabase for Postgres, Auth, Storage, Edge Functions (Deno), Queues (pgmq), pg_cron, pg_net, pgvector, Realtime, secrets. Anthropic SDK inside Edge Functions only.
@@ -30,8 +33,14 @@ Next.js 15 (App Router, TS, Tailwind, shadcn/ui) on Vercel. Supabase for Postgre
 - Never use `budget_tokens`, assistant prefill, or forced `tool_choice`; they error on current models.
 - Cap `max_tokens` at 12K per call; draft long formats section by section.
 
-## Copy standard (encode in prompts, check in reviews)
-Pick the desire that keeps the prospect stuck and the promise a believable mechanism supports. Put proof where doubt arises. Do not explain everything; leave pulls forward. Do not invent objections. Be specific. Do not hedge supported claims; the claims ledger and factual review handle compliance line by line. Output only copy in the requested structure.
+## Copy standard (non-negotiable; details in docs/04-copy-standard.md)
+- Decide in this order and never repair a higher failure lower down: market, awareness, sophistication, desire, mechanism, big idea, lead, structure, proof, offer, close. The offer is designed before the brief; the argument is chosen before any prose.
+- Every number, study, name, credential, quote, price and deadline carries a ledger ID. Never generate a testimonial, a narrator, a study or a statistic. Precision matches the evidence.
+- Claim never bigger than proof; proof within two sentences of its claim; no hedges on supported claims; compliance is handled by the factual review as `line → rule → rewritten line`, never by adding "may" or "results vary".
+- Draft in the standard's order (offer block and order form, bullets and proof, body, three leads, headline last). The cold read runs on a different model than the drafter.
+- The editorial reviewer runs gates in order and stops at the first failure, predicts beat/lose/unsure against a control, and never averages a score.
+- The tell detector never penalizes caps, fragments, exclamation marks, ellipses or em dashes at human rates; bold-label-colon bullets, placeholders, assistant residue and unledgered authorities are hard rejects.
+- Prompts carry parameters and exemplar paragraphs, never tone adjectives. Output only copy in the requested structure.
 
 ## Commands (to be kept current as the scaffold lands)
 ```

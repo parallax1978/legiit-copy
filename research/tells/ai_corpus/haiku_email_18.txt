@@ -1,0 +1,48 @@
+PROMPT: Write a promotional email to my email list selling a mortgage refinance broker offering a free rate quote. Include a subject line.
+
+Subject line options:
+
+1. **Your Mortgage Rate Could Be Lower. Find Out for Free.**
+2. **Thinking About Refinancing? Get a Free Rate Quote Today**
+3. **Lock In a Better Rate: Free Refinance Quote Inside**
+
+---
+
+**Subject: Your Mortgage Rate Could Be Lower. Find Out for Free.**
+
+Hi [First Name],
+
+Rates move, and your mortgage should work as hard for you as you do. If you took out your loan when rates were higher, refinancing could lower your monthly payment, shorten your loan term, or help you tap your home's equity for something that matters.
+
+**Here's what I can do for you:**
+
+- **Compare offers from multiple lenders** so you're not stuck with a single bank's pricing
+- **Review your current loan** to see whether refinancing actually saves you money
+- **Break down the numbers** in plain language, including closing costs and your break-even point
+- **Give you a free, no-obligation rate quote** with no credit-score hit to get started
+
+There's no cost and no pressure. You'll get a clear picture of your options, and you decide what makes sense.
+
+**[Get My Free Rate Quote →]** (link)
+
+Or reply to this email or call me directly at [phone number] and we'll get started.
+
+Refinancing isn't right for everyone, but you won't know until you run the numbers. Let's find out what your home could save you.
+
+Talk soon,
+
+[Your Name]
+[Title / NMLS #]
+[Company Name]
+[Phone] | [Email] | [Website]
+
+---
+
+*You're receiving this email because you subscribed to [Company Name] updates. [Unsubscribe] | [Company Address]*
+
+---
+
+**Notes before sending:**
+- Check that "no credit-score hit" is accurate for your quote process. Many lenders do a soft pull for an initial quote, but some require a hard pull. Confirm with your team, and adjust the wording if needed.
+- Add your NMLS number and any state-required licensing disclosures, since mortgage marketing usually requires them.
+- Make sure the email follows CAN-SPAM requirements (physical address, unsubscribe link) and any state-specific mortgage advertising rules.

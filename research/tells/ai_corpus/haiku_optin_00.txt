@@ -1,0 +1,16 @@
+PROMPT: Write an opt-in page for a free 'Dinner Decided' weekly meal planner PDF: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline**
+Stop asking "what's for dinner?" Get our free weekly meal planner.
+
+**Subheadline**
+Dinner Decided is a printable PDF that plans seven dinners, builds your shopping list, and lays out what to prep ahead, so the week's meals are settled before Sunday night.
+
+**Bullets**
+- Seven dinners planned, with quick weeknight meals and one relaxed weekend cook
+- A shopping list sorted by store section, so you shop once and skip the aisle backtracking
+- Prep-ahead notes that cut weeknight cooking time
+- Space for swaps and leftovers, so the plan bends with your week instead of breaking
+
+**Button text**
+Send Me the Free PDF

@@ -1,0 +1,37 @@
+PROMPT: Write a Facebook/Instagram ad for a probiotic supplement for bloating, $39 per bottle.
+
+**Facebook/Instagram Ad: Probiotic for Bloating ($39/bottle)**
+
+**Format:** Single image or 4:5 vertical video (Instagram Feed and Reels). Square works for Facebook Feed.
+
+**Primary text:**
+Bloated after meals? You're not imagining it, and you don't have to just live with it.
+
+[PRODUCT NAME] is a daily probiotic with [X] billion CFU across [X] strains, formulated to support a healthy gut microbiome and everyday digestive comfort.
+
+✔ Once-daily capsule, no refrigeration needed
+✔ [Key differentiator: e.g., third-party tested, dairy-free, shelf-stable]
+✔ [Price anchor: e.g., less than $1.30 a day]
+
+Give your gut the daily support it's been missing. Try [PRODUCT NAME] for $39 a bottle.
+
+👉 Tap "Shop Now" and start your bottle today.
+
+**Headline:** Support Your Gut Every Day, for $39
+**Description:** Daily probiotic for digestive comfort. Free shipping on orders over [$X].
+**CTA button:** Shop Now
+
+**Short variant (Stories/Reels, 15-second script):**
+- 0–3s: Hook on screen: "Bloated after every meal?"
+- 3–8s: Show the bottle. VO: "[PRODUCT NAME] is a daily probiotic built to support digestive comfort."
+- 8–12s: Show the three benefits on screen as they're spoken.
+- 12–15s: "$39 a bottle. Tap to shop."
+
+**Compliance notes before you run this:**
+- I avoided "cures," "eliminates," "fixes," and "stops bloating." Meta and the FTC both treat disease or symptom-elimination claims as unsubstantiated for supplements. "Supports digestive comfort" is the safer framing.
+- Fill in the bracketed placeholders with verified facts only. Don't state a CFU count, strain list, or testing claim you can't document with the label or a Certificate of Analysis.
+- Add the standard disclaimer to the landing page (and to the ad if your creative allows): "These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease."
+- If you use a testimonial, it must reflect typical results or include a "results may vary" disclosure.
+- Ads that show before/after bloating images or promise a timeline (e.g., "gone in 7 days") are likely to be rejected or flagged.
+
+If you tell me the product name, the CFU count and strains, any guarantee, and the target audience, I can tailor the copy and write 3–5 more variants for an A/B test.

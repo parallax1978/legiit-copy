@@ -1,0 +1,87 @@
+PROMPT: Write the first two minutes of a video sales letter script for AI bookkeeping software for Shopify store owners, $99/month.
+
+# VSL Script: [Product Name], AI Bookkeeping for Shopify Stores
+**Length:** about 2:00 (roughly 310 words at a conversational pace)
+**Tone:** Direct, empathetic, a little conspiratorial. Like a founder talking to a friend.
+
+---
+
+**[0:00–0:10] HOOK**
+
+*VISUAL: Black screen. White text appears word by word.*
+
+**VO:**
+If you run a Shopify store, there's a number you probably don't know.
+
+Not your revenue. Not your ad spend.
+
+Your *real* profit.
+
+---
+
+**[0:10–0:30] PATTERN INTERRUPT / RELATABILITY**
+
+*VISUAL: A tired store owner at a kitchen table, 11:47 PM on the clock. Laptop open to a messy spreadsheet. Shopify, Stripe, PayPal, and bank tabs are all open.*
+
+**VO:**
+Be honest. When was the last time you knew, to the dollar, what you actually kept last month?
+
+After Shopify fees. After payment processor cuts. After refunds, chargebacks, shipping, apps, ad spend, and that supplier invoice you forgot about?
+
+If you had to think about it, you're not alone.
+
+---
+
+**[0:30–1:05] AGITATE THE PROBLEM**
+
+*VISUAL: Quick cuts. A shoebox of receipts. A spreadsheet with #REF! errors. A "Tax Payment Due" email.*
+
+**VO:**
+Most store owners run their books one of two ways.
+
+**Option one:** you do it yourself. Late nights, copy-pasting payouts into spreadsheets, trying to match a Shopify deposit to forty-three orders, two refunds, and a fee you can't explain.
+
+**Option two:** you hire a bookkeeper. You pay hundreds a month, sometimes more, and you *still* wait weeks for reports that are already out of date when they land.
+
+Either way, you're making big decisions without real numbers. Scaling ads. Ordering inventory. Hiring help.
+
+That's how stores with great sales still run out of cash.
+
+---
+
+**[1:05–1:35] THE TURN / NEW MECHANISM**
+
+*VISUAL: The screen clears. A clean dashboard fades in: "Net Profit This Month," updating live.*
+
+**VO:**
+But what if your books just… did themselves?
+
+What if every order, payout, fee, and refund were categorized and reconciled automatically, the moment it happened?
+
+That's exactly why we built **[Product Name]**.
+
+It's AI bookkeeping made for Shopify. Not a generic accounting tool with a Shopify plugin stuck on. It was built from day one to understand how ecommerce money actually moves.
+
+---
+
+**[1:35–2:00] PROOF TEASE + OPEN LOOP**
+
+*VISUAL: A store owner closes the laptop, smiling, and picks up a coffee. Daylight now.*
+
+**VO:**
+It connects to your store in minutes. It learns your business. And it gives you a live profit and loss statement you can actually trust.
+
+No spreadsheets. No waiting. No guessing.
+
+In the next few minutes, I'll show you exactly how it works, how [Customer Name] found [$X] in hidden fees in their first week, and why it costs less than a single hour with most accountants…
+
+*VISUAL: Text on screen: "Keep watching."*
+
+---
+
+### Production notes
+- **Hold the price until about 4:00 or later.** "Costs less than a single hour with most accountants" sets up the $99/month reveal. When you reveal it, compare it directly to typical bookkeeper retainers.
+- **Placeholders:** Swap in your product name. Only use a real customer story with real numbers. If you don't have one yet, change the line to a demo walkthrough ("I'll show you what it found in a real store's books").
+- **Check claims:** Before recording, make sure your product actually does what "connects in minutes," "reconciled automatically," and "live P&L" say it does.
+
+I can write the next section (demo, price reveal, guarantee, CTA) or do a punchier 60-second cold-traffic version if that would help.

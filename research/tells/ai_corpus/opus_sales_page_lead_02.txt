@@ -1,0 +1,31 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for CRM software for real estate agents, $49/month.
+
+# Your Last Lost Deal Didn't Go to a Better Agent. It Went to the One Who Followed Up.
+
+*The CRM built for real estate agents, so every lead, client and referral gets the call they're waiting for. $49/month.*
+
+---
+
+You met them at an open house. They loved the kitchen, asked about school districts and said they'd be "ready to move in the spring."
+
+You meant to call them back. You really did.
+
+Then a listing appointment ran long. An inspection fell apart. Three new leads came in from Zillow, a past client texted about a referral, and the sticky note with their name on it ended up under your passenger seat.
+
+Spring came. They bought a house with someone else.
+
+Here's the uncomfortable truth about real estate: the agent with the sharpest market knowledge or the slickest listing presentation doesn't win most deals. The agent who's still in touch when the buyer is finally ready does. You can't keep in touch with hundreds of people on hundreds of different timelines using your memory, a spreadsheet and a phone full of unanswered texts.
+
+That isn't a discipline problem. It's a systems problem.
+
+**[Product Name]** is the CRM made for real estate agents. It isn't a generic sales tool you have to force into shape, or an enterprise platform that needs a consultant and six weeks to set up. It knows the difference between a buyer, a seller, a past client and someone in your sphere. It brings in leads from the portals you already use. And every morning it tells you exactly who to call, text or email, so nobody slips through the cracks again.
+
+Set it up in an afternoon. Keep every relationship warm for years.
+
+All for $49 a month, which is less than one lunch with a lead who never calls back. One saved commission pays for years of it, so the real question isn't whether you can afford it.
+
+It's how many more spring buyers you can afford to lose.
+
+---
+
+*Notes:* The lead is about 300 words. Replace **[Product Name]** with the product's name. The portal-import and daily follow-up features are assumptions, so change them to match what the product actually does.

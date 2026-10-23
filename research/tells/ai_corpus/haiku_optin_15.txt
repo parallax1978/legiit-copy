@@ -1,0 +1,17 @@
+PROMPT: Write an opt-in page for the templates themselves: headline, subheadline, 3 to 5 bullets, and button text.
+
+Here's the opt-in copy for the templates. I took "the templates themselves" as a free lead magnet with no specific product attached, so the copy stays generic. Swap in the real template names if you have them.
+
+**Headline:** Stop Starting From a Blank Page
+
+**Subheadline:** Get the ready-to-send templates we use every week, free, delivered straight to your inbox.
+
+**Bullets:**
+- Copy-and-paste templates you can send today, with no design skills needed
+- Written to customize in minutes, not hours
+- Structures built to get read and answered
+- Free to download, and you can unsubscribe anytime
+
+**Button text:** Send Me the Templates
+
+I didn't create or publish a file, since this is short copy. The scratchpad folder has a generator script, `gen_ai_corpus.py`, that already uses this same opt-in prompt, so this copy could be added as a reference draft there if that's the purpose.

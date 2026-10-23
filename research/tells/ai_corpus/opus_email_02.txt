@@ -1,0 +1,51 @@
+PROMPT: Write a promotional email to my email list selling CRM software for real estate agents, $49/month. Include a subject line.
+
+**Subject line:** Stop losing deals to a messy inbox (CRM built for agents, $49/mo)
+
+*Alternate subject lines to A/B test:*
+- *Your next closing is hiding in your follow-up list*
+- *The CRM real estate agents actually use: $49/month*
+
+---
+
+Hi [First Name],
+
+Quick question: how many leads slipped through the cracks last month?
+
+Most agents don't lose deals because they're bad at sales. They lose them because follow-up lives in sticky notes, spreadsheets, old texts and memory. A buyer who wasn't ready in March is ready in September, and if you're not the one who reached out, someone else gets the listing.
+
+That's why we built **[Product Name]**, a CRM made only for real estate agents.
+
+**What it does for you:**
+
+- **Every lead in one place.** Zillow, Realtor.com, your website, open houses and referrals all flow into one pipeline automatically.
+- **Follow-up that runs itself.** Set up drip texts and emails once, and past clients and cold leads stay warm without you lifting a finger.
+- **Never miss a milestone.** Get reminders for showings, inspections, closing dates and home anniversaries, which are the moments that bring in referrals.
+- **Transaction tracking.** See every deal's stage at a glance, from first contact to keys in hand.
+- **Works from your phone.** Log a call, add notes or send a listing from the car between showings.
+
+**All of this for $49/month.** No setup fees, no long-term contract, cancel anytime.
+
+That's less than the cost of one lunch meeting, and one extra closing pays for it for years.
+
+👉 **[Start Your Free Trial]**
+
+Here's the honest math: if better follow-up turns even one forgotten lead into a closing this year, you're looking at thousands in commission from a $49 tool.
+
+Your pipeline is already full of opportunities. Let's make sure you're the one who follows up.
+
+To your next closing,
+
+[Your Name]
+[Title], [Company]
+[Phone] | [Website]
+
+*P.S. Most agents are set up in under 15 minutes, and you can import your existing contacts in one click. [Try it free today →]*
+
+---
+
+**Before you send:**
+- Swap in the real product name, links and trial length.
+- Only keep the setup time, one-click import and listed integrations if your product really has them.
+- If you have a real customer testimonial, put it after the feature list. It's often the strongest part of an email like this.
+- Make sure the footer has an unsubscribe link and your physical mailing address, which CAN-SPAM requires.

@@ -1,0 +1,50 @@
+PROMPT: Write a promotional email to my email list selling a productivity app for adults with ADHD, $12/month. Include a subject line.
+
+**Subject line:** Your brain isn't broken. Your tools are.
+
+**Preview text:** A productivity app built for how ADHD brains actually work.
+
+---
+
+Hi [First Name],
+
+If you've ever downloaded a planner app, used it hard for four days, and then never opened it again, this email is for you.
+
+That's not a willpower problem. Most productivity tools are built for brains that like long lists, rigid schedules, and remembering to check in. ADHD brains work differently, so we built something that works with yours.
+
+**Meet [App Name].**
+
+It's a productivity app designed from the ground up for adults with ADHD. Here's what's different:
+
+- **One thing at a time.** No overwhelming wall of tasks. [App Name] shows you what matters right now and hides the rest until you need it.
+- **Big tasks, broken down.** "Do taxes" turns into small, doable steps, so starting doesn't feel like climbing a mountain.
+- **Reminders you won't tune out.** Gentle, well-timed nudges that change it up, so they don't fade into background noise.
+- **Time you can see.** Visual timers and time estimates help with the "wait, it's 4pm?" moments.
+- **No guilt.** Missed a day? No streak shaming and no red overdue badges. Just pick up where you left off.
+
+**$12/month. Cancel anytime.**
+
+That's less than one forgotten late fee, and you get a system that actually sticks.
+
+👉 **[Start using [App Name] today]**
+
+You don't need to become a different person to get things done. You need tools that fit the person you already are.
+
+Talk soon,
+[Your Name]
+[Company Name]
+
+*P.S. If you've given up on productivity apps before, we get it. Most of our team has too. That's exactly why we built this one. [Try it here →]*
+
+---
+
+**Other subject lines to test:**
+- Finally, a to-do app that doesn't make you feel bad
+- For the 47 abandoned planner apps on your phone
+- ADHD-friendly productivity for $12/month
+
+A few things to fill in or check:
+- **App name and features:** I wrote general features, so swap in what your app actually does.
+- **Free trial:** If you offer one, put it in the CTA (e.g. "Start your free 7-day trial"). It usually lifts conversions a lot.
+- **Social proof:** One real user quote or rating under the feature list would help. I left it out on purpose so nothing made up ends up in the email.
+- **Health claims:** I avoided saying the app treats or manages ADHD symptoms. That keeps you clear of health-claim trouble with regulators and email platforms.

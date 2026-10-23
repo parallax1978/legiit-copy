@@ -1,0 +1,22 @@
+PROMPT: Write an opt-in page for a free 'Shopify tax deductions' cheat sheet: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Stop Overpaying the IRS on Your Shopify Sales
+
+**Subheadline:**
+Get the free cheat sheet that lists the deductions Shopify sellers miss most often, all on one page you can hand to your accountant.
+
+**Bullets:**
+- **The Shopify fees you can write off:** subscription costs, apps, themes, payment processing and transaction fees, and where each one goes on your return.
+- **Inventory and shipping costs explained simply:** product costs, packaging, postage and fulfillment fees that cut your taxable income.
+- **Home office and equipment deductions:** how to claim your workspace, computer, phone and internet without raising red flags.
+- **Marketing spend you're probably under-claiming:** Facebook and Google ads, influencer payments, samples and giveaways.
+- **A quarter-by-quarter checklist:** what to track and when, so tax season stops being a scramble.
+
+**Button text:**
+Send Me the Free Cheat Sheet
+
+**Optional microcopy under the button:**
+Instant download. No spam, and you can unsubscribe anytime.
+
+You may want a small footer disclaimer such as: *"For informational purposes only. This isn't tax advice, so check with a qualified tax professional about your situation."* Tax content can get pushback from ad platforms without one, and it also protects you if a reader's situation is different.

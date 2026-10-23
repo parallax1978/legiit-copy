@@ -1,0 +1,56 @@
+PROMPT: Write a promotional email to my email list selling a local HVAC company's $89 fall furnace tune-up. Include a subject line.
+
+**Subject:** Your furnace has one job this winter. Make sure it can do it. ($89 tune-up)
+
+**Preview text:** Fall tune-ups are $89 through [END DATE]. Book before the cold snap fills the schedule.
+
+---
+
+Hi [First Name],
+
+The first cold morning always shows you something. Either your furnace kicks on quietly and the house warms up, or you hear a rattle, smell something odd, or get nothing at all.
+
+You can't pick which one you get on that morning. But you can pick it now, while it's still mild out.
+
+**[Company Name]'s Fall Furnace Tune-Up is just $89.**
+
+A certified technician will go through your system and make sure it's ready for winter. Here's what's included:
+
+- Full safety inspection, including a carbon monoxide and heat exchanger check
+- Burner and ignition cleaning and adjustment
+- Blower motor and electrical connection check
+- Thermostat calibration
+- Airflow and filter inspection
+- Written report on your system's condition, with no pressure and no surprise upsells
+
+**Why do it now?**
+
+- **Fewer breakdowns.** Most no-heat calls come from problems a tune-up would have caught.
+- **Lower heating bills.** A clean, well-adjusted furnace runs more efficiently.
+- **Safety.** A cracked heat exchanger can leak carbon monoxide. A tune-up is how you find out.
+- **Shorter waits.** Once temperatures drop, emergency calls pile up and appointments get scarce. Booking now gets you a time that works for you.
+- **Warranty.** Many manufacturers require regular maintenance to keep your warranty valid.
+
+**[Book your $89 tune-up →]** [LINK]
+Or call us at **[PHONE NUMBER]**
+
+This price is available through **[END DATE]**, and appointments are filling up each week.
+
+Your family will spend a lot of time indoors over the next few months. It's worth an hour now to make sure the heat is on and the air is safe.
+
+Stay warm,
+
+[Name]
+[Title], [Company Name]
+[Phone] | [Website]
+[Service area / license number]
+
+P.S. If we find a problem during your tune-up, we'll explain the repair and the cost before doing anything. You decide what happens next. [Edit to match your actual policy.]
+
+---
+
+**Notes before you send:**
+- Fill in the bracketed fields. Add a real deadline, since a specific date outperforms vague urgency.
+- Only keep claims the company can back up. I included common tune-up items, so check them against the company's actual checklist, and confirm the warranty point applies to the brands they service.
+- Optional A/B subject line: *"$89 now vs. an emergency call in January"*
+- If you have a physical address or CAN-SPAM footer, add it, along with an unsubscribe link.

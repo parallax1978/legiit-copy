@@ -1,0 +1,74 @@
+PROMPT: Write the first two minutes of a video sales letter script for a membership delivering weekly stock trading alerts, $97/month.
+
+# VSL Script: First Two Minutes
+**Product:** Weekly stock trading alerts membership, $97/month
+**Runtime target:** ~300 spoken words at a relaxed pace
+
+---
+
+**[0:00–0:12] HOOK**
+*[Visual: Tight shot, you at a desk. Phone face-down beside a notebook.]*
+
+> "Last Tuesday, a stock everyone on social media was screaming about dropped 18% before lunch. Somebody bought it at the top. Somebody else sold it at the bottom. I want to talk about who you'd rather be."
+
+---
+
+**[0:12–0:35] THE PROBLEM**
+*[Visual: Quick cuts of finance headlines, screenshots of "guaranteed" posts, a red portfolio chart.]*
+
+> "If you've tried to trade on your own, you already know the problem. There's too much noise. Cable shows, YouTube gurus, Reddit threads, all shouting about the next big thing. And most of it is written for the person selling you something, not for you.
+>
+> You don't need another hot tip. You need a process, and you need it to arrive at a time when you can actually act on it."
+
+---
+
+**[0:35–1:00] THE INTRODUCTION**
+*[Visual: Cut to a lower-third with your name, [CREDENTIALS], and [YEARS] of experience.]*
+
+> "My name is [NAME]. For [YEARS] years I've [BRIEF, TRUE CREDENTIAL, e.g., 'managed portfolios for individual clients' or 'researched equities full time']. I started this service because my clients kept asking the same question: 'What should I be watching this week?'
+>
+> So every week, I put together a short, clear set of stock alerts. Each one shows you what I'm watching, why I'm watching it, and the specific conditions I'd use to act or stay away."
+
+*[Production note: Use only credentials you can document. Do not claim returns you cannot verify.]*
+
+---
+
+**[1:00–1:30] THE SOLUTION**
+*[Visual: Screen recording of a sample alert, with names and details blurred if needed.]*
+
+> "Here's what members get every week:
+>
+> First, a written alert with the ticker, the thesis, and the key risks, so you're never guessing.
+>
+> Second, entry and exit levels, so you know in advance what would make the trade work and what would make it fail.
+>
+> Third, a weekly market brief in about ten minutes of reading, so you spend your time making decisions instead of hunting for them.
+>
+> No hype. No 'guaranteed' anything. Just a repeatable process you can review, question, and decide for yourself."
+
+---
+
+**[1:30–2:00] THE OFFER TEASE**
+*[Visual: Membership name on screen. Price card appears.]*
+
+> "Membership is [MEMBERSHIP NAME], and it's $97 a month. That's less than [RELEVANT COMPARISON, e.g., 'one commission on a bad trade' or 'a single streaming bundle'], and you can cancel anytime from your account page.
+>
+> In a minute, I'll show you the exact track record, including the losing weeks, because I think you should see both before you decide. But first, I want to be clear about one thing.
+>
+> Trading stocks involves real risk, and you can lose money. Past alerts don't guarantee future results. Everything I share is information to help you think, not a promise about what you'll earn."
+
+*[On-screen text: "Trading involves risk of loss. Past performance does not guarantee future results. Not personalized investment advice."]*
+
+---
+
+## Compliance Notes
+
+These are not optional. Stock-picking subscriptions attract regulatory attention.
+
+1. **Track record:** If you show results, show all the calls, including the losers, over a defined period. Cherry-picked wins can be deceptive. In the U.S., hypothetical or back-tested performance has its own disclosure rules.
+2. **Testimonials:** Any testimonial must reflect a typical experience or carry a clear earnings disclaimer. Do not use invented or paid-for results without disclosure.
+3. **Registration:** Depending on your jurisdiction and whether you're paid per subscriber, you may need to qualify as a bona fide publisher or be registered as an investment adviser. Check this with a securities attorney before the VSL goes live.
+4. **Conflicts:** Disclose any positions you hold in alerted stocks, and whether you're paid by the companies you cover.
+5. **Claims:** Avoid words like "guaranteed," "risk-free," "never lose," or specific income promises such as "$3,000 a month."
+
+I can draft the next section (the proof and track-record segment, 2:00–4:00) or write a shorter 60-second version for ads if you want.

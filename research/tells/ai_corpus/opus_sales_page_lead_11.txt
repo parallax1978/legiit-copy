@@ -1,0 +1,34 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for a productivity app for adults with ADHD, $12/month.
+
+# Your Brain Isn't Broken. Your To-Do List Is.
+
+### The productivity app built for how ADHD brains actually work. $12/month.
+
+You've tried the planners. The color-coded ones, the bullet journals, the apps with a thousand features and a streak counter that makes you feel guilty the moment you miss a day.
+
+They worked for about a week. Maybe two.
+
+Then the novelty wore off, the list grew to 87 items, and opening the app started to feel like opening a pile of unpaid bills. So you stopped opening it. And a familiar voice in the back of your mind said: *See? You just can't stick with anything.*
+
+Nobody told you this part: those tools weren't designed for you. They were designed for brains that can look at a long list and calmly pick the most important thing. Brains that feel time passing, and that don't need a spark of interest just to get started.
+
+Yours works differently. That isn't a character flaw. It's wiring, and it deserves a tool built around it.
+
+[App Name] doesn't ask you to become a more disciplined person. It works with you as you are:
+
+- It shows you **one next step** instead of a wall of tasks.
+- It makes **time visible**, so "I'll do it in five minutes" doesn't quietly turn into three hours.
+- When you're stuck, it breaks big projects into **pieces small enough to start**.
+- It **nudges instead of nags**. If you drop off for a week, it welcomes you back without guilt or a backlog to dig out of.
+
+There are no streaks to break and no lectures about productivity. It's a calmer, kinder way to get the important things done, whether or not your focus shows up that day.
+
+It costs $12 a month, which is less than the late fee on the bill you forgot last month.
+
+If it doesn't click for you, you can cancel in two taps. (We know you hate hunting for the cancel button too.)
+
+---
+
+**Notes:**
+- The four features and the "cancel in two taps" promise are placeholders I made up. Swap in the app's real features and cancellation process before you publish.
+- I left out medical or clinical claims (for example, "clinically proven" or "treats ADHD symptoms"). Add those only if you have evidence behind them.

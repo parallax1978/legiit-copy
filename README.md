@@ -10,7 +10,10 @@ Backend is Supabase (Postgres, Auth, Storage, Edge Functions, Queues). Frontend 
 - `docs/00-requirements.md` what the product must do and what the user supplies
 - `docs/01-architecture.md` stack, data model, pipeline, job orchestration
 - `docs/02-plan.md` phased execution plan with gates and open decisions
+- `docs/03-copy-research.md` what makes direct response copy convert, fact-checked, and why AI copy does not
+- `docs/04-copy-standard.md` the operational standard the engine's prompts, rubric and reviewers are built from
+- `research/` calibration data and scripts behind the standard
 - `CLAUDE.md` conventions for Claude Code sessions
 
 ## Status
-Planning complete; Phase 0 (foundations) is next. Monetization is intentionally out of scope for now.
+Planning and the copywriting research pass are complete; Phase 0 (foundations) is next, with the founder's control intake as the first Phase 1 item. Monetization is intentionally out of scope for now.

@@ -1,0 +1,13 @@
+PROMPT: Write an opt-in page for a free 5-day gut-reset meal guide: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:** Reset your gut in 5 days, one simple meal at a time
+
+**Subheadline:** Get our free 5-day meal guide with easy, real-food breakfasts, lunches, and dinners designed to take the guesswork out of eating lighter and feeling better.
+
+- Five days of ready-to-cook meals with a clear shopping list for each day
+- Simple recipes that take 30 minutes or less, with no specialty ingredients
+- Gentle swaps for the foods most likely to leave you bloated or sluggish
+- Tips for building plates that keep you full and your energy steady
+- Delivered straight to your inbox, free, with no commitment
+
+**Button text:** Send me the free guide

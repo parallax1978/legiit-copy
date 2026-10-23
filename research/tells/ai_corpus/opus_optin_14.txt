@@ -1,0 +1,21 @@
+PROMPT: Write an opt-in page for a free 'law firm SEO audit' checklist: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Why Aren't More Clients Finding Your Firm on Google? This Free Checklist Shows You.
+
+**Subheadline:**
+The Law Firm SEO Audit Checklist walks you step by step through finding the gaps that cost you rankings, calls and signed cases, whether or not you have a marketing team.
+
+**Bullets:**
+- **Fix your Google Business Profile.** Find the settings and missing details that keep firms out of the local "map pack" for searches like "personal injury lawyer near me."
+- **Check your practice area pages.** See whether each page targets the searches your future clients actually type, and how to tell if pages are competing with each other.
+- **Find technical problems.** Use a simple checklist for slow load times, mobile issues and indexing errors that quietly push you down the results.
+- **Measure your authority against competitors.** Learn how to compare your reviews, citations and backlinks with the firms that outrank you.
+- **Stay within bar advertising rules.** Spot common SEO mistakes, like testimonials or "expert" claims, that can cause ethics trouble.
+
+**Button text:**
+Send Me the Free Checklist
+
+**Other button options:**
+- Get My Free SEO Audit Checklist
+- Show Me What's Holding My Firm Back

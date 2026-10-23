@@ -1,0 +1,77 @@
+PROMPT: Write the first two minutes of a video sales letter script for CRM software for real estate agents, $49/month.
+
+# VSL Script: Real Estate CRM, 0:00–2:00
+
+**Runtime:** about 2:00 at a natural pace of roughly 150 words per minute. Bracketed items are placeholders you'll need to fill in.
+
+---
+
+**[0:00–0:12] HOOK**
+
+*VISUAL: Black screen. A phone buzzes. A notification slides in: "New lead: Sarah M. — 11:42 PM."*
+
+**VO:**
+Somewhere in your phone right now is a lead worth eight or ten thousand dollars in commission.
+
+And you've already forgotten about them.
+
+---
+
+**[0:12–0:40] THE STORY**
+
+*VISUAL: Quick cuts. A car dashboard, a showing, a closing table, a kid's soccer game, then the phone lying face-down on a car seat.*
+
+**VO:**
+You didn't mean to. You were at a showing. Then a closing. Then your daughter's game.
+
+By the time you remembered to call Sarah back, three weeks had gone by. She'd already signed with the agent who called her back first.
+
+Here's what nobody tells you. Most agents don't lose deals because they're bad at sales. They lose them because they're buried.
+
+---
+
+**[0:40–1:05] AGITATE AND IDENTIFY**
+
+*VISUAL: The screen fills with clutter: a Zillow inbox, email threads, sticky notes, a spreadsheet with "Last updated: March" circled in red.*
+
+**VO:**
+Leads in Zillow. Leads in your email. Leads on sticky notes. Past clients you swore you'd check in with every year and haven't spoken to since closing.
+
+If you've got a spreadsheet you stopped updating months ago, or you've watched a past client list their home with someone they met at a barbecue because you went quiet, this video is for you.
+
+The math is brutal. Missing just one deal a year costs you more than this tool would cost you for the next ten years.
+
+---
+
+**[1:05–1:40] INTRODUCE THE SOLUTION**
+
+*VISUAL: The presenter on camera, relaxed, in a home office.*
+
+**PRESENTER:**
+I'm [Name]. I [credibility line, e.g. "sold real estate for 12 years and lost more deals to follow-up than to any competitor"]. That's why we built **[Product Name]**.
+
+*VISUAL: Clean dashboard UI. Leads from several sources flow into one list.*
+
+It's a CRM made only for real estate agents. It isn't a generic sales tool you have to force into shape. It already knows what a listing, a showing and "under contract" mean.
+
+Every lead from every source lands in one place automatically. Each morning it tells you exactly who to call. When you can't make the call yourself, it follows up for you with texts, emails and check-ins written in your voice.
+
+---
+
+**[1:40–2:00] OPEN THE LOOP**
+
+**PRESENTER:**
+In the next few minutes I'll show you exactly how it works, how agents like you are using it to [specific result, e.g. "reconnect with past clients and win repeat business"], and why it costs less per day than your morning coffee.
+
+But first, let me show you what your morning looks like when you open it…
+
+*VISUAL: Hard cut to a screen recording of the "Today" dashboard.*
+
+---
+
+**A few notes on the choices:**
+- **The price isn't revealed yet.** It's only hinted at. "Less than your morning coffee" works because $49 a month is about $1.63 a day. The "ten years" claim assumes a typical commission of $8K or more against $588 a year, so a single closed deal actually covers well over a decade.
+- **Fill in the placeholders with real details.** Any results claim at 1:40 should be something you can back up, such as real customer outcomes or testimonials. That keeps you clear of FTC trouble.
+- **The "Sarah" story is used again later.** It makes a natural callback when you show the follow-up automation: "Here's how Sarah would have heard from you within 60 seconds."
+
+I can write the next section, which would be the demo, social proof and the $49 offer with a guarantee and call to action, whenever you're ready.

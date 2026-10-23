@@ -1,0 +1,59 @@
+PROMPT: Write the first two minutes of a video sales letter script for a retinol serum for women over 40, $68.
+
+# VSL Script: First 2 Minutes
+**Product:** [Brand] Retinol Serum | **Price:** $68 | **Audience:** Women 40+
+**Runtime:** about 2:00 (roughly 310 spoken words at 150 wpm)
+
+---
+
+### 0:00–0:15 | HOOK
+**[VISUAL: Close-up of a woman in her 40s, no makeup, looking at her face in a bathroom mirror under harsh light]**
+
+**VO:** If you're over 40 and you've ever stood at the mirror thinking, *"When did my skin start looking so tired?"*... please don't click away. This video is going to explain why.
+
+### 0:15–0:40 | PROBLEM
+**[VISUAL: Quick cuts: a drawer full of half-used creams, a receipt, a hand smoothing the forehead]**
+
+**VO:** You've tried the creams. The $15 ones from the drugstore. The $200 ones with the fancy jar. Maybe a few that a friend swore by.
+
+And you were patient. You used them every night, for weeks.
+
+And the mirror still looked the same. Maybe a little worse.
+
+So here's the question nobody answers: *Why?*
+
+### 0:40–1:10 | THE REAL CAUSE
+**[VISUAL: Simple animation of skin cells turning over, fast when young, slow when mature]**
+
+**VO:** When you were in your twenties, your skin renewed itself about once a month. Fresh cells came up and old ones fell away.
+
+After 40, that cycle slows down. Dull, tired cells sit on the surface longer. Fine lines settle in. Tone gets uneven.
+
+So most moisturizers only treat the surface. They don't address the *renewal* problem underneath.
+
+### 1:10–1:35 | THE TURN
+**[VISUAL: Dermatology-style lab setting, then a retinol molecule graphic]**
+
+**VO:** For decades, dermatologists have pointed to one ingredient that works on that cycle: retinol.
+
+There's one catch. Most retinol products are either too weak to matter, or so harsh that women quit after a week of redness and peeling.
+
+If that's happened to you, it wasn't your fault. It was the formula.
+
+### 1:35–2:00 | THE BRIDGE
+**[VISUAL: Product bottle reveal, soft light, then a woman applying it]**
+
+**VO:** That's why we created [Brand] Retinol Serum. It's built for mature skin: effective, but gentle enough to use consistently, because consistency is what gets results.
+
+In the next few minutes, I'll show you what's inside, why it's different, and what women your age are saying after 30 days.
+
+And if you stay to the end, I'll show you how to try it for less than you'd expect.
+
+---
+
+**Notes before you record:**
+- **Compliance:** I kept claims soft ("works on that cycle," "what women are saying") to stay clear of drug-claim language. Have counsel or your platform's ad policy reviewed before you add before/after results or "wrinkle reduction" claims.
+- **Placeholders:** Swap in the brand name, and add real review counts or study data later in the script. I didn't invent any statistics.
+- **The $68 price** is deliberately held back until after the product and proof sections, where it's easier to justify.
+
+I can write the next section (ingredients and mechanism) or give you two alternate hooks to split-test.

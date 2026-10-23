@@ -1,0 +1,68 @@
+PROMPT: Write a promotional email to my email list selling AI bookkeeping software for Shopify store owners, $99/month. Include a subject line.
+
+**Subject line:** Your Shopify books, done while you sleep
+
+**Alternates for A/B testing:**
+- Stop doing bookkeeping at 11pm
+- What would you do with 10 extra hours a month?
+- Your Shopify sales, reconciled automatically
+
+**Preview text:** AI bookkeeping built for Shopify. $99/month. No spreadsheets.
+
+---
+
+Hi {{first_name}},
+
+Quick question: when did you last look at your store's numbers and actually trust them?
+
+If you're like most Shopify owners, your books look something like this:
+
+- Payouts that never line up with your order totals
+- Shopify fees, refunds, chargebacks and discount codes all mixed together
+- A pile of receipts from ads, apps and suppliers that you'll "get to later"
+- A small panic every time tax season comes around
+
+You started a store to sell products, not to reconcile spreadsheets.
+
+**That's why we built [Product Name].**
+
+[Product Name] is AI bookkeeping software made for Shopify stores. It connects to your store in a few minutes and keeps your books up to date on its own.
+
+**Here's what it does:**
+
+✅ **Syncs your sales automatically.** Every order, refund, fee and payout gets pulled in and matched. You don't have to enter anything.
+
+✅ **Categorizes your expenses.** Ad spend, apps, shipping, inventory: the AI sorts it and learns how your business works.
+
+✅ **Shows your real profit.** See what you actually make after COGS, fees and ad costs, not just your revenue.
+
+✅ **Keeps you ready for tax time.** Clean, organized books you can hand straight to your accountant.
+
+✅ **Works across all your sales channels.** [Edit to match your integrations, e.g. PayPal, Stripe, Shop Pay, Amazon.]
+
+**All of it costs $99/month.**
+
+That's usually less than one hour of a traditional bookkeeper's time. And it works every day, not once a quarter.
+
+👉 **[Start Your Free Trial]**
+
+Picture opening one dashboard and knowing exactly which products make money, what your margins are, and where your cash went. No guessing, and no late nights.
+
+Your store is growing. Your books should keep up.
+
+**[Get Started with [Product Name] →]**
+
+Talk soon,
+{{your_name}}
+{{your_title}}, [Company Name]
+
+**P.S.** Every hour you spend on bookkeeping is an hour you're not spending on growth. Let the AI handle the numbers so you can get back to building your brand. **[Try it today →]**
+
+---
+
+Before you send it:
+- **Replace the brackets:** your product name, links, trial details and integrations.
+- **Only promise what's true:** if you offer a free trial, guarantee or launch discount, add it near the first call to action. That usually lifts conversions. If you don't offer one, change "Start Your Free Trial" to something like "Get Started."
+- **Add real proof if you have it:** a real customer quote or a stat (for example, "saves our users X hours a month") belongs right after the feature list. Use real numbers and testimonials only, never made-up ones.
+
+If you'd like a shorter version, a more casual tone, or a 3-email launch sequence, just say so.

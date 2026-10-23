@@ -1,0 +1,72 @@
+PROMPT: Write a Facebook/Instagram ad for an SEO agency for law firms, free strategy call.
+
+## Facebook/Instagram Ad: SEO for Law Firms
+
+### Version A: Pain-point hook (main version)
+
+**Primary text:**
+> When someone in your city searches "car accident lawyer near me," who shows up first?
+>
+> If it's not you, those cases are going to the firm down the street.
+>
+> We do SEO only for law firms. We help attorneys rank higher on Google, show up in the Map Pack, and get more qualified cases without paying more for ads.
+>
+> ✅ Local SEO and Google Business Profile optimization
+> ✅ Practice-area pages that turn visitors into consultations
+> ✅ Authority link building from trusted legal and local sources
+> ✅ Clear monthly reports showing calls, form fills, and rankings
+>
+> 📞 **Book a free 30-minute strategy call.** We'll show you where you rank today, what your top competitors are doing, and what it would take to pass them.
+>
+> No pressure and no long pitch. You'll leave with a plan either way.
+
+**Headline:** More Cases From Google, Without More Ad Spend
+**Description:** Free SEO strategy call for law firms
+**CTA button:** Book Now
+
+---
+
+### Version B: Short (for Instagram feed and Stories)
+
+**Primary text:**
+> Your next client is searching Google right now. ⚖️
+>
+> Will they find you, or your competitor?
+>
+> We help law firms rank higher and sign more cases through SEO.
+>
+> 👉 Book a free strategy call and get a custom competitor breakdown for your market.
+
+**Headline:** Free SEO Strategy Call for Attorneys
+**CTA button:** Learn More
+
+---
+
+### Version C: Curiosity and an audit offer
+
+**Primary text:**
+> Attorneys: we'll look at your firm's Google rankings for free.
+>
+> On a 30-minute call, we'll show you:
+> 1️⃣ The keywords you're losing to competitors
+> 2️⃣ Why your Google Maps listing isn't bringing in calls
+> 3️⃣ The 3 fastest fixes to get more consultations
+>
+> Spots are limited each month, so we can give every firm real attention.
+
+**Headline:** See What Your Competitors See
+**CTA button:** Book Now
+
+---
+
+### Creative ideas
+- **Image:** A phone screen showing a Google search for "[practice area] lawyer near me," with the firm's spot circled at #1. Overlay text: *"Is this you?"*
+- **Video (15 sec):** A quick screen recording of a search, followed by the line "Your competitor gets the call." End on the line "Book your free strategy call."
+- **Carousel:** Slide 1 is the hook. Slides 2–4 each show one way the firm is losing cases. The last slide is the call to action.
+
+### Tips for running it
+- **Targeting:** Use interests like law firm owner, managing partner, and attorney, or upload a custom list of law firm contacts. Choose Lead Form or a booking-page conversion objective.
+- **Compliance:** Meta's policies and legal marketing rules both penalize promises like "guaranteed #1 rankings," so the copy avoids them. Only add specific results, like "212% more leads for a PI firm," if you have real case studies to back them up.
+- **Test:** Run A and C against each other first. The offer framing usually decides the winner more than the wording does.
+
+If you tell me the agency name, which practice areas you focus on (PI, family, criminal), or a real client result, I can tailor the copy to fit.

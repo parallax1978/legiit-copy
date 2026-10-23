@@ -1,0 +1,135 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys CRM software for real estate agents, $49/month. The upsell is a $29/month automated texting add-on.
+
+# One-Time Offer Page: Automated Texting Add-On
+
+---
+
+**[Progress bar: ✓ Order Complete → Step 2: Customize Your Account → Step 3: Get Started]**
+
+## ✅ You're in. Your [CRM Name] account is being set up now.
+
+**Before you log in, there's one thing you should know about.**
+
+---
+
+# Your Next Lead Will Go With Whichever Agent Answers First. Make Sure It's You, Even When You're at a Showing.
+
+### Add **[AutoText]** for $29/month. It texts every new lead within seconds, follows up for you, and hands you the conversation once they're ready to talk.
+
+---
+
+### You just got a great system for organizing your leads. Now think about the gap.
+
+A lead from Zillow comes in at 7:42 PM while you're at your kid's game. Another one comes in during a closing. A third fills out your open-house sign-in sheet and never hears from you again, because Tuesday got away from you.
+
+You don't lose these leads because you're a bad agent. You lose them because **you're one person, and leads don't wait.**
+
+Your CRM now shows you every one of those leads. **[AutoText] is what reaches out to them.**
+
+---
+
+### How It Works
+
+**1. A lead comes in.** It can come from your website, a portal, an open house, or a manual entry. [AutoText] picks it up right away inside [CRM Name].
+
+**2. They get a personal text within seconds.**
+> *"Hi Sarah, it's Mike with Coastal Realty. Saw you were looking at 214 Maple. Want me to send over a few similar homes, or are you hoping to see this one in person?"*
+
+**3. Follow-up runs on its own.** If they don't reply, a short, natural sequence goes out over the next days and weeks, so nobody slips through the cracks.
+
+**4. You step in once they reply.** The moment a lead responds, [AutoText] stops the sequence and alerts you so you can take it from there.
+
+---
+
+### What's Included
+
+- ⚡ **Instant first response.** New leads get a text in seconds, 24/7.
+- 🔁 **Pre-written follow-up sequences** for buyers, sellers, open-house visitors, expired listings, and past clients. They're ready on day one and fully editable.
+- 🎂 **Sphere nurture on autopilot.** Home anniversaries, birthdays, and market check-ins keep you top of mind for referrals.
+- 🛑 **Smart stop.** Automation pauses the moment someone replies, so you never come across as a robot.
+- 📲 **Two-way texting inside your CRM.** Every conversation is logged on the contact's record.
+- ✅ **Opt-out handling built in.** STOP requests are honored automatically.
+- 🔌 **Zero setup headaches.** It's already connected to the account you just bought.
+
+---
+
+### The Math Is Simple
+
+[AutoText] costs **$29/month**, or about **$348 a year.**
+
+A single closed deal usually pays several thousand dollars in commission. **If it saves even one lead a year that would have gone cold, it has paid for itself many times over.**
+
+---
+
+### Why You're Only Seeing This Now
+
+We show this offer **only to new customers, only on this page**, because this is the best time to turn it on. Your contacts aren't imported yet, so every lead from day one gets instant follow-up.
+
+**[Use only if true: Add it now for $29/month. After today it's $__/month.]**
+
+Your payment details are already on file. **One click adds it to your account.** There are no forms and no re-entering your card.
+
+---
+
+<div align="center">
+
+## [ YES, ADD [AUTOTEXT] TO MY ACCOUNT, $29/MONTH ]
+
+*Billed monthly alongside your [CRM Name] subscription. Cancel anytime in two clicks.*
+
+**[Optional: 30-day money-back guarantee. If it doesn't earn its keep, we'll refund you, no questions asked.]**
+
+<sub>[No thanks, I'll follow up with my leads manually]</sub>
+
+</div>
+
+---
+
+### What Agents Are Saying
+
+> **[Real customer testimonial: ideally a specific result, e.g. a deal closed from an automated follow-up]**
+> *Name, Brokerage, City*
+
+> **[Real customer testimonial: ideally about time saved or responding faster]**
+> *Name, Brokerage, City*
+
+---
+
+### Questions
+
+**Will the texts sound automated?**
+No. They're short, conversational, and written the way agents actually text. You can edit every message and add your own voice.
+
+**Does it text from my number?**
+[Explain your setup, e.g. "You get a dedicated local number, and replies come straight to you in the CRM and on your phone."]
+
+**Is this compliant?**
+[AutoText] includes automatic opt-out handling and [carrier registration (10DLC) / consent tracking]. You're still responsible for texting only contacts who have given you permission. [Link to compliance guide.]
+
+**Can I add it later?**
+Yes, at the standard rate of [$__/month]. This price is only available on this page.
+
+**What if I don't like it?**
+Cancel anytime from your billing settings. [Plus the 30-day refund, if you offer it.]
+
+---
+
+<div align="center">
+
+## [ YES, ADD [AUTOTEXT] FOR $29/MONTH ]
+
+<sub>[No thanks, take me to my dashboard]</sub>
+
+</div>
+
+---
+
+### Things you'll need to fill in or confirm before publishing
+
+1. **Names.** Replace `[CRM Name]` and `[AutoText]`.
+2. **Regular price.** Only use the "after today it's $__" line if the add-on really does cost more later. Fake urgency backfires and can raise FTC issues.
+3. **Testimonials.** Use real customer quotes only. If you don't have any yet, cut that section.
+4. **Guarantee and compliance details.** Fill these in to match what you actually offer and how the texting works, including the number setup, 10DLC registration and consent handling.
+5. **The "No thanks" links.** I kept them neutral instead of guilt-tripping. That tends to protect trust with customers who just paid you.
+
+I can also build this as a styled, mobile-ready HTML page with the buttons wired up, or write a shorter version if you'd rather test a lean page against this one.

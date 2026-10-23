@@ -1,0 +1,30 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for a membership delivering weekly stock trading alerts, $97/month.
+
+**Headline**
+
+Stop Guessing at Stocks. Get One Clear Trade Plan Every Week.
+
+**Subhead:** Weekly stock alerts with the entry, target, stop-loss, and the reasoning behind every call, for traders who want a plan instead of a hunch.
+
+**Lead**
+
+Most traders don't lose money because they can't read a chart. They lose because they spend hours scrolling for ideas, buy on a feeling, and have no plan when the trade turns against them.
+
+[Your Name] built [Membership Name] to fix that. Every week, members get a focused set of stock alerts: the ticker, the planned entry zone, the price target, the stop-loss level, and a plain-English explanation of why we're watching it. No jargon walls, and no hour-long videos to sit through before you can act.
+
+Here's what a typical week looks like:
+
+- **Monday morning:** the weekly watchlist, with each setup we're tracking and why it made the cut.
+- **Midweek:** alert updates when a setup triggers, needs adjusting, or no longer holds up.
+- **Friday:** a recap of every open and closed call, including the ones that didn't work.
+
+We publish our full track record at [link to verified record]. We show the losing trades too, because a process you can check is worth more than a highlight reel. Past results don't guarantee future performance, and no alert service can promise you profits. What we can give you is a consistent, repeatable process you can measure against your own goals.
+
+Membership is $97 per month. Join today, follow the alerts on your own schedule, and cancel anytime from your account dashboard [confirm cancellation terms before publishing].
+
+**Notes before you publish**
+
+- **Remove any "guaranteed," "risk-free," or "double your money" language.** These claims are a common basis for FTC and SEC action against trading services.
+- **Any performance figures must be verified and disclosed.** Show net-of-fees results over a stated period, and don't cherry-pick. The SEC's Marketing Rule governs this if you're a registered adviser, and the FTC applies its own standards.
+- **Check whether you need to register.** Paid, ongoing stock recommendations can make you an investment adviser depending on your jurisdiction and how the service is structured. Have a securities attorney review the page before it goes live.
+- **Add a full disclaimer** in the footer covering risk of loss, the non-personalized nature of the alerts, and that members make their own decisions.

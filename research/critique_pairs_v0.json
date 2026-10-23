@@ -1,0 +1,956 @@
+{
+ "meta": {
+  "purpose": "Seed critique pairs for the teaching library (brief, weak draft, strong revision, reasons). Collected 2026-10-23.",
+  "quote_policy": "quote_status=verbatim means the text was read from the fetched page or local primary text. paraphrase means the fetch returned a description, not the line.",
+  "evidence_levels": [
+   "split_test",
+   "documented_result",
+   "practitioner_critique",
+   "author_opinion"
+  ],
+  "defect_taxonomy": [
+   "VAGUE_NOT_SPECIFIC",
+   "NOT_CUSTOMER_LANGUAGE_GENERIC",
+   "WRONG_OR_MULTIPLE_BIG_IDEA",
+   "LEAD_MISMATCHED_TO_AWARENESS",
+   "FEATURE_NOT_OUTCOME",
+   "NOT_READER_FOCUSED",
+   "WRITER_MODE_NOT_CONVERSATIONAL",
+   "CURIOSITY_MISSING_OR_KILLED",
+   "PROOF_CLAIMED_NOT_SHOWN",
+   "EMOTION_MISUSED",
+   "CTA_WEAK_OR_UNCLEAR",
+   "QUESTION_INVITES_NO",
+   "STRUCTURE_DENSE_OR_MISORDERED",
+   "URGENCY_MECHANICS",
+   "DEAD_WEIGHT_ELEMENT",
+   "OFFER_APPEAL_NOT_COPY",
+   "DESIGN_IMPEDES_READING"
+  ],
+  "not_obtained": [
+   "Copy Chief Radio audio (EP 102, 124, 190, 243, 249, 303): libsyn media returns HTTP 404 through the session proxy even for current episodes; iTunes lookup confirmed URLs but no bytes.",
+   "Clayton Makepeace Total Package archive: makepeacetotalpackage.com dead (502), web.archive.org blocked for this tool.",
+   "Carline Anglade-Cole red-ink critiques: paywalled as book bonuses ('Live Critique #1 ... 122% lift' claim only).",
+   "Joe Schriefer Copy-Boarding: Copy Chief members-only training; show notes only.",
+   "Copyhackers Tutorial Tuesday transcripts: pages redirect to school.copyhackers.com or 403/500.",
+   "Bob Bly critique samples: not found on bly.com (blog, reports, articles 404).",
+   "Copy Logic CUB/four-point checklist: only product-page confirmation that the technique exists (AWAI, markford.net)."
+  ],
+  "counts": {
+   "pairs": 36,
+   "procedures": 7,
+   "by_evidence": {
+    "split_test": 15,
+    "documented_result": 5,
+    "practitioner_critique": 14,
+    "author_opinion": 2
+   }
+  }
+ },
+ "pairs": [
+  {
+   "id": "P01",
+   "source": "Copyhackers, Amazon review mining (Beachway)",
+   "url": "https://copyhackers.com/2014/10/amazon-review-mining/",
+   "chief": "Joanna Wiebe",
+   "format": "landing page headline",
+   "before": "Your Addiction Ends Here",
+   "after": "If you think you need rehab, you do.",
+   "quote_status": "verbatim",
+   "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+   "defect_named": "Brand-voice promise; not the prospect's own inner sentence",
+   "principle": "Pull the headline from the prospect's own words (review mining); address the visitor's struggle, not the service's hype",
+   "reason": "Wiebe read 500+ Amazon reviews of addiction books and lifted one reviewer's exact sentence (paraphrase of article).",
+   "tested": {
+    "status": "split_test",
+    "result": ">400% more clicks on the CTA, >20% more lead-form submits on next page"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument",
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P02",
+   "source": "Copyhackers, SweatBlock case study",
+   "url": "https://copyhackers.com/2016/06/copywriting-principles-sweatblock/",
+   "chief": "Joanna Wiebe",
+   "format": "ecommerce home page headline",
+   "before": "Stop Embarrassment",
+   "after": "Headline rewritten to add 'your' and replace the pain with the outcome 'wear what you want' (full line in image)",
+   "quote_status": "before verbatim; after paraphrase",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "Summarizes a pain instead of describing a tangible one; not visitor-focused",
+   "principle": "Be specific; name the outcome the visitor can picture; use 'your'",
+   "reason": "Pain-aware/problem-aware visitors respond to relatable, concrete experiences (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "Variation B: +108% paid conversions (page-level, all changes together)"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument"
+   ]
+  },
+  {
+   "id": "P03",
+   "source": "Copyhackers, SweatBlock case study",
+   "url": "https://copyhackers.com/2016/06/copywriting-principles-sweatblock/",
+   "chief": "Joanna Wiebe",
+   "format": "subhead",
+   "before": "(generic product subhead)",
+   "after": "Added 'just the dab of a towelette'",
+   "quote_status": "after verbatim fragment",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "Visitor cannot picture using the product",
+   "principle": "Mechanism made visible in one concrete image",
+   "reason": "So visitors can picture using the product (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "same +108% page test"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_2_explains_instead_of_shows"
+   ]
+  },
+  {
+   "id": "P04",
+   "source": "Copyhackers, SweatBlock case study",
+   "url": "https://copyhackers.com/2016/06/copywriting-principles-sweatblock/",
+   "chief": "Joanna Wiebe",
+   "format": "CTA buttons",
+   "before": "Order Now (everywhere)",
+   "after": "Keep 'Order Now' in header/footer; mid-page buttons become 'Sweat less. Live more.', 'Why suffer? Get SweatBlock now', 'Control your sweat! Order now'",
+   "quote_status": "verbatim",
+   "defect": "CTA_WEAK_OR_UNCLEAR",
+   "defect_named": "Action-only CTAs for visitors who have not decided",
+   "principle": "Calls to value for the undecided; calls to action for the decided",
+   "reason": "Measured paid conversions, not clicks, because extra buttons inflate clicks (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "same +108% page test"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_polished_but_does_nothing"
+   ]
+  },
+  {
+   "id": "P05",
+   "source": "Copyhackers, 'great home page copy into killer' (SweatBlock round 2)",
+   "url": "https://copyhackers.com/2016/06/great-home-page-copy/",
+   "chief": "Joanna Wiebe",
+   "format": "home page lead (PAS)",
+   "before": "Hero that opened on the product (the already-winning control)",
+   "after": "excessive sweaters are sweating for all sorts of reasons. It's almost never 'cos it's hot out. ... Excessive sweating makes you feel trapped. [then Brianna testimonial story, then product] + proof '4 million towelettes sold'; 4-step demo removed",
+   "quote_status": "after verbatim fragments",
+   "defect": "LEAD_MISMATCHED_TO_AWARENESS",
+   "defect_named": "Control led with solution for a problem-aware audience",
+   "principle": "Lead at the prospect's awareness stage: problem, agitation, then solution; add proof; cut what is not needed to buy",
+   "reason": "Lead with a pain the team had heard often; remind readers deodorant does not solve it (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "+49% (woman hero) and +46% (man hero) paid lift at 99% confidence"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument",
+    "thesis_2_explains_everything"
+   ]
+  },
+  {
+   "id": "P06",
+   "source": "Copyhackers, Wistia onboarding emails",
+   "url": "https://copyhackers.com/2017/08/saas-onboarding-email/",
+   "chief": "Joanna Wiebe / Copyhackers team",
+   "format": "onboarding email body",
+   "before": "Customize the color of your video player appearance.",
+   "after": "The Wistia video player defaults to grey. Which is nice. But grey. Why stick with grey when you can go with hot pink... or dollar-bill green... or, well, Wistia Blue?",
+   "quote_status": "verbatim",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "Reader must imagine what the change looks like",
+   "principle": "Specificity reduces the reader's mental work ('Don't make me think')",
+   "reason": "Specific version forms images readily (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "Whole 8-email sequence: +350% paid conversions vs control (HubSpot A/B, Wistia CRO monitored)"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_polished_but_does_nothing"
+   ]
+  },
+  {
+   "id": "P07",
+   "source": "Copyhackers, Wistia onboarding emails",
+   "url": "https://copyhackers.com/2017/08/saas-onboarding-email/",
+   "chief": "Copyhackers",
+   "format": "email body claim",
+   "before": "18% is a lot.",
+   "after": "Getting 18% more views is pretty major. Videos that used to get 100 views a day now get 118 views a day. In a month, that's an extra 500+ views.",
+   "quote_status": "verbatim",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "Reader must do the math and may dispute the claim",
+   "principle": "Do the math for the reader; dimensionalize numbers",
+   "reason": "Removes burden of calculation (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "same sequence test"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_3_hedged_claims"
+   ]
+  },
+  {
+   "id": "P08",
+   "source": "Copyhackers, Wistia onboarding emails",
+   "url": "https://copyhackers.com/2017/08/saas-onboarding-email/",
+   "chief": "Copyhackers",
+   "format": "email body features",
+   "before": "You can add annotations, create calls to action or collect emails through turnstile – all within the video player!",
+   "after": "Unpacked into a bullet list, one bullet per feature with what it does for you (bullets in image)",
+   "quote_status": "before verbatim; after paraphrase",
+   "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+   "defect_named": "Glosses over the significance of each feature",
+   "principle": "One idea per line; unpack stacked features",
+   "reason": "Not stated beyond 'Don't make me think'.",
+   "tested": {
+    "status": "split_test",
+    "result": "same sequence test"
+   },
+   "evidence": "split_test",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_describes_every_feature"
+   ]
+  },
+  {
+   "id": "P09",
+   "source": "Copyhackers, Wistia onboarding emails",
+   "url": "https://copyhackers.com/2017/08/saas-onboarding-email/",
+   "chief": "Copyhackers",
+   "format": "email opening question",
+   "before": "Ready to dive into some data?",
+   "after": "People are watching your video. Fantastic, right? ... How can you put your new video data to work for you?",
+   "quote_status": "verbatim",
+   "defect": "QUESTION_INVITES_NO",
+   "defect_named": "A question the prospect may answer 'no' to breaks the persuasion",
+   "principle": "Ask only questions that get a yes, or open questions the copy then answers",
+   "reason": "First question almost always gets a yes; second requires thought and lets copy guide the answer (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "same sequence test"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P10",
+   "source": "Copyhackers, Crazy Egg home page",
+   "url": "https://copyhackers.com/2014/02/optimized-crazy-egg-home-page/",
+   "chief": "Joanna Wiebe",
+   "format": "video caption + headline",
+   "before": "Watch this!",
+   "after": "Caption rebuilt from what users say they use Crazy Egg for: 'to validate our design decisions'; headline 'pulled verbatim from a simple, catchy phrase a handful of survey respondents had used'",
+   "quote_status": "verbatim fragments",
+   "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+   "defect_named": "Marketer's imperative instead of customer's words",
+   "principle": "Customer language from surveys/interviews",
+   "reason": "Headline and subheads based on top-3 survey answers to 'what was going on in your world...' (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "Variation D +13% over a CRE-optimized control"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P11",
+   "source": "Copyhackers, Crazy Egg home page",
+   "url": "https://copyhackers.com/2014/02/optimized-crazy-egg-home-page/",
+   "chief": "Joanna Wiebe",
+   "format": "Johnson box",
+   "before": "Johnson box present",
+   "after": "Removed",
+   "quote_status": "paraphrase",
+   "defect": "DEAD_WEIGHT_ELEMENT",
+   "defect_named": "Occupied high-value space without affecting conversion",
+   "principle": "Exclusion test: if removing it is flat, cut it",
+   "reason": "Exclusion test showed flat results (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "flat"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_polished_but_does_nothing"
+   ]
+  },
+  {
+   "id": "P12",
+   "source": "Copyhackers, curiosity gap (Mad Mimi pricing)",
+   "url": "https://copyhackers.com/2014/04/curiosity-gap/",
+   "chief": "Joanna Wiebe",
+   "format": "pricing page",
+   "before": "Plans in ascending order, all prices shown",
+   "after": "Lead with most expensive; Gold plan price omitted so visitors must click",
+   "quote_status": "paraphrase",
+   "defect": "CURIOSITY_MISSING_OR_KILLED",
+   "defect_named": "Cautionary: curiosity clicks that do not convert",
+   "principle": "Curiosity moves the click; only a real offer moves the sale",
+   "reason": "+927% clicks to Gold but no more Gold sign-ups; Variation 2 better on other goals (paraphrase).",
+   "tested": {
+    "status": "split_test",
+    "result": "+927% clicks, no lift in sign-ups"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_2_curiosity_misused"
+   ]
+  },
+  {
+   "id": "P13",
+   "source": "Caples, Tested Advertising Methods (local text)",
+   "url": "local: scratchpad/dl/caples1.txt ~line 16997",
+   "chief": "John Caples",
+   "format": "print headline",
+   "before": "Save one gallon of gas in every ten",
+   "after": "Car Owners! Save one gallon of gas in every ten",
+   "quote_status": "verbatim",
+   "defect": "NOT_READER_FOCUSED",
+   "defect_named": "Audience not called out",
+   "principle": "Flag the reader in the headline",
+   "reason": "Only change was the headline; same copy (verbatim: 'There was no other change').",
+   "tested": {
+    "status": "split_test",
+    "result": "+20% replies (newspaper split-run)"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument"
+   ]
+  },
+  {
+   "id": "P14",
+   "source": "Caples, Tested Advertising Methods (local text)",
+   "url": "local: scratchpad/dl/caples1.txt ~line 11925",
+   "chief": "John Caples (reporting John Stern)",
+   "format": "direct mail window line",
+   "before": "RESPOND BY THURSDAY, MAY 19.",
+   "after": "RESPOND BY THURSDAY.",
+   "quote_status": "verbatim",
+   "defect": "URGENCY_MECHANICS",
+   "defect_named": "Dated deadline reads as distant; undated 'Thursday' reads as this week",
+   "principle": "Urgency must feel immediate",
+   "reason": "'computer error' version pulled 39% more (verbatim fragment).",
+   "tested": {
+    "status": "split_test",
+    "result": "+39%"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_3_needless_caution"
+   ]
+  },
+  {
+   "id": "P15",
+   "source": "Caples, Tested Advertising Methods (local text)",
+   "url": "local: scratchpad/dl/caples1.txt ~line 15725",
+   "chief": "Caples (Pitney Bowes case)",
+   "format": "B2B lead-gen mailing",
+   "before": "Can You Afford A Dumb Worker?",
+   "after": "IQ Test Enclosed (60-second test the office manager gives their photocopier; free gift open and close)",
+   "quote_status": "verbatim",
+   "defect": "CURIOSITY_MISSING_OR_KILLED",
+   "defect_named": "Fear question less involving than a device the reader does",
+   "principle": "Involvement device beats a rhetorical threat",
+   "reason": "'the less involving' control (verbatim fragment).",
+   "tested": {
+    "status": "split_test",
+    "result": "+138% response, higher conversion to sale"
+   },
+   "evidence": "split_test",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_2_explains_instead_of_involves"
+   ]
+  },
+  {
+   "id": "P16",
+   "source": "Gary Bencivenga, Marketing Bullets (local text)",
+   "url": "local: scratchpad/dl/bullets.txt ~line 3017 (marketingbullets.com)",
+   "chief": "Gary Bencivenga",
+   "format": "early-bird premium copy (space ad)",
+   "before": "Specific description of the early-bird gift",
+   "after": "A Surprise Gift from Me to You...with Love. Everyone loves a surprise gift, especially me! And I've got one for you that's extra special if you respond to my invitation within the next 10 days. ... I can't tell you—that would ruin the surprise! But I can tell you what it's not:",
+   "quote_status": "verbatim",
+   "defect": "CURIOSITY_MISSING_OR_KILLED",
+   "defect_named": "Fully described premium leaves nothing to find out",
+   "principle": "A mystery bonus described with tantalizing copy can out-pull a specific one",
+   "reason": "'our strongest early-bird premium proved to be a mystery gift' (verbatim).",
+   "tested": {
+    "status": "documented_result",
+    "result": "strongest premium in his Richard Simmons tests; no % given"
+   },
+   "evidence": "documented_result",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_2_explains_everything"
+   ]
+  },
+  {
+   "id": "P17",
+   "source": "Gary Bencivenga, Marketing Bullets (local text)",
+   "url": "local: scratchpad/dl/bullets.txt ~line 3012",
+   "chief": "Gary Bencivenga",
+   "format": "deadline line",
+   "before": "Free if you reply by January 31.",
+   "after": "Free if you reply in 7 days.",
+   "quote_status": "verbatim",
+   "defect": "URGENCY_MECHANICS",
+   "defect_named": "Fixed date can already be past when the reader sees it",
+   "principle": "Relative deadlines offline; test 10/15/30 days",
+   "reason": "Postal/printer delay 'can massacre your response' (verbatim fragment).",
+   "tested": {
+    "status": "author_opinion",
+    "result": "none stated"
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "high",
+   "ai_failure_map": []
+  },
+  {
+   "id": "P18",
+   "source": "Justin Goff reporting David Deutsch critique",
+   "url": "https://www.justingoff.com/david-deutschs-brutal-email-advice-that-nearly-made-me-cry/",
+   "chief": "David Deutsch (secondhand)",
+   "format": "promo email (supplement)",
+   "before": "Anti-aging email listing buyer pain points (stairs, gardening, grandkids) ending in a promise of renewed energy",
+   "after": "Subject: V8 Juice worse for your heart than McDonald's french fries? Body compares V8 sodium to fries, doctors calling V8 'junk'; product pitch only at the end",
+   "quote_status": "after subject verbatim; rest paraphrase",
+   "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+   "defect_named": "'sounded like every other anti-aging email in his inbox' (verbatim as quoted by Goff); 'generic, boiler plate copy'",
+   "principle": "A unique hook is the first thing a chief looks for; without it nothing else matters",
+   "reason": "Hook sets the email apart, gets it read, pushes to buy (paraphrase).",
+   "tested": {
+    "status": "documented_result",
+    "result": "~$15,400 sales from a $3,500 email drop (not a split test)"
+   },
+   "evidence": "documented_result",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument",
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P19",
+   "source": "Justin Goff, 'anti email'",
+   "url": "https://www.justingoff.com/the-anti-email-that-beat-every-other-email-in-a-recent-launch-example-inside/",
+   "chief": "Justin Goff",
+   "format": "affiliate launch email",
+   "before": "Praise-the-product emails like every other affiliate",
+   "after": "Subjects: 'The case against Brent Charleton' / 'Is Brent Charleton a SCAM?'; body names the method's real downsides ('even though Brent's method can be uncomfortable...') then endorses",
+   "quote_status": "verbatim fragments",
+   "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+   "defect_named": "Sameness; nothing forces the open",
+   "principle": "Go against the grain; admit the downside to earn belief",
+   "reason": "'went against the grain' so people felt they had to read (paraphrase).",
+   "tested": {
+    "status": "documented_result",
+    "result": "all contrarian emails in top 5 of 16 by sales; claimed 3x vs other emails (seller's own numbers)"
+   },
+   "evidence": "documented_result",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_3_hedging_vs_candor"
+   ]
+  },
+  {
+   "id": "P20",
+   "source": "Justin Goff, offer that flopped vs 320k buyers",
+   "url": "https://www.justingoff.com/analyzing-an-offer-that-flopped-vs-one-that-brought-in-320k-buyers/",
+   "chief": "Justin Goff",
+   "format": "offer/promise (cookbook)",
+   "before": "Paleo Plenty: 'foodie' recipes of summer salads, zucchini noodles, taro root chips",
+   "after": "Paleo Sweets: paleo versions of your favorite brownies, chocolate chip cookies and ice cream",
+   "quote_status": "paraphrase",
+   "defect": "OFFER_APPEAL_NOT_COPY",
+   "defect_named": "Copy cannot rescue a promise people do not want",
+   "principle": "Argument selection precedes writing: pick the desire with mass appeal",
+   "reason": "Same price, same format, same $15k copywriter; appeal was the variable (paraphrase).",
+   "tested": {
+    "status": "documented_result",
+    "result": "near-zero vs hundreds of buyers/day"
+   },
+   "evidence": "documented_result",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument"
+   ]
+  },
+  {
+   "id": "P21",
+   "source": "Kevin Rogers, 'This guy CALLED ME OUT about the sales page'",
+   "url": "https://copychief.com/this-guy-called-me-out-about-the-sales-page/",
+   "chief": "Kevin Rogers (prospect-driven edit)",
+   "format": "membership sales letter",
+   "before": "Letter with proof, testimonials, scarcity, 30-day guarantee",
+   "after": "Added a Loom screen-recorded tour of the member area (job forum, critique forum)",
+   "quote_status": "verbatim prospect email on page",
+   "defect": "PROOF_CLAIMED_NOT_SHOWN",
+   "defect_named": "Prospect: 'Your sales letter is great. But we can't see what's inside.' (verbatim)",
+   "principle": "Show the thing; demonstration beats assertion",
+   "reason": "Rogers: 'sometimes the best way to sell something is by simply showing someone exactly what they're buying' (verbatim).",
+   "tested": {
+    "status": "documented_result",
+    "result": "the objector bought an annual pass after the video"
+   },
+   "evidence": "documented_result",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_invented_objections_vs_real_ones"
+   ]
+  },
+  {
+   "id": "P22",
+   "source": "David Deutsch, 'Stop writing... start talking'",
+   "url": "https://davidldeutsch.com/stop-writing-start-talking/",
+   "chief": "David Deutsch",
+   "format": "general copy critique (corporate-background writer)",
+   "before": "Copy that 'sound[s] like copy is expected to sound' (verbatim fragment); written in 'writer mode'",
+   "after": "No rewrite shown. Fix: write from the part of you that persuades a friend in conversation; picture a person you care about; read it out loud and revise until it does not make you cringe",
+   "quote_status": "verbatim fragments",
+   "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+   "defect_named": "'You write well but you rely on that too much.' (verbatim)",
+   "principle": "Show there is a person behind the words",
+   "reason": "Persuasive instinct comes from conversation, not book reports and memos (paraphrase).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P23",
+   "source": "Clayton Makepeace via AWAI, 'Astonishing Power of Fear'",
+   "url": "https://www.awai.com/2014/12/clayton-makepeace-on-the-astonishing-power-of-fear/",
+   "chief": "Clayton Makepeace",
+   "format": "fear lead",
+   "before": "We all know that smoking can kill us – someday in the distant future",
+   "after": "No rewrite; rule: make it an imminent fear, close in time and place",
+   "quote_status": "before verbatim",
+   "defect": "EMOTION_MISUSED",
+   "defect_named": "Distant consequence loses power",
+   "principle": "Fear must be imminent and already waking the prospect at 2:30 AM",
+   "reason": "Sugarman's alarm copy works because the break-in is next door (paraphrase).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_3_needless_caution"
+   ]
+  },
+  {
+   "id": "P24",
+   "source": "Clayton Makepeace via AWAI",
+   "url": "https://www.awai.com/2014/12/clayton-makepeace-on-the-astonishing-power-of-fear/",
+   "chief": "Clayton Makepeace",
+   "format": "fear lead",
+   "before": "the entire U.S. economy could come unglued at virtually any moment",
+   "after": "No rewrite; narrow to a fear the product can fix (losing money), not collapse",
+   "quote_status": "before verbatim",
+   "defect": "EMOTION_MISUSED",
+   "defect_named": "Paralyzing fear freezes instead of moving",
+   "principle": "Fear must be actionable by the offer",
+   "reason": "'Using a fear that paralyzes prospects won't do you any good' (verbatim).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": []
+  },
+  {
+   "id": "P25",
+   "source": "Clayton Makepeace via AWAI",
+   "url": "https://www.awai.com/2014/12/clayton-makepeace-on-the-astonishing-power-of-fear/",
+   "chief": "Clayton Makepeace",
+   "format": "full draft review",
+   "before": "Draft whose copy 'sang and soared' but spent many pages on threats; product's answer 'presented quickly and without passion'",
+   "after": "Re-balance: fear as short attention-getter, bulk of passion on how the product neutralizes each threat",
+   "quote_status": "verbatim fragments",
+   "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+   "defect_named": "'didn't make me want to buy the product' (verbatim)",
+   "principle": "'Nobody buys just because they're afraid.' (verbatim)",
+   "reason": "Fear overwhelmed the offer (paraphrase).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_4_polished_but_does_nothing"
+   ]
+  },
+  {
+   "id": "P26",
+   "source": "Mark Ford via AWAI, 'Ignore this rule...'",
+   "url": "https://www.awai.com/2016/05/ignore-this-rule-and-risk-the-success-of-your-copy/",
+   "chief": "Mark Ford (Agora)",
+   "format": "slogan/big idea",
+   "before": "The pause that refreshes and always cool",
+   "after": "The pause that refreshes",
+   "quote_status": "verbatim",
+   "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+   "defect_named": "Two ideas; focus lost",
+   "principle": "Rule of One: one big idea; other benefits to sidebar or P.S.",
+   "reason": "'the more points you try to cover, the less effective each point' (verbatim, Loftus quoting Ford).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_1_describes_every_feature"
+   ]
+  },
+  {
+   "id": "P27",
+   "source": "Mark Ford via AWAI",
+   "url": "https://www.awai.com/2016/05/ignore-this-rule-and-risk-the-success-of-your-copy/",
+   "chief": "Mark Ford (Agora)",
+   "format": "slogan",
+   "before": "Together we will",
+   "after": "No rewrite given",
+   "quote_status": "verbatim",
+   "defect": "FEATURE_NOT_OUTCOME",
+   "defect_named": "'doesn't express any benefit for the reader' (verbatim)",
+   "principle": "One desirable benefit",
+   "reason": "",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_wrong_central_argument"
+   ]
+  },
+  {
+   "id": "P28",
+   "source": "Marketing Examples, 'copy that converts'",
+   "url": "https://marketingexamples.com/copywriting/conversion",
+   "chief": "Harry Dry",
+   "format": "CTA button",
+   "before": "Sign up now",
+   "after": "Create Your Website",
+   "quote_status": "verbatim",
+   "defect": "CTA_WEAK_OR_UNCLEAR",
+   "defect_named": "Button names the action, not the value gained",
+   "principle": "Button = value, not action",
+   "reason": "Value-over-action buttons usually perform better (paraphrase; no test cited).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": []
+  },
+  {
+   "id": "P29",
+   "source": "Marketing Examples",
+   "url": "https://marketingexamples.com/copywriting/conversion",
+   "chief": "Harry Dry",
+   "format": "value line",
+   "before": "a better toothbrush",
+   "after": "a brighter smile",
+   "quote_status": "verbatim",
+   "defect": "FEATURE_NOT_OUTCOME",
+   "defect_named": "Sells the product, not what it delivers",
+   "principle": "People buy the value delivered",
+   "reason": "",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_describes_every_feature"
+   ]
+  },
+  {
+   "id": "P30",
+   "source": "Marketing Examples, '17 tips'",
+   "url": "https://marketingexamples.com/copywriting/tips",
+   "chief": "Harry Dry",
+   "format": "vocabulary rule",
+   "before": "Unlock, unleash, enhance, exceed, empower, supercharge",
+   "after": "Words real people say; no replacement list given",
+   "quote_status": "verbatim",
+   "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+   "defect_named": "'landing page words' real people do not use",
+   "principle": "Write like you talk",
+   "reason": "",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_4_assistant_voice"
+   ]
+  },
+  {
+   "id": "P31",
+   "source": "Copyhackers, Jobs to be Done",
+   "url": "https://copyhackers.com/2014/11/jobs-to-be-done-copywriting/",
+   "chief": "Joanna Wiebe",
+   "format": "benefit line (tax software)",
+   "before": "Do your taxes faster & better",
+   "after": "You'll never again have to worry about how you're going to fit 'doing your taxes' into your busy life.",
+   "quote_status": "verbatim",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "Broad comparative claim with no situation",
+   "principle": "Name the job and the moment the prospect hires the product for",
+   "reason": "Swap broad claim for the customer's daily struggle (paraphrase).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "high",
+   "ai_failure_map": [
+    "thesis_4_polished_but_does_nothing"
+   ]
+  },
+  {
+   "id": "P32",
+   "source": "Justin Goff, 'does your AI copy sound like a robot'",
+   "url": "https://www.justingoff.com/does-your-ai-copy-sound-like-a-robot-heres-the-cure/",
+   "chief": "Justin Goff",
+   "format": "ad/email lead (crypto)",
+   "before": "Get expert guidance, cutting-edge tech, and a supportive community for maximum investment success. ... Don't miss out on achieving financial freedom. Join now!",
+   "after": "There's ONE crypto coin that's perfectly positioned to benefit from AI. ... already jumped 237% in the last month ... Sounds crazy, right? ... Ready to see what this 100x coin is?",
+   "quote_status": "verbatim fragments",
+   "defect": "VAGUE_NOT_SPECIFIC",
+   "defect_named": "'robot speak that means nothing' (verbatim); no curiosity, no emotion, no proof, generic CTA",
+   "principle": "Curiosity + proof + specificity + a human voice",
+   "reason": "Author sells a prompt bundle; the pair is his demonstration, not a test.",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "author_opinion",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1",
+    "thesis_2",
+    "thesis_3",
+    "thesis_4"
+   ]
+  },
+  {
+   "id": "P33",
+   "source": "Justin Goff, 'AI turns average copy into A-list copy'",
+   "url": "https://www.justingoff.com/ai-turns-average-copy-into-a-list-copy-full-example/",
+   "chief": "Justin Goff",
+   "format": "VSL lead (dog supplement)",
+   "before": "You'll discover how to restore his coat, so he looks young and healthy ... You'll find out how to provide him with flexible and pain-free paws, legs, and hips",
+   "after": "Imagine seeing your dog spring off the couch and chase his favorite toy, pain-free and full of boundless energy... There's no more heartache watching him struggle to go up the stairs... No more guilt as you wonder if he's suffering in silence...",
+   "quote_status": "verbatim fragments",
+   "defect": "FEATURE_NOT_OUTCOME",
+   "defect_named": "'average, C-level copy' (verbatim): a list of discoveries instead of a scene the owner feels",
+   "principle": "Dimensionalize: scene, relief, guilt removed",
+   "reason": "'way more vivid', 'you can feel the emotion' (verbatim). No per-line reasons; AI-produced rewrite.",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "author_opinion",
+   "confidence": "low",
+   "ai_failure_map": [
+    "thesis_1_describes_every_feature"
+   ]
+  },
+  {
+   "id": "P34",
+   "source": "Drayton Bird, Jamie Oliver email",
+   "url": "https://draytonbird.com/2025/04/why-jamie-oliver-is-a-one-trick-pony/",
+   "chief": "Drayton Bird",
+   "format": "email CTA + design",
+   "before": "CTA 'Love at first bite' (link not visibly clickable); reversed-out, centered body copy; low-contrast sales lines",
+   "after": "'See the recipes', underlined; black on white, left-justified",
+   "quote_status": "verbatim fragments",
+   "defect": "CTA_WEAK_OR_UNCLEAR",
+   "defect_named": "'isn't the most obvious call to action' (verbatim); 'the invisible sales pitch'",
+   "principle": "'your design must help your copy not hinder it' (verbatim)",
+   "reason": "'Don't make readers' eyes work harder than they need to' (verbatim).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "high",
+   "ai_failure_map": []
+  },
+  {
+   "id": "P35",
+   "source": "Copyhackers 2013 product-page teardown plan",
+   "url": "https://copyhackers.com/2013/09/product-detail-pages/",
+   "chief": "Joanna Wiebe",
+   "format": "product detail page plan",
+   "before": "Factual bullet points on the materials, size and function. / A longer description of the maker.",
+   "after": "No rewrite; emotional appeal supported by logic; page addresses the buyer's needs, not the maker",
+   "quote_status": "before verbatim",
+   "defect": "FEATURE_NOT_OUTCOME",
+   "defect_named": "Specs alone are 'a conversion slayer' (verbatim); maker-focus is the wrong subject",
+   "principle": "Emotion first, logic as support; buyer not maker",
+   "reason": "",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_1_describes_every_feature"
+   ]
+  },
+  {
+   "id": "P36",
+   "source": "AWAI, compassionate critique",
+   "url": "https://www.awai.com/2015/12/providing-a-compassionate-copywriting-critique/",
+   "chief": "AWAI (unsigned method piece)",
+   "format": "benefits paragraph",
+   "before": "Benefits 'in a series of sentences' that are 'difficult to read and comprehend'",
+   "after": "List benefits as bullets, each tied to a product feature",
+   "quote_status": "verbatim fragments",
+   "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+   "defect_named": "Dense sentences hide the benefits",
+   "principle": "Scannable bullets linked to features",
+   "reason": "Faster to scan, easier to understand, keeps what the writer got right (paraphrase).",
+   "tested": {
+    "status": "none",
+    "result": ""
+   },
+   "evidence": "practitioner_critique",
+   "confidence": "medium",
+   "ai_failure_map": [
+    "thesis_2_explains_everything"
+   ]
+  }
+ ],
+ "review_procedures": [
+  {
+   "id": "R01",
+   "who": "Kevin Rogers (Copy Chief)",
+   "url": "https://copychief.com/ep-243-new-breed-craig-dave/ (also the show's RSS description at https://copychief.com/feed/podcast/)",
+   "status": "first-person show notes in Rogers' own feed; unsigned on page",
+   "text": "In a typical first draft copy review there's something critical on the very first page that needs to be fixed, so I rarely get beyond that before sending over a list of notes.",
+   "quote_status": "verbatim",
+   "operational": "Review stops at the first page-one failure (usually hook/big idea); notes go back before reading further."
+  },
+  {
+   "id": "R02",
+   "who": "Mark Ford (Agora) via AWAI",
+   "url": "https://www.awai.com/2017/07/the-power-of-one-one-big-idea/",
+   "status": "paraphrase of Ford's test questions",
+   "text": "Ask: What is the Big Idea here? Is this idea strong enough to capture the hearts of my customers? Are my ideas all over the place? The idea must be easy to grasp immediately, stay consistent throughout, be strong, easy to understand, easy to believe. Writers who list every feature and benefit and throw them all in produce 'B-level' copy.",
+   "quote_status": "paraphrase with verbatim fragments",
+   "operational": "Five one-things: one idea, one core emotion, one story, one desirable benefit, one inevitable response."
+  },
+  {
+   "id": "R03",
+   "who": "Mark Ford via AWAI 'One Big Idea: Tip #1'",
+   "url": "https://www.awai.com/2013/10/one-big-idea-copywriting-tip-1/",
+   "status": "paraphrase",
+   "text": "Name the big idea in one sentence (if you need 'and', there are two). Identify the dominant emotion. Check the lead carries the main benefit. Later benefits must extend the main one, not add new promises. Find skip points: sections only some readers care about give everyone else permission to stop.",
+   "operational": "Note: the fetch tool invented illustrative examples for this page; none were used."
+  },
+  {
+   "id": "R04",
+   "who": "John Forde",
+   "url": "https://copywritersroundtable.com/ego-butter-how-to-give-a-copy-critique/",
+   "status": "verbatim fragments",
+   "text": "'Very simply, start with the positive.' Lead with a real strength, 'Don't save it for last', then 'lower the resistance to your suggestions' before raising problems. Goal is 'the best possible copy you can get', not toughening the writer.",
+   "operational": "Delivery format for the revise step: strength first, then the one change that makes it 'even stronger'."
+  },
+  {
+   "id": "R05",
+   "who": "AWAI (compassionate critique)",
+   "url": "https://www.awai.com/2015/12/providing-a-compassionate-copywriting-critique/",
+   "status": "paraphrase",
+   "text": "1 find what shines and say why; 2 check single focus (power of one), flag drift; 3 check benefit presentation; 4 mark reader reactions: the phrases that keep you reading, the section that loses you, the section that moves you to act.",
+   "operational": "Three reaction marks (kept reading / lost me / moved me) are a usable reviewer output schema."
+  },
+  {
+   "id": "R06",
+   "who": "David Deutsch",
+   "url": "https://davidldeutsch.com/stop-writing-start-talking/",
+   "status": "verbatim fragment",
+   "text": "'Read it out loud.' Revise until it sounds like one half of a real conversation.",
+   "operational": "Voice test for the AI-failure checklist."
+  },
+  {
+   "id": "R07",
+   "who": "Michael Masterson & Mike Palmer, Copy Logic (Agora)",
+   "url": "https://www.awai.com/copy-logic/p/ ; https://markford.net/product/copy-logic/",
+   "status": "existence confirmed only",
+   "text": "Product pages confirm the book teaches 'Mike's simple CUB technique' and 'a four-point copy checklist'. The expansion Confusing/Unbelievable/Boring and the peer-marking procedure are from prior knowledge, not fetched text.",
+   "operational": "Treat CUB details as medium-confidence until the book is sourced."
+  }
+ ],
+ "defect_frequency": {
+  "VAGUE_NOT_SPECIFIC": 6,
+  "NOT_CUSTOMER_LANGUAGE_GENERIC": 4,
+  "FEATURE_NOT_OUTCOME": 4,
+  "CTA_WEAK_OR_UNCLEAR": 3,
+  "CURIOSITY_MISSING_OR_KILLED": 3,
+  "STRUCTURE_DENSE_OR_MISORDERED": 2,
+  "URGENCY_MECHANICS": 2,
+  "WRITER_MODE_NOT_CONVERSATIONAL": 2,
+  "EMOTION_MISUSED": 2,
+  "WRONG_OR_MULTIPLE_BIG_IDEA": 2,
+  "LEAD_MISMATCHED_TO_AWARENESS": 1,
+  "QUESTION_INVITES_NO": 1,
+  "DEAD_WEIGHT_ELEMENT": 1,
+  "NOT_READER_FOCUSED": 1,
+  "OFFER_APPEAL_NOT_COPY": 1,
+  "PROOF_CLAIMED_NOT_SHOWN": 1
+ }
+}

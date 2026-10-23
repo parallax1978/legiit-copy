@@ -1,0 +1,39 @@
+PROMPT: Write a promotional email to my email list selling a free lead magnet: 7 email subject line templates. Include a subject line.
+
+Here's a promotional email you can send to your list:
+
+**Subject line:** Your next 7 emails just got easier (free templates inside)
+
+---
+
+Hi {{first_name}},
+
+Staring at a blank email and wondering what to say? You're not alone, and it's one of the biggest time sinks in marketing.
+
+That's why I put together **7 Email Subject Line Templates**, and they're yours free.
+
+Each template is a fill-in-the-blank starting point you can use today. Inside you'll find formulas for:
+
+- **Curiosity** hooks that get opened without clickbait
+- **Benefit-led** lines that answer "what's in it for me?"
+- **Urgency** angles that work without sounding pushy
+- **Personal** openers that feel like a note from a friend
+- **Question** formats that invite a reply
+- **Social proof** lines that build trust fast
+- **Quick-win** subjects for busy inboxes
+
+Copy one, swap in your details, and send. No guesswork, no staring at the screen.
+
+**[Download your free templates here]**
+
+It takes less than a minute to grab them, and they'll save you time on your very next send.
+
+Talk soon,
+
+{{your_name}}
+
+P.S. Subject lines decide whether your email gets opened at all. Grab the templates now and test a few in your next campaign.
+
+---
+
+If you tell me your brand name, tone (casual or professional), and the link to the download, I can tailor the copy and add a second subject line option for A/B testing.

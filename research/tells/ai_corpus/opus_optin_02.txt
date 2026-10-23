@@ -1,0 +1,23 @@
+PROMPT: Write an opt-in page for a free 'open house follow-up' email sequence: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Turn Open House Sign-Ins Into Signed Clients
+
+**Subheadline:**
+Get our free, ready-to-send email sequence that follows up with every visitor for you. It keeps you top of mind long after they've left the driveway.
+
+**Bullets:**
+- **7 proven emails, already written.** Copy, paste, and send. Each one is written to start replies, not get ignored.
+- **Timed to match how buyers decide.** Send a same-day thank-you, then useful follow-ups over the next 30 days.
+- **Works for every type of visitor.** Ready buyers, curious neighbors, and "just looking" browsers all get a message that fits.
+- **Book more appointments without sounding pushy.** Soft calls to action invite showings and listing conversations.
+- **Plugs into any CRM or email tool.** It works in Follow Up Boss, kvCORE, Mailchimp, or plain Gmail.
+
+**Button text:**
+Send Me the Free Email Sequence
+
+**Other options to A/B test:**
+- Headline: "Most Agents Never Follow Up After an Open House. Here's Your Unfair Advantage."
+- Button: "Get My Follow-Up Emails Now"
+
+I wrote this for real estate agents. If the sequence has a different number of emails or a different timeline, change the "7 emails" and "30 days" in the bullets to match.

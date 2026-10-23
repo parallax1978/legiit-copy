@@ -1,0 +1,31 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for a summer coding camp for kids ages 9-14, $899.
+
+**Headline:**
+# This Summer, Your Kid Stops Playing Games and Starts Building Them
+
+**Subhead:**
+*A hands-on coding camp for ages 9–14 where every camper goes home with a game, app, or website they made themselves.*
+
+---
+
+Ask your kid what they want to be when they grow up, and there's a good chance the answer involves a screen. YouTuber. Game designer. The person who builds the next Minecraft.
+
+But right now, most of that screen time is spent consuming: scrolling, watching, tapping through things someone else made. Once school lets out, that adds up to hours a day.
+
+What if this summer went differently?
+
+At [Camp Name], kids ages 9 to 14 swap passive screen time for something they'll be proud of. They learn to code by building projects they actually care about: a platformer game starring their own characters, an app that fixes a small problem in their life, or a website about whatever they're obsessed with this month.
+
+There are no dry worksheets and no lectures on syntax. Campers learn by making things, breaking them, and fixing them. Our instructors know how to keep a 10-year-old engaged and a 14-year-old challenged in the same room.
+
+On the last day, they show off what they made. Parents come to a demo where every camper presents their project. (Fair warning: you'll probably be asked to play their game. More than once.)
+
+The skills last, too. Coding teaches kids to break a big problem into small steps, stay patient when something doesn't work, and try again. Those habits help in math class, at the science fair, and long after camp ends.
+
+We keep groups small so every camper gets real attention from an instructor. Tuition is $899 and covers all instruction and materials [plus snacks/lunch — confirm]. No coding experience is needed, and [laptops are provided — confirm].
+
+**Spots are limited. Reserve your camper's seat today.**
+
+---
+
+That's about 300 words for the lead. I made up a few details you'll need to check or change: the demo day, the small groups, and the items in brackets. If any of them aren't true for your camp, cut them; don't soften them. The camp's length, dates and location would also strengthen the last paragraph if you add them.

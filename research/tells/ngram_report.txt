@@ -1,0 +1,252 @@
+AI docs 120, human docs 342
+
+=== 1-grams over-represented in AI (min 6 AI docs); ratio = AI docfreq / human docfreq
+  122.6  AI  21/120  HU   0/342  placeholders
+   77.0  AI  13/120  HU   0/342  scratchpad
+   71.3  AI  12/120  HU   0/342  runtime
+   71.3  AI  12/120  HU   0/342  legiit
+   54.1  AI   9/120  HU   0/342  agitate
+   48.5  AI  25/120  HU   1/342  subheadline
+   27.6  AI  14/120  HU   1/342  bracketed
+   25.7  AI  13/120  HU   1/342  dashboard
+   19.9  AI  10/120  HU   1/342  placeholder
+   16.5  AI  14/120  HU   2/342  swap
+   16.2  AI   8/120  HU   1/342  repeatable
+   16.2  AI   8/120  HU   1/342  gentle
+   16.2  AI   8/120  HU   1/342  generic
+   14.3  AI  12/120  HU   2/342  countdown
+   13.1  AI  11/120  HU   2/342  apps
+   12.0  AI  10/120  HU   2/342  roughly
+   11.8  AI  14/120  HU   3/342  upsell
+   11.8  AI  14/120  HU   3/342  html
+   10.8  AI   9/120  HU   2/342  compliance
+   10.5  AI  16/120  HU   4/342  preview
+   10.2  AI  12/120  HU   3/342  reels
+   10.2  AI  12/120  HU   3/342  overlay
+    9.7  AI   8/120  HU   2/342  logo
+    9.4  AI  64/120  HU  19/342  button
+    9.3  AI  76/120  HU  23/342  text
+    7.9  AI  12/120  HU   4/342  pace
+    7.7  AI   9/120  HU   3/342  guesswork
+    7.7  AI   9/120  HU   3/342  builds
+    7.5  AI  14/120  HU   5/342  checkout
+    7.0  AI  13/120  HU   5/342  covers
+    6.4  AI  23/120  HU  10/342  visual
+    6.4  AI  14/120  HU   6/342  cuts
+    6.3  AI  25/120  HU  11/342  script
+    6.3  AI  16/120  HU   7/342  setup
+    6.0  AI   9/120  HU   4/342  timer
+    5.9  AI  19/120  HU   9/342  anytime
+    5.4  AI   8/120  HU   4/342  relaxed
+    5.4  AI   8/120  HU   4/342  fills
+    5.4  AI   8/120  HU   4/342  bridge
+    5.2  AI  15/120  HU   8/342  guessing
+
+--- 1-grams common in HUMAN DR (>=25% docs) but rare in AI
+   0.01  AI   0/120  HU 268/342  he
+   0.01  AI   0/120  HU 257/342  his
+   0.01  AI   0/120  HU 244/342  newsletter
+   0.01  AI   0/120  HU 239/342  him
+   0.01  AI   0/120  HU 230/342  gary
+   0.01  AI   0/120  HU 228/342  halbert
+   0.01  AI   0/120  HU 191/342  letter
+   0.01  AI   0/120  HU 189/342  stuff
+   0.01  AI   0/120  HU 188/342  mail
+   0.01  AI   0/120  HU 183/342  fact
+   0.01  AI   0/120  HU 166/342  letters
+   0.01  AI   0/120  HU 164/342  he's
+   0.01  AI   0/120  HU 162/342  subscriber
+   0.01  AI   0/120  HU 156/342  dear
+   0.01  AI   0/120  HU 152/342  she
+   0.01  AI   0/120  HU 148/342  guy
+   0.01  AI   0/120  HU 147/342  sincerely
+   0.01  AI   0/120  HU 147/342  teach
+   0.01  AI   0/120  HU 140/342  creek
+   0.01  AI   0/120  HU 140/342  damn
+   0.01  AI   0/120  HU 138/342  jewfish
+   0.01  AI   0/120  HU 134/342  though
+   0.01  AI   0/120  HU 133/342  guys
+   0.01  AI   0/120  HU 130/342  named
+   0.01  AI   0/120  HU 128/342  interesting
+
+=== 2-grams over-represented in AI (min 6 AI docs); ratio = AI docfreq / human docfreq
+  116.9  AI  20/120  HU   0/342  primary text
+  116.9  AI  20/120  HU   0/342  button text
+  111.2  AI  19/120  HU   0/342  cta button
+  105.5  AI  18/120  HU   0/342  vsl script
+  105.5  AI  18/120  HU   0/342  product name
+   99.8  AI  17/120  HU   0/342  text send
+   88.4  AI  15/120  HU   0/342  problem visual
+   82.7  AI  14/120  HU   0/342  hook visual
+   77.0  AI  13/120  HU   0/342  upsell page
+   77.0  AI  13/120  HU   0/342  one click
+   71.3  AI  12/120  HU   0/342  yes add
+   71.3  AI  12/120  HU   0/342  user legiit
+   71.3  AI  12/120  HU   0/342  tools bdc
+   71.3  AI  12/120  HU   0/342  tmp claude
+   71.3  AI  12/120  HU   0/342  scratchpad tools
+   71.3  AI  12/120  HU   0/342  quick cuts
+   71.3  AI  12/120  HU   0/342  legiit copy
+   71.3  AI  12/120  HU   0/342  home user
+   71.3  AI  12/120  HU   0/342  copy bdc
+   71.3  AI  12/120  HU   0/342  claude tmp
+   71.3  AI  12/120  HU   0/342  claude home
+   71.3  AI  12/120  HU   0/342  cd scratchpad
+   71.3  AI  12/120  HU   0/342  cancel anytime
+   71.3  AI  12/120  HU   0/342  be cd
+   71.3  AI  12/120  HU   0/342  bdc bb
+   71.3  AI  12/120  HU   0/342  bb be
+   65.6  AI  11/120  HU   0/342  visual quick
+   65.6  AI  11/120  HU   0/342  script first
+   65.6  AI  11/120  HU   0/342  headline stop
+   59.9  AI  10/120  HU   0/342  what's included
+   59.9  AI  10/120  HU   0/342  the upsell
+   59.9  AI  10/120  HU   0/342  swap in
+   59.9  AI  10/120  HU   0/342  spoken words
+   59.9  AI  10/120  HU   0/342  shop now
+   59.9  AI  10/120  HU   0/342  html file
+   54.1  AI   9/120  HU   0/342  upsell html
+   54.1  AI   9/120  HU   0/342  time offer
+   54.1  AI   9/120  HU   0/342  facebook instagram
+   54.1  AI   9/120  HU   0/342  are placeholders
+   48.5  AI   8/120  HU   0/342  text overlay
+
+--- 2-grams common in HUMAN DR (>=25% docs) but rare in AI
+   0.01  AI   0/120  HU 253/342  all the
+   0.01  AI   0/120  HU 224/342  gary halbert
+   0.01  AI   0/120  HU 191/342  to know
+   0.01  AI   0/120  HU 188/342  of all
+   0.01  AI   0/120  HU 187/342  you will
+   0.01  AI   0/120  HU 162/342  be on
+   0.01  AI   0/120  HU 161/342  my newsletter
+   0.01  AI   0/120  HU 158/342  in fact
+   0.01  AI   0/120  HU 157/342  of his
+   0.01  AI   0/120  HU 156/342  to me
+   0.01  AI   0/120  HU 155/342  got to
+   0.01  AI   0/120  HU 155/342  here if
+   0.01  AI   0/120  HU 154/342  to view
+   0.01  AI   0/120  HU 152/342  view click
+   0.01  AI   0/120  HU 151/342  and he
+   0.01  AI   0/120  HU 149/342  not only
+   0.01  AI   0/120  HU 148/342  dear friend
+   0.01  AI   0/120  HU 144/342  sincerely gary
+   0.01  AI   0/120  HU 138/342  jewfish creek
+   0.01  AI   0/120  HU 137/342  of jewfish
+   0.01  AI   0/120  HU 136/342  i've been
+   0.01  AI   0/120  HU 135/342  direct mail
+   0.01  AI   0/120  HU 134/342  is so
+   0.01  AI   0/120  HU 132/342  in his
+   0.01  AI   0/120  HU 131/342  my friend
+
+=== 3-grams over-represented in AI (min 6 AI docs); ratio = AI docfreq / human docfreq
+   99.8  AI  17/120  HU   0/342  text send me
+   99.8  AI  17/120  HU   0/342  button text send
+   82.7  AI  14/120  HU   0/342  me the free
+   71.3  AI  12/120  HU   0/342  user legiit copy
+   71.3  AI  12/120  HU   0/342  tools bdc bb
+   71.3  AI  12/120  HU   0/342  tmp claude tmp
+   71.3  AI  12/120  HU   0/342  tmp claude home
+   71.3  AI  12/120  HU   0/342  that's why we
+   71.3  AI  12/120  HU   0/342  scratchpad tools bdc
+   71.3  AI  12/120  HU   0/342  next few minutes
+   71.3  AI  12/120  HU   0/342  legiit copy bdc
+   71.3  AI  12/120  HU   0/342  home user legiit
+   71.3  AI  12/120  HU   0/342  copy bdc bb
+   71.3  AI  12/120  HU   0/342  claude tmp claude
+   71.3  AI  12/120  HU   0/342  claude home user
+   71.3  AI  12/120  HU   0/342  cd scratchpad tools
+   71.3  AI  12/120  HU   0/342  be cd scratchpad
+   71.3  AI  12/120  HU   0/342  bdc bb be
+   71.3  AI  12/120  HU   0/342  bb be cd
+   65.6  AI  11/120  HU   0/342  vsl script first
+   59.9  AI  10/120  HU   0/342  visual quick cuts
+   59.9  AI  10/120  HU   0/342  the upsell page
+   59.9  AI  10/120  HU   0/342  the problem visual
+   59.9  AI  10/120  HU   0/342  few minutes i'll
+   54.1  AI   9/120  HU   0/342  only on this
+   54.1  AI   9/120  HU   0/342  one time offer
+   54.1  AI   9/120  HU   0/342  minutes i'll show
+   48.5  AI   8/120  HU   0/342  why we built
+   48.5  AI   8/120  HU   0/342  upsell page as
+   48.5  AI   8/120  HU   0/342  to fill in
+   48.5  AI   8/120  HU   0/342  problem visual quick
+   48.5  AI   8/120  HU   0/342  file tmp claude
+   48.5  AI   8/120  HU   0/342  facebook instagram ad
+   37.1  AI  19/120  HU   1/342  hi first name
+   18.8  AI  16/120  HU   2/342  send me the
+   14.3  AI  12/120  HU   2/342  show you exactly
+   14.3  AI  12/120  HU   2/342  on this page
+    9.4  AI  11/120  HU   3/342  fill in the
+    4.7  AI  15/120  HU   9/342  i'll show you
+    4.5  AI  13/120  HU   8/342  the next few
+
+--- 3-grams common in HUMAN DR (>=25% docs) but rare in AI
+   0.01  AI   0/120  HU 157/342  to be on
+   0.01  AI   0/120  HU 155/342  here if you
+   0.01  AI   0/120  HU 154/342  be on my
+   0.01  AI   0/120  HU 154/342  click here if
+   0.01  AI   0/120  HU 153/342  here to view
+   0.01  AI   0/120  HU 153/342  on my newsletter
+   0.01  AI   0/120  HU 152/342  to view click
+   0.01  AI   0/120  HU 152/342  view click here
+   0.01  AI   0/120  HU 141/342  sincerely gary halbert
+   0.01  AI   0/120  HU 137/342  of jewfish creek
+   0.01  AI   0/120  HU 124/342  how to make
+   0.01  AI   0/120  HU 123/342  creek dear friend
+   0.01  AI   0/120  HU 122/342  jewfish creek dear
+   0.01  AI   0/120  HU 116/342  dear friend subscriber
+   0.01  AI   0/120  HU 114/342  of the best
+   0.01  AI   0/120  HU 110/342  of all the
+   0.01  AI   0/120  HU 104/342  my newsletter reserved
+   0.01  AI   0/120  HU  97/342  by the way
+   0.02  AI   0/120  HU  86/342  for long time
+   0.03  AI   1/120  HU 161/342  click here to
+   0.03  AI   1/120  HU 134/342  some of the
+   0.03  AI   1/120  HU 134/342  want you to
+   0.03  AI   2/120  HU 206/342  you want to
+   0.04  AI   1/120  HU 112/342  if you do
+   0.05  AI   1/120  HU  93/342  if you are
+
+=== 4-grams over-represented in AI (min 6 AI docs); ratio = AI docfreq / human docfreq
+   99.8  AI  17/120  HU   0/342  button text send me
+   94.1  AI  16/120  HU   0/342  text send me the
+   82.7  AI  14/120  HU   0/342  send me the free
+   71.3  AI  12/120  HU   0/342  user legiit copy bdc
+   71.3  AI  12/120  HU   0/342  tools bdc bb be
+   71.3  AI  12/120  HU   0/342  tmp claude tmp claude
+   71.3  AI  12/120  HU   0/342  tmp claude home user
+   71.3  AI  12/120  HU   0/342  the next few minutes
+   71.3  AI  12/120  HU   0/342  scratchpad tools bdc bb
+   71.3  AI  12/120  HU   0/342  legiit copy bdc bb
+   71.3  AI  12/120  HU   0/342  home user legiit copy
+   71.3  AI  12/120  HU   0/342  copy bdc bb be
+   71.3  AI  12/120  HU   0/342  claude tmp claude home
+   71.3  AI  12/120  HU   0/342  claude home user legiit
+   71.3  AI  12/120  HU   0/342  cd scratchpad tools bdc
+   71.3  AI  12/120  HU   0/342  be cd scratchpad tools
+   71.3  AI  12/120  HU   0/342  bdc bb be cd
+   71.3  AI  12/120  HU   0/342  bb be cd scratchpad
+   54.1  AI   9/120  HU   0/342  only on this page
+   54.1  AI   9/120  HU   0/342  next few minutes i'll
+   54.1  AI   9/120  HU   0/342  minutes i'll show you
+   48.5  AI   8/120  HU   0/342  file tmp claude tmp
+   48.5  AI   8/120  HU   0/342  few minutes i'll show
+    6.0  AI   9/120  HU   4/342  in the next few
+
+--- 4-grams common in HUMAN DR (>=25% docs) but rare in AI
+   0.01  AI   0/120  HU 155/342  want to be on
+   0.01  AI   0/120  HU 154/342  click here if you
+   0.01  AI   0/120  HU 154/342  here if you want
+   0.01  AI   0/120  HU 154/342  to be on my
+   0.01  AI   0/120  HU 153/342  be on my newsletter
+   0.01  AI   0/120  HU 153/342  click here to view
+   0.01  AI   0/120  HU 152/342  here to view click
+   0.01  AI   0/120  HU 152/342  to view click here
+   0.01  AI   0/120  HU 152/342  view click here if
+   0.01  AI   0/120  HU 122/342  jewfish creek dear friend
+   0.01  AI   0/120  HU 120/342  of jewfish creek dear
+   0.01  AI   0/120  HU 104/342  on my newsletter reserved
+   0.01  AI   0/120  HU  98/342  creek dear friend subscriber
+   0.02  AI   1/120  HU 184/342  if you want to
+   0.03  AI   1/120  HU 164/342  you want to be
+   0.13  AI   4/120  HU  95/342  is one of the

@@ -1,0 +1,30 @@
+PROMPT: Write an opt-in page for a free 'is my kid ready to code' quiz: headline, subheadline, 3 to 5 bullets, and button text.
+
+Here's opt-in copy for the quiz:
+
+---
+
+**Headline:**
+Is Your Kid Ready to Code? Find Out in 2 Minutes.
+
+**Subheadline:**
+Take our free 10-question quiz to see if your child is ready to start coding, which skills they already have, and the best way for them to begin. No tech background needed.
+
+**Bullets:**
+- **Get a clear answer for your child's age and stage.** You'll learn whether they're ready now, almost ready, or would do better with a few building-block activities first.
+- **Find the hidden skills that predict success.** Puzzle-solving, patience and curiosity count for more than screen time or typing speed. See where your kid stands.
+- **Get a learning path matched to your child.** You'll get starting points that fit how they learn, whether that's games, building blocks or real code.
+- **Skip the guesswork and wasted sign-ups.** Find out before you spend money on classes, apps or camps that don't fit.
+- **Results come straight to your inbox.** You get a personalized readout you can save, share and come back to.
+
+**Button text:**
+Take the Free Quiz →
+
+*Alternates:* "Find Out If My Kid Is Ready" · "Get My Child's Results" · "Start the 2-Minute Quiz"
+
+**Microcopy under the button (optional):**
+Free and private. We'll email your results and send occasional tips, and you can unsubscribe anytime.
+
+---
+
+The 2-minute time and 10-question count are placeholders. Change them to match your actual quiz.

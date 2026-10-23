@@ -1,0 +1,50 @@
+PROMPT: Write a Facebook/Instagram ad for a membership delivering weekly stock trading alerts, $97/month.
+
+**Facebook/Instagram Ad: Weekly Stock Alerts ($97/month)**
+
+**Primary text:**
+Tired of guessing which stocks to watch?
+
+Every week, our analysts send you a short list of stock alerts with the setup, the reasoning, and the levels we're watching. No 3-hour research sessions. No chart-staring on Sunday night.
+
+Here's what members get:
+✅ Weekly stock alerts, delivered by [email/SMS/Discord]
+✅ The reasoning behind each alert, in plain English
+✅ Entry, exit, and risk levels for every idea
+✅ [Live Q&A / Community channel / Monthly review call]
+
+Join [X] traders already using the weekly list to make more organized decisions.
+
+$97/month. Cancel anytime.
+
+👉 Get this week's alerts
+
+*Trading stocks involves risk, including possible loss of principal. Alerts are for educational purposes and are not personalized investment advice. Past performance, including any results shown, does not guarantee future results. Do your own research before making any decision.*
+
+**Headline:** Weekly Stock Alerts, With the Reasoning Included
+**Description:** $97/month. Cancel anytime.
+**CTA button:** Learn More
+
+---
+
+**Alternate version (shorter, for Instagram):**
+
+Stop guessing. Start with a plan.
+
+Our weekly stock alerts give you the ideas, the reasoning, and the levels to watch, all in one email every [day].
+
+$97/month · Cancel anytime
+
+*Not personalized investment advice. Trading involves risk of loss.*
+
+---
+
+**Notes before you run this:**
+
+- **Fill in the brackets with real facts only.** I left out performance claims, win rates, and subscriber counts because I don't have your numbers. If you add them, use verifiable, audited, or clearly labeled hypothetical figures. Cherry-picked returns are the most common reason these ads get rejected or draw complaints.
+- **Avoid these phrases,** which violate Meta's policies and securities rules: "guaranteed," "risk-free," "double your money," "get rich," "100% accurate," and "turn $X into $Y."
+- **Meta's financial products policy.** Ads for trading and investment services generally require the advertiser to complete Meta's financial services authorization and set the ad's special ad category to "Financial products and services." Check the current requirements in Meta Business Suite before launching.
+- **Regulatory check.** Selling stock alerts in the US is generally allowed under the publisher's exclusion only if the content is impersonal, general, and not tailored to individual accounts, and if the publisher has no material interest in the securities it recommends. If you or your analysts trade the same names you publish, or you have a financial relationship with the companies, talk to a securities attorney. Rules vary by country and state.
+- **Disclosure.** Keep the risk disclaimer visible in the ad and on the landing page, not only in the terms.
+
+If you tell me the delivery method, the cadence, and what's included beyond the alerts, I can tighten the copy and write a second variant for A/B testing.

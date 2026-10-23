@@ -1,0 +1,29 @@
+PROMPT: Write an opt-in page for a free 7-day keto starter grocery list: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:**
+Your Free 7-Day Keto Starter Grocery List
+
+**Subheadline:**
+Stop guessing what to buy. Get the exact shopping list for your first week of keto, so you can walk into the store with confidence and walk out with food that works.
+
+**Bullets:**
+- **Every item for 7 days, organized by aisle.** Shop in one quick trip instead of wandering the store.
+- **Simple, affordable staples.** No pricey specialty products or hard-to-find ingredients.
+- **Hidden-carb swaps included.** Know which "healthy" foods quietly kick you out of ketosis, and what to buy instead.
+- **Protein, fat, and veggie picks that keep you full.** Fewer cravings, less temptation to quit by day three.
+- **Printable and phone-friendly.** Check items off right in the store.
+
+**Button text:**
+Send Me the Free Grocery List
+
+**Optional microcopy under the button:**
+No spam. Unsubscribe anytime.
+
+---
+
+A few notes:
+- I wrote the bullets around benefits (saves time, saves money, avoids mistakes) rather than features, since that's what moves people to opt in.
+- Button alternatives to A/B test: "Get My Free Keto List" or "Yes, Send It to Me."
+- Only claim "printable and phone-friendly" and "organized by aisle" if the PDF delivers both. If it doesn't, swap in what it does include.
+
+I can also build this as a styled HTML page, or write the follow-up welcome email, if you'd like.

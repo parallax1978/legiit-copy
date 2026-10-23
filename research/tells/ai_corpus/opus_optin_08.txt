@@ -1,0 +1,28 @@
+PROMPT: Write an opt-in page for the webinar registration itself: headline, subheadline, 3 to 5 bullets, and button text.
+
+Here's the opt-in page for the free Amazon FBA webinar, based on the offer in your `gen_ai_corpus.py`:
+
+---
+
+**Headline:**
+Your First Amazon Product, Start to Finish: A Free Live Training for Total Beginners
+
+**Subheadline:**
+In 60 minutes you'll see how to find a product, source it, and get it into Amazon's warehouses without guessing or spending thousands on the wrong item. Bring your questions; we'll answer them live.
+
+**On this free training, you'll learn:**
+
+- **The 4-filter product test** that rules out most bad product ideas before you spend a dollar on samples
+- **How to read a supplier quote** so you know your real landed cost, Amazon fees, and profit per unit *before* you place an order
+- **The 3 mistakes that sink most first launches**, including the inventory and pricing errors that turn a "winning" product into a loss
+- **What a realistic first-year budget looks like**, with numbers for starting small, and what you can skip until you have sales
+- **A live Q&A** where you can ask about your own product idea, budget, or situation
+
+**Button text:**
+Save My Free Seat →
+
+*(Microcopy under the button:)* Free to attend. A replay will be sent to everyone who registers.
+
+---
+
+I kept income numbers out of the headline and bullets on purpose. FBA results vary a lot, and earnings claims on webinar pages tend to get you in trouble with ad platforms and the FTC. If you want, I can write a second version with more urgency, like limited seats, a countdown, or "starts Thursday at 8 PM ET."

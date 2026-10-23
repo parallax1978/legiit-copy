@@ -1,0 +1,49 @@
+PROMPT: Write the first two minutes of a video sales letter script for a coaching program that helps dentists add $20,000/month in high-ticket cases, by application.
+
+# VSL Script: First Two Minutes
+
+**Runtime:** ~2:00 at a natural speaking pace. Bracketed text is a placeholder or a stage direction.
+
+---
+
+**[0:00–0:12] HOOK**
+*[VISUAL: Close-up of you, dental operatory softly blurred behind you]*
+
+"If you're a dentist doing excellent dentistry, but your schedule is full of cleanings and your case pipeline quietly dies every month, this video is for you. Stay with me for the next two minutes. I'm going to show you where that money is hiding."
+
+**[0:12–0:35] WHO THIS IS FOR**
+*[VISUAL: Quick cuts of gloved hands, a treatment plan printout, a full calendar]*
+
+"This is for established general dentists and specialists who are already busy, already trained, and already capable of doing implants, full-arch, or aligner cases. You don't have a skill problem. You have a conversion problem. Right now, your high-value treatment plans get presented, the patient nods, and then... nothing."
+
+**[0:35–1:00] THE PROBLEM**
+*[VISUAL: Treatment plan PDF with a red "PENDING" stamp across it]*
+
+"Every month, you probably present dozens of treatment plans worth thousands of dollars each. Most of them never get accepted. You follow up with patients who say, 'Let me think about it.' Your team gets uncomfortable talking about money. So you go back to filling the hygiene chair, because it's easier than fixing what's actually broken: how the case is presented and how it gets accepted."
+
+**[1:00–1:30] THE REFRAME**
+*[VISUAL: You, direct to camera, leaning in slightly]*
+
+"Here's what most dentists miss. You don't need a flood of new patients to add $20,000 a month in high-ticket cases. In most practices, the opportunity is already sitting in the chair, in the people who've already said yes to a consult. The gap isn't your clinical skill. It's the system that turns a diagnosis into a signed case, without pressure, without discounting, and without you losing your evenings to it."
+
+**[1:30–1:55] THE PROGRAM**
+*[VISUAL: Program name lower-third, then a three-step graphic appears]*
+
+"That's what [PROGRAM NAME] is built to fix. Over [NUMBER] weeks, we work with you on three things: how you diagnose and present high-ticket cases, how your team handles the financial conversation, and how you track case acceptance so you always know what's working.
+
+*[VISUAL: Client result card with name, practice type, date range, and on-screen disclaimer]*
+
+"[CLIENT FIRST NAME] went from [STARTING NUMBER] to [RESULT] in [TIMEFRAME] after implementing this system."
+
+**[1:55–2:10] CALL TO ACTION**
+*[VISUAL: "Apply Below" button animates in]*
+
+"This isn't for everyone. We only work with dentists who are serious about growth and whose practice is already producing. If that's you, click the button below and complete the short application. We review every one personally, and if it's a fit, we'll book a call to map out your numbers. Apply now, and I'll see you on the inside."
+
+---
+
+### Notes
+
+- **Income claim:** Keep "$20,000 a month" in the script only if you can back it with documented results from real clients. Show a typical result, not the best one, and put a results disclaimer on screen. Don't present $20,000 as a guarantee. If you can't substantiate it, swap in a figure you can.
+- **Placeholders to fill:** the program name, the number of weeks, the client's name and results, and the timeframe. If the client result is hypothetical or composite, don't present it as a real testimonial.
+- **Structure:** Hook, who it's for, problem, reframe, offer, call to action. The reframe does the most work: it moves the dentist's attention from "I need more patients" to "I'm losing cases I've already earned."

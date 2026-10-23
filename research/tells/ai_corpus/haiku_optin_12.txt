@@ -1,0 +1,16 @@
+PROMPT: Write an opt-in page for a free 'top 3 setups this week' report: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:** The 3 SEO setups that moved rankings this week
+
+**Subheadline:** A free weekly report with the three tactics, tests, and fixes worth your time, plus the ones to skip. One email every Monday.
+
+**Bullets:**
+- The three setups with the strongest results this week, ranked by impact
+- What each one changed, with the numbers behind it
+- Step-by-step instructions to replicate each setup on your own site
+- Mistakes to avoid, drawn from the setups that underperformed
+- Free to join, and you can unsubscribe in one click
+
+**Button text:** Send me this week's top 3
+
+I wrote this for an SEO audience, based on your domain. If "setups" means something else for your readers, tell me the audience and I'll rewrite the copy.

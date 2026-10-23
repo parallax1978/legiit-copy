@@ -1,0 +1,72 @@
+PROMPT: Write the first two minutes of a video sales letter script for a mortgage refinance broker offering a free rate quote.
+
+# Mortgage Refinance VSL: First Two Minutes
+
+**Runtime target:** ~2:00 (about 320 spoken words)
+**Bracketed items** are placeholders to replace with your real numbers, names, and offer details.
+
+---
+
+**[0:00–0:12] COLD OPEN**
+*[Visual: Close-up of a monthly mortgage statement on a kitchen table, the total circled in red marker.]*
+
+**NARRATOR (VO):**
+"That number on your mortgage statement? It might be costing you thousands more than it should, every single year. And most homeowners never find out, because nobody ever asks them to check."
+
+---
+
+**[0:12–0:35] THE PROBLEM**
+*[Visual: Homeowner (stock or real client, with permission) looking at a phone, then setting it down with a sigh.]*
+
+**NARRATOR (VO):**
+"Rates have moved a lot since many of you got your loan. Maybe you bought when rates were higher. Maybe you took the first offer your bank gave you and never looked back. Either way, you're probably paying more than someone with your exact home, your exact credit, and your exact income could be paying today."
+
+---
+
+**[0:35–1:00] WHY PEOPLE DON'T ACT**
+*[Visual: Split screen. Left: a stack of confusing bank paperwork. Right: a calm person with a laptop.]*
+
+**NARRATOR (VO):**
+"So why don't people shop their rate? Because it feels like a headache. Hours on hold. Forms you don't understand. Calls from lenders you've never heard of. And the fear that you'll start the process and end up with a worse deal.
+
+That's exactly what we built this to fix."
+
+---
+
+**[1:00–1:30] THE SOLUTION**
+*[Visual: Logo reveal. Broker at a desk, smiling, pulling up rate comparison on a monitor.]*
+
+**NARRATOR (VO):**
+"My name is [Your Name], and I'm a licensed mortgage broker with [X] years of experience helping homeowners in [City/State] refinance. Here's the difference: I don't work for one bank. I work with [number] lenders, which means I can shop your loan across all of them and show you where you actually stand.
+
+You give me a few basic details. I do the legwork. You get clear side-by-side options, with no pressure and no obligation to move forward."
+
+---
+
+**[1:30–1:50] THE OFFER**
+*[Visual: On-screen text: "FREE RATE QUOTE. No Obligation." Then a sample comparison card with placeholder numbers.]*
+
+**NARRATOR (VO):**
+"Right now, I'm offering a free rate quote to homeowners in [area]. In about [X] minutes, you'll know what you could qualify for, what your monthly payment could look like, and whether refinancing makes sense for your goals, whether that's a lower rate, a shorter term, or pulling cash out.
+
+If it doesn't make sense for you, you'll know that too. And you still keep the quote."
+
+---
+
+**[1:50–2:00] CALL TO ACTION**
+*[Visual: Large button graphic and phone number on screen. Broker's hand gesturing toward the button.]*
+
+**NARRATOR (VO):**
+"Click the button below, or call me at [phone number]. Get your free rate quote today, and find out if you've been overpaying without knowing it."
+
+*[End card: Name, NMLS #, company, phone, and website. Full legal disclaimer displayed for the required duration.]*
+
+---
+
+### Production and Compliance Notes
+
+- **Replace all claims with verifiable data.** Don't say "save thousands" unless you can show a real example from your own closed loans, and disclose the assumptions behind it.
+- **Check your state and federal advertising rules.** Mortgage ads typically require your NMLS number and company disclosures. Some states also have rules about rate and payment claims, so have your compliance team review the script before it goes live.
+- **Avoid "guaranteed" language.** Rates, approval, and savings depend on the borrower's situation, and the script should not imply otherwise.
+- **Get consent for any real homeowner footage**, and don't present actors as real clients.
+- **Test the 2:00 runtime** by reading the script aloud at a natural pace. Trim the problem section first if it runs long.

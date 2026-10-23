@@ -1,0 +1,63 @@
+PROMPT: Write a Facebook/Instagram ad for a productivity app for adults with ADHD, $12/month.
+
+Here's ad copy ready to drop into Meta Ads Manager. I used **[App Name]** as a placeholder.
+
+---
+
+## Main ad (primary version)
+
+**Primary text:**
+> Most productivity apps assume you'll remember to open them.
+>
+> [App Name] was built for ADHD brains. It doesn't expect perfect habits. It works with how attention actually works:
+>
+> ⚡ One task on screen at a time, not a wall of 47 to-dos
+> ⏰ Gentle nudges that show up when you need them
+> 🧩 Big projects broken into tiny steps you can actually start
+> 🎯 Body-doubling focus sessions for when "just do it" doesn't work
+> 💛 No guilt streaks. Miss a day, pick up where you left off.
+>
+> Less planning to plan. More getting things done.
+>
+> $12/month. Try it free for 7 days.
+
+**Headline:** Productivity That Works With Your Brain
+
+**Description:** $12/mo · Cancel anytime
+
+**CTA button:** Try for Free (or Download / Sign Up)
+
+---
+
+## Short version (Instagram Stories and Reels)
+
+> Your to-do list shouldn't need its own to-do list.
+> [App Name]: the planner built for ADHD brains.
+> One task at a time. Zero guilt. $12/month.
+
+**CTA:** Try Free
+
+---
+
+## Alternate hooks for A/B testing
+
+1. "Started 6 tasks. Finished 0. Sound familiar? There's a better system."
+2. "Built by people with ADHD, for people with ADHD."
+3. "The productivity app that doesn't punish you for forgetting it exists."
+4. "Time blindness is real. Your planner should know that."
+
+---
+
+## Creative suggestion
+
+A split-screen video. On the left is a chaotic phone screen with 20 open tabs and a mess of sticky notes. On the right is [App Name] showing a single calm task: "Reply to Sam's email: 5 min." Add text overlay: *"Same brain. Better system."*
+
+---
+
+## Before you publish, check Meta's ad policies
+
+- **Don't say the viewer has ADHD.** Meta rejects copy like "Do you have ADHD?" or "Struggling with your ADHD?" because it implies you know a personal health attribute. The copy above describes who the *product* is for ("built for ADHD brains"), not who the *viewer* is.
+- **Make no medical claims.** Avoid "treats," "cures," or "manages symptoms." Present it as a productivity tool, not a therapy.
+- **Fix the bullets to match the real app.** I made up the feature list, so swap in what the app actually does. Also confirm the 7-day free trial exists, or remove that line.
+
+I can also write a version that leads with the price, one for a specific group (students, freelancers, parents), or a set of 5 Reels scripts.

@@ -1,0 +1,44 @@
+PROMPT: Write a promotional email to my email list selling a probiotic supplement for bloating, $39 per bottle. Include a subject line.
+
+**Subject line:** Say goodbye to the bloat by dinnertime? Try this.
+
+**Preview text:** Our daily probiotic, made to help support a flatter, more comfortable stomach. $39 a bottle.
+
+---
+
+Hi [First Name],
+
+Feeling bloated after meals? You're not alone. Gas, pressure, and that tight, puffy feeling can make a normal day harder than it should be.
+
+That's why we created **[Product Name]**, a daily probiotic formulated to support digestive comfort and a healthy gut microbiome.
+
+**Why people reach for [Product Name]:**
+
+- **Targeted probiotic strains** chosen for digestive support
+- **[X] billion CFU** per serving, delivered in a [capsule/powder/chewable] you can take every day
+- **Simple routine:** one serving a day, with or without food
+- **Clean formula** with no [artificial colors, fillers, etc. - edit to match your product]
+
+Your gut works hard for you. Give it a little help.
+
+**[Product Name] is $39 per bottle.**
+
+**[Shop Now →]** (link)
+
+Have questions about which product is right for you? Just reply to this email. We're happy to help.
+
+To your comfort,
+[Your Name]
+[Brand Name]
+
+---
+
+*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease. Consult your healthcare provider before starting any new supplement, especially if you are pregnant, nursing, or have a medical condition.*
+
+---
+
+**Notes before you send:**
+
+- **Fill in the brackets** with your real product name, CFU count, strains, and ingredients. I left them as placeholders rather than guessing.
+- **Keep the claims to what you can back up.** I avoided words like "cures," "eliminates," or "stops bloating," which can draw FDA or FTC scrutiny. If you have clinical data on specific strains, you can cite it in a sentence.
+- **Check the disclaimer** with whoever handles your compliance, since requirements vary by claim and by country.

@@ -1,0 +1,76 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys a productivity app for adults with ADHD, $12/month. The upsell is an annual plan at 2 months free.
+
+# One-Time Offer Page: Annual Plan Upsell
+
+*Shown right after checkout. Replace [App Name] and anything else in brackets.*
+
+---
+
+### ✅ You're in. Your account is ready.
+
+**Before you go, one quick thing. It takes 20 seconds to read.**
+
+---
+
+## Get 2 months free when you switch to annual
+
+**$120/year instead of $144.** That works out to $10 a month, and you only pay once.
+
+This offer is only on this page. If you close it, your monthly plan stays exactly as it is.
+
+---
+
+### Why this exists
+
+You probably know how this goes. A new app feels great at first. Then a few weeks in, the novelty wears off and your brain wants something new.
+
+That's normal for ADHD brains, and it isn't a character flaw. [App Name] is built for that slump: the day you open it after a week away and it doesn't make you feel bad about it.
+
+The annual plan helps in three small ways:
+
+- **One less charge to keep track of.** You don't have to wonder each month what that $12 was.
+- **You keep $24.** That's two months free.
+- **It gives you time to make it a habit.** Real routines take longer than the honeymoon phase. A year gives you room to fall off and come back as often as you need to.
+
+---
+
+### Here's exactly what happens if you say yes
+
+| | Monthly (what you have now) | **Annual (this offer)** |
+|---|---|---|
+| Price | $12/month | **$120/year** |
+| Yearly total | $144 | **$120** |
+| You save | — | **$24 (2 months free)** |
+| Features | Everything | Everything, no difference |
+
+[Today's $12 payment is credited toward your annual plan, so you'll be charged **$108** now.]
+
+[**30-day money-back guarantee.** If it isn't helping, email us and we'll refund you in full. No forms and no questions.]
+
+---
+
+### [ Yes, switch me to annual and save $24 → ]
+
+<sub>No thanks, I'll stay on monthly</sub>
+
+---
+
+**Quick answers**
+
+**Will I lose anything I've set up?** No. Your account, settings and data stay as they are.
+
+**What happens when the year ends?** It renews at $120/year. [We'll email you 7 days before so you aren't surprised.]
+
+**Can I come back to this offer later?** No, this exact price is only shown here. You can switch to annual later at [the standard annual price].
+
+---
+
+## A few notes on the choices
+
+- **The math checks out.** $12 × 12 = $144, and 10 paid months = $120. The page uses $24 and $10/mo everywhere so nobody has to do the math.
+- **The bracketed lines need your input.** Most important is the credit for today's $12. Without it, buyers can feel double-charged and you'll see refund requests. The renewal reminder and guarantee are also strong trust signals for this audience. Only keep them if they're true.
+- **The decline link is neutral on purpose.** Avoid guilt-trip opt-outs like "No, I like being disorganized." ADHD buyers often carry shame about this, and those links tend to cause refunds and resentment.
+- **There's no countdown timer or fake scarcity.** Impulsive buying is a real ADHD pain point, and this audience is quick to call out manipulation. "Only on this page" is enough urgency, as long as it's true.
+- **It's short and easy to scan,** with a clear yes or no at the end. The page is written for the way this audience reads.
+
+I can also turn this into a styled HTML page or write an A/B headline variant.

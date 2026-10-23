@@ -1,0 +1,56 @@
+PROMPT: Write a one-time-offer upsell page shown right after someone buys a free lead magnet: 7 email subject line templates. The upsell is a $37 mini-course on email open rates.
+
+# One-Time Upsell Page: Email Open Rates Mini-Course ($37)
+
+Shown once, right after the free lead magnet purchase. Replace the bracketed placeholders with your own details.
+
+---
+
+**Headline**
+Your [Lead Magnet Name] is ready. Want the system behind it?
+
+**Subhead**
+The mini-course on email open rates: a step-by-step system for getting more of your emails opened, from subject lines to sender name to list hygiene.
+
+**Body**
+You just grabbed [Lead Magnet Name]. It covers [one-sentence promise]. This mini-course goes further. It's [X] short lessons you can finish in [time], and each one gives you a template you can use the same day.
+
+**What's inside**
+- **Module 1:** [Topic, e.g., why opens drop and how to diagnose yours]
+- **Module 2:** [Topic, e.g., subject line formulas you can reuse]
+- **Module 3:** [Topic, e.g., sender name and preview text]
+- **Module 4:** [Topic, e.g., list segmentation and cleaning]
+- **Bonus:** [Bonus, e.g., the 7 subject line templates below, in a fill-in-the-blank doc]
+
+**Price**
+~~$[Regular price]~~ **$37** one-time
+
+**Offer**
+This offer appears only on this page. If you leave, you won't see it again, and it won't be sent to your inbox later.
+
+**[Yes, Add the Mini-Course for $37]** *(button)*
+
+Secure checkout. Instant access after purchase. Lifetime access to the lessons.
+
+**Decline link:** No thanks, send me my download.
+
+---
+
+## 7 Email Subject Line Templates
+
+These are for the follow-up email that delivers or promotes the offer. Each one fits a different angle, so you can test them against each other.
+
+1. **Curiosity:** `{first_name}, why do some emails get opened and others don't?`
+2. **Direct benefit:** `Get more opens from your next {number} emails`
+3. **Continuation:** `Now that you have [Lead Magnet Name], here's the next step`
+4. **Diagnostic:** `Your open rate is probably [X]%. Here's how to find out why.`
+5. **Question:** `Are your subject lines doing the work, or is your sender name?`
+6. **Reminder:** `The email open rate course is still open to you, {first_name}`
+7. **Final notice:** `Last note about the open rate mini-course`
+
+**Notes on use**
+- Send the offer email within an hour of the purchase, while the lead magnet is still fresh.
+- Keep the wording honest. If you don't have a real deadline, don't write one. Templates 6 and 7 work without a fake countdown.
+- Swap in real numbers, such as your own open rate or the count of lessons, only after you've confirmed them.
+
+I read "upsell page" as landing-page copy with a headline, module list, price, and decline path, plus the subject lines for the email that follows it. If you wanted an HTML page built and published, tell me and I'll make it.

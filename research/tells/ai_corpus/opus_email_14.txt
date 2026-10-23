@@ -1,0 +1,71 @@
+PROMPT: Write a promotional email to my email list selling an SEO agency for law firms, free strategy call. Include a subject line.
+
+**Subject line:** Is your firm invisible on Google? (Free 30-min strategy call)
+
+**Alternate subject lines to A/B test:**
+- Why your competitors are getting the cases you should be getting
+- Your next 10 clients are searching Google right now
+- [First Name], a quick question about your firm's website
+
+---
+
+**Preview text:** Find out exactly what's keeping your firm off page one, for free.
+
+---
+
+Hi [First Name],
+
+When someone gets hurt in a car accident, gets served divorce papers, or gets arrested, they usually don't ask a friend for a referral first.
+
+They pick up their phone and search for something like *"personal injury lawyer near me."*
+
+Then they call one of the first three firms they see.
+
+**If your firm isn't one of those three, those cases go to your competitors.** That isn't because they're better lawyers. They just show up first.
+
+That's the problem we solve.
+
+At [Agency Name], we only do SEO for law firms. We know how legal search works: how competitive the keywords are, how much each case is worth, and the ethics and advertising rules your marketing has to follow.
+
+Here's what we do for firms like yours:
+
+✅ **Local map pack rankings:** We get your firm into the top 3 Google Maps results in your city.
+✅ **Practice area pages that convert:** These are pages that rank well and get visitors to pick up the phone.
+✅ **Authority link building:** We earn high-quality, relevant links so Google trusts your site.
+✅ **Technical SEO fixes:** We find and fix the hidden problems that hold your rankings back.
+✅ **Clear monthly reporting:** You'll see rankings, calls, and form fills, without the fluff.
+
+[Optional: *"We recently helped [Client Firm], a [practice area] firm in [City], go from [X] to [Y] monthly leads in [timeframe]."*]
+
+---
+
+### Book your free SEO strategy call
+
+On a 30-minute call, we'll:
+
+1. **Audit your current rankings** for the keywords that bring in cases
+2. **Show you exactly who's outranking you** and why
+3. **Give you a clear action plan** to start pulling in more qualified leads
+
+There's no pressure and no long sales pitch. You'll come away with useful insights whether or not you work with us.
+
+👉 **[Book My Free Strategy Call]**
+
+We keep only [X] strategy call spots open each month so every firm gets real attention. Spots usually fill up quickly.
+
+Every month you wait is another month of cases going to the firm down the street.
+
+Talk soon,
+
+[Your Name]
+[Title], [Agency Name]
+[Phone] | [Website]
+
+**P.S.** Not sure if SEO is right for your firm? The strategy call is the easiest way to find out. You'll know where you stand on Google and what it would take to win more cases online. **[Grab your spot here →]**
+
+---
+
+A few notes:
+- Swap in a real client result if you have one. A specific number is the strongest part of an email like this. If you don't have one, leave that line out rather than making up a figure.
+- Only keep the "[X] spots open each month" line if it's true. False scarcity hurts trust, especially with lawyers.
+- If you know your list's practice areas (PI, family, criminal defense, etc.), I can write segmented versions with examples for each one.

@@ -1,0 +1,42 @@
+PROMPT: Write the headline and the first 300 words (the lead) of a sales page for a local HVAC company's $89 fall furnace tune-up.
+
+# Headline
+
+**Don't Find Out Your Furnace Is Dead on the First Freezing Night. Get a Full Fall Tune-Up for $89.**
+
+*Our certified technician inspects, cleans, and tests your furnace now, while we can still book you this week.*
+
+---
+
+# Lead (≈300 words)
+
+It's 2 a.m. The first real cold snap has hit, and your house is getting colder by the minute. You flip the thermostat. Nothing happens, or the furnace kicks on, rattles, and shuts off again.
+
+You call for emergency service and learn that every HVAC company in town is booked for days. The ones who can come out are charging after-hours rates.
+
+This happens every year, and it's rarely a surprise to the technician who arrives. Most no-heat calls trace back to problems a routine inspection would have caught: a dirty flame sensor, a clogged filter, a worn igniter, a weak capacitor, or a cracked part that slowly gets worse.
+
+Your furnace has sat idle since spring. Dust has settled inside it, and parts have aged. Now it's about to run nonstop for months.
+
+For **$89**, a [Company Name] technician will go through your furnace *before* you need it. Here's what the visit covers:
+
+- **Clean and inspect** the burners, flame sensor, and blower
+- **Test the safety controls**, including the heat exchanger check that helps protect your family from carbon monoxide
+- **Check airflow, thermostat calibration, and electrical connections**
+- **Replace a standard filter** if yours is due
+- **Give you a plain-English report** on your furnace's condition, with no pressure and no surprise add-ons
+
+A tuned furnace runs more efficiently, which can help keep your energy bills down. It's also less likely to break down on the coldest night of the year.
+
+Our fall schedule fills quickly, and once the temperature drops, it fills faster.
+
+**Book your $89 tune-up today and go into winter knowing your heat will work.**
+
+[Schedule My Tune-Up →]
+
+---
+
+**Notes for you:**
+- I used bracketed placeholders for the company name and button. I left out claims like "licensed since 19XX" and "5-star rated" because I can't verify them. Add real proof points (years in business, review count, guarantee) right after the headline if you have them.
+- Confirm that the bullet list matches what your technicians actually do, and that the filter is included in the price.
+- Some companies add a deadline or capacity limit ("only 40 spots this month"). I didn't, because it only works if it's true.

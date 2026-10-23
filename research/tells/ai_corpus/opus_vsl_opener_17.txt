@@ -1,0 +1,79 @@
+PROMPT: Write the first two minutes of a video sales letter script for a summer coding camp for kids ages 9-14, $899.
+
+# VSL Script: Summer Coding Camp (Ages 9–14)
+**Runtime covered:** 0:00–2:00 · **Narration:** about 300 words, a natural pace for a parent-facing VSL
+*[Brackets] are placeholders for your real details.*
+
+---
+
+**[0:00–0:12] HOOK**
+
+**VISUAL:** Close-up of a kid's face lit by a tablet screen, thumb scrolling. Slow push-in.
+
+**VO:**
+Your kid is going to spend about 300 hours on a screen this summer.
+
+*(beat)*
+
+The question is whether they spend those hours *watching* someone else's game… or *building* their own.
+
+---
+
+**[0:12–0:40] THE PROBLEM**
+
+**VISUAL:** Quick cuts: YouTube autoplay, a game lobby, a kid on the couch, a parent glancing at the clock.
+
+**VO:**
+If you're a parent, you know how summer goes. School ends, the schedule disappears, and by week two the screens have taken over.
+
+You've tried limits. You've tried "go play outside." And part of you wonders whether all those hours could be going toward something that actually *matters*.
+
+Here's the thing: the screen isn't the problem. Your kid is fascinated by technology, and that's a good thing. They just have no idea they could be the one making it.
+
+---
+
+**[0:40–1:15] THE SHIFT**
+
+**VISUAL:** The same kid, now at a table with other kids, laughing. A simple game they coded appears on screen. A character jumps and they cheer.
+
+**VO:**
+Picture a different summer.
+
+Your 11-year-old comes home and says, *"Want to see the game I made today?"*
+
+Not a game they played. A game they **made**, with a character, levels, and a scoreboard, written in real code.
+
+By the end of the week they've built something they can show their grandparents, their friends, even their teacher. And they walk a little taller, because they've figured out something most adults never do: *I can build things.*
+
+---
+
+**[1:15–1:45] INTRODUCE THE CAMP**
+
+**VISUAL:** Logo reveal: **[CAMP NAME]**. B-roll of instructors kneeling beside kids, high-fives, a project demo day.
+
+**VO:**
+That's what happens at **[Camp Name]**, a summer coding camp built specifically for kids ages 9 to 14.
+
+No boring lectures and no sitting through slides. Kids learn by building: games, animations, websites, even simple apps, guided by instructors who actually [are working developers / love teaching kids].
+
+Beginners are welcome. If your child has never written a line of code, that's exactly who we built this for. And if they already tinker with Scratch or Minecraft mods, we'll take them further than they thought they could go.
+
+---
+
+**[1:45–2:00] BRIDGE TO THE OFFER**
+
+**VISUAL:** Kid presenting their project to a small crowd of parents, who clap. Freeze frame on the kid's proud grin.
+
+**VO:**
+In the next few minutes I'll show you exactly what your child will build each day, why parents call it [the best summer investment they've made], and how to save your child's spot before [session dates] fill up.
+
+But first, let me tell you about [Student Name]…
+
+---
+
+### Notes
+- **Price ($899):** I held it back on purpose. In a VSL it usually lands around the 4–6 minute mark, after the value stack. You can set it up against the cost of a typical week of summer childcare or a private tutor in your area, and you could use the per-day breakdown if it's flattering (for example, a 2-week camp works out to about $90 a day).
+- **Fill in honestly:** The "300 hours" figure, the instructor credentials, any scarcity ("fill up") and the testimonial at the end should all reflect your real numbers and your real students. Parents tend to check these claims.
+- **Next beat:** The "[Student Name]" cliffhanger is meant to lead into a short, real parent or student story of about 30 seconds as social proof.
+
+I can write the next section (story, curriculum breakdown, value stack and price reveal) if you'd like.

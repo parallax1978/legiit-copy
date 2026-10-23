@@ -61,14 +61,18 @@ All tenant tables carry `workspace_id` and are protected by RLS (`exists (select
 | `profiles` | Display name, onboarding state |
 | `offers` | Name, status, structured brief (jsonb), audience, price, guarantee, positioning |
 | `offer_sources` | URL or storage path, extracted text, extraction status |
-| `offer_claims` | Claims ledger: text, type, evidence (source ref + quote), status (verified/unverified/prohibited), created_by (system/user) |
+| `offer_claims` | Claims ledger. Per row: claim text; claim type (the 19 types in the standard, Section 8.1); role in the argument; evidence grade A–F with endpoint, population, dose, duration and effect size; source ref and quote; precision; typical result; earnings context (dates, cohort, percentage achieving, time and effort, expenses); material-connection flag; guarantee terms and approver; former price and bonus value with basis; scarcity number with an enforced flag; deadline with mechanism; trial and continuity terms; story-claim rows; establishment-signal flag; status (verified/unverified/prohibited); created_by |
+| `offer_config` | Per-offer: vertical; business-opportunity and FTC Notice-recipient booleans; humor policy per format; greeting and edge tolerance; refund window; first-week experience |
+| `offer_variants` | The offer options sheet and the chosen variant with reasons (step 2 output) |
 | `offer_research` | Research dossier (jsonb) with sources; versioned, one active |
 | `offer_questions` | Missing-info questions and answers |
 | `voice_profiles` | Samples and derived style guide |
 | `generations` | One job: offer_id, format, purpose, options, status, current_step, progress_message, selected_angle_id, cost, token totals, prompt_version_set |
 | `generation_steps` | One row per step attempt: step, attempt, status, input_hash, output (jsonb), model, tokens, cost, duration, error |
-| `angles` | The three candidate arguments per generation with scores and the selection rationale |
-| `drafts` | Versions of the copy: generation_id, version, origin (system/user/rewrite), blocks (jsonb), markdown, created_by |
+| `angles` | All candidate arguments per generation with gate results and rubric scores; the three finalists, the winning thesis, and the two kept losers |
+| `controls` | Control intake: the customer's (and at first the founder's) existing promotions with format, traffic, diagnosed awareness and sophistication, argument sentence, lead type, mechanism, proof placement, offer devices, results with dates and sample sizes, losing variants |
+| `generation_predictions` | The reviewer's beat/lose/unsure prediction against the control, and the reported result and refund rate when known |
+| `drafts` | Versions of the copy: generation_id, version, origin (system/user/rewrite), blocks (jsonb) with inline ledger IDs, markdown, skim-path extract, created_by |
 | `draft_flags` | Factual and editorial flags on a draft version: quote, issue, severity, suggested fix, resolved |
 | `draft_feedback` | User thumbs/reason per draft |
 | `usage_events` | Per-workspace meter: generation completed, tokens, cost (feeds limits later) |
@@ -77,8 +81,9 @@ All tenant tables carry `workspace_id` and are protected by RLS (`exists (select
 | Table | Purpose |
 |---|---|
 | `app_admins` | user_ids with admin access |
-| `examples` | Teaching library: format, market, selling situation tags, awareness level, full text, annotations (jsonb), results notes, source, embedding |
-| `critiques` | Brief, weak draft, strong revision, reasons (jsonb), tags, embedding |
+| `examples` | Teaching library: format, market, selling situation, awareness state, sophistication stage, lead type, argument sentence, hook, mechanism type, proof placement, offer devices, voice profile, funnel position, documented result, loser flag, rights status, full text, annotations (jsonb), source, embedding |
+| `example_sections` | Separately retrievable leads, mechanism sections, proof blocks, closes and order forms cut from examples |
+| `critiques` | Brief, weak draft, strong revision, the chief's named defect, principle, test result, AI-failure mapping, tags, embedding (seeded from `research/critique_pairs_v0.json`) |
 | `prompt_versions` | step, version, template, model, effort, max_tokens, active, notes |
 | `eval_briefs` | Unseen offers used only for evaluation |
 | `eval_runs`, `eval_outputs` | A prompt-version set run over all eval briefs |
@@ -87,41 +92,37 @@ All tenant tables carry `workspace_id` and are protected by RLS (`exists (select
 
 ## 4. The engine: pipeline steps
 
-Each step is a pure function `(input) → output` with zod-validated JSON on both sides, persisted in `generation_steps`. A step never reads the previous step's prose from the prompt history; it reads the stored structured output. That keeps every step re-runnable and lets "try another angle" restart from step 2.
+The pipeline follows `docs/04-copy-standard.md` (the operational standard) and `docs/03-copy-research.md` (the evidence). The order matters: a failure higher in the hierarchy cannot be repaired lower down, so the offer is designed before the argument, the argument before any prose, and claims are matched to the ledger before anyone judges the prose.
 
-| # | Step | Inputs | Output (stored) | Model / tools |
-|---|---|---|---|---|
-| 0 | Intake | Sources text | Offer brief, claims ledger, open questions | Opus 5.5, structured output |
-| 1 | Research | Brief, claims | Dossier: verbatim customer language with sources, desires, frustrations, objections, competing options, awareness and sophistication level, proof inventory | Opus 5.5 + web search/fetch, effort high |
-| 2 | Argument | Brief, dossier, claims, retrieved examples | Three candidate arguments (core desire, promise, mechanism, proof path, why-now, big idea / hook), scored on the rubric, one selected with rationale | Opus 5.5, effort xhigh |
-| 3 | Draft | Selected argument, format spec, voice profile, retrieved examples | Structured draft (blocks) + markdown | Opus 5.5, effort high, max_tokens sized per format; long formats are drafted in sections |
-| 4 | Editorial review | Draft, argument, rubric | Scores per rubric item and at most 8 specific revision instructions (quote → instruction) | Opus 5.5, effort xhigh |
-| 5 | Factual review | Draft, claims ledger, prohibited-claims policy | Flags: quote, issue, severity, suggested fix. Nothing else. | Opus 5.5 (Sonnet 5.5 candidate) |
-| 6 | Revise | Draft + instructions + flags | Revised draft; unresolved questions for the user | Opus 5.5, effort high |
+Each step is a pure function `(input) → output` with zod-validated JSON on both sides, persisted in `generation_steps`. A step reads the stored structured output of earlier steps, never the prompt history, so every step is re-runnable and "try another angle" restarts from step 3.
 
-Steps 4 and 5 run in parallel. Steps 4–6 loop at most twice; the loop stops early when editorial scores clear the threshold and no high-severity flags remain. Step 0 and 1 run once per offer and are cached; a generation reuses the active dossier.
+| # | Step | Output (stored) | Model / tools |
+|---|---|---|---|
+| 0 | Intake | Offer brief, initial claims ledger rows (typed, graded), open questions, per-offer config | Opus 5.5, structured output |
+| 1 | Research | Dossier: tagged verbatim table with sources; ranked themes with three verbatims each; competitor table with the logo-swap result; awareness and sophistication per traffic segment; proof inventory graded A–F; objection map from VOC only; resident emotion; story inventory; first-week experience and refund history | Opus 5.5 + web search/fetch, effort high |
+| 2 | Offer construction | Options sheet (hard, bill-me, trial, money-back, charter, premium-led, continuity, multi-unit), chosen variant with reasons, denominated guarantee, deadline with mechanism, promise/delivery gap note; every term becomes a ledger row pending user approval | Opus 5.5, effort xhigh; user confirms before drafting |
+| 3 | Argument selection | Twenty candidates generated by search (the unused fact, the opposite idea, the mechanism in the process); desire gate and proof gate; anchored rubric C1–C14; three finalists with lead verbatim, belief to displace, mechanism mapped to ledger rows, proof asset; winning thesis sentence; two losers kept as body reasons and next lead tests | Opus 5.5, effort xhigh |
+| 4 | Draft | In this order: offer block rendered as order form and close; bullets and proof blocks; body; three leads of different type cut from the top; headline and deck last. Per-format, per-section prompts from the format spec. Every claim carries an inline ledger ID. Drafting is blocked until missing mechanism, missing proof and unclear awareness are answered or marked unknown | Opus 5.5, effort high; long formats drafted section by section |
+| 5 | Cold read | On a **different model** with no brief, memo or ledger: skim-path readback (headline, deck, crossheads, bold, P.S., order form) of what is sold, to whom, for how much, and why believe it; then one fast full read reporting where attention dropped and the one claim it disbelieves. Also used to pick among the three leads | Sonnet 5.5 when the drafter is Opus 5.5 |
+| 6 | Editorial review | Gates A–D in order, stop at first failure (argument readback; belief and lead; claims against ledger; voice), sentence-job audit, verdict REJECT/REVISE/APPROVE, prediction beat/lose/unsure against the control, one fatal note and at most five secondary, DO NOT TOUCH list, testable disputes. No additive score | Opus 5.5, effort xhigh |
+| 7 | Mechanical passes | Tiered AI-tell detector (Tier 0 hard rejects, weighted tiers scored per 300 words), FK grade flag with audience band, sentence-length cadence floor, "and then" beat test, format hard gates (SMS characters, cold-email words, first-125-characters standalone, first-5-seconds spoken) | Code, not a model; ported from `research/tells/analyze.py` |
+| 8 | Factual and compliance review | Ten tests in order (ledger match, strength match to evidence grade, disease screen, testimonial pack, earnings screen, track-record screen, net impression on headline/lead/offer, cross-asset consistency with the offer block as source of truth, channel pass, fabrication guard). Output per flag: `line → rule (cited) → rewritten line`. May not add "may", "results vary" or generic disclaimers | Opus 5.5 (Sonnet 5.5 candidate) |
+| 9 | Revise | Changes only referenced lines, honors DO NOT TOUCH; passes run separately (strategy, style, clarity, fewest words) | Opus 5.5, effort high |
+| 10 | Ship and log | Control plus one challenger lead with the single variable named; the reviewer's prediction logged; result and refunds at 30 days logged when the user reports them | |
 
-### Editorial rubric (the judgment the product sells)
-1. **Argument**: the piece leads with the desire that actually keeps the prospect stuck, and the promise connects to a believable mechanism.
-2. **Belief**: proof appears where skepticism would arise, not in a pile at the end.
-3. **Curiosity and pacing**: the reader is pulled forward; nothing is explained before it needs to be.
-4. **No invented objections**: objections handled are ones the research shows; none are introduced to be answered.
-5. **Specificity**: concrete numbers, names, scenes; no generic adjectives doing the work.
-6. **Confidence on supported claims**: no hedging of claims the ledger supports.
-7. **Offer and action**: the offer is framed as the obvious next step; the CTA is one clear action.
-8. **Voice**: matches the voice profile; reads like a person selling, not an assistant advising.
+Steps 6, 7 and 8 run in parallel after the cold read. Steps 6–9 loop at most twice; the loop stops early when the gates pass and no Tier 0 or high-severity flag remains. Steps 0–2 run once per offer and are cached; a generation reuses the active dossier and offer block. Step 2 needs the user's approval because it changes what is sold, not just how.
+
+### The copy chief rubric
+The rubric is `docs/04-copy-standard.md` Section 6, used verbatim as the editorial reviewer's instruction: gates in order, stop at the first failure, predict against a control, never average. The seven observed dimensions (argument, proof, pacing, offer, specificity, reader focus, rhythm) are logged for calibration only and never decide the verdict.
 
 ### Teaching library and retrieval
-- `examples` and `critiques` are tagged by format, market, selling situation (launch, evergreen, cart close, reactivation), awareness level, and the lesson they demonstrate.
-- Retrieval for a step: filter by format and situation, then rank by embedding similarity to the brief + argument, return the top 3 examples and top 3 critiques. Examples go into the prompt as annotated excerpts with the lesson stated; they are never pasted as something to imitate verbatim.
-- Only curated rows influence generation. Customer feedback is stored per workspace and can adjust that workspace's instructions, never the global library.
+- `examples` are tagged structurally: awareness state, sophistication stage, lead type, the one-sentence argument, hook, mechanism type, proof elements with placement, offer devices, voice profile, format, funnel position, documented result, and a **loser** flag. Leads, mechanism sections, proof blocks, closes and order forms are stored as separately retrievable sections.
+- `critiques` hold (brief, weak draft, strong revision, the chief's named defect, the principle, test result). `research/critique_pairs_v0.json` seeds the first 36.
+- Retrieval for a step: filter by format and selling situation, then rank by embedding similarity to the brief and argument; return the top 3 examples and top 3 critiques as annotated excerpts with the lesson stated. Examples are studied, never pasted as something to imitate verbatim.
+- Only curated rows influence generation. Customer feedback adjusts that workspace's instructions, never the global library.
 
-### Prompt principles (encoded in every writer-side prompt)
-- Decide the argument before writing; do not write to cover every feature.
-- Write within the claims ledger; do not add disclaimers, do not soften supported claims.
-- Leave things unresolved until the next paragraph; do not explain everything.
-- Do not raise objections the research did not surface.
-- Output only the copy in the requested structure; reasoning stays in the structured fields, never in the customer-facing text.
+### Prompt principles
+The numbered standard in `docs/04-copy-standard.md` Section 1 is the writer's rulebook and is pasted into the draft prompts. The rules the engine enforces mechanically rather than by instruction: speaker identified by word 150; one claim a skeptic would doubt in the lead; every claim's carrier within two sentences; objections only from the research map; one damaging admission from the brief; one CTA path; the turn written as a reason-why sentence; no tone adjectives in prompts (voice is parameters and exemplar paragraphs); no Word-Substitute rewriting; reasoning stays in structured fields, never in the customer-facing text.
 
 ## 5. Job orchestration on Supabase
 
@@ -164,3 +165,5 @@ The engine is only "done" when it wins blind. The harness lives in admin screens
 3. Blind pairwise screen: the user sees two outputs for the same brief, unlabeled, picks the stronger, writes one line why.
 4. `judge`: Opus 5.5 with the rubric scores the same pairs; the report shows human–judge agreement. The judge pre-screens drafts in production only once agreement is at least 75% on the latest 40 comparisons.
 5. Every correction the user records becomes a critique candidate for the library.
+6. The reviewer's prediction scorecard: every beat/lose/unsure prediction is stored and scored against reported results; this, not the blind score alone, is what calibrates the editorial reviewer over time.
+7. Tell thresholds (`04-copy-standard.md` Section 7) are recalibrated by counting every tell in the founder's winners and the library controls before they are enforced; the shipped numbers were measured on Claude-only drafts.

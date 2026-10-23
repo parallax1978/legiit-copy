@@ -1,0 +1,42 @@
+PROMPT: Write a Facebook/Instagram ad for meal-prep delivery service for busy parents, $89/week.
+
+**Primary text (Facebook & Instagram)**
+
+Dinner is the hardest part of your day, and it doesn't have to be.
+
+Our meal prep delivers fully cooked, balanced family meals to your door every week, for **$89/week**. Pick your meals, we cook them fresh, and you just reheat and serve.
+
+No grocery runs. No 9pm "what's for dinner?" panic. No more takeout you didn't plan for.
+
+✅ Kid-approved recipes
+✅ Balanced, portioned meals
+✅ Skip or pause any week
+✅ Free delivery to your door
+
+Busy parents deserve dinner that's already handled. Start your first week today.
+
+**Headline:** Dinner handled. $89/week.
+
+**Description (under headline):** Fresh, family-sized meals delivered weekly. Skip anytime.
+
+**CTA button:** Shop Now (or Get Started)
+
+**Link:** [your landing page URL]
+
+---
+
+**Alternate hook options** (swap into the first line to A/B test)
+
+- "It's 6pm. The kids are hungry. You have no plan. Sound familiar?"
+- "What if you never had to grocery shop on a Sunday again?"
+- "Your family eats well. You don't have to cook every night to make it happen."
+
+**Image/video direction:** A parent calmly setting a warm dinner on the table with kids reaching in, or a hand opening a delivery box of labeled meal containers. Show real food, not stock-perfect plates. A short video of someone reheating a meal in under 5 minutes tends to perform well on Reels.
+
+**Before you run it:** Confirm these details, since I used placeholders or assumptions:
+- **Meal count and servings** included in the $89/week (add something like "5 dinners for 4" if that's accurate)
+- **Delivery area and fee** (I wrote "free delivery"; remove it if that's not true)
+- **Skip/pause policy** (I wrote "skip anytime"; make sure it matches your terms)
+- **Dietary options** (add "gluten-free" or "vegetarian options" only if you offer them)
+
+Tell me the meal count, servings, and delivery terms, and I'll tighten the copy and write a few more variants for testing.

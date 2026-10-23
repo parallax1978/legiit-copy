@@ -1,0 +1,68 @@
+PROMPT: Write the first two minutes of a video sales letter script for a productivity app for adults with ADHD, $12/month.
+
+# VSL Script: [APP NAME], first two minutes
+
+*Runs about 2:00 at a normal speaking pace (around 300 words of voiceover). Visual cues are in brackets.*
+
+---
+
+**[0:00–0:12] HOOK**
+*[Black screen. Text appears one line at a time, in time with the voiceover.]*
+
+**VO:** You had a plan for today. A good one.
+
+And then you went to grab a glass of water… and somehow it's 4 p.m., you've reorganized a drawer, you've got eleven tabs open, and the one thing that actually mattered still isn't done.
+
+---
+
+**[0:12–0:35] RECOGNITION**
+*[Quick cuts: a sticky note graveyard on a monitor, a planner with three filled-in pages and the rest blank, a phone full of abandoned to-do apps.]*
+
+**VO:** If you have ADHD, you already know this isn't about being lazy. You care. You care so much that the guilt follows you to bed at night.
+
+You've bought the planners. You've downloaded the apps. You've color-coded systems that lasted exactly nine days.
+
+And every time one fails, that little voice says the same thing: *"What's wrong with me?"*
+
+---
+
+**[0:35–1:00] REFRAME**
+*[Screen goes calm. One clean line of text: "Nothing is wrong with you."]*
+
+**VO:** Here's what nobody told you. Nothing is wrong with you. **Your tools were built for a different brain.**
+
+Most productivity apps assume you'll remember to open them. They assume a long list motivates you instead of freezing you. They assume "later" means something.
+
+For an ADHD brain, a forty-item to-do list isn't a plan. It's a wall.
+
+---
+
+**[1:00–1:35] AGITATE AND PIVOT**
+*[Split screen. Left: a giant, overwhelming task list. Right: a single glowing card that reads "Next: Reply to Sam (2 min)."]*
+
+**VO:** So you're stuck with a choice: keep forcing yourself into systems that punish how you think, or keep winging it and hoping nothing important slips through the cracks.
+
+But what if your system worked *with* your brain instead of against it?
+
+What if it showed you one thing at a time? What if it came and found you when you drifted, instead of waiting for you to remember it exists? And what if it made starting feel easy, and *rewarding*?
+
+---
+
+**[1:35–2:00] REVEAL AND OPEN LOOP**
+*[App logo animates in. Phone mockup shows the "One Thing" screen.]*
+
+**VO:** That's exactly why we built **[APP NAME]**, the first productivity app designed from the ground up for adults with ADHD.
+
+In the next few minutes, I'll show you the three features that make it different, why so many users say it's the first system they've actually *kept* using, and how you can try it today for less than the cost of a couple of coffees a month.
+
+But first, let me show you what happens the moment you open it…
+
+---
+
+### A few notes for production
+
+- **The price stays hidden on purpose.** The "couple of coffees" line hints at $12/month without saying it. Save the actual number for after the demo and value stack, usually around minute 5–7, framed as "$12/month, less than $0.40 a day."
+- **Keep it legal.** Don't say the app "treats," "manages symptoms of," or "is clinically proven for" ADHD unless you have the evidence and the regulatory clearance to back it up. Only use the "first app designed for…" and "users say…" lines if they're true and you can document them.
+- **Fit the cut to the viewer.** This audience leaves fast. Keep the visual cuts quick in the first 35 seconds, then slow down at the reframe so the change in pace feels like relief.
+
+I can write the next section (the demo of the three features and the value stack), or a 60-second cutdown for paid social.

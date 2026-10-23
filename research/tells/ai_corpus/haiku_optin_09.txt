@@ -1,0 +1,13 @@
+PROMPT: Write an opt-in page for a free case study PDF: headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:** How We Grew [Client Name]'s Organic Traffic [X]% in [Timeframe]
+
+**Subheadline:** Get the full case study: the exact SEO changes, the timeline, and the results we measured, free, delivered to your inbox.
+
+**Bullets:**
+- The keyword and content gaps that were holding back their rankings
+- The technical fixes we made first, and why they came before new content
+- The month-by-month results, including what didn't work
+- A checklist you can run on your own site this week
+
+**Button text:** Send Me the Free Case Study

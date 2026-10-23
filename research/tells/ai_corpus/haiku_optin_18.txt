@@ -1,0 +1,14 @@
+PROMPT: Write an opt-in page for a free 'refinance break-even calculator': headline, subheadline, 3 to 5 bullets, and button text.
+
+**Headline:** Find out if refinancing actually pays off, in about 60 seconds.
+
+**Subheadline:** Enter your current loan and the new offer. Our free break-even calculator shows how many months it takes for your monthly savings to cover the closing costs.
+
+**Bullets:**
+- See your break-even point in months, not guesses
+- Compare your current loan with up to two refinance offers side by side
+- Include closing costs, points, and fees so the numbers are realistic
+- Find out whether a shorter term or a lower rate is the better deal for you
+- Free, no credit check, and nothing to install
+
+**Button text:** Calculate my break-even
