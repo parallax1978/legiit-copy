@@ -2,7 +2,7 @@
 
 Research document for the founder and the engineering team; the operational rules distilled from it are in `04-copy-standard.md`. This revision applies two critiques (a completeness review and a copy chief's review) and ten gap-fill research passes to the first synthesis. Claims the fact-checkers rejected are dropped or corrected; the corrections are listed in Section 14.
 
-**How to read the evidence labels.** *Verified* means the wording was fetched from the author's own text or the primary page. *Secondary* means the wording is consistent across reader notes or summaries but the book was not fetched (Caples, Ogilvy's books, Collier, Great Leads, Hormozi, Kobs, Benson's full rule list). *Reported* means a practitioner says a test happened but published no data. *Tested* means a documented split test or dataset with numbers. *Measured* means this project's own corpus analysis (107 AI drafts against 341 human DR documents). *This document* marks a working rule with no source behind it, to be calibrated against the teaching library and the founder's results.
+**How to read the evidence labels.** *Verified* means the wording was fetched from the author's own text or the primary page. *Secondary* means the wording is consistent across reader notes or summaries but the book was not fetched (Caples, Ogilvy's books, Collier, Great Leads, Hormozi, Kobs, Benson's full rule list). *Reported* means a practitioner says a test happened but published no data. *Tested* means a documented split test or dataset with numbers. *Measured* means this project's own corpus analysis (107 AI drafts against 341 human DR documents). *This document* marks a working rule with no source behind it, to be calibrated against the teaching library and the acquired controls.
 
 ---
 
