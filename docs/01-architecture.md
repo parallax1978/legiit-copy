@@ -143,7 +143,9 @@ run-step:
   beforeunload handler: mark the attempt interrupted so the retry is explainable
 ```
 
-Rules: usage is recorded only when a step completes, keyed by `(generation_id, step, attempt)`, so retries never double count. `max_tokens` per call is capped at 12K; formats longer than that are drafted section by section with a shared outline, each section its own call within the same step.
+Rules: usage is recorded only when a step completes, keyed by `(generation_id, step, attempt)`, so retries never double count. `max_tokens` per call is capped at 12K; formats longer than that are drafted section by section, grouped into call groups by word band.
+
+Resumable steps: a step that makes several model calls (the draft step: up to seven for a sales letter) saves its partial state to the running attempt row after every call group (`ctx.savePartial`) and, when the invocation's time budget is spent, returns `continueLater`; the runner marks the attempt `continued`, re-enqueues the same step, and the next invocation resumes from the partial. A wall-clock kill therefore loses at most one call group.
 
 Escape hatch if a step cannot fit the 400s window after tuning: a small long-running worker (Fly.io or Railway) consumes the same pgmq queue with the same engine code. Nothing else changes. This is a documented risk, not the plan.
 
