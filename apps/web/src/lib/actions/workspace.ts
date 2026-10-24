@@ -3,16 +3,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { WS_COOKIE, requireUser } from "@/lib/auth";
+import { WS_COOKIE, WS_COOKIE_OPTS as COOKIE_OPTS, requireUser } from "@/lib/auth";
+import { safeInternalPath } from "@/lib/safe-path";
 import type { ActionResult } from "./settings";
-
-const COOKIE_OPTS = { path: "/", httpOnly: true, sameSite: "lax" as const, maxAge: 60 * 60 * 24 * 365 };
 
 export async function switchWorkspace(workspaceId: string, next = "/app") {
   await requireUser();
   const cookieStore = await cookies();
   cookieStore.set(WS_COOKIE, workspaceId, COOKIE_OPTS);
-  redirect(next);
+  redirect(safeInternalPath(next));
 }
 
 /**
@@ -22,8 +21,7 @@ export async function switchWorkspace(workspaceId: string, next = "/app") {
 export async function createWorkspace(formData: FormData) {
   const user = await requireUser();
   const name = String(formData.get("name") ?? "").trim();
-  const rawReturn = String(formData.get("return_to") ?? "/app/onboarding");
-  const returnTo = rawReturn.startsWith("/") ? rawReturn : "/app/onboarding";
+  const returnTo = safeInternalPath(String(formData.get("return_to") ?? ""), "/app/onboarding");
   if (!name) redirect(`${returnTo}?error=name`);
   const supabase = await createClient();
   const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}-${Math.random().toString(36).slice(2, 7)}`;

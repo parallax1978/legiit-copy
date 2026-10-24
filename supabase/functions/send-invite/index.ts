@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     // deno-lint-ignore no-explicit-any
     const wsName = (inv as any).workspaces?.name ?? "a workspace";
     if (!apiKey) {
-      console.warn("RESEND_API_KEY not set; invite link:", link);
+      console.warn("RESEND_API_KEY not set; invite not emailed", { invite_id: inv.id });
       return json({ ok: true, sent: false, link });
     }
     const res = await fetch("https://api.resend.com/emails", {

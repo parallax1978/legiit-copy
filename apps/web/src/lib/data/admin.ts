@@ -722,6 +722,9 @@ export function mapExampleRecord(r: LooseRecord): Tables["examples"]["Insert"] {
   };
 }
 
+/** Older research files name formats loosely; map them onto FORMAT_IDS. */
+const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social" };
+
 /** Accepts an eval_briefs-shaped record or a research/corpus/eval_briefs.json record (offer_name, formats_to_test, the record itself is the brief). */
 export function mapEvalBriefRecord(r: LooseRecord): Tables["eval_briefs"]["Insert"] {
   const name = str(r.name) ?? str(r.title) ?? str(r.offer_name);
@@ -732,7 +735,7 @@ export function mapEvalBriefRecord(r: LooseRecord): Tables["eval_briefs"]["Inser
     name,
     brief: (brief ?? {}) as NonNullable<Json>,
     market: str(r.market),
-    formats: arr(r.formats ?? r.formats_to_test),
+    formats: arr(r.formats ?? r.formats_to_test).map((f) => FORMAT_ALIASES[String(f)] ?? String(f)),
     notes: str(r.notes),
   };
 }

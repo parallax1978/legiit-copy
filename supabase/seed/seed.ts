@@ -115,6 +115,7 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
 }
 
 // ---- eval briefs ----
+const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social" };
 {
   const rows = await readJson("research/corpus/eval_briefs.json");
   if (rows) {
@@ -124,7 +125,7 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
       name: r.offer_name ?? r.name ?? r.id,
       brief: r,
       market: r.market ?? null,
-      formats: r.formats_to_test ?? ["email_single", "sales_letter"],
+      formats: ((r.formats_to_test ?? ["email_single", "sales_letter"]) as string[]).map((f) => FORMAT_ALIASES[f] ?? f),
       notes: r.notes ?? null,
     })).filter((r) => r.external_id);
     const { error } = await db.from("eval_briefs").upsert(mapped, { onConflict: "external_id" });

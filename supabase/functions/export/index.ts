@@ -43,6 +43,8 @@ serve(async (req) => {
     db.from("generations").select("id, workspace_id, format, offer_id").eq("id", visible.generation_id).single(),
   ]);
   if (!draft || !gen) throw new HttpError(404, "draft or generation missing");
+  // the same-workspace triggers make this unreachable; it stays as the last check before a service-role write to storage
+  if (draft.workspace_id !== gen.workspace_id || draft.workspace_id !== visible.workspace_id) throw new HttpError(409, "draft and generation belong to different workspaces");
   const { data: offer } = await db.from("offers").select("name").eq("id", gen.offer_id).maybeSingle();
 
   const parsed = parseSections(draft.blocks);

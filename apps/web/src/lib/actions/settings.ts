@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { WS_COOKIE, getMemberships, requireUser, type Role } from "@/lib/auth";
+import { WS_COOKIE, WS_COOKIE_OPTS, getMemberships, requireUser, type Role } from "@/lib/auth";
 import type { MemoryItem } from "@/lib/data/dashboard";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -82,7 +82,7 @@ export async function deleteWorkspace(workspaceId: string, confirmName: string):
   if (error) return { ok: false, error: error.message };
 
   const cookieStore = await cookies();
-  cookieStore.set(WS_COOKIE, remaining[0].workspace.id, { path: "/", httpOnly: true, sameSite: "lax", maxAge: 60 * 60 * 24 * 365 });
+  cookieStore.set(WS_COOKIE, remaining[0].workspace.id, WS_COOKIE_OPTS);
   revalidatePath("/app", "layout");
   redirect("/app?deleted=1");
 }

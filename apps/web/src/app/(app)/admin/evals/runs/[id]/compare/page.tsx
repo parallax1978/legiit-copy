@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { marked } from "marked";
+import { renderMarkdownSafe } from "@/lib/markdown";
 import { PageHeader } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
 import { BlindCompare } from "@/components/admin/blind-compare";
@@ -21,7 +21,7 @@ export default async function ComparePage({ params, searchParams }: { params: Pr
   const candidates = baselineRuns.filter((b) => b.id !== run.id);
   const baseline = candidates.find((b) => b.id === baselineId) ?? null;
 
-  const render = (md: string | null) => marked.parse((md ?? "").replace(/</g, "&lt;").replace(/>/g, "&gt;"), { async: false, gfm: true, breaks: true }) as string;
+  const render = (md: string | null) => renderMarkdownSafe(md ?? "");
   const data = baseline ? await getComparePairs(run.id, baseline.id, user.id) : null;
   const pairs = (data?.pairs ?? []).map((p) => ({
     brief_id: p.brief_id,

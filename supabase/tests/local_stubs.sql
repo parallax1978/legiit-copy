@@ -1,6 +1,6 @@
 -- Local validation stubs for Supabase-only schemas. NOT a migration.
 create schema if not exists auth;
-create table if not exists auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb default '{}'::jsonb, created_at timestamptz default now());
+create table if not exists auth.users (id uuid primary key default gen_random_uuid(), email text, email_confirmed_at timestamptz, raw_user_meta_data jsonb default '{}'::jsonb, created_at timestamptz default now());
 create or replace function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 create or replace function auth.jwt() returns jsonb language sql stable as $$ select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb $$;
 do $$ begin
@@ -24,3 +24,11 @@ create schema if not exists net;
 create or replace function net.http_post(url text, headers jsonb default '{}'::jsonb, body jsonb default '{}'::jsonb, timeout_milliseconds int default 5000) returns bigint language sql as $$ select 1::bigint $$;
 create schema if not exists vault;
 create table if not exists vault.decrypted_secrets (name text, decrypted_secret text);
+-- API-role privileges as Supabase grants them (schema usage + default privileges on public), so RLS tests run as
+-- `authenticated` the way PostgREST does and the migrations' explicit REVOKEs are exercised.
+grant usage on schema public to anon, authenticated, service_role;
+alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+alter default privileges in schema public grant execute on functions to anon, authenticated, service_role;
+grant usage on schema storage to anon, authenticated, service_role;
+grant all on storage.objects, storage.buckets to anon, authenticated, service_role;

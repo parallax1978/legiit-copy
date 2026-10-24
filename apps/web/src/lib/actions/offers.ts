@@ -59,7 +59,13 @@ const msg = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 // ---------------------------------------------------------------- create + sources
 
-const SourceFile = z.object({ name: z.string().min(1), storage_path: z.string().min(1), mime_type: z.string().nullable() });
+const SourceFile = z.object({ name: z.string().min(1), storage_path: z.string().min(1).max(400), mime_type: z.string().nullable() });
+
+/** Uploads land at <workspace_id>/<offer_id>/<file> (source-inputs.tsx). A path pointing anywhere else is refused before it is stored and later downloaded by ingest-source. */
+function storagePathBelongsTo(path: string, workspaceId: string, offerId: string): boolean {
+  const parts = path.split("/");
+  return parts.length === 3 && parts[0] === workspaceId && parts[1] === offerId && /^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$/.test(parts[2]);
+}
 const SourcesInput = z.object({
   offerId: z.string().uuid(),
   urls: z.array(z.string().url()).default([]),
@@ -92,6 +98,7 @@ async function insertAndIngest(ctx: Ctx, input: z.output<typeof SourcesInput>): 
   const { supabase, workspaceId } = ctx;
   const offer = await loadOffer(ctx, input.offerId);
   if (!offer) return fail("Offer not found.");
+  if (input.files.some((f) => !storagePathBelongsTo(f.storage_path, workspaceId, offer.id))) return fail("One of the uploaded files is not in this offer's folder. Upload it again.");
   const rows = [
     ...input.urls.map((url) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "url", url, title: hostOf(url) })),
     ...input.files.map((f) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "file", storage_path: f.storage_path, title: f.name, mime_type: f.mime_type })),

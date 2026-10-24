@@ -7,6 +7,8 @@ import type { Database } from "@/lib/supabase/database.types";
 export type Workspace = Database["public"]["Tables"]["workspaces"]["Row"];
 export type Role = "owner" | "editor" | "viewer";
 export const WS_COOKIE = "lc_ws";
+/** The current-workspace cookie: it only selects among the user's own memberships, but never travels in the clear in production. */
+export const WS_COOKIE_OPTS = { path: "/", httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", maxAge: 60 * 60 * 24 * 365 };
 
 export const getUser = cache(async () => {
   const supabase = await createClient();

@@ -94,11 +94,14 @@ addEventListener("beforeunload", () => {
 });
 
 // ---------- HTTP ----------
+// Deployed with --no-verify-jwt: the shared secret is the only gate. Unset or short means every request is refused.
+const SHARED_SECRET = Deno.env.get("PIPELINE_SHARED_SECRET") ?? "";
+if (SHARED_SECRET.length < 16) console.error("PIPELINE_SHARED_SECRET is unset or shorter than 16 characters; run-step refuses every request");
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
-  const expected = Deno.env.get("PIPELINE_SHARED_SECRET");
   const given = req.headers.get("x-pipeline-secret");
-  if (!expected || !given || !constantTimeEqual(expected, given)) return new Response("unauthorized", { status: 401 });
+  if (SHARED_SECRET.length < 16 || !given || !(await secretMatches(SHARED_SECRET, given))) return new Response("unauthorized", { status: 401 });
 
   let raw: unknown;
   try {
@@ -122,11 +125,14 @@ Deno.serve(async (req) => {
   });
 });
 
-function constantTimeEqual(a: string, b: string): boolean {
-  const ea = new TextEncoder().encode(a);
-  const eb = new TextEncoder().encode(b);
-  let diff = ea.length ^ eb.length;
-  for (let i = 0; i < Math.max(ea.length, eb.length); i++) diff |= (ea[i] ?? 0) ^ (eb[i] ?? 0);
+/** Compares SHA-256 digests: fixed-length, constant-time, and the loop reveals nothing about the secret's length. */
+async function secretMatches(expected: string, given: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([crypto.subtle.digest("SHA-256", enc.encode(expected)), crypto.subtle.digest("SHA-256", enc.encode(given))]);
+  const ua = new Uint8Array(a);
+  const ub = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < ua.length; i++) diff |= ua[i] ^ ub[i];
   return diff === 0;
 }
 

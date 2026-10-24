@@ -1,16 +1,18 @@
 /**
  * ingest-source: turns an offer source (url | file | text) into extracted_text.
  *   POST { source_id, run_extraction?: boolean }
- *   → { source_id, offer_id, extraction_status: "done" | "failed", chars, title, error?, extraction?, extraction_error? }
+ *   → { source_id, offer_id, extraction_status: "done" | "failed", chars, title, error?, extraction_started? } (202 when intake was started in the background)
  * The caller must be an editor of the source's workspace (checked under RLS before the service client is used).
- * URL fetches are guarded: http(s) only, public hosts only, ≤ 3 redirects, 10s timeout, 5 MB cap.
+ * URL fetches are guarded: http(s) only, public hosts only (literal and resolved; an unresolvable host is refused),
+ * ≤ 3 redirects each re-checked, 10s timeout, 5 MB cap. File sources are downloaded only from the source's own
+ * <workspace_id>/<offer_id>/ folder, so a crafted storage_path cannot reach another workspace's objects.
  * Fetched and uploaded text is untrusted data; it is stored verbatim and handed to the intake prompt as a document.
  */
 import { z } from "zod";
 import { extractText } from "unpdf";
 import mammoth from "mammoth";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
-import { assertEditor, errorMessage, normalizeWhitespace, parseBody, runIntake, serve } from "shared/http.ts";
+import { assertEditor, background, errorMessage, normalizeWhitespace, parseBody, runIntake, serve } from "shared/http.ts";
 
 const Body = z.object({ source_id: z.uuid(), run_extraction: z.boolean().optional().default(false) });
 
@@ -43,6 +45,7 @@ serve(async (req) => {
       mime = r.mime;
     } else if (src.kind === "file") {
       if (!src.storage_path) throw new Error("file source has no storage_path");
+      if (!storagePathBelongsTo(src.storage_path, src.workspace_id, src.offer_id)) throw new Error("storage_path is outside the offer's folder");
       const { data: blob, error: dlErr } = await db.storage.from("offer-sources").download(src.storage_path);
       if (dlErr || !blob) throw new Error(`download failed: ${dlErr?.message ?? "no data"}`);
       if (blob.size > MAX_BYTES) throw new Error(`file exceeds ${MAX_BYTES / 1024 / 1024} MB`);
@@ -72,14 +75,19 @@ serve(async (req) => {
 
   const out: Record<string, unknown> = { source_id: src.id, offer_id: src.offer_id, extraction_status: "done", chars: text.length, title };
   if (body.run_extraction) {
-    try {
-      out.extraction = await runIntake(db, src.offer_id);
-    } catch (e) {
-      out.extraction_error = errorMessage(e).slice(0, 1000);
-    }
+    // The intake model call takes minutes; it runs after the response. runIntake moves the offer off 'extracting'
+    // itself on success or failure, and the offer page watches offers.status.
+    background(runIntake(db, src.offer_id).catch((e) => console.error("intake failed", errorMessage(e).slice(0, 500))));
+    out.extraction_started = true;
   }
-  return json(out);
+  return json(out, body.run_extraction ? 202 : 200);
 });
+
+/** Objects live at <workspace_id>/<offer_id>/<file>. Anything else (another folder, "..", encoded or nested segments) is refused before the service client downloads it. */
+export function storagePathBelongsTo(path: string, workspaceId: string, offerId: string): boolean {
+  const parts = path.split("/");
+  return parts.length === 3 && parts[0] === workspaceId && parts[1] === offerId && /^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$/.test(parts[2]);
+}
 
 // ---------- bytes → text ----------
 
@@ -281,7 +289,12 @@ async function readCapped(res: Response, max: number): Promise<Uint8Array> {
   return out;
 }
 
-/** Blocks loopback, link-local, private and reserved ranges by literal and by DNS answer (A and AAAA). */
+/**
+ * Blocks loopback, link-local, private and reserved ranges by literal and by DNS answer (A and AAAA). A host with no
+ * resolvable public address is refused rather than passed to fetch unchecked (fail closed). The fetch that follows
+ * resolves again, so a rebinding resolver could still swap answers between the two lookups; the redirect loop
+ * re-checks every hop, which closes the common redirect-to-metadata path.
+ */
 async function assertPublicHost(url: URL): Promise<void> {
   const host = url.hostname.replace(/^\[|\]$/g, "").toLowerCase();
   if (!host) throw new Error("url has no host");
@@ -301,6 +314,7 @@ async function assertPublicHost(url: URL): Promise<void> {
       console.warn(`resolveDns ${type} ${host} unavailable: ${errorMessage(e)}`);
     }
   }
+  if (addrs.length === 0) throw new Error("host could not be resolved to a public address");
   if (addrs.some(isPrivateIp)) throw new Error("host resolves to a private address");
 }
 

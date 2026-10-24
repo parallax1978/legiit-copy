@@ -225,7 +225,10 @@ enable_signup = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-enable_confirmations = false
+# Must stay true: invites are matched on the email address, and the Auth API also accepts password sign-ups, so an
+# unconfirmed address would let anyone register a victim's email and inherit their invites. Mirror this in the
+# hosted project's Auth settings (Email provider -> Confirm email).
+enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
 # Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
