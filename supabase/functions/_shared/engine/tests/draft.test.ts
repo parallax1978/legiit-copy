@@ -1,9 +1,13 @@
 /** Unit tests for the drafting half: section planning, lead selection, ledger checks, assembly, interrogation. */
 import { assert, assertEquals, assertThrows } from "@std/assert";
-import type { FormatSpec } from "../formats/spec.ts";
 import { sales_letter } from "../formats/specs/sales_letter.ts";
 import { email_single } from "../formats/specs/email_single.ts";
-import { describePlan, GROUP_OVERFLOW, GROUP_SOFT_LIMIT_WORDS, groupUnits, itemCount, planDraft, sectionUnit } from "../draft/plan.ts";
+import { describePlan, GROUP_OVERFLOW, GROUP_SOFT_LIMIT_WORDS, groupUnits, itemCount, itemShape, planDraft, sectionUnit } from "../draft/plan.ts";
+import { email_sequence, SEQUENCE_ROLES } from "../formats/specs/email_sequence.ts";
+import { meta_ad } from "../formats/specs/meta_ad.ts";
+import { google_rsa } from "../formats/specs/google_rsa.ts";
+import { webinar_package } from "../formats/specs/webinar_package.ts";
+import { vsl_long } from "../formats/specs/vsl_long.ts";
 import { DIRECT_LEADS, INDIRECT_LEADS, LEAD_IDS, leadTypesForAwareness, runnerUpLead } from "../draft/leads.ts";
 import { collectLedgerRefs, droppedClaimIds, droppedLedgerRefs, interrogate, needsSourceLines, normalizeQuote, quoteAppears, readerText, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { applyLeadPick, assembleDraft, orderSections, provisionalLeadSection, parseStoredDraft, toDraftEffect } from "../draft/assemble.ts";
@@ -57,24 +61,53 @@ Deno.test("groupUnits: tiny sections attach to neighbours, oversize sections sta
   assertEquals(groups.map((g) => g.map((x) => x.id)), [["a"], ["b"], ["c", "d", "e"], ["f"]]);
 });
 
-Deno.test("multi-item formats: each item is a unit with its role; count clamps to the spec", () => {
-  const seq: FormatSpec = {
-    ...email_single,
-    id: "email_sequence",
-    name: "Welcome sequence",
-    multi_item: { item_name: "email", min: 3, max: 7, item_roles: ["deliver", "origin", "belief", "proof", "objection", "offer"] },
-  };
-  assertEquals(itemCount(seq), 6);
-  assertEquals(itemCount(seq, 10), 7);
-  assertEquals(itemCount(seq, 1), 3);
-  const plan = planDraft(seq, { itemCount: 4 });
-  assert(plan.multiItem);
-  assertEquals(plan.itemCount, 4);
-  const units = plan.calls.flatMap((c) => c.units);
-  assertEquals(units.map((u) => u.id), ["email_1", "email_2", "email_3", "email_4"]);
-  assertEquals(units.map((u) => u.item?.role), ["deliver", "origin", "belief", "proof"]);
-  assertEquals(units[0].maxWords, email_single.sections.reduce((n, s) => n + s.band_words[1], 0));
+Deno.test("item shape is derived from the spec: sequences and ad sets repeat every section, the webinar repeats replay emails, the RSA's items are blocks", () => {
+  assertEquals(itemShape(email_sequence), { kind: "repeat_all" });
+  assertEquals(itemShape(meta_ad), { kind: "repeat_all" });
+  assertEquals(itemShape(webinar_package), { kind: "repeat_section", sectionId: "replay_email", fixedAssets: 5 });
+  assertEquals(itemShape(google_rsa), { kind: "blocks" });
+  assertEquals(itemShape(sales_letter), { kind: "none" });
+});
+
+Deno.test("email sequence: one call per email, sections suffixed #n in draft order, roles from the sequence type, count clamped", () => {
+  const roles = SEQUENCE_ROLES.welcome;
+  const plan = planDraft(email_sequence, { roles });
+  assertEquals(plan.itemCount, roles.length);
+  assertEquals(plan.calls.length, roles.length, "724-word emails never share a call");
+  assertEquals(plan.calls[0].units.map((u) => u.id), email_sequence.draft_order.map((id) => `${id}#1`));
+  assertEquals(plan.calls[2].units.map((u) => u.item?.role), email_sequence.draft_order.map(() => roles[2]));
+  assertEquals(plan.calls[2].units[0].baseId, "cta");
+  assertEquals(itemCount(email_sequence, 20, roles), 12);
+  assertEquals(itemCount(email_sequence, 1, roles), 3);
+  assertEquals(planDraft(email_sequence, { roles: SEQUENCE_ROLES.abandoned_cart }).itemCount, 3);
+  assertEquals(planDraft(email_sequence, { itemCount: 4 }).itemCount, 4);
   assertEquals(plan.leadSectionId, null);
+});
+
+Deno.test("meta ad: three variations in one call; webinar: fixed assets once and replay_email ×5-7; RSA: one plain call", () => {
+  const meta = planDraft(meta_ad);
+  assertEquals(meta.itemCount, 3);
+  assertEquals(meta.calls.length, 1);
+  assertEquals(meta.calls[0].units.map((u) => u.id), [1, 2, 3].flatMap((n) => meta_ad.draft_order.map((id) => `${id}#${n}`)));
+  assertEquals(planDraft(meta_ad, { itemCount: 6 }).itemCount, 6);
+
+  const web = planDraft(webinar_package);
+  const ids = web.calls.flatMap((c) => c.units.map((u) => u.id));
+  assertEquals(ids.filter((id) => id.startsWith("replay_email")), ["replay_email#1", "replay_email#2", "replay_email#3", "replay_email#4", "replay_email#5"]);
+  assertEquals(ids.filter((id) => !id.includes("#")).length, webinar_package.sections.length - 1, "every other asset once, unsuffixed");
+  assertEquals(web.itemCount, 5);
+  assertEquals(planDraft(webinar_package, { itemCount: 12 }).itemCount, 7);
+  assertEquals(web.leadSectionId, null, "lead_variants 3 without a lead section: no lead loop");
+  for (const c of web.calls) assert(c.units.length === 1 || c.maxWords <= Math.round(GROUP_SOFT_LIMIT_WORDS * (1 + GROUP_OVERFLOW)), c.units.map((u) => u.id).join(","));
+
+  const rsa = planDraft(google_rsa);
+  assertEquals(rsa.calls.length, 1);
+  assertEquals(rsa.calls[0].units.map((u) => u.id), ["descriptions", "headlines"]);
+  assertEquals(rsa.itemCount, 1);
+
+  const vsl = planDraft(vsl_long);
+  assertEquals(vsl.leadSectionId, null);
+  assertEquals(vsl.calls.flatMap((c) => c.units.map((u) => u.id)), vsl_long.draft_order);
 });
 
 // ---------------------------------------------------------------- leads
@@ -229,6 +262,12 @@ Deno.test("assembleDraft orders by the spec, computes skim path, refs, word coun
   assertEquals(parseStoredDraft(fx.blocks)?.format, "sales_letter");
   assertEquals(parseStoredDraft({ nope: true }), null);
   assertEquals(orderSections(sales_letter, [sec("zzz", []), sec("ps", [])]).map((s) => s.section_id), ["ps", "zzz"]);
+  assertEquals(
+    orderSections(email_sequence, [sec("subject#2", []), sec("body#1", []), sec("subject#1", []), sec("hook#2", [])]).map((s) => s.section_id),
+    ["subject#1", "body#1", "subject#2", "hook#2"],
+    "items ascending, spec order within an item",
+  );
+  assertEquals(orderSections(webinar_package, [sec("replay_email#2", []), sec("replay_email#1", []), sec("registration_cta", [])]).map((s) => s.section_id), ["registration_cta", "replay_email#1", "replay_email#2"]);
 });
 
 Deno.test("provisional lead, then the cold read's pick replaces it and keeps all three leads", () => {
@@ -269,6 +308,14 @@ Deno.test("matchSections renumbers block ids and maps by id or by position; vali
 
   const byPosition = matchSections(returned.map((s, i) => ({ ...s, section_id: `wrong${i}` })), call)!;
   assertEquals(byPosition.map((s) => s.section_id), ["offer", "price", "guarantee", "urgency"]);
+
+  // a repeated item whose suffix the model dropped is matched by base id and re-suffixed; blocks carry item meta
+  const email3 = planDraft(email_sequence, { roles: SEQUENCE_ROLES.welcome }).calls[2];
+  const bare = email3.units.map((u) => sec(u.baseId, [blk("x", "Line", u.spec.block_types?.[0] as Block["type"])])).reverse();
+  const m3 = matchSections(bare, email3)!;
+  assertEquals(m3.map((s) => s.section_id), email3.units.map((u) => u.id));
+  assertEquals(m3[0].blocks[0].id, `${email3.units[0].id}-1`);
+  assertEquals(m3[0].blocks[0].meta, { item: "3", role: SEQUENCE_ROLES.welcome[2] });
 
   const bad = matchSections([
     sec("offer", []),

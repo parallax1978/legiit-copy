@@ -11,6 +11,8 @@ import { ArgumentOutput } from "../schemas/argument.ts";
 import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
 import { draftPrompt, type DraftArgs } from "../prompts/draft.v1.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
+import { SEQUENCE_ROLES, sectionBaseId } from "../formats/index.ts";
+import { evaluateGates } from "../tells.ts";
 import { parseOptions } from "../draft/options.ts";
 import { interrogate, knownClaimIds, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { LEAD_IDS, leadTypesForAwareness } from "../draft/leads.ts";
@@ -31,13 +33,22 @@ export function normalizeSection(section: Section, sectionId: string, meta: Reco
   };
 }
 
-/** Map returned sections onto the requested units, in the requested order. Null when the shape is wrong. */
+/**
+ * Map returned sections onto the requested units, in the requested order. Exact ids first; then base ids when the
+ * model dropped the `#n` item suffix and the call holds each base once; else by position. Null when the count is wrong.
+ */
 export function matchSections(returned: Section[], call: DraftCall): Section[] | null {
   const wanted = call.units.map((u) => u.id);
   if (returned.length !== wanted.length) return null;
   const byId = new Map(returned.map((s) => [s.section_id, s]));
-  const allMatch = wanted.every((id) => byId.has(id));
-  const ordered = allMatch ? wanted.map((id) => byId.get(id)!) : returned; // ids differ but the count matches: assign by position
+  let ordered: Section[];
+  if (wanted.every((id) => byId.has(id))) ordered = wanted.map((id) => byId.get(id)!);
+  else {
+    const bases = call.units.map((u) => u.baseId);
+    const byBase = new Map(returned.map((s) => [sectionBaseId(s.section_id), s]));
+    const uniqueBases = new Set(bases).size === bases.length && byBase.size === returned.length && bases.every((b) => byBase.has(b));
+    ordered = uniqueBases ? bases.map((b) => byBase.get(b)!) : returned; // ids differ but the count matches: assign by position
+  }
   return ordered.map((s, i) => {
     const u = call.units[i];
     const meta = u.item ? { item: String(u.item.index), ...(u.item.role ? { role: u.item.role } : {}) } : null;
@@ -102,7 +113,10 @@ export const draftStep: StepFn = async (ctx) => {
     return { output: { paused: true, reason: q.reason }, summary: `Drafting blocked: ${q.reason}`, pause: { reason: q.reason } };
   }
 
-  const plan = planDraft(spec, { itemCount: options.item_count });
+  // email sequences take their item roles from the sequence type; other multi-item formats from the spec
+  const seqType = options.sequence_type && options.sequence_type in SEQUENCE_ROLES ? (options.sequence_type as keyof typeof SEQUENCE_ROLES) : null;
+  const roles = spec.id === "email_sequence" ? SEQUENCE_ROLES[seqType ?? "welcome"] : undefined;
+  const plan = planDraft(spec, { itemCount: options.item_count, roles });
   await ctx.progress(`Drafting ${spec.name} in ${plan.calls.length} call${plan.calls.length === 1 ? "" : "s"}: ${describePlan(plan).join("; ")}`);
 
   let examplesText = "";
@@ -131,12 +145,33 @@ export const draftStep: StepFn = async (ctx) => {
     sophistication,
     thesis: q.thesis,
     argumentText,
-    drafted: plan.multiItem ? [...drafted] : orderSections(spec, drafted),
+    drafted: orderSections(spec, drafted),
     leads: call.kind === "headline" ? leads : null,
     leadTypes: call.kind === "leads" ? leadTypes : null,
     examplesText,
     retryNote: null,
   });
+
+  /** One sections call with one retry on a code-side rejection (wrong shape, unknown ledger id, empty required section, disallowed block type). */
+  const runSections = async (call: DraftCall, i: number, extraNote: string | null): Promise<{ sections: Section[]; needs: string[] }> => {
+    const args = baseArgs(call, i);
+    const single = call.units.length === 1;
+    let attempt = 0;
+    let note: string | null = extraNote;
+    for (;;) {
+      const res = single
+        ? await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionDraft, `draft ${call.units[0].id}${attempt ? " (retry)" : ""}`)
+        : await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionGroupDraft, `draft ${call.units.map((u) => u.id).join("+")}${attempt ? " (retry)" : ""}`);
+      calls++;
+      model = res.model;
+      const returned = "section" in res.output ? [res.output.section] : res.output.sections;
+      const matched = matchSections(returned, call);
+      const problems = matched ? validateSections(matched, call, known) : [`return exactly ${call.units.length} section(s) with section_id ${call.units.map((u) => `"${u.id}"`).join(", ")}.`];
+      if (matched && problems.length === 0) return { sections: matched, needs: res.output.needs_source };
+      if (attempt++ >= 1) throw new Error(`draft call for ${call.units.map((u) => u.id).join(", ")} rejected twice: ${problems.join(" ")}`);
+      note = [extraNote, ...problems].filter(Boolean).join("\n");
+    }
+  };
 
   for (const [i, call] of plan.calls.entries()) {
     const label = call.kind === "leads" ? "three leads" : call.units.map((u) => u.title).join(", ");
@@ -163,25 +198,24 @@ export const draftStep: StepFn = async (ctx) => {
       continue;
     }
 
-    const single = call.units.length === 1;
-    let attempt = 0;
-    let note: string | null = null;
-    for (;;) {
-      const res = single
-        ? await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionDraft, `draft ${call.units[0].id}${attempt ? " (retry)" : ""}`)
-        : await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionGroupDraft, `draft ${call.units.map((u) => u.id).join("+")}${attempt ? " (retry)" : ""}`);
-      calls++;
-      model = res.model;
-      const returned = "section" in res.output ? [res.output.section] : res.output.sections;
-      const matched = matchSections(returned, call);
-      const problems = matched ? validateSections(matched, call, known) : [`return exactly ${call.units.length} section(s) with section_id ${call.units.map((u) => `"${u.id}"`).join(", ")}.`];
-      if (matched && problems.length === 0) {
-        drafted.push(...matched);
-        needsSource.push(...res.output.needs_source);
-        break;
-      }
-      if (attempt++ >= 1) throw new Error(`draft call for ${call.units.map((u) => u.id).join(", ")} rejected twice: ${problems.join(" ")}`);
-      note = problems.join("\n");
+    const r = await runSections(call, i, null);
+    drafted.push(...r.sections);
+    needsSource.push(...r.needs);
+  }
+
+  // single-call formats (ads, SMS, RSA, short emails): run the format's hard gates now and give the writer one shot at them
+  if (plan.calls.length === 1 && plan.calls[0].kind === "sections") {
+    let failures: string[] = [];
+    try {
+      failures = evaluateGates(orderSections(spec, drafted), spec).failures;
+    } catch (e) {
+      console.warn("hard gates skipped:", e instanceof Error ? e.message : e);
+    }
+    if (failures.length) {
+      await ctx.progress(`Hard gates failed (${failures.join("; ")}); redrafting once`);
+      const r = await runSections(plan.calls[0], 0, `The format's machine-checked hard gates failed on your draft: ${failures.join("; ")}. Fix exactly these and return the whole draft again.`);
+      drafted.splice(0, drafted.length, ...r.sections);
+      needsSource.splice(0, needsSource.length, ...r.needs);
     }
   }
 
@@ -190,10 +224,10 @@ export const draftStep: StepFn = async (ctx) => {
     const leadSpec = spec.sections.find((s) => s.id === plan.leadSectionId);
     drafted.push(provisionalLeadSection(plan.leadSectionId, leadSpec?.name ?? null, leads));
   }
-  const draft = assembleDraft({ spec, sections: drafted, leads, chosenLeadId: null, needsSource, keepOrder: plan.multiItem });
+  const draft = assembleDraft({ spec, sections: drafted, leads, chosenLeadId: null, needsSource });
   DraftOutput.parse(draft);
 
-  const summary = `Drafted ${draft.word_count} words in ${calls} call${calls === 1 ? "" : "s"}${leads ? `, three leads (${leads.map((l) => l.lead_type).join(", ")}) awaiting the cold read` : ""}; ${draft.ledger_refs_used.length} ledger rows cited; ${draft.needs_source.length} NEEDS SOURCE`;
+  const summary = `Drafted ${draft.word_count} words in ${calls} call${calls === 1 ? "" : "s"}${plan.shape.kind !== "none" ? ` (${plan.itemCount} ${spec.multi_item?.item_name ?? "item"}${plan.itemCount === 1 ? "" : "s"})` : ""}${leads ? `, three leads (${leads.map((l) => l.lead_type).join(", ")}) awaiting the cold read` : ""}; ${draft.ledger_refs_used.length} ledger rows cited; ${draft.needs_source.length} NEEDS SOURCE`;
   await ctx.progress(summary);
   return { output: draft, model, summary, effects: { newDraft: toDraftEffect(draft, "system", "draft") } };
 };

@@ -153,9 +153,9 @@ export function formatParagraph(spec: FormatSpec): string {
   return hit ?? `${spec.name}: ${spec.description}`;
 }
 
-export function sectionSpecText(s: SectionSpec, extra: { itemRole?: string | null } = {}): string {
+export function sectionSpecText(s: SectionSpec, extra: { id?: string; itemRole?: string | null } = {}): string {
   return [
-    `- section_id "${s.id}": ${s.name}${extra.itemRole ? ` [${extra.itemRole}]` : ""}`,
+    `- section_id "${extra.id ?? s.id}": ${s.name}${extra.itemRole ? ` [role: ${extra.itemRole}]` : ""}`,
     `  job: ${s.job}`,
     `  length: ${s.band_words[0]}-${s.band_words[1]} words`,
     s.must.length ? `  must: ${s.must.join("; ")}` : "",

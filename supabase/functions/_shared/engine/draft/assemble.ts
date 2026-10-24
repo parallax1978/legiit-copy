@@ -7,20 +7,21 @@ import type { LeadType } from "../schemas/common.ts";
 import { draftWordCount, extractSkimPath, renderMarkdown } from "../render.ts";
 import type { StepEffects } from "../steps/types.ts";
 import { collectLedgerRefs, needsSourceLines, readerText } from "./ledger.ts";
+import { sectionBaseId, sectionItemIndex } from "../formats/index.ts";
 
 export type LeadVariantT = NonNullable<DraftOutput["leads"]>[number];
 
-/** Sections in the spec's reading order; sections the spec does not list keep their given order at the end. */
+/**
+ * Reading order: unsuffixed sections (item 0) first, then items 1..n; within an item the spec's section order.
+ * Sections the spec does not list keep their given order at the end of their item.
+ */
 export function orderSections(spec: FormatSpec, sections: Section[]): Section[] {
   const rank = new Map(spec.sections.map((s, i) => [s.id, i]));
-  return [...sections].sort((a, b) => {
-    const ra = rank.get(a.section_id);
-    const rb = rank.get(b.section_id);
-    if (ra === undefined && rb === undefined) return 0;
-    if (ra === undefined) return 1;
-    if (rb === undefined) return -1;
-    return ra - rb;
-  });
+  const key = (s: Section) => {
+    const r = rank.get(sectionBaseId(s.section_id));
+    return [sectionItemIndex(s.section_id), r === undefined ? Number.MAX_SAFE_INTEGER : r] as const;
+  };
+  return sections.map((s, i) => ({ s, i, k: key(s) })).sort((a, b) => a.k[0] - b.k[0] || a.k[1] - b.k[1] || a.i - b.i).map((x) => x.s);
 }
 
 export interface AssembleInput {

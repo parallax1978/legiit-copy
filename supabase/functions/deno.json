@@ -24,7 +24,7 @@
   "tasks": {
     "check": "deno check **/*.ts",
     "test": "deno test --allow-read --allow-env --allow-net ./_shared ./tests",
-    "engine": "deno run --allow-read --allow-write --allow-env --allow-net ../../tools/engine-cli/main.ts"
+    "engine": "deno run -c deno.json --allow-read --allow-write --allow-env --allow-net ../../tools/engine-cli/main.ts"
   },
   "lint": {
     "rules": {

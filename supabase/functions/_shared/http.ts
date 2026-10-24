@@ -221,6 +221,10 @@ export async function loadOfferContext(db: Db, offerId: string, purpose: string,
     attempt: 1,
     promptVersions,
     progress: async () => {},
+    partial: null,
+    savePartial: async () => {},
+    timeBudgetMs: 300_000,
+    startedAt: Date.now(),
   };
   return { ctx, offer, generationId: generation.id };
 }

@@ -37,6 +37,16 @@ export interface StepContext {
   promptVersions: Record<string, { id: string; version: number; template: string; model: string; effort: string; max_tokens: number } | undefined>;
   /** Report progress to the UI (generations.progress_message). */
   progress: (message: string) => Promise<void>;
+  /**
+   * Resumable steps (draft): the partial state saved by the previous attempt of this step in this pass, or null.
+   * A step that does several model calls persists after each call group with savePartial, and when its time
+   * budget is spent returns `continueLater` so the runner re-enqueues the same step in a fresh invocation.
+   */
+  partial: unknown | null;
+  savePartial: (partial: unknown) => Promise<void>;
+  /** Wall-clock budget for this invocation in ms (the runner sets it below the Edge Function limit). */
+  timeBudgetMs: number;
+  startedAt: number;
 }
 
 export interface StepResult<T = unknown> {
@@ -47,6 +57,8 @@ export interface StepResult<T = unknown> {
   effects?: StepEffects;
   /** When true the pipeline pauses with status needs_input (e.g. offer approval, blocking questions). */
   pause?: { reason: string };
+  /** The step saved partial state and needs another invocation to finish; the runner re-enqueues the same step. */
+  continueLater?: { reason: string };
 }
 
 export interface StepEffects {

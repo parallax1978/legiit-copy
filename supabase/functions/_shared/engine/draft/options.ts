@@ -18,6 +18,8 @@ export const GenerationOptions = z.looseObject({
   control_text: z.string().optional(),
   /** Item count for multi-item formats (sequences, ad sets); clamped to the spec's min/max. */
   item_count: z.number().int().positive().optional(),
+  /** Sequence type for email_sequence (a key of SEQUENCE_ROLES: welcome, launch, abandoned_cart, post_purchase, win_back). */
+  sequence_type: z.string().optional(),
   /** User chose to keep the offer as-is (no offer construction step). */
   skip_offer: z.boolean().optional(),
   purpose: z.string().optional(),

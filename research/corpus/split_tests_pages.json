@@ -16,7 +16,9 @@
     "lift": "-24.95% for the 'Your' variant",
     "metric": "clicks on the payment button (final funnel step)",
     "why_it_won": "Source: Aagaard expected 'your' to win because sites address visitors in second person; it lost and he offers no mechanism. Our reading: on an order form the reader is already acting as 'I', so first-person button copy mirrors the decision being made.",
-    "principle": "Sec 9 order form: button states the buyer's action; Sec 9 opt-in: button completes 'I want...'. Supports first-person CTA copy."
+    "principle": "Sec 9 order form: button states the buyer's action; Sec 9 opt-in: button completes 'I want...'. Supports first-person CTA copy.",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24. Body text states -24.95%; the article's own headline says -26.55%. Figure kept as the body text states it."
   },
   {
     "id": "split_tests_pages-02",
@@ -35,7 +37,8 @@
     "lift": "+90% click-through rate",
     "metric": "CTR on PPC landing page button (unbounce.com)",
     "why_it_won": "Source: cited as the largest of several 'my' vs 'your' tests, no mechanism given. Our reading: two variables changed at once ('my' and 'free'), so the lift cannot be attributed to person alone.",
-    "principle": "Sec 9 opt-in page: button completing 'I want...'. Supports first-person CTA, with a confound (added 'free')."
+    "principle": "Sec 9 opt-in page: button completing 'I want...'. Supports first-person CTA, with a confound (added 'free').",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-03",
@@ -54,7 +57,8 @@
     "lift": "-18.70% sign-ups for the privacy line",
     "metric": "sign-ups on homepage form",
     "why_it_won": "Source: the word 'spam' next to the form planted the fear it denied.",
-    "principle": "Sec 9 opt-in page must-not: 'we will never spam you.' Directly supports the rule."
+    "principle": "Sec 9 opt-in page must-not: 'we will never spam you.' Directly supports the rule.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-04",
@@ -73,7 +77,8 @@
     "lift": "+19.47% sign-ups",
     "metric": "sign-ups",
     "why_it_won": "Source: removing the word 'spam' fixed the problem found in the prior test; a positive privacy promise reassures without naming the fear.",
-    "principle": "Sec 9 opt-in: no 'we will never spam you'; Sec 4 proof/reassurance stated as a positive promise. Supports."
+    "principle": "Sec 9 opt-in: no 'we will never spam you'; Sec 4 proof/reassurance stated as a positive promise. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-05",
@@ -92,7 +97,8 @@
     "lift": "-24% downloads for the 'spam' wording",
     "metric": "e-book downloads",
     "why_it_won": "Source: same pattern as the Bettingexpert test; naming spam near the form reduces conversions.",
-    "principle": "Sec 9 opt-in must-not 'we will never spam you'. Supports."
+    "principle": "Sec 9 opt-in must-not 'we will never spam you'. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-06",
@@ -111,7 +117,8 @@
     "lift": "+114.0% conversion rate (T2); headline alone +95.4% at 93.3% confidence",
     "metric": "donor conversion rate (2.1% to 4.5%)",
     "why_it_won": "Source: the continuation headline pulled visitors into the value proposition; first-person copy signed by a named messenger created a stronger connection.",
-    "principle": "Sec 3 most-aware/returning: line one continues the decision just made; Sec 9 upsell/OTO: one-line confirmation of the first decision then bridge. Supports."
+    "principle": "Sec 3 most-aware/returning: line one continues the decision just made; Sec 9 upsell/OTO: one-line confirmation of the first decision then bridge. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-07",
@@ -130,7 +137,8 @@
     "lift": "-65.0% conversion rate for the treatment (key learnings say -62% donors)",
     "metric": "conversion rate (2.5% vs 0.89%)",
     "why_it_won": "Source (Tim Kachuriak): the treatment added benefit language but lost clarity about what the page was for; 'added value while losing clarity'.",
-    "principle": "Sec 2 C7 one-sentence clarity and C9 claim <= proof: an unsupported superlative ('most exclusive ... in the Nation') with no carrier lost to a plain statement of purpose. Supports."
+    "principle": "Sec 2 C7 one-sentence clarity and C9 claim <= proof: an unsupported superlative ('most exclusive ... in the Nation') with no carrier lost to a plain statement of purpose. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-08",
@@ -149,7 +157,8 @@
     "lift": "+21.8% conversion rate, NOT VALID (confidence below 95%)",
     "metric": "donor conversion rate (18.0% vs 22.0%)",
     "why_it_won": "Source (Jeff Giddens): reminding visitors of the gift's impact appeared to help in a funnel tied to a personal relationship; result tentative.",
-    "principle": "Sec 2 C11 important/exciting/beneficial in the reader's terms. Weakly supports; underpowered."
+    "principle": "Sec 2 C11 important/exciting/beneficial in the reader's terms. Weakly supports; underpowered.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-09",
@@ -168,7 +177,8 @@
     "lift": "+119.2% conversion rate",
     "metric": "conversion rate (7.0% vs 15.4%)",
     "why_it_won": "Source (Jeff Giddens): sponsors may empathize with fellow sponsors more than with the immediate needs of a child; more testing needed.",
-    "principle": "Sec 2 C4 awareness fit / C5 right problem: the headline must name the reader's own problem, not the writer's. Supports."
+    "principle": "Sec 2 C4 awareness fit / C5 right problem: the headline must name the reader's own problem, not the writer's. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-10",
@@ -187,7 +197,8 @@
     "lift": "+150.2% donor conversion rate",
     "metric": "donor conversion rate (2.5% vs 6.3%)",
     "why_it_won": "Source: the team had assumed visitors on the donation page were already committed; a clear value proposition motivated far more to give.",
-    "principle": "Sec 9 order form/short landing page: argued benefits with proof in line; Sec 1 claim/reason/proof. Supports: do not assume the page's visitor is sold."
+    "principle": "Sec 9 order form/short landing page: argued benefits with proof in line; Sec 1 claim/reason/proof. Supports: do not assume the page's visitor is sold.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-11",
@@ -206,7 +217,8 @@
     "lift": "+63.6% click rate",
     "metric": "clickthrough on homepage premium block (0.50% vs 0.82%)",
     "why_it_won": "Source: visitors arrive with some motivation to give and are not repelled by a direct ask.",
-    "principle": "Sec 9 CTA as verb/object; Sec 3 most-aware gets the offer in line one. Supports direct asks over disguised ones."
+    "principle": "Sec 9 CTA as verb/object; Sec 3 most-aware gets the offer in line one. Supports direct asks over disguised ones.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-12",
@@ -225,7 +237,8 @@
     "lift": "+104.6% conversion rate on the following page",
     "metric": "donor conversion rate (0.25% vs 0.51%)",
     "why_it_won": "Source: 'clarity is king'; 'get your copy' reads as bait-and-switch once a donation is required, 'donate' sets expectations.",
-    "principle": "Sec 8 claims: offer stated exactly as it is; Sec 9 order form: nothing the close did not state. Supports."
+    "principle": "Sec 8 claims: offer stated exactly as it is; Sec 9 order form: nothing the close did not state. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-13",
@@ -244,7 +257,8 @@
     "lift": "+18.4% donor conversion (T1); T2 +11.5% at 89.5%",
     "metric": "donor conversion rate (0.76% vs 0.90%)",
     "why_it_won": "Source: the button told donors both what they receive and how they receive it, reducing friction; an earlier 'Get the DVD Here' drove traffic but lowered conversion because visitors expected the resource free.",
-    "principle": "Sec 9 order bump: 'Yes! Add [thing] for only $X' (what and the price in the button). Supports stating the exchange in the CTA."
+    "principle": "Sec 9 order bump: 'Yes! Add [thing] for only $X' (what and the price in the button). Supports stating the exchange in the CTA.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-14",
@@ -263,7 +277,8 @@
     "lift": "+64.7% clicks to the donation page; donor conversion then fell about 4%",
     "metric": "click rate to donation page (2.0% vs 3.3%)",
     "why_it_won": "Source: visitors were more motivated to get the resource than to give; the stronger button weakened the donation-for-resource expectation downstream.",
-    "principle": "Sec 9 order form: no claim the close did not state. A CTA that hides the exchange buys clicks and loses conversions. Supports."
+    "principle": "Sec 9 order form: no claim the close did not state. A CTA that hides the exchange buys clicks and loses conversions. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-15",
@@ -282,7 +297,9 @@
     "lift": "+336.7% downstream transactions; email sign-ups +6.5% at 60% confidence",
     "metric": "transaction conversion rate (0.16% vs 0.68%)",
     "why_it_won": "Source (Jeff Giddens): modest lift in sign-ups, the significant gain came downstream on the donation page; recommends value-focused copy on sign-up pages.",
-    "principle": "Sec 9 opt-in page: incomplete bullets and one proof line; Sec 1 the skim path sells alone. Supports (but the headline metric is downstream)."
+    "principle": "Sec 9 opt-in page: incomplete bullets and one proof line; Sec 1 the skim path sells alone. Supports (but the headline metric is downstream).",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24. Source results table attributes +336.7% to landing-page conversion rate while Key Learnings attribute it to downstream transactions; the source does not reconcile the two."
   },
   {
     "id": "split_tests_pages-16",
@@ -291,7 +308,7 @@
     "quote_status": "verbatim",
     "confidence": "97.3%",
     "sample_size": "103 total (43 required)",
-    "source": "NextAfter experiment, Human Coalition year-end donation page",
+    "source": "NextAfter experiment #201112, Human Coalition year-end donation page",
     "source_url": "https://www.nextafter.com/experiments/how-specifying-the-impact-of-a-gift-in-a-donation-page-headline-affects-conversions/",
     "format": "donation_page",
     "element_tested": "headline",
@@ -301,7 +318,9 @@
     "lift": "+107.1% conversion rate; average gift -64.8%; revenue -27.1%",
     "metric": "conversion rate (17.6% vs 36.5%)",
     "why_it_won": "Source: a specific, immediate outcome tied to the reader's action felt more personally impactful; it may have attracted lower-dollar donors.",
-    "principle": "Sec 2 C7 one sentence, eight words or fewer, concrete picture; Sec 1 precision. Supports on conversion, cautions on revenue: the metric decides."
+    "principle": "Sec 2 C7 one sentence, eight words or fewer, concrete picture; Sec 1 precision. Supports on conversion, cautions on revenue: the metric decides.",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24 (experiment #201112). Table confidence 97.3%; summary text says 97.2%."
   },
   {
     "id": "split_tests_pages-17",
@@ -310,7 +329,7 @@
     "quote_status": "paraphrase",
     "confidence": "99.3%",
     "sample_size": "3,286 total (851 required)",
-    "source": "NextAfter experiment, Minnesota Public Radio premium offer",
+    "source": "NextAfter experiment #202191, Minnesota Public Radio premium offer",
     "source_url": "https://www.nextafter.com/experiments/does-the-addition-of-a-premium-on-an-offer-donation-page-impact-donor-conversion/",
     "format": "donation_page",
     "element_tested": "offer",
@@ -320,7 +339,9 @@
     "lift": "+131.9% conversion rate; revenue +215.3%; monthly gifts +102.9%",
     "metric": "conversion rate (0.85% vs 2.0%)",
     "why_it_won": "Source: the premium paired the mission ask with a thank-you; growth came mainly from recurring giving.",
-    "principle": "Sec 5 offer presentation / Sec 9 stack: a tangible premium tied to a specific threshold. Supports."
+    "principle": "Sec 5 offer presentation / Sec 9 stack: a tangible premium tied to a specific threshold. Supports.",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24 (experiment #202191). Results table states +131.9% conversion; Key Learnings state +34.3% overall transactions at 94% confidence. Monthly gifts +102.9%, revenue +215.3% confirmed."
   },
   {
     "id": "split_tests_pages-18",
@@ -339,7 +360,8 @@
     "lift": "+108.3% conversion rate; revenue +124.4%",
     "metric": "conversion rate (0.08% vs 0.16%)",
     "why_it_won": "Source: clearer information and less friction about what the gift is increased donations.",
-    "principle": "Sec 2 C10 mechanism named and explained; Sec 9 order form 'what arrives and when'. Supports."
+    "principle": "Sec 2 C10 mechanism named and explained; Sec 9 order form 'what arrives and when'. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-19",
@@ -358,7 +380,8 @@
     "lift": "-37.8% conversion rate; average gift +61.3%; revenue -0.6% (NOT VALID, 94.8%)",
     "metric": "donor conversion rate (15.7% vs 9.7%)",
     "why_it_won": "Source: researcher hypothesizes copy length caused the drop; higher average gift was encouraging, so a short donor-centered version is planned.",
-    "principle": "Sec 3 most-aware traffic: offer lead, do not explain the problem. Supports: long copy on a primary donate page serving warm traffic."
+    "principle": "Sec 3 most-aware traffic: offer lead, do not explain the problem. Supports: long copy on a primary donate page serving warm traffic.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-20",
@@ -374,10 +397,12 @@
     "variant_a": "Transactional copy describing what donors receive",
     "variant_b": "Value proposition copy explaining what the monthly gift will do",
     "winner": "b",
-    "lift": "+31.5% conversion rate; average gift unchanged",
+    "lift": "+31.5% conversion rate; average gift about -4.7% ($60.51 vs $57.66)",
     "metric": "conversion rate (1.0% vs 1.4%)",
     "why_it_won": "Source (Courtney Gaines): what the gift does motivated more than what the donor receives.",
-    "principle": "Sec 1 benefits as claim, reason, proof, picture; Sec 2 C11 beneficial in reader's terms. Supports."
+    "principle": "Sec 1 benefits as claim, reason, proof, picture; Sec 2 C11 beneficial in reader's terms. Supports.",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24. Corrected: source reports average gift $60.51 (control) vs $57.66 (treatment), about -4.7%, described as 'slightly higher' for the control, not unchanged."
   },
   {
     "id": "split_tests_pages-21",
@@ -396,7 +421,8 @@
     "lift": "-17.6% conversion rate (new mobile visitors segment +12%)",
     "metric": "conversion rate (53.5% vs 44.1%)",
     "why_it_won": "Source: visitors to this page have varied motivations (many from direct mail); the stronger value proposition lowered conversion for the whole, lifted new mobile visitors.",
-    "principle": "Sec 3: most-aware traffic (direct-mail responders) wants the offer, not re-education. Supports the awareness-first rule; contradicts 'more value prop always wins'."
+    "principle": "Sec 3: most-aware traffic (direct-mail responders) wants the offer, not re-education. Supports the awareness-first rule; contradicts 'more value prop always wins'.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-22",
@@ -415,7 +441,8 @@
     "lift": "-37.6% conversion for the value-first treatment",
     "metric": "enrollment conversion rate (13.8% vs 8.6%)",
     "why_it_won": "Source: value-heavy copy blurred what the offer was and implied an immediate download the form did not deliver.",
-    "principle": "Sec 9 opt-in must-not 'headline describing the artifact' is nuanced here: clarity about the exchange beat benefit talk. Supports Sec 2 C7 clarity; cautions against benefit copy that misstates the offer."
+    "principle": "Sec 9 opt-in must-not 'headline describing the artifact' is nuanced here: clarity about the exchange beat benefit talk. Supports Sec 2 C7 clarity; cautions against benefit copy that misstates the offer.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-23",
@@ -434,7 +461,8 @@
     "lift": "+269.7% conversion rate; one-time donations -43.8%",
     "metric": "conversion rate (0.55% vs 2.0%)",
     "why_it_won": "Source: highlighting monthly benefits and preselecting monthly 'subtly influenced donors towards monthly giving'; trade-off against one-time gifts.",
-    "principle": "Sec 5 offer presentation: options highest-value first, default framed. Supports with the trade-off recorded."
+    "principle": "Sec 5 offer presentation: options highest-value first, default framed. Supports with the trade-off recorded.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-24",
@@ -453,7 +481,8 @@
     "lift": "+106.7% donation conversion rate",
     "metric": "donation conversion (6.4%, 14/219 vs 13.2%, 30/227)",
     "why_it_won": "Source: copy that only confirmed a completed action was removed, moving visitors faster from registration to the opportunity to give.",
-    "principle": "Sec 9 thank-you page / upsell: one-line confirmation then bridge to the next offer; close at 15-25% of length. Supports cutting dead confirmation copy."
+    "principle": "Sec 9 thank-you page / upsell: one-line confirmation then bridge to the next offer; close at 15-25% of length. Supports cutting dead confirmation copy.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-25",
@@ -472,7 +501,8 @@
     "lift": "-58.3% donor conversion for the treatment",
     "metric": "donor conversion rate (1.0% vs 0.43%)",
     "why_it_won": "Source: the control's reminder of the action just taken likely drove conversion; new copy to be rewritten and retested.",
-    "principle": "Sec 9 upsell/OTO: confirm the first decision and bridge from it; do not re-educate. Supports."
+    "principle": "Sec 9 upsell/OTO: confirm the first decision and bridge from it; do not re-educate. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-26",
@@ -491,7 +521,8 @@
     "lift": "+0.5% for short form, i.e. no difference (NOT VALID)",
     "metric": "donor conversion rate (5.2% vs 5.2%); average gift $51.60 vs $62.00 n.s.",
     "why_it_won": "Source: copy length 'is not a significant factor' on this page; add value through propositions and incentives instead.",
-    "principle": "Sec 9: bands are starting values, the control overrides them. Neutral on length; supports testing argument over length."
+    "principle": "Sec 9: bands are starting values, the control overrides them. Neutral on length; supports testing argument over length.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-27",
@@ -510,7 +541,8 @@
     "lift": "+204.1% revenue per visitor ($0.51 to $1.54); average gift +150.4%; conversion +21.4% not validated",
     "metric": "revenue per visitor",
     "why_it_won": "Source: shorter copy reduced friction on mobile, the primary device; lift held across device and visitor segments.",
-    "principle": "Sec 9 short landing page 150-600 words for product-aware traffic; Sec 3 product-aware gets promise, not re-education. Supports."
+    "principle": "Sec 9 short landing page 150-600 words for product-aware traffic; Sec 3 product-aware gets promise, not re-education. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-28",
@@ -529,7 +561,8 @@
     "lift": "-30.7% conversion for the short form",
     "metric": "conversion rate (39.0% vs 27.0%)",
     "why_it_won": "Source (Nathan Hill): the short copy had less specific and clear detail about what visitors would receive.",
-    "principle": "Sec 1 precision; Sec 9 opt-in: incomplete bullets with specifics. Supports: cut words, never cut specifics."
+    "principle": "Sec 1 precision; Sec 9 opt-in: incomplete bullets with specifics. Supports: cut words, never cut specifics.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-29",
@@ -548,7 +581,8 @@
     "lift": "+51.9% conversion rate",
     "metric": "conversion rate (2.3% vs 3.5%)",
     "why_it_won": "Source: longer copy is acceptable if it explains how the donor's gift can stop the problem.",
-    "principle": "Sec 9 long-form: problem mechanism then solution mechanism; Sec 2 C10. Supports."
+    "principle": "Sec 9 long-form: problem mechanism then solution mechanism; Sec 2 C10. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-30",
@@ -567,7 +601,8 @@
     "lift": "+14.3% conversion (NOT VALID, 93.6%); revenue +94.4% at 77% confidence",
     "metric": "donor conversion rate (26.8% vs 30.7%)",
     "why_it_won": "Source (Courtney Gaines): less friction plus stronger value proposition brought more donors at a higher gift; not statistically reliable.",
-    "principle": "Sec 1 claim/reason/proof. Weak support; underpowered."
+    "principle": "Sec 1 claim/reason/proof. Weak support; underpowered.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-31",
@@ -586,7 +621,8 @@
     "lift": "+74.0% donation conversion for 'Make my Gift'; 'Donate Today!' -6.0% at 15.6%",
     "metric": "donation page conversion (2.0% vs 3.5%)",
     "why_it_won": "Source: first-person framing aligned with donor intent; the command 'Donate Today!' reduced traffic.",
-    "principle": "Sec 9: button completes 'I want...'; CTA as verb+object. Supports first-person CTA over imperative-with-urgency."
+    "principle": "Sec 9: button completes 'I want...'; CTA as verb+object. Supports first-person CTA over imperative-with-urgency.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-32",
@@ -605,7 +641,8 @@
     "lift": "0.0% (both 0.00% conversion; NOT VALID)",
     "metric": "donation and email conversion",
     "why_it_won": "Source: 'just adding the calls to action' did not inspire readers; next step is to contextualize the CTA to the content and emphasize one primary CTA.",
-    "principle": "Sec 9 organic/content: a sales intent inside the content, one CTA with verb/object/location. Supports: an uncontextualized CTA is dead weight."
+    "principle": "Sec 9 organic/content: a sales intent inside the content, one CTA with verb/object/location. Supports: an uncontextualized CTA is dead weight.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-33",
@@ -624,7 +661,8 @@
     "lift": "+2,694% clicks to donation page (from near zero); donor conversion -9.3% (14.5% conf.) / -64% near-valid",
     "metric": "click rate; donor conversion rate",
     "why_it_won": "Source: people who click a prominent button may be less motivated than those who seek out the page.",
-    "principle": "Sec 3: traffic state governs the lead; a button that changes who arrives must change the page. Supports awareness-first."
+    "principle": "Sec 3: traffic state governs the lead; a button that changes who arrives must change the page. Supports awareness-first.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-34",
@@ -643,7 +681,8 @@
     "lift": "stated inconsistently: +8.7% conversion in summary, 100.0% relative difference in table",
     "metric": "donate button clicks",
     "why_it_won": "Source: changes were deliberately radical; recommends re-running on one platform. Our reading: confounded multi-variable test, low traffic.",
-    "principle": "Sec 2 C12 inevitable conclusion. Weak support; confounded."
+    "principle": "Sec 2 C12 inevitable conclusion. Weak support; confounded.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-35",
@@ -662,7 +701,8 @@
     "lift": "+42% donations",
     "metric": "donations",
     "why_it_won": "Source: a reassurance at the moment of decision. Our reading: proof/value within two sentences of the ask.",
-    "principle": "Sec 4 proof placement: proof within two sentences of the claim; Sec 9 order form: guarantee beside the button. Supports."
+    "principle": "Sec 4 proof placement: proof within two sentences of the claim; Sec 9 order form: guarantee beside the button. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-36",
@@ -681,7 +721,8 @@
     "lift": "+56% conversions",
     "metric": "donor conversions",
     "why_it_won": "Source: 'communal' language speaking to the reader rather than about the organization.",
-    "principle": "Sec 7 AI tell: assistant/brand voice; Sec 1: one reader. Supports."
+    "principle": "Sec 7 AI tell: assistant/brand voice; Sec 1: one reader. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-37",
@@ -700,7 +741,8 @@
     "lift": "+527% donations (one experiment)",
     "metric": "donations",
     "why_it_won": "Source: the copy carried the same message without the friction of pressing play.",
-    "principle": "Sec 1 the skim path sells alone. Supports copy over gated media on the decision page."
+    "principle": "Sec 1 the skim path sells alone. Supports copy over gated media on the decision page.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-38",
@@ -719,7 +761,8 @@
     "lift": "+89.97% purchases",
     "metric": "online purchases",
     "why_it_won": "Source: adding 'supplement' let visitors grasp what Movexa is without reading the full copy. Vendor-published, self-reported.",
-    "principle": "Sec 2 C7 clarity in one sentence; Sec 3 solution-aware: name the category. Supports."
+    "principle": "Sec 2 C7 clarity in one sentence; Sec 3 solution-aware: name the category. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-39",
@@ -738,7 +781,8 @@
     "lift": "+24.31% newsletter sign-ups",
     "metric": "newsletter sign-ups",
     "why_it_won": "Source: headline taken from real, frequent customer feedback; 'do something different that gets attention'. Vendor-published.",
-    "principle": "Sec 2: lead verbatim from the customer; Sec 9 opt-in: one proof line. Supports testimonial-as-headline; question headline lost."
+    "principle": "Sec 2: lead verbatim from the customer; Sec 9 opt-in: one proof line. Supports testimonial-as-headline; question headline lost.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-40",
@@ -757,7 +801,8 @@
     "lift": "+91% sign-ups; +42% click-through",
     "metric": "completed sign-ups; homepage CTR",
     "why_it_won": "Source: more compelling copy and a layout that led to the button; follow-up planned to isolate copy from layout. Confounded.",
-    "principle": "Sec 9 short landing page: headline, subhead with who and differentiator, CTA. Weak support (confounded)."
+    "principle": "Sec 9 short landing page: headline, subhead with who and differentiator, CTA. Weak support (confounded).",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-41",
@@ -776,7 +821,8 @@
     "lift": "+9.52% leads (reported as +10%)",
     "metric": "form submissions",
     "why_it_won": "Source: a time-bound promise, a sense the task is easy, and a command verb opening appealed to first-timers who assume it is hard and slow.",
-    "principle": "Sec 9 opt-in: headline with number, timeframe or mechanism, not describing the artifact. Supports."
+    "principle": "Sec 9 opt-in: headline with number, timeframe or mechanism, not describing the artifact. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-42",
@@ -795,7 +841,8 @@
     "lift": "+161.66% click-through (0.54% to 1.40%)",
     "metric": "clicks to sales inquiry form",
     "why_it_won": "Source: a survey showed visitors wanted pricing; the link label that named what they wanted won. Lead-volume impact not shown.",
-    "principle": "Sec 9 B2B pricing page must-not: gated pricing without a stated reason; CTA names what the reader gets. Supports."
+    "principle": "Sec 9 B2B pricing page must-not: gated pricing without a stated reason; CTA names what the reader gets. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-43",
@@ -814,7 +861,8 @@
     "lift": "+620.9% CTA clickthroughs",
     "metric": "CTA clicks",
     "why_it_won": "Source: 'Download' plus a price looked like a banner ad; the winner was more relevant (visitors wanted a price guide) and more specific. Follow-up with 'Starts at $4' did not beat it.",
-    "principle": "Sec 9 CTA as verb + object; Sec 5 price after value. Supports; note the price-removal confound."
+    "principle": "Sec 9 CTA as verb + object; Sec 5 price after value. Supports; note the price-removal confound.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-44",
@@ -833,7 +881,8 @@
     "lift": "+30% conversions to customers",
     "metric": "customer conversions",
     "why_it_won": "Source: 'length is not the problem; a page that is too boring is'; visitors wanted their questions answered.",
-    "principle": "Sec 9 long-form: the skim path sells alone, objections answered; Sec 3 solution-aware gets the mechanism. Supports."
+    "principle": "Sec 9 long-form: the skim path sells alone, objections answered; Sec 3 solution-aware gets the mechanism. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-45",
@@ -852,7 +901,9 @@
     "lift": "+116% sign-ups",
     "metric": "free-trial sign-ups",
     "why_it_won": "Source: visitors thought the card request was a scam and were confused by monthly vs yearly; confusion causes hesitation.",
-    "principle": "Sec 9 order form: price, total and every added cost; what arrives and when; guarantee beside the button. Supports."
+    "principle": "Sec 9 order form: price, total and every added cost; what arrives and when; guarantee beside the button. Supports.",
+    "verification": "passed",
+    "verification_note": "Verified 2026-10-24. Source states +116% signups for the revised checkout page as a whole and does not isolate the explanation box; other changes (yearly billing terms clarified) shipped in the same variant."
   },
   {
     "id": "split_tests_pages-46",
@@ -871,7 +922,8 @@
     "lift": "+157% paid memberships",
     "metric": "paid memberships",
     "why_it_won": "Source: newcomers met pricing too soon; showing the offer first and anchoring against expert consultation brought them up to speed.",
-    "principle": "Sec 9 B2B pricing: value argument restated above the price, anchor against the expensive alternative; Sec 5 price after value. Supports."
+    "principle": "Sec 9 B2B pricing: value argument restated above the price, anchor against the expensive alternative; Sec 5 price after value. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-47",
@@ -890,7 +942,8 @@
     "lift": "+91% annual memberships",
     "metric": "annual memberships",
     "why_it_won": "Source: visitors needed reassurance of instant access, objections answered at the form, fewer fields.",
-    "principle": "Sec 9 order form: eight fields or fewer, trust block in the payment area, recap in the close's words. Supports."
+    "principle": "Sec 9 order form: eight fields or fewer, trust block in the payment area, recap in the close's words. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-48",
@@ -909,7 +962,8 @@
     "lift": "+52% PRO membership sales",
     "metric": "PRO membership sales",
     "why_it_won": "Source: the long page told the story the CEO told in person; a curiosity headline held attention before selling; proof the company took for granted was made prominent.",
-    "principle": "Sec 3 solution-aware: Secret/Promise lead with proof; Sec 9 long-form proof block. Supports."
+    "principle": "Sec 3 solution-aware: Secret/Promise lead with proof; Sec 9 long-form proof block. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-49",
@@ -928,7 +982,8 @@
     "lift": "+11% orders",
     "metric": "orders",
     "why_it_won": "Source: the guarantee works as a promise, not just a get-out clause.",
-    "principle": "Sec 9 long-form and order form: guarantee verbatim beside the button; Sec 5 risk reversal. Supports."
+    "principle": "Sec 9 long-form and order form: guarantee verbatim beside the button; Sec 5 risk reversal. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-50",
@@ -947,7 +1002,8 @@
     "lift": "+21% sales",
     "metric": "sales",
     "why_it_won": "Source implies specificity and prominence strengthened the effect over test 1a.",
-    "principle": "Sec 1 precision matches the evidence; specific promises beat vague ones. Supports."
+    "principle": "Sec 1 precision matches the evidence; specific promises beat vague ones. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-51",
@@ -966,7 +1022,8 @@
     "lift": "+24% over the previous winner; +49% calls to sales vs the guarantee-less original",
     "metric": "conversions (calls to sales team)",
     "why_it_won": "Source: mouse-movement maps showed the guarantee was among the most-read elements; positive-promise framing and concision won.",
-    "principle": "Sec 9 upsell: one-line guarantee; Sec 5. Supports."
+    "principle": "Sec 9 upsell: one-line guarantee; Sec 5. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-52",
@@ -985,7 +1042,8 @@
     "lift": ">400% more clicks on the CTA; >20% more lead-form submits on the next page",
     "metric": "CTA clicks; downstream form submits",
     "why_it_won": "Source (Joanna Wiebe): the headline is a reviewer's exact sentence from 500+ Amazon reviews of addiction books; no later treatment has beaten it.",
-    "principle": "Sec 2: lead verbatim and the belief to displace; Sec 3 problem-aware: name the need in the reader's words. Supports."
+    "principle": "Sec 2: lead verbatim and the belief to displace; Sec 3 problem-aware: name the need in the reader's words. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-53",
@@ -1004,7 +1062,8 @@
     "lift": "+103% clicks to Plans & Pricing; three of four treatments lost, one by -100%",
     "metric": "clicks from landing page to Plans & Pricing",
     "why_it_won": "Source: customer language outperformed the copywriter's own treatments.",
-    "principle": "Sec 2 lead verbatim; Sec 10 voice capture from the customer corpus. Supports."
+    "principle": "Sec 2 lead verbatim; Sec 10 voice capture from the customer corpus. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-54",
@@ -1023,7 +1082,8 @@
     "lift": "+13% for the best of four treatments",
     "metric": "not specified",
     "why_it_won": "Source gives no explanation on the page; details are in a video case study.",
-    "principle": "Sec 6: predicts beat/lose against a control; small gains on a strong control. Neutral."
+    "principle": "Sec 6: predicts beat/lose against a control; small gains on a strong control. Neutral.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-55",
@@ -1042,7 +1102,8 @@
     "lift": "-6% to -80% for every button treatment",
     "metric": "clicks/engagement; downloads",
     "why_it_won": "Source hypotheses: big attractive buttons on a download site look like spam/scam; headers made visitors notice Office is not free; D and E added form friction.",
-    "principle": "Sec 6: never repair a higher failure (trust/offer clarity) lower down (button design). Supports."
+    "principle": "Sec 6: never repair a higher failure (trust/offer clarity) lower down (button design). Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-56",
@@ -1061,7 +1122,8 @@
     "lift": "+18% clicks on 'Schedule Repair' ('statistically meaningful')",
     "metric": "CTA clicks",
     "why_it_won": "Source: humour tied to a real timing hook beat the embarrassment angle and the plain default.",
-    "principle": "Sec 2 C6 timing evidence (a named event); Sec 9 SMS must-not jokes is format-specific. Partial support: the hook was a dated event, not cleverness for its own sake."
+    "principle": "Sec 2 C6 timing evidence (a named event); Sec 9 SMS must-not jokes is format-specific. Partial support: the hook was a dated event, not cleverness for its own sake.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-57",
@@ -1080,7 +1142,8 @@
     "lift": "'massive lift' on every plan goal, not stated numerically; C beat B except on Gold",
     "metric": "click-through on each plan button",
     "why_it_won": "Source hypotheses: price-sensitive visitors; leading with $199 signalled 'too expensive'; the Gold plan made $10 look like a bargain.",
-    "principle": "Sec 9 B2B pricing: three plans, anchor against the expensive alternative, 'Best for [persona]'. Partial support; CONTRADICTS Sec 9 order form 'options highest price first' for this audience."
+    "principle": "Sec 9 B2B pricing: three plans, anchor against the expensive alternative, 'Best for [persona]'. Partial support; CONTRADICTS Sec 9 order form 'options highest price first' for this audience.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-58",
@@ -1099,7 +1162,8 @@
     "lift": "control beat the best challenger by 16.2%; all three variations lost",
     "metric": "email opt-ins",
     "why_it_won": "Source: 'simple and straightforward worked best'; the question and three-benefit headlines also lost.",
-    "principle": "Sec 2 C7 eight words, no qualifier; Sec 9 ads must-not 'Are you tired of' question openers. Supports."
+    "principle": "Sec 2 C7 eight words, no qualifier; Sec 9 ads must-not 'Are you tired of' question openers. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-59",
@@ -1118,7 +1182,8 @@
     "lift": "no difference in opt-ins; control won bottom-of-funnel completions by 21.7%",
     "metric": "opt-ins; full-funnel completion",
     "why_it_won": "Source: 'too many promises can look like hype'; big promises drew people less motivated to finish.",
-    "principle": "Sec 1 claim never bigger than proof; Sec 2 C9. Supports: VOC words alone do not license bigger promises."
+    "principle": "Sec 1 claim never bigger than proof; Sec 2 C9. Supports: VOC words alone do not license bigger promises.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-60",
@@ -1137,7 +1202,8 @@
     "lift": "+21.5% opt-ins",
     "metric": "email opt-ins",
     "why_it_won": "Source: shorter layouts with less copy increased opt-ins for this audience (mobile ~50% of traffic).",
-    "principle": "Sec 9 opt-in page 60-250 words. Supports."
+    "principle": "Sec 9 opt-in page 60-250 words. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-61",
@@ -1156,7 +1222,8 @@
     "lift": "control beat the shorter form by 13.56%",
     "metric": "email opt-ins",
     "why_it_won": "Source guess: extra fields add credibility; a bare email field can look 'spammy'.",
-    "principle": "Sec 9 opt-in: email-only form. CONTRADICTS the default for this audience; the control overrides the band."
+    "principle": "Sec 9 opt-in: email-only form. CONTRADICTS the default for this audience; the control overrides the band.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-62",
@@ -1175,7 +1242,8 @@
     "lift": "+44.7% opt-ins; cumulative 12.1% to 21.7% (+79.3%) over six rounds",
     "metric": "email opt-ins",
     "why_it_won": "Source: easy fields first then email may build commitment and consistency.",
-    "principle": "Sec 9 opt-in: email-only; eight fields or fewer. Supports."
+    "principle": "Sec 9 opt-in: email-only; eight fields or fewer. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-63",
@@ -1194,7 +1262,8 @@
     "lift": "+37.5% signups",
     "metric": "signups",
     "why_it_won": "Source gives no explanation. Our reading: more answered questions before the plan choice.",
-    "principle": "Sec 9 long-form: the skim path sells alone. Supports."
+    "principle": "Sec 9 long-form: the skim path sells alone. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-64",
@@ -1213,7 +1282,8 @@
     "lift": "+47% paid signups",
     "metric": "paid signups",
     "why_it_won": "Source: author asks why and does not answer; later concludes 'big photos of smiling customers work' and the specific person did not matter.",
-    "principle": "Sec 4 proof: a real customer with a face and words as the lead proof. Supports; contradicts 'longer always wins' from the prior test."
+    "principle": "Sec 4 proof: a real customer with a face and words as the lead proof. Supports; contradicts 'longer always wins' from the prior test.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-65",
@@ -1232,7 +1302,8 @@
     "lift": "more than 22% worse for the added information",
     "metric": "signups",
     "why_it_won": "Source calls it 'crazy'; a commenter suggests extra content sends visitors exploring instead of signing up.",
-    "principle": "Sec 3 product-aware/most-aware: do not re-educate; Sec 9 bands set by the control. Supports."
+    "principle": "Sec 3 product-aware/most-aware: do not re-educate; Sec 9 bands set by the control. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-66",
@@ -1251,7 +1322,8 @@
     "lift": "+201% captured leads",
     "metric": "captured leads",
     "why_it_won": "Source (Flint McGlaughlin): 'The value proposition must be framed with customer logic rather than company logic.'",
-    "principle": "Sec 2 C11 in the reader's terms; Sec 7 brand voice tell. Supports."
+    "principle": "Sec 2 C11 in the reader's terms; Sec 7 brand voice tell. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-67",
@@ -1270,7 +1342,8 @@
     "lift": "+31.4% trial signups",
     "metric": "trial signups on the following page",
     "why_it_won": "Source: matching the searcher's exact verb signalled relevance; message match between ad and page.",
-    "principle": "Sec 9 short landing page: headline matched to the ad. Supports."
+    "principle": "Sec 9 short landing page: headline matched to the ad. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-68",
@@ -1289,7 +1362,8 @@
     "lift": "+120% conversion rate",
     "metric": "conversion rate (clicks)",
     "why_it_won": "Source: a more specific call to action on a newsletter-themed page drew more clicks. Self-reported by the vendor.",
-    "principle": "Sec 9 CTA as verb + object + location. Supports."
+    "principle": "Sec 9 CTA as verb + object + location. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-69",
@@ -1308,7 +1382,8 @@
     "lift": "+78% trial signup conversion",
     "metric": "trial signups",
     "why_it_won": "Source: policy unchanged; stating it removed uncertainty that held people back. Self-reported by the vendor.",
-    "principle": "Sec 9 order form: every cost stated; risk reversal beside the button. Supports."
+    "principle": "Sec 9 order form: every cost stated; risk reversal beside the button. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-70",
@@ -1327,7 +1402,8 @@
     "lift": "+57% conversion rate",
     "metric": "free trial signups",
     "why_it_won": "Source: message match between ad and page. Self-reported by the vendor.",
-    "principle": "Sec 9 short landing page: headline matched to the ad. Supports."
+    "principle": "Sec 9 short landing page: headline matched to the ad. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-71",
@@ -1346,7 +1422,8 @@
     "lift": "+48% purchases",
     "metric": "purchases",
     "why_it_won": "Source summary only: anchoring and price illusions. Details paywalled.",
-    "principle": "Sec 9 B2B pricing: anchor against the expensive alternative. Supports (summary-level evidence)."
+    "principle": "Sec 9 B2B pricing: anchor against the expensive alternative. Supports (summary-level evidence).",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-72",
@@ -1365,7 +1442,8 @@
     "lift": "+28% contest signups",
     "metric": "signups",
     "why_it_won": "Source summary: 'natural language applied to form copy'. Details paywalled.",
-    "principle": "Sec 9 opt-in: button completing 'I want...'; Sec 7 no placeholders/labels. Supports."
+    "principle": "Sec 9 opt-in: button completing 'I want...'; Sec 7 no placeholders/labels. Supports.",
+    "verification": "passed"
   },
   {
     "id": "split_tests_pages-73",
@@ -1384,6 +1462,7 @@
     "lift": "+17% paid accounts",
     "metric": "paid accounts",
     "why_it_won": "Source summary: reassurances near the decision. Details paywalled.",
-    "principle": "Sec 4 proof within two sentences of the claim; Sec 9 two objections with guarantee. Supports."
+    "principle": "Sec 4 proof within two sentences of the claim; Sec 9 two objections with guarantee. Supports.",
+    "verification": "passed"
   }
 ]

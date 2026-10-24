@@ -1,0 +1,1775 @@
+[
+ {
+  "id": "P37",
+  "source": "Copyhackers, Seven Sweeps tutorial (Sweeps 3 So What + 4 Prove It), Asana home page",
+  "url": "https://copyhackers.com/edit-believability-sweeps-3-4/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page subhead",
+  "before": "Asana is the easiest way for teams to track their work, complete tasks, and get results.",
+  "after": "No rewrite; direction: keep the line (it passes So What via 'get results') but attach a data point for 'results' (e.g., a project-time statistic) and proof of 'easiest'",
+  "quote_status": "before verbatim; after paraphrase of stated direction",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "Passes So What, fails Prove It: 'easy' and 'get results' are asserted, not proven",
+  "principle": "Every claim gets a Prove It sweep: a number, a demo or a logo within reach of the claim",
+  "reason": "Wiebe runs the sweeps line by line and highlights any claim with no proof beside it (paraphrase of tutorial).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_2_claim_without_proof"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P38",
+  "source": "Copyhackers, Seven Sweeps tutorial (Sweeps 3 + 4), Asana home page",
+  "url": "https://copyhackers.com/edit-believability-sweeps-3-4/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page feature section",
+  "before": "Finish short and long-term projects together. See how creating and moving projects forward in Asana will help your team. You'll know who is doing what and when they're doing it.",
+  "after": "No rewrite; direction: answer 'so what if I know who is doing what?' and replace the static screenshot with a GIF, video or autoplay demo that shows it",
+  "quote_status": "before verbatim (one duplicated word removed); after paraphrase of stated direction",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "'So what if I know who is doing what and when they're doing it?' (verbatim); the screenshot is 'a perfectly nice screen shot' but proves nothing",
+  "principle": "Each feature line must carry its consequence for the reader and a proof object that shows the feature working",
+  "reason": "Whole section highlighted for failing So What; Prove It fails because a screenshot cannot prove the claim (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature",
+   "thesis_2_explains_instead_of_shows"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P39",
+  "source": "Copyhackers, Seven Sweeps tutorial (Sweeps 3 + 4), Asana home page",
+  "url": "https://copyhackers.com/edit-believability-sweeps-3-4/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page CTA section",
+  "before": "Get started today. If you can make a list or send an email you can use Asana. Starting a team is really that simple.",
+  "after": "No rewrite; direction: say what happens next ('Next you'll invite your team'), prove how easy adding team members is, and consider a click trigger near the button about the next steps",
+  "quote_status": "before verbatim; after paraphrase with one verbatim fragment",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "So What is 'not wrong, but it's not right either' (verbatim); 'really that simple' is unproven and the list/email line does not connect to it",
+  "principle": "A claim of ease is proven by showing the next step, not by asserting simplicity",
+  "reason": "Prove It fails on 'that simple'; the fix is to show the first action after the click (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_2_claim_without_proof",
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P40",
+  "source": "Copyhackers, Seven Sweeps tutorial (Sweep 7 Zero Risk), Asana home page headline",
+  "url": "https://copyhackers.com/the-zero-risk-sweep/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page headline",
+  "before": "Move Work Forward",
+  "after": "No rewrite; highlighted but left unchanged because the big idea is unknown: 'I don't know what their big idea should be'",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "'it's not clear, it's not specific' (verbatim); no So What, no Prove It, not emotional, no risk reduction, no voice: 'zero of any Sweeps at all'",
+  "principle": "A headline that fails every sweep cannot be edited; it is a big-idea problem to be solved upstream",
+  "reason": "Wiebe refuses to rewrite a headline without first knowing the big idea; the sweeps edit copy, they do not choose the argument (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P41",
+  "source": "Copyhackers, Seven Sweeps tutorial (Voice and Tone sweep), Asana home page",
+  "url": "https://copyhackers.com/voice-and-tone/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page body line",
+  "before": "You can set aggressive goals. ... and actually hit them.",
+  "after": "Your team's responsibilities and next steps are clear so you can set lofty goals ... and actually reach them.",
+  "quote_status": "verbatim fragments",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Word choice off the intended voice: 'aggressive' and 'hit' do not sound friendly, calm or smart",
+  "principle": "Edit single words against the voice profile's named attributes, not against taste",
+  "reason": "'lofty' may sound friendlier; 'reach them' judged friendly, calm and smart (paraphrase). Also tied the claim to clear responsibilities.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_4_mimicked_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P42",
+  "source": "Copyhackers, 'How to be specific in your copywriting' (Wistia onboarding email)",
+  "url": "https://copyhackers.com/how-to-be-specific/",
+  "chief": "Joanna Wiebe",
+  "format": "onboarding email headline",
+  "before": "Ready, set, engage.",
+  "after": "Video marketing with Wistia turns viewers into leads.",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "'trying to be clever' and 'not specific in any real way' (verbatim)",
+  "principle": "Specific enough that readers 'get it without having to sit there and go, What do they mean?'",
+  "reason": "Specific headline lets the uninterested skip and the interested keep reading (paraphrase).",
+  "tested": {
+   "status": "split_test",
+   "result": "Whole 8-email Wistia sequence: 3.5x paid conversions vs control (same test as v0 P06-P09); this line not isolated"
+  },
+  "evidence": "split_test",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_polished_but_does_nothing",
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P43",
+  "source": "Copyhackers, Heightened Emotion sweep tutorial (Talia Wolf on Gusto)",
+  "url": "https://copyhackers.com/the-heightened-emotion-sweep/",
+  "chief": "Talia Wolf (GetUplift), hosted by Copyhackers",
+  "format": "SaaS home page headline",
+  "before": "It's time to tame the chaos of payroll, benefits, and HR.",
+  "after": "For HR people who do everything, one intuitive place to manage payroll, benefits, and HR for your business.",
+  "quote_status": "verbatim (after is Gusto's 2016 headline as quoted by Wolf)",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Weak emotional pull; a feature list ('payroll, benefits and HR') with no one addressed",
+  "principle": "Name the person and acknowledge their state before listing what the product manages",
+  "reason": "'talks to me': HR people feel overwhelmed and want to be acknowledged (paraphrase). Wolf treats the older headline as the better one.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature",
+   "thesis_4_installed_emotion"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P44",
+  "source": "Copyhackers, 'How to Improve Clarity' (Drift home page)",
+  "url": "https://copyhackers.com/how-to-improve-clarity/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page headline",
+  "before": "Bring your go to market teams together to deliver personalized customer experiences that increase your revenue, shorten your sales cycles and strengthen your brand.",
+  "after": "Bring your go to market teams together to deliver personalized customer experiences that increase your revenue.",
+  "quote_status": "verbatim",
+  "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+  "defect_named": "Diluted message: commas and 'and' stack three outcomes; 'strengthen your brand' drifts from the 'revenue acceleration platform' positioning",
+  "principle": "One outcome per headline, matched to the positioning",
+  "reason": "The reader should not have to hold several messages at once (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P45",
+  "source": "Copyhackers, 'How to Improve Clarity' (Drift home page)",
+  "url": "https://copyhackers.com/how-to-improve-clarity/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page proof line",
+  "before": "See how 50,000 businesses use Drift to create pipeline and accelerate revenue.",
+  "after": "Keep only 'create pipeline' if it supports the main message; if the two are a sequence, state the timeline instead",
+  "quote_status": "before verbatim; after paraphrase of stated direction",
+  "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+  "defect_named": "Two loosely related benefits joined by 'and'",
+  "principle": "A proof line supports the one message; it does not add a second",
+  "reason": "A single supporting benefit is easier to remember and does not dilute the core message (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P46",
+  "source": "Copyhackers, 'How to Improve Clarity' (Drift home page)",
+  "url": "https://copyhackers.com/how-to-improve-clarity/",
+  "chief": "Joanna Wiebe",
+  "format": "SaaS home page section headline",
+  "before": "Accelerate your digital transformation and scale the power of your team.",
+  "after": "Pick one idea; Wiebe's example rewrite 'Create more pipeline and revenue faster.' which she notes still needs one clear choice",
+  "quote_status": "before verbatim; after verbatim example with her caveat",
+  "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+  "defect_named": "Two separate ideas joined by 'and' force the reader to choose between them",
+  "principle": "Choose the more important or easier-to-understand idea; the page already has visual competition",
+  "reason": "One message is more memorable (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P47",
+  "source": "Copyhackers, 'How to Improve Clarity'",
+  "url": "https://copyhackers.com/how-to-improve-clarity/",
+  "chief": "Joanna Wiebe",
+  "format": "tagline",
+  "before": "Built faster, stronger and tougher.",
+  "after": "No rewrite given",
+  "quote_status": "before verbatim",
+  "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+  "defect_named": "Three adjectives joined by 'and' with no indication of which matters most",
+  "principle": "Rank the attributes; lead with the one the reader buys",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P48",
+  "source": "Copyhackers, 'How to Write In-App Tour Copy' (Copy School welcome modal)",
+  "url": "https://copyhackers.com/how-to-write-in-app-tour-copy/",
+  "chief": "Carolyn (senior conversion copywriter, Copyhackers)",
+  "format": "in-app welcome modal",
+  "before": "A 'strong first draft' too long for a small, crowded modal; body copy and generic buttons (text not reproduced in transcript)",
+  "after": "Headline leads with the benefit of acting ('kickstart your copywriting success'), states the minimal time commitment, one line of body, primary button as call to value 'kickstart my success', secondary button signals the cost of not continuing",
+  "quote_status": "before paraphrase; after verbatim fragments",
+  "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+  "defect_named": "Length adds friction at first use; the modal buried what's in it for the user",
+  "principle": "Lead with the benefit of taking the action; cut to one line; button names the value",
+  "reason": "Revision cut copy by roughly half and 'amplified persuasion' (claimed; transcript garbled on the figure).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_2_explains_everything",
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P49",
+  "source": "Copyhackers, 'How to Optimize Your Button Copy'",
+  "url": "https://copyhackers.com/how-to-optimize-your-button-copy/",
+  "chief": "Joanna Wiebe",
+  "format": "CTA button",
+  "before": "I want to start a company",
+  "after": "I want to be my own boss",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "A call to value that still implies a lot of work; what happens after the click is unclear",
+  "principle": "Button completes 'I want to...' with the desirable outcome, not the laborious means",
+  "reason": "Naming the outcome makes the friction feel less important; pattern seen 'after test, after test, after test' (verbatim) but no figures given.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P50",
+  "source": "Copyhackers, 'How to Optimize Your Button Copy'",
+  "url": "https://copyhackers.com/how-to-optimize-your-button-copy/",
+  "chief": "Joanna Wiebe",
+  "format": "donation CTA button",
+  "before": "I want to donate now",
+  "after": "I want to help easily",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "'Donate now' is a call to action; fits only a visitor ready to complete a donation",
+  "principle": "Calls to value for visitors higher in the funnel; calls to action for the decided",
+  "reason": "Matches the button to the visitor's stage (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P51",
+  "source": "Copyhackers, 'How to Optimize Your Button Copy'",
+  "url": "https://copyhackers.com/how-to-optimize-your-button-copy/",
+  "chief": "Joanna Wiebe",
+  "format": "CTA button",
+  "before": "I want to see all your options",
+  "after": "I want to see all my options",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "'all your options' sounds like work and does not complete the 'I want to' construction",
+  "principle": "First person on the button; the visitor speaks the button",
+  "reason": "Also offers 'See the number one most popular option' as a further option (verbatim).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P52",
+  "source": "Copyhackers, 'How to Optimize Your Button Copy'",
+  "url": "https://copyhackers.com/how-to-optimize-your-button-copy/",
+  "chief": "Joanna Wiebe",
+  "format": "CTA button (home services)",
+  "before": "Get started",
+  "after": "I want to get my free inspection",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "'Get started' is vague and names an action rather than a benefit",
+  "principle": "Name the specific thing the visitor gets",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P53",
+  "source": "Copyhackers, 'How to Optimize Your Button Copy' (Drift pricing page critique)",
+  "url": "https://copyhackers.com/how-to-optimize-your-button-copy/",
+  "chief": "Joanna Wiebe",
+  "format": "B2B pricing page buttons",
+  "before": "Buy standard / Sign up free / Learn more",
+  "after": "Chat with us (the one button on the page she calls the most optimized)",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "'Buy' is a scary word; 'sign up' and 'learn more' each imply effort: the buttons are 'de-optimized' (paraphrase)",
+  "principle": "The button that implies the least work wins the micro-yes",
+  "reason": "Critique, not a tested rewrite.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P54",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips to stand out in your subscriber's inbox'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email subject line",
+  "before": "SUBJ: Bananas have the most potassium. (also 'Why bananas have the most potassium')",
+  "after": "SUBJ: What's cheap, delicious, and stops leg cramps?",
+  "quote_status": "verbatim",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "The subject line gives away the answer, so there is no gap to close",
+  "principle": "Open a curiosity gap; readers open to check their guess",
+  "reason": "Missing information engages puzzle-solving (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_2_explains_everything"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P55",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email subject line",
+  "before": "SUBJ: This Problem You Have Is Keeping Me Up At Night",
+  "after": "SUBJ: This problem you have is keeping me up at night",
+  "quote_status": "verbatim",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Title case 'screams I'm a newsletter!' (verbatim)",
+  "principle": "Sentence case reads like a note from someone the reader knows",
+  "reason": "Keeps the illusion of a personal message (paraphrase). No figures; a subscriber reply offered as the desired response.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P56",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email subject line",
+  "before": "SUBJ: How to get more clients [Superduper Marketing Inc]",
+  "after": "Same line without the bracketed company name; brackets reserved for emphasis such as '[Open now – time-sensitive!]'",
+  "quote_status": "before verbatim; after paraphrase with verbatim fragment",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Bracketed branding makes readers file the email as a mass send and skip it",
+  "principle": "Remove every mass-send signal from the envelope",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P57",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email greeting",
+  "before": "Greetings, valued customer. / Hello, Matilda, / Dear Matilda,",
+  "after": "Hey Matilda, / Hi Matilda, / Matilda! / or no greeting at all",
+  "quote_status": "verbatim",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Formal greetings signal 'we're not friends' (paraphrase of her phrasing)",
+  "principle": "Greet the way you would greet a friend; greeting per voice profile",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P58",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email opening line",
+  "before": "Hey everyone, hope you're all having a great Friday.",
+  "after": "Hey Matilda, hope you're having a great Friday!",
+  "quote_status": "verbatim",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Group wording pulls the reader out of a one-to-one moment",
+  "principle": "Subscribers read alone; write to one reader",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P59",
+  "source": "Laura Belgray, Talking Shrimp, '21 tips'",
+  "url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell",
+  "chief": "Laura Belgray",
+  "format": "email subject line",
+  "before": "SUBJ: This is so you.",
+  "after": "SUBJ: this is so you",
+  "quote_status": "verbatim",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Polished punctuation and capitalization read as formal (problem implied, not named)",
+  "principle": "An unpunctuated line feels dashed off and personal",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "author_opinion",
+  "confidence": "low",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P60",
+  "source": "Laura Belgray, Talking Shrimp, 'The secret 2-minute tweak' (preview text)",
+  "url": "https://www.talkingshrimp.com/2-minute-email-tweak",
+  "chief": "Laura Belgray",
+  "format": "email preview text",
+  "before": "To view this email as a web page, click here Did someone forward this to you? Click here to subscribe",
+  "after": "I'm seriously conflicted. I keep saying how much I hate these, but I've decided it's the only way to help you",
+  "quote_status": "verbatim",
+  "defect": "DEAD_WEIGHT_ELEMENT",
+  "defect_named": "'Housekeeping' items in the preview read as a mass broadcast, so readers skip the email",
+  "principle": "The preview is copy; fill it with the opening line that carries tension",
+  "reason": "Conflict and tension make readers want to click; personal tone signals the email is for them (paraphrase). No open-rate figures.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P61",
+  "source": "Laura Belgray, Talking Shrimp, '30 ways to personalize your emails'",
+  "url": "https://www.talkingshrimp.com/personalize-emails",
+  "chief": "Laura Belgray",
+  "format": "email body (merge-tag use)",
+  "before": "Laura, I'm so glad we met for coffee. And you know what I think, Laura?",
+  "after": "Use the first name no more than you would in conversation: once or twice in the body beyond the greeting",
+  "quote_status": "before verbatim; after paraphrase",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "'creepy' (verbatim): the name in every sentence",
+  "principle": "Personalization at human rates; over-use is itself a mass-mail tell",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P62",
+  "source": "Bob Bly, Internet Media Review, Cleveland Clinic heart newsletter landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL6.htm",
+  "chief": "Bob Bly",
+  "format": "landing page tagline/headline",
+  "before": "Advice and information from the world leader in coronary care and research.",
+  "after": "Replace 'advice and information' with 'cures and solutions' and move the #1 proof ('rated #1 in cardiac care by U.S. News & World Report for the last 10 years in a row') into the headline in large bold type",
+  "quote_status": "before verbatim; after paraphrase with verbatim fragments",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "'No one needs more information about health' (verbatim fragment); the strongest proof is buried",
+  "principle": "Headline promises the outcome; the best proof moves up next to it",
+  "reason": "'Newsletters do not sell themselves. They need to be sold.' (verbatim)",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument",
+   "thesis_2_proof_buried"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P63",
+  "source": "Bob Bly, Internet Media Review, Harvard Health Letter landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL7.htm",
+  "chief": "Bob Bly",
+  "format": "landing page headline",
+  "before": "(No headline; only the publication name)",
+  "after": "When doctors at Harvard Medical School get sick, this is what they do (or an offer: FREE sample issue!)",
+  "quote_status": "after verbatim",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "'A publication's name alone seldom provokes sufficient interest or provides motivation to subscribe.' (verbatim)",
+  "principle": "Headline carries a benefit or an offer, never the artifact's name",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P64",
+  "source": "Bob Bly, Internet Media Review, Harvard Health Letter landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL7.htm",
+  "chief": "Bob Bly",
+  "format": "landing page body",
+  "before": "A one-paragraph boilerplate description of the newsletter",
+  "after": "Teaser bullets in the Boardroom style, e.g. 'How to tell if your body is filled with nasty toxins. Simple test you can do at home using a glass of water' and 'The finger and thumb trick that relieves headaches in 90 seconds.'",
+  "quote_status": "before paraphrase; after verbatim examples",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "The description 'does nothing to differentiate the publication from its competitors' (verbatim)",
+  "principle": "Fascination bullets sell the content; a description describes it",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_2_explains_everything"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P65",
+  "source": "Bob Bly, Internet Media Review, Harvard Health Letter landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL7.htm",
+  "chief": "Bob Bly",
+  "format": "price presentation",
+  "before": "$28 (price stated flat; no installment option)",
+  "after": "less than 8 cents a day for a full year of service; or 3 easy monthly payments of $9.37 each; plus ROI framing: avoiding just one costly prescription can pay back the entire subscription fee",
+  "quote_status": "after verbatim fragments",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "'There are no creative tactics used to minimize price resistance.' (verbatim)",
+  "principle": "Reduce price to a daily figure, offer installments, show the payback",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P66",
+  "source": "Bob Bly, Internet Media Review, 'Can This Marriage -- and This Landing Page -- Be Saved?'",
+  "url": "https://www.bly.com/Pages/IMRCOL16.htm",
+  "chief": "Bob Bly",
+  "format": "landing page headline (relationship e-book)",
+  "before": "Put an end to the stress and anxiety of not knowing what to do to save your troubled marriage",
+  "after": "Can Your Marriage Be Saved? (big bold type, followed by a short interactive quiz); or promote the subhead 'Discover proven methods for getting your marriage back on track'",
+  "quote_status": "verbatim",
+  "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+  "defect_named": "'perhaps a little cumbersome'; 'do we have to bring in the idea of stress and anxiety?' (verbatim)",
+  "principle": "A short involving question plus an involvement device beats a long compound promise",
+  "reason": "The subhead 'seems more direct and hard-hitting; perhaps it should be the headline' (verbatim).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P67",
+  "source": "Bob Bly, Internet Media Review, marriage e-book order page",
+  "url": "https://www.bly.com/Pages/IMRCOL16.htm",
+  "chief": "Bob Bly",
+  "format": "order page offer",
+  "before": "Three bonus reports and lifetime online updates listed with no dollar values; $20 discount not spelled out",
+  "after": "Assign $10 per report and $50 for updates ($80 in bonuses), add 'Order now and save $20!', show $100 total savings on the order page",
+  "quote_status": "paraphrase with verbatim fragment",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "'None of these is assigned a dollar value, and they should be.' (verbatim)",
+  "principle": "Every stack item carries a value; every discount is stated as a saving",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P68",
+  "source": "Bob Bly, Internet Media Review, Silva UltraMind site",
+  "url": "https://www.bly.com/Pages/IMRCOL9.htm",
+  "chief": "Bob Bly",
+  "format": "site headline",
+  "before": "Master the Techniques of Holistic Faith Healing",
+  "after": "No rewrite; cut 'the techniques of', drop 'faith healing' (tent-revival connotation) and 'holistic' (unknown to most readers), add the health benefit (live longer, healthier, less illness and pain), add a capsule-description subhead",
+  "quote_status": "before verbatim; after paraphrase of stated direction",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "'I am not sure what the site is trying to sell me or what it is supposed to do.' (verbatim)",
+  "principle": "Headline words must mean the same thing to the reader as to the writer; benefit stated in the reader's terms",
+  "reason": "The page converts only for visitors who searched the exact phrase (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P69",
+  "source": "Bob Bly, Internet Media Review, America's Test Kitchen",
+  "url": "https://www.bly.com/Pages/IMRCOL11.htm",
+  "chief": "Bob Bly",
+  "format": "landing page headline",
+  "before": "Welcome to Public Television's Most Popular Cooking Show, Brought to You by the Editors of Cook's Illustrated Magazine.",
+  "after": "Get Mouth-Watering Recipes, Tips, and a FREE Sample Issue of Cook's Illustrated from the Stars of Public Television's Most Popular Cooking Show!",
+  "quote_status": "verbatim",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "'Welcome is never the strongest option' (verbatim)",
+  "principle": "Open with what the reader gets, not a greeting",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_polished_but_does_nothing"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P70",
+  "source": "Bob Bly, Internet Media Review, Louis Rukeyser mutual fund newsletter landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL4.htm",
+  "chief": "Bob Bly",
+  "format": "landing page headline (financial)",
+  "before": "Here's how to put the best fund managers in the country to work for you",
+  "after": "How the top 10 fund managers helped my readers turn $100,000 into $398,450 in just 15 months (Bly's illustrative figures, not a verified result)",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "Not specific: what does 'best' mean, recent or long-term? (paraphrase)",
+  "principle": "Replace the superlative with the number and the timeframe; the number must be a real, ledgered one",
+  "reason": "Bly offers the figures as a sample headline, not a claim he verified.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_generic_specificity"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P71",
+  "source": "Bob Bly, Internet Media Review, tax-loopholes CD landing page",
+  "url": "https://www.bly.com/Pages/IMRCOL8.htm",
+  "chief": "Bob Bly",
+  "format": "landing page urgency line",
+  "before": "quantities very limited (tiny type; a digital CD)",
+  "after": "No rewrite; give the reason quantities are limited (will not be reprinted once inventory is gone), set an expiration date on the bonus gifts, count down to December 31 or April 15",
+  "quote_status": "before verbatim fragment; after paraphrase of stated direction",
+  "defect": "URGENCY_MECHANICS",
+  "defect_named": "Scarcity claim is vague and not credible for a digital product (paraphrase)",
+  "principle": "Urgency needs a stated reason and a real date",
+  "reason": "Claims, especially scarcity claims, must be believable (paraphrase).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_3_invented_scarcity"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P72",
+  "source": "Bob Bly, DM News column, subject lines (4 U's)",
+  "url": "https://www.bly.com/newsite/Pages/DMNCOL1e%5B1%5D.htm",
+  "chief": "Bob Bly",
+  "format": "email subject line (B2B lead gen)",
+  "before": "Free White Paper",
+  "after": "Free White Paper shows how to cut training costs up to 90% with e-learning.",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "Scored on the 4 U's: no urgency (1/4), little uniqueness (2/4), not specific (2/4), benefit never hinted (2/4)",
+  "principle": "Name the topic and the benefit; a line needs 3 or 4 on at least three of the four U's",
+  "reason": "The marketer reported success with the original; Bly argues the stronger version would have earned more (no figures).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P73",
+  "source": "Bob Bly, DM News column, subject lines (4 U's)",
+  "url": "https://www.bly.com/newsite/Pages/DMNCOL1e%5B1%5D.htm",
+  "chief": "Bob Bly",
+  "format": "headline/subject line",
+  "before": "Make $100,000 working from home",
+  "after": "Make $100,000 working from home this year",
+  "quote_status": "verbatim",
+  "defect": "URGENCY_MECHANICS",
+  "defect_named": "No time element, so no reason to act now",
+  "principle": "Add the timeframe",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P74",
+  "source": "Bob Bly, DM News column, subject lines (4 U's)",
+  "url": "https://www.bly.com/newsite/Pages/DMNCOL1e%5B1%5D.htm",
+  "chief": "Bob Bly",
+  "format": "email subject line (ecommerce)",
+  "before": "Save 10% on Japanese Bath Kits",
+  "after": "Why Japanese women have beautiful skin",
+  "quote_status": "verbatim",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "A standard discount pitch with nothing new in it ('the typical approach')",
+  "principle": "Say something new, or a familiar thing in a new way",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_obvious_angle"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P75",
+  "source": "Bob Bly, DM News column, 'Sell More Prospects with a Secondary Promise'",
+  "url": "https://www.bly.com/newsite/Pages/DMNCOL22.htm",
+  "chief": "Bob Bly",
+  "format": "financial promotion headline + subhead",
+  "before": "Crazy as it Sounds, Shares of This Tiny R&D Company, Selling for $2 Today ... (could reach $100: a 4,900% gain)",
+  "after": "Keep the big promise; add a subhead: 'I think this new technology for treating liver disease is going to work' and even if it fails 'the stock could still earn early-stage investors a 500% gain on their shares within the next 24 months'",
+  "quote_status": "verbatim fragments",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "The Big Promise was so large that skeptics dismiss it; proof then argues against existing belief (paraphrase)",
+  "principle": "Pair the large promise with a smaller believable one that justifies the purchase alone",
+  "reason": "Skeptics reason they cannot lose either way (paraphrase). No measured result.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_promise_inflation"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P76",
+  "source": "Bob Bly, Target Marketing, 'Business-to-Business Headline Writing Clinic'",
+  "url": "https://www.bly.com/newsite/Pages/TMCOL17.html",
+  "chief": "Bob Bly",
+  "format": "direct mail headline (trading system)",
+  "before": "Hype-filled gain claims that competitors in the category use (the control; wording not given)",
+  "after": "Why most trading systems don't work ... and never will.",
+  "quote_status": "before paraphrase; after verbatim",
+  "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+  "defect_named": "The category's hype does not match the reader's skepticism",
+  "principle": "Acknowledge the skepticism the reader already has instead of out-claiming the competition",
+  "reason": "'generated three times more sales than the control' (as stated by Bly).",
+  "tested": {
+   "status": "documented_result",
+   "result": "3x sales vs control (Bly's own account)"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_hedging_vs_candor",
+   "thesis_1_obvious_angle"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P77",
+  "source": "VeryGoodCopy, 'Which headline won?' (reporting Bob Bly's Day-Timer competitor test)",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-9/bob-bly-headlines",
+  "chief": "Bob Bly (reported by Eddie Shleyner)",
+  "format": "direct mail headline (time management)",
+  "before": "Next week I'm going to get organized... (control)",
+  "after": "Headline promising 'at least one more hour of productive time each day...' (full line in image)",
+  "quote_status": "verbatim fragments",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "Control dramatizes the procrastination; winner states the specific promise",
+  "principle": "A clear, specific, big promise beats cleverness",
+  "reason": "Won 'not because it was outrageous, sensational, or absurd' but because of the clear specific promise (paraphrase).",
+  "tested": {
+   "status": "split_test",
+   "result": "+50% over the control (as stated by Shleyner citing Bly)"
+  },
+  "evidence": "split_test",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P78",
+  "source": "Bob Bly, 'The 12 Most Common Direct Mail Mistakes'",
+  "url": "https://www.bly.com/Pages/documents/T12MCD.html",
+  "chief": "Bob Bly",
+  "format": "direct mail offer wording",
+  "before": "gift / brochure / consultation",
+  "after": "free gift / free brochure / free consultation",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "Recipients of the plain version wrote in to ask whether the gift was free",
+  "principle": "State the obvious condition the reader will otherwise doubt",
+  "reason": "'free gift' version 'significantly outpulled' the plain version (paraphrase; no %).",
+  "tested": {
+   "status": "documented_result",
+   "result": "significantly outpulled; no figure"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_needless_caution"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P79",
+  "source": "Bob Bly, 'The 12 Most Common Direct Mail Mistakes' (starting with the product, not the prospect)",
+  "url": "https://www.bly.com/Pages/documents/T12MCD.html",
+  "chief": "Bob Bly",
+  "format": "radio script (rat poison to farmers)",
+  "before": "'Manufacturer's copy' about the product (wording not given)",
+  "after": "Added a line that the product ships in a 'plain brown wrapper' (farmers did not want neighbors to know they had rats)",
+  "quote_status": "paraphrase with verbatim fragment",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Copy began with the product instead of the prospect's real concern",
+  "principle": "Ask prospects their biggest problem; write about their concern, not the vendor's",
+  "reason": "Sales to farmers were zero before and 'soared' after the line was added (as stated).",
+  "tested": {
+   "status": "documented_result",
+   "result": "zero to 'soared'; no figure"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P80",
+  "source": "Bob Bly, 'The 12 Most Common Direct Mail Mistakes' (not having an offer)",
+  "url": "https://www.bly.com/Pages/documents/T12MCD.html",
+  "chief": "Bob Bly",
+  "format": "B2B mailing offer",
+  "before": "Portfolio of article reprints offered at $3",
+  "after": "Same portfolio offered free",
+  "quote_status": "paraphrase",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "A token charge killed the response",
+  "principle": "Build a real offer into every mailing",
+  "reason": "Free offer drew dozens of replies; the $3 version drew three (as stated).",
+  "tested": {
+   "status": "documented_result",
+   "result": "dozens vs 3 replies"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P81",
+  "source": "Bob Bly, 'The 12 Most Common Direct Mail Mistakes' (review by committee)",
+  "url": "https://www.bly.com/Pages/documents/T12MCD.html",
+  "chief": "Bob Bly",
+  "format": "B2B sales letter length",
+  "before": "Three-page letter",
+  "after": "Cut to one page at the client's insistence: 'Business people don't read long letters.'",
+  "quote_status": "verbatim fragment",
+  "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+  "defect_named": "Cautionary: the committee's cut, not the writer's draft, was the defect",
+  "principle": "Judge by measured results, not reviewer belief; long letters have outpulled short in many B2B tests",
+  "reason": "'In many business-to-business tests, long letters outpulled short ones, sometimes dramatically' (paraphrase).",
+  "tested": {
+   "status": "documented_result",
+   "result": "long outpulled short in Bly's B2B tests; no figure"
+  },
+  "evidence": "documented_result",
+  "confidence": "low",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P82",
+  "source": "Bob Bly, Subscription Marketing column, 'Making Your Offer Make Sense'",
+  "url": "https://www.bly.com/newsite/Pages/SMCOL8.htm",
+  "chief": "Bob Bly",
+  "format": "guarantee wording",
+  "before": "a prorated refund on the unused portion of your subscription",
+  "after": "We'll refund your entire subscription fee in full / We'll refund every penny you paid",
+  "quote_status": "verbatim",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "'full refund on the unused portion' sounds like 100% but means only unmailed issues (paraphrase)",
+  "principle": "Guarantee stated plainly; the strongest honest version, no fine-print ambiguity",
+  "reason": "Boardroom refunds the full price even on the last day; 'a great selling point' with minimal risk (Michael Feldstein, as quoted).",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P83",
+  "source": "Bob Bly, 'Making Your Offer Make Sense'",
+  "url": "https://www.bly.com/newsite/Pages/SMCOL8.htm",
+  "chief": "Bob Bly",
+  "format": "offer wording",
+  "before": "free issue",
+  "after": "risk-free issue / no-risk issue (or make it truly free: an evergreen first issue in the welcome kit, 13 for the price of 12)",
+  "quote_status": "verbatim",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "The 'free' issue is free only if the reader cancels; otherwise it is one of the twelve paid",
+  "principle": "Offer copy must survive a logic check; say what is true",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_3_promise_inflation"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P84",
+  "source": "Bob Bly, 'Making Your Offer Make Sense'",
+  "url": "https://www.bly.com/newsite/Pages/SMCOL8.htm",
+  "chief": "Bob Bly",
+  "format": "order form option",
+  "before": "Bill me (premium promised up front)",
+  "after": "Bill me (bonus gift sent upon receipt of payment)",
+  "quote_status": "verbatim",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "Bill-me subscribers can take the gifts, cancel, and pay nothing",
+  "principle": "Tie the premium to payment; reward cash-with-order",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P85",
+  "source": "Bob Bly, Target Marketing, 'The Power of Proof'",
+  "url": "https://www.bly.com/newsite/Pages/TMCOL22.html",
+  "chief": "Bob Bly",
+  "format": "B2B brochure claim",
+  "before": "the fastest or most reliable (unproven superlatives; 'everybody claims the same thing')",
+  "after": "one of the most reliable digital switches available for wireless systems today, followed by the FCC's ARMIS report figures and installed-base numbers",
+  "quote_status": "verbatim fragments",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "Lack of proof for product claims; buyers are skeptical because every vendor says it",
+  "principle": "'All product claims in marketing copy and content should be backed by proof.' (verbatim)",
+  "reason": "Seven proof techniques listed: comparison, test, sample, visualization, dramatization, description with third-party data, demonstration.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_2_claim_without_proof"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P86",
+  "source": "AWAI, Guillermo Rubio on Clayton Makepeace's dimensionalizing method",
+  "url": "https://www.awai.com/2013/02/far-too-many-copywriters-fail-to-do-this/",
+  "chief": "Clayton Makepeace (method), Guillermo Rubio (author)",
+  "format": "benefit copy (drill bit example)",
+  "before": "Constructed of carbon steel. (feature) / Never wears out. (why)",
+  "after": "The last drill bit you'll ever buy. ... You can save up to $75 a year in broken drill bits ... hours of unnecessary trips to the hardware store ... (and lost income)",
+  "quote_status": "verbatim fragments",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "Copy that stops at the feature or the surface benefit is 'lukewarm at best' (verbatim)",
+  "principle": "Feature, purpose, benefit, then dimensionalize: what it means in the prospect's life, in money, time and feeling",
+  "reason": "People buy on emotion and justify with logic; the strongest copy reaches the underlying want (paraphrase). The $75 is a sample claim, not a result.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P87",
+  "source": "VeryGoodCopy, 'Could this be the worst sales email ever written?'",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blog-3/sales-email",
+  "chief": "Eddie Shleyner",
+  "format": "cold email",
+  "before": "Dear [CEO], Very much reaching out of the blue here, but would love to connect & explore potential synergies w [COMPANY], crosschain coin-agnostic platform w 3rd Gen unifying ledger, biometric wallet & zero gas fees or staking? ... Let me know if we may chat?",
+  "after": "No rewrite; fix: explain each term or cut it, and state what the reader gains early",
+  "quote_status": "before verbatim (abridged); after paraphrase",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Jargon is 'the enemy of comprehension'; fails what's-in-it-for-me: 'You won't find the word you in there once.' (verbatim)",
+  "principle": "Clear beats clever; the reader's gain before the sender's description",
+  "reason": "The recipient CEO shared the email on social as an example of what not to do.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature",
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P88",
+  "source": "VeryGoodCopy, 'Horrible, horrible copy'",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-10/bad-copywriting",
+  "chief": "Eddie Shleyner",
+  "format": "outdoor ad (health)",
+  "before": "CANCER SOLUTIONS DISCOVERED / 97% SUCCESS RATE",
+  "after": "No rewrite; the claim should not be made",
+  "quote_status": "before verbatim",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "A promise that exploits hope with no proof; 'the worst kind of marketing sin' (Godin, as quoted)",
+  "principle": "'Ads make promises. Promises bring people hope. Don't fuck with a person's hope.' (verbatim)",
+  "reason": "Maps to the claims ledger: a statistic with no source is a hard reject.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_3_unledgered_statistic"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P89",
+  "source": "VeryGoodCopy, '26 words you can almost always simplify'",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-8/fancy-copywriting",
+  "chief": "Eddie Shleyner",
+  "format": "vocabulary rule",
+  "before": "accelerate, beneficial, comprises, demonstrate, enable, facilitate, generate, illustrate, jeopardize, locate, moreover, nevertheless, objective, provide, request, select, transfer, utilize, variation, whereas",
+  "after": "speed up, useful, includes, prove, allow, help, make, explain, risk, find, and, but, goal, give, ask, choose, move, use, change, but",
+  "quote_status": "verbatim (23 pairs on page; title says 26)",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Fancy words impress less than a big idea clearly expressed",
+  "principle": "'Good copy, first and foremost, is understood.' ... 'if you can write it simpler, you should.' (verbatim)",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P90",
+  "source": "VeryGoodCopy, 'Wasted (copywriting) opportunity'",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-6/wasted-copywriting",
+  "chief": "Eddie Shleyner (crediting Ben Settle's 'unused capacity')",
+  "format": "image caption on landing page / article",
+  "before": "No caption under the image",
+  "after": "Caption carrying conversion copy with an ask: 'Go add some conversion copy to your image captions. Ask for an action.' (verbatim instruction; his own caption CTA not reproduced)",
+  "quote_status": "after verbatim instruction",
+  "defect": "DEAD_WEIGHT_ELEMENT",
+  "defect_named": "'Image captions, or the lack thereof.' (verbatim): page space carrying no persuasive copy",
+  "principle": "Audit for unused capacity; captions are the second-most-read copy after the headline",
+  "reason": "Most of his subscribers converted on the small grey caption CTA rather than the bold green end-of-article CTA (self-reported, no figures).",
+  "tested": {
+   "status": "documented_result",
+   "result": "majority of subscriber conversions via caption CTA (self-reported, no figures)"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P91",
+  "source": "VeryGoodCopy, 'To make your copy feel more real and compelling' (Kim Krause Schwalm critique)",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-11/copywriting-dimensionalization",
+  "chief": "Kim Krause Schwalm (critiquing Shleyner)",
+  "format": "print ad benefit (Escher print)",
+  "before": "Benefit pitched at the surface: the print as decor for a room (text in image)",
+  "after": "Benefit drilled down by repeated 'what is the benefit of the benefit?' until it reaches the buyer's ego (text in image)",
+  "quote_status": "paraphrase",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "'Ed, this benefit is a bit flat' (verbatim)",
+  "principle": "Dimensionalize: keep asking what each benefit leads to until you reach the core desire",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P92",
+  "source": "VeryGoodCopy, 'In copywriting, specifics sell, generalities do not' (Milt Pierce via Denny Hatch, Bob Bly)",
+  "url": "https://www.verygoodcopy.com/very-good-copy-blogs-5/specific-copywriting",
+  "chief": "Milt Pierce, Denny Hatch, Bob Bly (as quoted)",
+  "format": "magazine subscription headline (Good Housekeeping)",
+  "before": "28 ways / 17 ways / 45 ways to Save Time & Money (tested alternatives)",
+  "after": "32 Ways to Save Time & Money from the Pages of Good Housekeeping",
+  "quote_status": "verbatim fragments",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "A round or arbitrary number invites doubt; the specific number implies 'certain, specific information' (Pierce, verbatim)",
+  "principle": "Precision signals nothing was padded",
+  "reason": "'32 ways' performed best and ran 20 years unbeaten (as stated); Hopkins: 'Generalities roll off the human understanding like water off a duck's back.'",
+  "tested": {
+   "status": "documented_result",
+   "result": "'32 ways' best of four tested numbers; control for 20 years (as stated)"
+  },
+  "evidence": "documented_result",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_generic_specificity"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P93",
+  "source": "VeryGoodCopy, 'This could triple your conversion rate' (Justin Welsh)",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-11/triple-your-conversion-rate",
+  "chief": "Eddie Shleyner reporting Justin Welsh",
+  "format": "course landing page proof block",
+  "before": "Landing page with little visible proof (copy not shown)",
+  "after": "A wall of testimonials added to the page",
+  "quote_status": "paraphrase",
+  "defect": "PROOF_CLAIMED_NOT_SHOWN",
+  "defect_named": "Proof absent; the article's mechanism is the 'length implies strength' heuristic",
+  "principle": "Volume of visible proof is itself an argument",
+  "reason": "Welsh: conversion 'from that low-to-mid 1 percent up to about 3.6 percent' (verbatim, self-reported); Shleyner's own homepage 'Conversions shot up' (no figure).",
+  "tested": {
+   "status": "documented_result",
+   "result": "~1-1.5% to ~3.6% (vendor self-report, no test design given)"
+  },
+  "evidence": "documented_result",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_2_proof_buried"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P94",
+  "source": "VeryGoodCopy, 'Word choice' (G2 office bins)",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blog-4/copywriting-word-choice",
+  "chief": "Eddie Shleyner",
+  "format": "label / microcopy",
+  "before": "TRASH / GARBAGE",
+  "after": "LANDFILL",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "'Weak words are more abstract. They don't conjure clear images.' (verbatim)",
+  "principle": "Strong words put one specific image in the reader's mind; the image carries the emotion",
+  "reason": "Claims the word compels recycling; no measured result.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_2_explains_instead_of_shows"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P95",
+  "source": "VeryGoodCopy, 'Confident copy connects and converts'",
+  "url": "https://www.verygoodcopy.com/verygoodcopy-blogs-2/confident-copy-connects-and-converts",
+  "chief": "Eddie Shleyner",
+  "format": "general copy rule",
+  "before": "Hedging qualifiers: generally, probably, often, most; passive voice that avoids 'specifying authority'; vague or ambiguous claims",
+  "after": "Bold, direct statements that commit, e.g. the mirror sticker 'GET IT BECAUSE YOU WANT IT.'",
+  "quote_status": "verbatim fragments",
+  "defect": "WRITER_MODE_NOT_CONVERSATIONAL",
+  "defect_named": "Equivocation: copy that is 'vague or ambiguous or uncertain' (verbatim)",
+  "principle": "No hedges on supported claims; copy says 'you're making the right decision'",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_hedged_claims"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P96",
+  "source": "Ship 30 for 30, 'Clear vs Clever'",
+  "url": "https://www.ship30for30.com/post/clear-vs-clever-a-quick-guide-to-avoid-the-1-mistake-in-writing",
+  "chief": "Dickie Bush & Nicolas Cole",
+  "format": "B2B positioning line",
+  "before": "We deliver asynchronous reporting data and analytics to integrate your business into the creator economy's growing community.",
+  "after": "Sales Analytics For Creators.",
+  "quote_status": "verbatim",
+  "defect": "VAGUE_NOT_SPECIFIC",
+  "defect_named": "Jargon that sounds smart but does not say what the company does",
+  "principle": "Describe the solution in five words or fewer; if you cannot, you are not clear on what you sell",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "high",
+  "ai_failure_map": [
+   "thesis_4_assistant_voice",
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P97",
+  "source": "Ship 30 for 30, 'Clear vs Clever'",
+  "url": "https://www.ship30for30.com/post/clear-vs-clever-a-quick-guide-to-avoid-the-1-mistake-in-writing",
+  "chief": "Dickie Bush & Nicolas Cole",
+  "format": "tagline",
+  "before": "For People. With People. By People.",
+  "after": "No rewrite; state what the company does",
+  "quote_status": "before verbatim",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "'Clever' chosen over 'clear': wordplay at the top of the site; confused readers leave",
+  "principle": "Clarity first; cleverness only when the reader already knows what you sell",
+  "reason": "Also flagged: 'Unleash your creativity...', 'Real-time changes, real-time trust...', 'Big Problem? You Betcha.'",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P98",
+  "source": "Ship 30 for 30, '7 Copywriting Mistakes Hurting Your Course Sales'",
+  "url": "https://www.ship30for30.com/post/7-copywriting-mistakes-hurting-your-course-sales-these-might-cost-you-6-figures",
+  "chief": "Dickie Bush & Nicolas Cole",
+  "format": "course sales page promise",
+  "before": "Learn how to...",
+  "after": "Promise what buyers will do, experience and unlock (no verbatim rewrite)",
+  "quote_status": "before verbatim; after paraphrase",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "Leading with 'learn': buyers want the outcome, not the learning process",
+  "principle": "Sell the result, not the curriculum",
+  "reason": "Authors report 'a clear increase in sales every time we fixed one of these problems' on their own page (no figures).",
+  "tested": {
+   "status": "documented_result",
+   "result": "self-reported sales increase, no figure"
+  },
+  "evidence": "documented_result",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P99",
+  "source": "Ship 30 for 30, '7 Copywriting Mistakes'",
+  "url": "https://www.ship30for30.com/post/7-copywriting-mistakes-hurting-your-course-sales-these-might-cost-you-6-figures",
+  "chief": "Dickie Bush & Nicolas Cole",
+  "format": "course sales page structure",
+  "before": "Here's what you get!",
+  "after": "Benefits in headlines, outcomes in descriptions; page ordered as struggle, solution, changed life, sign-up",
+  "quote_status": "before verbatim; after paraphrase",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "Focusing on features; 'solutions before problems' (customers cannot care about a solution before the problem)",
+  "principle": "Problem before solution; benefit before feature",
+  "reason": "",
+  "tested": {
+   "status": "documented_result",
+   "result": "same self-reported page result"
+  },
+  "evidence": "documented_result",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P100",
+  "source": "Ship 30 for 30, 'How to Write a Twitter Thread Using Hooks' (thought experiment)",
+  "url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples",
+  "chief": "Dickie Bush",
+  "format": "social hook",
+  "before": "College completely failed in teaching me how to write. (hook without the contrast line)",
+  "after": "College completely failed in teaching me how to write. ... But unlike college, these won't cost you $120,000.",
+  "quote_status": "verbatim",
+  "defect": "CURIOSITY_MISSING_OR_KILLED",
+  "defect_named": "Without the contrast the hook 'loses its sting'; the free offer no longer contrasts with the $120,000 cost",
+  "principle": "A contrast line with a number makes the free thing feel valuable",
+  "reason": "Author calls it 'one of my most successful threads ever' (no metrics).",
+  "tested": {
+   "status": "documented_result",
+   "result": "self-described top thread, no metric"
+  },
+  "evidence": "author_opinion",
+  "confidence": "low",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P101",
+  "source": "John Forde, Copywriter's Roundtable, 'How One Big Idea Beats Lots of Small Ones'",
+  "url": "https://copywritersroundtable.com/how-one-big-idea-trumps-lots-of-small-ones/",
+  "chief": "John Forde",
+  "format": "headline (Schwab's top-100 list)",
+  "before": "Six Types of Investors — Which Group Are You In? (multi-idea)",
+  "after": "The Secret of Making People Like You (single idea)",
+  "quote_status": "verbatim",
+  "defect": "WRONG_OR_MULTIPLE_BIG_IDEA",
+  "defect_named": "'overloaded with competing ideas', 'scattershot', 'thinly spread approach' (verbatim)",
+  "principle": "One isolated core idea; 'Those that flopped were those that wandered.' (verbatim)",
+  "reason": "Forde classified 90 of Schwab's 100 headlines as single-idea and found the same across 200+ swipe-file ads; no figures.",
+  "tested": {
+   "status": "documented_result",
+   "result": "90/100 of Schwab's list single-idea; author's own promos: focused won, wandering flopped (no figures)"
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P102",
+  "source": "Marketing Examples, 'Bou's Near-Perfect Google ad' (Dave Trott's impact / communication / persuasion)",
+  "url": "https://marketingexamples.com/copywriting/bou",
+  "chief": "Harry Dry",
+  "format": "display ad",
+  "before": "We're a brand agency",
+  "after": "Ad that does all three parts: gets noticed, says what, says why (copy in image)",
+  "quote_status": "before verbatim; after paraphrase",
+  "defect": "FEATURE_NOT_OUTCOME",
+  "defect_named": "Only 'communication' (what it is); no impact, no persuasion: reader's reaction 'No s***. I just googled that' (verbatim)",
+  "principle": "Impact, then what, then why",
+  "reason": "Bou's founder says it is their best performing ad (no metrics).",
+  "tested": {
+   "status": "documented_result",
+   "result": "vendor says best-performing ad; no figure"
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P103",
+  "source": "Marketing Examples, 'How Steve Jobs clarified Apple's message'",
+  "url": "https://marketingexamples.com/copywriting/think-different",
+  "chief": "Harry Dry",
+  "format": "launch copy vs campaign line",
+  "before": "Lisa launch (1983): 'nine pages of geek speak' (Dry's description)",
+  "after": "Think different.",
+  "quote_status": "after verbatim; before is Dry's characterization",
+  "defect": "NOT_CUSTOMER_LANGUAGE_GENERIC",
+  "defect_named": "'geek speak'; 'Nobody outside NASA is interested' (verbatim)",
+  "principle": "People buy the story, not the spec",
+  "reason": "Lisa sold about 10,000 units (as stated); campaign ran five years. Not a controlled comparison.",
+  "tested": {
+   "status": "documented_result",
+   "result": "Lisa ~10,000 units; no figures for Think different"
+  },
+  "evidence": "author_opinion",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_1_describes_every_feature"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P104",
+  "source": "Copy Chief, 'The ONE sales hook that has never failed'",
+  "url": "https://copychief.com/the-one-sales-hook-that-has-never-failed/",
+  "chief": "Kevin Rogers (Copy Chief; author of post)",
+  "format": "donation request email",
+  "before": "Hi, my school is new and needs furniture. Would you like to donate a couch and maybe some chairs? ... We'd really appreciate it.",
+  "after": "No rewrite shown; fix: more 'you' statements than 'I' statements (check the you/I ratio), and segment by interest, desire or awareness",
+  "quote_status": "before verbatim; after paraphrase",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Missing the one thing people care about: 'themselves' (verbatim); 'single dimensional, one size fits all messaging' (verbatim)",
+  "principle": "WIIFM: the reader is the subject of every message",
+  "reason": "Post claims opt-in 20% to 70% and other figures from segmentation; author's own claims, unverified and not tied to this email.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P105",
+  "source": "Copy Chief, 'How to Capture Drifting Attention with the Captain Hook Rule'",
+  "url": "https://copychief.com/the-captain-hook-rule/",
+  "chief": "Copy Chief (Story Sells series)",
+  "format": "opening line (illustrative)",
+  "before": "Hey, Captain Hook, I really need to tell –",
+  "after": "Tick Tock Crocodile is coming! (or just 'Crocodile!')",
+  "quote_status": "verbatim",
+  "defect": "STRUCTURE_DENSE_OR_MISORDERED",
+  "defect_named": "Hedging lead; the listener tunes out before the point",
+  "principle": "'Lead with the important stuff first.' (verbatim); explanation without an opening hook is 'hot air'",
+  "reason": "Illustrative, not a tested pair.",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "author_opinion",
+  "confidence": "low",
+  "ai_failure_map": [
+   "thesis_2_explains_everything"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P106",
+  "source": "NextAfter experiment #2759, National Breast Cancer Foundation",
+  "url": "https://www.nextafter.com/experiments/how-first-name-personalization-affects-email-engagement/",
+  "chief": "NextAfter",
+  "format": "fundraising email body",
+  "before": "Email with no personalization (copy in image; two CTAs: donate and Facebook share)",
+  "after": "Same email with first-name personalization",
+  "quote_status": "paraphrase (copy shown only as images)",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Unaddressed reader",
+  "principle": "Address the one reader by name",
+  "reason": "NextAfter: the lift justified updating capture forms to collect first and last names (paraphrase).",
+  "tested": {
+   "status": "split_test",
+   "result": "Click rate 0.19% to 0.72%, +270.1%, 100% confidence, n=29,389 (1,207 required), valid"
+  },
+  "evidence": "split_test",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P107",
+  "source": "NextAfter experiment, Bible League Canada Facebook ad CTA",
+  "url": "https://www.nextafter.com/experiments/will-testing-learn-more-vs-give-bibles-ctas-in-facebook-ad-copy-to-increase-donor-conversions/",
+  "chief": "NextAfter",
+  "format": "Facebook ad copy CTA",
+  "before": "Click to Learn More >>",
+  "after": "Click to Give Bibles >>",
+  "quote_status": "verbatim",
+  "defect": "CTA_WEAK_OR_UNCLEAR",
+  "defect_named": "Indirect ask leaves the ad's purpose ambiguous",
+  "principle": "A literal CTA that states the outcome of the click",
+  "reason": "The direct ask 'aligned more strongly with donor intent and removed ambiguity about the ad's purpose' (verbatim); more clicks and higher conversion of clicks.",
+  "tested": {
+   "status": "split_test",
+   "result": "Donor conversion 0.88% to 1.75%, +117.6%, 98.6% confidence, n=566,700 (172,555 required), valid"
+  },
+  "evidence": "split_test",
+  "confidence": "high",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P108",
+  "source": "NextAfter experiment #189302, Time of Grace blog pages",
+  "url": "https://www.nextafter.com/experiments/how-a-dear-reader-on-blog-pages-impacts-email-and-donor-acquisition/",
+  "chief": "NextAfter",
+  "format": "blog page conversion copy",
+  "before": "Control blog page (copy in image)",
+  "after": "'Dear Reader' letter-style block added, offering a resource (T1 'How to fight anxiety', T2 'Mental Wellness'); copy in image",
+  "quote_status": "paraphrase",
+  "defect": "DEAD_WEIGHT_ELEMENT",
+  "defect_named": "Content page with no personal ask; cautionary: average gift fell from $135 to ~$30 as the offer shifted to email acquisition",
+  "principle": "A personal, letter-style ask on content pages converts engaged readers; measure revenue, not only conversion",
+  "reason": "'users who are already engaged with Time of Grace content are more likely to provide their email' (verbatim).",
+  "tested": {
+   "status": "split_test",
+   "result": "Conversion 0.23% to 4.2% (+1,708.7% T1, +1,698.8% T2), 100% confidence, n=8,961; average gift $135 to $31.43/$27.70"
+  },
+  "evidence": "split_test",
+  "confidence": "medium",
+  "ai_failure_map": [],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P109",
+  "source": "MarketingExperiments (MECLABS), 'How do I write value-infused headlines?' (Ferguson Enterprises)",
+  "url": "https://marketingexperiments.com/copywriting-2/how-to-write-value-infused-headlines",
+  "chief": "Flint McGlaughlin / MECLABS",
+  "format": "email sign-up headline (B2B)",
+  "before": "Exclusive Product And Event Information Delivered Right To Your Inbox!",
+  "after": "Get The Ferguson Updates You Want, When You Want Them.",
+  "quote_status": "verbatim",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "Describes what the company sends, not what the subscriber gets",
+  "principle": "State the value of the requested action from the customer's point of view",
+  "reason": "Other page changes were made at the same time, so the headline alone cannot be credited (stated on page).",
+  "tested": {
+   "status": "split_test",
+   "result": "+120% form submissions (page-level, multiple changes)"
+  },
+  "evidence": "split_test",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P110",
+  "source": "MarketingExperiments, 'value-infused headlines' (bank direct mail example)",
+  "url": "https://marketingexperiments.com/copywriting-2/how-to-write-value-infused-headlines",
+  "chief": "MECLABS",
+  "format": "direct mail opening line (bank)",
+  "before": "National ad claim about having the most branches in the nation (wording not given)",
+  "after": "We have a branch within walking distance of your home.",
+  "quote_status": "before paraphrase; after verbatim",
+  "defect": "NOT_READER_FOCUSED",
+  "defect_named": "A company-level claim where a prospect-level value was available",
+  "principle": "Shift the headline to the value that matters to this prospect in this medium",
+  "reason": "",
+  "tested": {
+   "status": "none",
+   "result": ""
+  },
+  "evidence": "practitioner_critique",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_1_wrong_central_argument"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ },
+ {
+  "id": "P111",
+  "source": "Conversion Rate Experts, 'How to do guarantees right' (Geeks2U)",
+  "url": "https://conversion-rate-experts.com/guarantees/",
+  "chief": "Conversion Rate Experts",
+  "format": "guarantee wording",
+  "before": "If you dislike our service… (negative 'get-out clause' framing; the client's actual first guarantee shown only as image)",
+  "after": "We guarantee that you'll love our service.",
+  "quote_status": "verbatim (illustrative pair given on page)",
+  "defect": "OFFER_APPEAL_NOT_COPY",
+  "defect_named": "'the most common guarantee mistake is negative wording' (paraphrase); a get-out clause instead of a promise",
+  "principle": "A guarantee is a positive promise in one sentence with a simple visual",
+  "reason": "Guarantee was among the most-viewed elements on the heat map (paraphrase). Sibling corpus holds the same test as a split-test record.",
+  "tested": {
+   "status": "split_test",
+   "result": "Calls to sales +49% over the guarantee-less page; final version +24% conversions (as stated)"
+  },
+  "evidence": "split_test",
+  "confidence": "medium",
+  "ai_failure_map": [
+   "thesis_3_needless_caution"
+  ],
+  "rights_status": "publicly_posted_copyrighted"
+ }
+]

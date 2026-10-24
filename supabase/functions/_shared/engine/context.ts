@@ -89,6 +89,10 @@ export async function buildContext(db: Db, generationId: string, attempt: number
     attempt,
     promptVersions,
     progress,
+    partial: null,
+    savePartial: async () => {},
+    timeBudgetMs: 300_000,
+    startedAt: Date.now(),
   };
 }
 

@@ -22,7 +22,7 @@ import { FormatId } from "../../supabase/functions/_shared/engine/schemas/common
 import { ClaimRowInput, OfferBrief, OfferConfigInput } from "../../supabase/functions/_shared/engine/schemas/brief.ts";
 import { Dossier } from "../../supabase/functions/_shared/engine/schemas/research.ts";
 import { ChosenOffer } from "../../supabase/functions/_shared/engine/schemas/offer.ts";
-import { getFormat, listFormats } from "../../supabase/functions/_shared/engine/formats/index.ts";
+import { getFormat, listFormats, SEQUENCE_ROLES } from "../../supabase/functions/_shared/engine/formats/index.ts";
 import { describePlan, planDraft } from "../../supabase/functions/_shared/engine/draft/plan.ts";
 import { callModel } from "../../supabase/functions/_shared/engine/llm.ts";
 
@@ -339,7 +339,8 @@ async function cmdRun(args: ReturnType<typeof parseArgs>) {
     generationId = gen.id;
     first = [stepOrder[0]];
     log(`offer ${setup.offerId}, generation ${generationId}, format ${format}, steps: ${stepOrder.join(" → ")}`);
-    log(`draft plan: ${describePlan(planDraft(getFormat(format), { itemCount: typeof file.options.item_count === "number" ? file.options.item_count : undefined })).join(" | ")}`);
+    const seqRoles = format === "email_sequence" ? SEQUENCE_ROLES[(typeof file.options.sequence_type === "string" && file.options.sequence_type in SEQUENCE_ROLES ? file.options.sequence_type : "welcome") as keyof typeof SEQUENCE_ROLES] : undefined;
+    log(`draft plan: ${describePlan(planDraft(getFormat(format), { itemCount: typeof file.options.item_count === "number" ? file.options.item_count : undefined, roles: seqRoles })).join(" | ")}`);
     await writeOut(opts.out, "00-setup.json", pretty({ offerId: setup.offerId, generationId, format, stepOrder, workspace: ws }));
   }
 
@@ -387,8 +388,11 @@ async function cmdBaseline(args: ReturnType<typeof parseArgs>) {
 function cmdPlan(args: ReturnType<typeof parseArgs>) {
   const format = parseFormat(args.format ? String(args.format) : undefined);
   const spec = getFormat(format);
-  const plan = planDraft(spec, { itemCount: args.items ? Number(args.items) : undefined });
-  console.log(`${spec.name} (${spec.id}): ${plan.calls.length} draft call(s)${plan.multiItem ? `, ${plan.itemCount} items` : ""}`);
+  const seq = String(args.sequence ?? "welcome");
+  if (format === "email_sequence" && !(seq in SEQUENCE_ROLES)) throw new Error(`--sequence must be one of ${Object.keys(SEQUENCE_ROLES).join(", ")}`);
+  const roles = format === "email_sequence" ? SEQUENCE_ROLES[seq as keyof typeof SEQUENCE_ROLES] : undefined;
+  const plan = planDraft(spec, { itemCount: args.items ? Number(args.items) : undefined, roles });
+  console.log(`${spec.name} (${spec.id}): ${plan.calls.length} draft call(s)${plan.shape.kind !== "none" ? `, ${plan.itemCount} ${spec.multi_item?.item_name ?? "item"}(s) [${plan.shape.kind}]` : ""}`);
   for (const line of describePlan(plan)) console.log("  " + line);
   console.log(`lead section: ${plan.leadSectionId ?? "none"}; headline section: ${plan.headlineSectionId ?? "none"}; lead variants: ${spec.lead_variants}`);
 }
@@ -410,7 +414,7 @@ function usage() {
   run       --brief <file.json> --format <id> [--out dir] [--workspace id] [--auto-approve] [--skip-offer]
             --generation <id> [--from <step>]            resume an existing generation
   baseline  --brief <file.json> --format <id> [--out dir] [--model id]
-  plan      --format <id> [--items n]
+  plan      --format <id> [--items n] [--sequence welcome|launch|abandoned_cart|post_purchase|win_back]
   formats
   eval      (TODO)
 
@@ -419,7 +423,7 @@ Env for run: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY [ENGINE_
 
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
-    string: ["brief", "format", "out", "workspace", "generation", "from", "model", "items"],
+    string: ["brief", "format", "out", "workspace", "generation", "from", "model", "items", "sequence"],
     boolean: ["auto-approve", "skip-offer", "help"],
   });
   const cmd = String(args._[0] ?? "");

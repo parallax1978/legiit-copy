@@ -1,0 +1,2157 @@
+[
+  {
+    "id": "controls_other_formats-01",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Original pricing page led with plans and prices, no restated value proposition, no objections section, no guarantee.",
+        "result": "Lost to challenger by 57% on leads"
+      }
+    ],
+    "title": "Earth Class Mail pricing page (CRE redesign, +57% leads)",
+    "author_or_company": "Conversion Rate Experts for Earth Class Mail",
+    "format": "other",
+    "market": "B2B SaaS, mail digitization for small businesses and travelers",
+    "funnel_position": "pricing page (bottom of funnel, lead form)",
+    "traffic": "warm",
+    "source_url": "https://conversion-rate-experts.com/earth-class-mail-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Winning headline shown only as an image on the source page; CRE describes it as one that 'clearly—and quickly—describes the benefits', followed by a 'Here's what you'll get' future-pacing section above the prices.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a mail-scanning subscription to small-business owners on the promise that paper mail becomes a managed online inbox, because the pricing page restates the value and answers price objections before showing plans.",
+      "hook": "Value proposition restated above the plan grid instead of leading with prices",
+      "mechanism": "Scan-and-forward service; mechanism explained in a demonstration video",
+      "big_idea": "Your paper mail, handled online from anywhere",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "price_anchor"
+      ],
+      "close": "Lead form after objections section; money-back guarantee beside plans",
+      "voice_notes": "Plain, benefit-first B2B; no adjectives, future-pacing in second person",
+      "length_words_est": 450
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Pricing page: 57% more leads than original; landing page: 61% more leads. Earth Class Mail projected 'over $1.5 million' extra revenue; CEO quoted as 'well into the millions of dollars'. Agency-reported; no sample sizes or significance given.",
+      "source_url": "https://conversion-rate-experts.com/earth-class-mail-case-study/"
+    },
+    "lessons": [
+      "On a pricing page restate the value argument and future-pace ('here's what you'll get') above the price grid.",
+      "Answer the researched pricing objections in a dedicated section on the pricing page itself.",
+      "A money-back guarantee placed at the decision point is a proof element, not a footnote.",
+      "Longevity ('Since 2006') and a third-party mention (The 4-Hour Workweek) work as authority proof when users cite them unprompted."
+    ],
+    "notes": "Control status: documented as A/B winner (Convert.com). 1,540 survey responses informed copy. Fits Sec 9 'B2B pricing page' spec: value argument restated above price, objections handled, proof at decision point."
+  },
+  {
+    "id": "controls_other_formats-02",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Original funnel showed pricing before visitors understood the depth of resources.",
+        "result": "Beaten by 157% on paid memberships"
+      },
+      {
+        "description": "Original single long signup form with many fields.",
+        "result": "Beaten by 91% on annual members"
+      }
+    ],
+    "title": "Smart Insights membership funnel: pre-pricing sales page and two-stage signup form",
+    "author_or_company": "Conversion Rate Experts for Smart Insights",
+    "format": "order_form",
+    "market": "Digital marketing training and membership (B2B publishing)",
+    "funnel_position": "sales page inserted before pricing, then membership signup form",
+    "traffic": "warm",
+    "source_url": "https://conversion-rate-experts.com/smart-insights-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Winning copy is shown only as images; CRE summarizes the argument as acknowledging that 'digital marketing is hard' and anchoring the membership against the cost of a personal expert consultation rather than against free content.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells a paid marketing-guides membership to in-house marketers on the promise of expert-level plans without expert fees, because the page mirrors the reader's difficulty, lists every member benefit, and anchors price against a consultant before the pricing page appears.",
+      "hook": "Empathy with the reader's existing difficulty before any price",
+      "mechanism": "Structured guides and templates replacing ad hoc research",
+      "big_idea": "An expert's plan at a fraction of an expert's price",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "order_form"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Two-stage form: essentials first, 'immediate access' promised, non-essential fields moved post-signup; proof in form sidebar",
+      "voice_notes": "Direct, second person, plain B2B; no hype",
+      "length_words_est": 900
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Sales page inserted before pricing: '157% more paid memberships' in an A/B test. Redesigned two-stage membership form: '91% more annual members'. Problem-based navigation: +75% memberships. Agency-reported, no sample sizes.",
+      "source_url": "https://conversion-rate-experts.com/smart-insights-case-study/"
+    },
+    "lessons": [
+      "Price shown before the value argument loses; insert the argument page before the price page.",
+      "Order forms: cut to essential fields, promise immediate access, move profile questions after the sale.",
+      "Put a proof element in the form sidebar to counter last objections at the field level.",
+      "Anchor a subscription against the expensive alternative (a consultant), never against free alternatives."
+    ],
+    "notes": "Control status documented as A/B wins by the agency. Supports Sec 9 order form 'eight fields or fewer' and 'what arrives and when'."
+  },
+  {
+    "id": "controls_other_formats-03",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Original headline 'Improve your traffic and rankings with an SEOmoz PRO Membership!' on a short, one-minute-summary page with buy-now language and small logos.",
+        "result": "Lost by 52% on sales"
+      }
+    ],
+    "title": "Moz (SEOmoz) PRO landing page: 'When eBay, Disney, and Marriott need SEO help, here's what they do…'",
+    "author_or_company": "Conversion Rate Experts for SEOmoz",
+    "format": "landing_page",
+    "market": "SEO software subscription for marketers",
+    "funnel_position": "PRO membership sales page with $1 trial, emailed to free subscribers",
+    "traffic": "owned_list",
+    "source_url": "https://conversion-rate-experts.com/seomoz-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "When eBay, Disney, and Marriott need SEO help, here's what they do…",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a PRO SEO toolset to free-tier users on the promise of doing what big brands' SEO teams do, because the page tells the full story with a comparison chart, pro testimonials and a $1 full-featured trial.",
+      "hook": "Curiosity headline naming famous clients instead of the product",
+      "mechanism": "Tools plus a Q&A community; feature chart with hover detail",
+      "big_idea": "The same help the biggest brands use, for $1 to start",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "headline"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "lead"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor"
+      ],
+      "close": "30-day full-featured trial for $1, offered only to existing free subscribers; follow-up email answers the hidden-commitment objection",
+      "voice_notes": "Long story-telling page, about six times the control's length; plain language",
+      "length_words_est": 2500
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "52% increase in PRO membership sales in a split test of 5,000+ visitors; conversion up about 170% over four months; $1 million added annual revenue in the first four months (agency-reported).",
+      "source_url": "https://conversion-rate-experts.com/seomoz-case-study/"
+    },
+    "lessons": [
+      "A curiosity headline that names recognizable users beats a direct 'improve your X' headline for product-aware traffic.",
+      "Long copy wins when the reader is deciding on a subscription with many features; a comparison chart does the explaining.",
+      "A $1 trial is an offer device that converts skeptics; the main objection (hidden commitment) must be answered in the follow-up email.",
+      "Survey the people who declined the offer and answer their objection in the next touch."
+    ],
+    "notes": "Documented with sample size (>5,000 visitors). One of the few CRE cases with the headline pair quoted verbatim."
+  },
+  {
+    "id": "controls_other_formats-04",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Harry's prelaunch splash page: 'Respecting the face, and wallet since like right now.'",
+    "author_or_company": "Harry's (Jeff Raider, written up on tim.blog)",
+    "format": "optin",
+    "market": "Men's shaving, DTC",
+    "funnel_position": "prelaunch email capture, one week before launch",
+    "traffic": "cold",
+    "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Respecting the face, and wallet since like right now. [email field] STEP INSIDE",
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "2",
+      "lead_type": "proclamation",
+      "argument_sentence": "This captures emails from men who shave on the promise of a better, cheaper razor coming soon, because a one-line brand stance plus a 'step inside' button asks almost nothing.",
+      "hook": "A single tongue-in-cheek brand line and a drawn key over the email field",
+      "mechanism": "None stated; mystery and a razor photo",
+      "big_idea": "A new kind of shaving company is about to open",
+      "proof_elements": [],
+      "offer_devices": [
+        "bonus"
+      ],
+      "close": "Button 'STEP INSIDE' completing the invitation; page two reveals the referral rewards",
+      "voice_notes": "Dry, confident, understated humor; no benefits list",
+      "length_words_est": 15
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "Over 85K valid email addresses (100K+ total) in one week; 77% of emails came from referrals; about 20K people referred about 65K friends; 200+ referred 50+ friends; about 3,000 received product rewards. Self-reported by the co-founder.",
+      "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/"
+    },
+    "lessons": [
+      "An opt-in page can be one line when the follow-on page (thank-you/referral) does the persuading.",
+      "Button text completes an action the reader wants ('Step inside'), never 'Submit'.",
+      "The opt-in and the thank-you page are one system; design the thank-you page's job first."
+    ],
+    "notes": "Documented result (email count, referral share) but no conversion rate. Control status: a one-week campaign, not an ongoing control. Pairs with record 05."
+  },
+  {
+    "id": "controls_other_formats-05",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "A 1,000-referral 'lifetime of product' tier was considered and dropped.",
+        "result": "Not tested; removed before launch"
+      }
+    ],
+    "title": "Harry's referral thank-you page: 'Shaving is evolving. Don't leave your friends behind.'",
+    "author_or_company": "Harry's (Jeff Raider, written up on tim.blog)",
+    "format": "other",
+    "market": "Men's shaving, DTC",
+    "funnel_position": "thank-you page after prelaunch opt-in",
+    "traffic": "owned_list",
+    "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Shaving is evolving. Don't leave your friends behind. Invite Friends and Earn Product. 5 friends: free shave cream; 10: free razor; 25: Winston shave set; 50: a year of free shaving.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "2",
+      "lead_type": "offer",
+      "argument_sentence": "This asks new subscribers to refer friends on the promise of free product at four tiers, because a ladder of rewards with a unique link turns a confirmation page into the acquisition engine.",
+      "hook": "Woolly mammoth visual and a 'don't leave your friends behind' line",
+      "mechanism": "Unique referral link; tiered rewards unlock at 5/10/25/50",
+      "big_idea": "Earn your shaving kit by bringing your friends",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "bonus",
+        "deadline_with_mechanism"
+      ],
+      "close": "Share buttons and the personal link; reward ladder visible",
+      "voice_notes": "Playful, short, imperative",
+      "length_words_est": 80
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "77% of 100K+ prelaunch emails came from referrals generated by this page; about 20K referrers brought about 65K friends (avg >3 each); 200+ people hit the 50-referral tier. Self-reported.",
+      "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/"
+    },
+    "lessons": [
+      "Thank-you pages should carry the next ask, with a concrete reward and a mechanism (link, tiers).",
+      "Tiered bonuses with achievable first steps (5 friends) drive volume; the top tier is for the story.",
+      "The deadline here was the launch itself: a real mechanism, not an invented timer."
+    ],
+    "notes": "Counts as the thank-you page control for Sec 9: confirmation, one instruction for the next 60 seconds, a bridge to a next action."
+  },
+  {
+    "id": "controls_other_formats-06",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Casper 'The One' mattress product page: 'As comfortable as it is affordable.'",
+    "author_or_company": "Casper",
+    "format": "product_description",
+    "market": "DTC mattresses",
+    "funnel_position": "product detail page",
+    "traffic": "warm",
+    "source_url": "https://casper.com/mattresses/casper-original/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "As comfortable as it is affordable. Expertly engineered to solve your sleep needs without breaking the bank. 4.4 out of 5 from 17,954 reviews.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a foam mattress to comparison shoppers on the promise of deep sleep at an affordable price, because three named foam layers, Consumer Reports' rating and a 100-night trial carry the claim.",
+      "hook": "Comfort and price in one line",
+      "mechanism": "Three layers of cradling foam, each designed for airflow",
+      "big_idea": "The sensible mattress: top-rated and affordable",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "headline"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "installments",
+        "price_anchor",
+        "bonus",
+        "guarantee_denominated"
+      ],
+      "close": "Add to cart with Affirm 0% APR option, 100-night trial, free shipping and returns, 10-year warranty, free gift limited time",
+      "voice_notes": "Plain, specific, benefit-per-feature bullets; 'without breaking the bank' is the only idiom",
+      "length_words_est": 350
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "On-page: '92% of customers keep their mattress' (12-month cohort May 2025-April 2026); Consumer Reports top-rated all-foam mattress of 2026 (with disclaimer that CR does not endorse); 17,954 reviews at 4.4. Listed as Best Seller. No test data.",
+      "source_url": "https://casper.com/mattresses/casper-original/"
+    },
+    "lessons": [
+      "Product description bullets translate each layer into a situation (overheating, pressure, bounce) rather than listing materials.",
+      "A keep-rate ('92% keep their mattress') is a stronger proof than a star rating for a trial-based offer.",
+      "Compare-at prices, installments and trial are stacked next to the price, not in a footer."
+    ],
+    "notes": "Asserted control: Best Seller badge on site; no test documented. Page uses a compliant third-party rating with disclaimer, a model for authority claims."
+  },
+  {
+    "id": "controls_other_formats-07",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Dr. Squatch Bar Soap 6-Pack: 'Create your dream 6-pack of our best selling bar soaps!'",
+    "author_or_company": "Dr. Squatch",
+    "format": "product_description",
+    "market": "Men's natural personal care, DTC",
+    "funnel_position": "bundle product page with subscribe-and-save",
+    "traffic": "warm",
+    "source_url": "https://www.drsquatch.com/products/bar-soap-6-pack",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Create your dream 6-pack of our best selling bar soaps! We craft natural, high-performance personal care products in manly scents with only the finest ingredients... All of our products are 98-100% natural origin.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a six-bar bundle to men who already know the brand on the promise of natural, high-performance soap in manly scents, because each scent is described as a scene (Old Forest Growth, Barrel Aged Bourbon) with a grit level and named ingredients.",
+      "hook": "Build your own bundle; scents as scenes",
+      "mechanism": "98-100% natural origin; a 'sh*t list' of ingredients never used",
+      "big_idea": "Soap that smells like a man and performs",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "installments",
+        "bonus"
+      ],
+      "close": "Subscribe & Save 14% ($36 vs $42), free delivery for subscribers, '30 Day Sudisfaction Guarantee', Shop Pay in 4",
+      "voice_notes": "Irreverent, masculine, masked profanity, puns; features phrased as blunt rules",
+      "length_words_est": 250
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "1,403 reviews at about 4.5 stars on the bundle page; homepage shows 6,067 reviews on the Triple Threat Set. No test or sales figures on page.",
+      "source_url": "https://www.drsquatch.com/products/bar-soap-6-pack"
+    },
+    "lessons": [
+      "Product descriptions can name what the product refuses to contain as the mechanism ('a list of ingredients we never use').",
+      "Scent and variant names work as pictures ('Crisp Forest Waterfall'); the grit level is a spec in the buyer's words.",
+      "Voice is a parameter: puns in the guarantee name ('Sudisfaction') are on-brand and still denominated (30 days)."
+    ],
+    "notes": "Asserted control (live bestseller bundle). The pine-tar single product URL returned 404; bundle page used instead."
+  },
+  {
+    "id": "controls_other_formats-08",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Instant Pot Duo 7-in-1 Amazon listing (#1 Best Seller in Electric Pressure Cookers)",
+    "author_or_company": "Instant Brands (Amazon listing)",
+    "format": "product_description",
+    "market": "Kitchen appliances on Amazon",
+    "funnel_position": "Amazon product detail page",
+    "traffic": "warm",
+    "source_url": "https://www.amazon.com/dp/B00FLYWNYQ",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Instant Pot Duo 6 Qt 7-in-1 Electric Pressure Cooker, Stainless Steel. Slow cooks, makes rice and yogurt, steams, sautés, warms and sterilizes, with an app featuring 800+ recipes.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a multi-cooker to home cooks comparing appliances on the promise of seven appliances in one, because the title stacks the functions and the badge, review count and 'bought in past month' count carry the proof.",
+      "hook": "7-in-1: the count is the hook",
+      "mechanism": "Pressure cooking plus six named functions; app with 800+ recipes",
+      "big_idea": "One pot replaces seven",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "headline"
+        },
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Add to cart; size variants 3/6/8 quarts",
+      "voice_notes": "Spec-dense, keyword-first title; no adjectives",
+      "length_words_est": 120
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "On page at fetch (Oct 2026): '#1 Best Seller' in Electric Pressure Cookers; 4.7 out of 5 stars from 186,419 reviews; '30K+ bought in past month'; price from $71.89. Sales-rank evidence as displayed by Amazon; bullets not retrievable from the fetched HTML.",
+      "source_url": "https://www.amazon.com/dp/B00FLYWNYQ"
+    },
+    "lessons": [
+      "Amazon titles lead with brand, model, capacity and the function count; benefits go in bullets, specs in the block.",
+      "Numerical proof shown by the platform (review count, bought-in-past-month) is the proof line; copy should not repeat it with adjectives."
+    ],
+    "notes": "Sales-rank evidence documented (Best Seller badge, category). 'About this item' bullets live in a part of the page the fetch could not reach; retrieve manually before using as a bullet exemplar."
+  },
+  {
+    "id": "controls_other_formats-09",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "The campaign itself: commercially successful, legally a loser.",
+        "result": "FTC consent order; compliance monitoring program required"
+      }
+    ],
+    "title": "Lord & Taylor paid article in Nylon with no disclosure (FTC settlement, 2016)",
+    "author_or_company": "Lord & Taylor / Nylon (FTC press release)",
+    "format": "advertorial",
+    "market": "Fashion retail (Design Lab dress launch)",
+    "funnel_position": "native article plus Instagram post and 50 paid influencer posts",
+    "traffic": "cold",
+    "source_url": "https://www.ftc.gov/news-events/news/press-releases/2016/03/lord-taylor-settles-ftc-charges-it-deceived-consumers-through-paid-article-online-fashion-magazine",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "FTC: 'The Instagram post and article gave no indication to consumers that they were paid advertising placed by Lord & Taylor.' Article headline not quoted in the release.",
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "3",
+      "lead_type": "story",
+      "argument_sentence": "This sold a dress to fashion readers on the promise of an editorial discovery, because a company-edited article and influencer photos were presented as independent coverage.",
+      "hook": "Editorial-style article in a fashion magazine",
+      "mechanism": "Borrowed editorial credibility",
+      "big_idea": "Everyone is wearing this dress",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Shop link; influencer posts tagged @lordandtaylor #DesignLab",
+      "voice_notes": "Magazine editorial voice",
+      "length_words_est": 600
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "FTC release: posts reached 11.4 million Instagram users in two days, 328,000 brand engagements, and the dress 'quickly sold out'. Outcome: FTC settlement barring misrepresentation of paid ads as independent and requiring disclosure of material connections.",
+      "source_url": "https://www.ftc.gov/news-events/news/press-releases/2016/03/lord-taylor-settles-ftc-charges-it-deceived-consumers-through-paid-article-online-fashion-magazine"
+    },
+    "lessons": [
+      "An advertorial without a label on the article and on every paid post is a hard reject regardless of conversion.",
+      "The factual review must check the disclosure line, not only the claims.",
+      "Commercial success is not the rubric; a sold-out campaign still failed the compliance gate."
+    ],
+    "notes": "Documented compliance loser for the advertorial format; the only native-ad record with hard outcome data (reach, engagements, sell-out) plus an enforcement result."
+  },
+  {
+    "id": "controls_other_formats-10",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "FTC Native Advertising Guide: label terms and placement rules",
+    "author_or_company": "Federal Trade Commission",
+    "format": "advertorial",
+    "market": "All (regulatory guidance)",
+    "funnel_position": "n/a (standard for native ads and click-through pages)",
+    "traffic": "unknown",
+    "source_url": "https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses",
+    "rights_status": "public_domain",
+    "excerpt": "Terms likely to be understood: 'Ad,' 'Advertisement,' 'Paid Advertisement,' 'Sponsored Advertising Content'. 'Promoted' and 'Promoted Stories' are 'at best ambiguous'. Place the disclosure 'in front of or above the headline of the native ad'.",
+    "structure": {
+      "awareness": "unknown",
+      "sophistication": "unknown",
+      "lead_type": "unknown",
+      "argument_sentence": "This is the labeling standard the advertorial format must satisfy: a clear label above the headline on the publisher page and as close as possible to the headline on the click-through page.",
+      "hook": "n/a",
+      "mechanism": "n/a",
+      "big_idea": "n/a",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "n/a",
+      "voice_notes": "n/a",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "Regulatory guidance, not a copy example. Key lines: 'Only disclosures that consumers notice, process, and understand can be effective'; a disclosure on the publisher's site alone may not be enough since readers can reach the ad directly.",
+      "source_url": "https://www.ftc.gov/business-guidance/resources/native-advertising-guide-businesses"
+    },
+    "lessons": [
+      "Advertorial template: label ('Ad', 'Advertisement', 'Paid Advertisement') above the headline on both the feed unit and the lander.",
+      "Never emit 'Promoted', 'Presented by' or a logo alone as the label.",
+      "Video thumbnails as the focal point need the label on the image."
+    ],
+    "notes": "US government work, public domain. Included as the documented rule behind the Sec 9 advertorial 'label on both pages' must; not a control."
+  },
+  {
+    "id": "controls_other_formats-11",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Jon Buchan's 'drunk' cold email: 'You've never heard of me. (Hi, I'm Jon.) I got your details from a list.'",
+    "author_or_company": "Jon Buchan, Charm Offensive",
+    "format": "cold_email",
+    "market": "B2B agency services sold to marketing directors (UK)",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://www.charm-offensive.co.uk/how-i-write-charming-cold-pitch-copy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Greetings {Firstname}, You've never heard of me. (Hi, I'm Jon.) I got your details from a list. But hey, at least you're list-worthy, that's gotta be worth something, right?",
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This gets replies from marketing directors on the promise of an entertaining pitch, because the opener names the awkward truth (a stranger from a list) and makes the reader laugh before any offer.",
+      "hook": "'The Way In': admit you are a stranger from a list, then joke about it",
+      "mechanism": "Self-deprecating candor as pattern interrupt",
+      "big_idea": "The only cold email you will enjoy reading",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Not reproduced on the fetched pages (the full email is a gated download)",
+      "voice_notes": "Conversational, British, self-mocking, long sentences with parentheticals",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "No reply-rate figure stated on the fetched pages. Evidence offered is qualitative: prospect replies quoted on the download page ('the most entertaining cold call/email that I have received recently, or possibly ever'; 'You stood out. You made me laugh.') and a VentureBeat front-page placement via the same approach.",
+      "source_url": "https://www.charm-offensive.co.uk/free-b2b-cold-email-template-download/"
+    },
+    "lessons": [
+      "Line one can be a verifiable observation about the situation ('you've never heard of me') when there is nothing to observe about the reader.",
+      "Candor about the mechanics of outreach disarms; the humor is in the truth, not in a joke.",
+      "Treat the widely repeated 'high reply rate' claims as undocumented until a figure is found at the source."
+    ],
+    "notes": "Control status asserted (Buchan says it won clients including enterprise brands); the reply rate commonly cited elsewhere is not stated on the source pages fetched. Full text gated; excerpt only."
+  },
+  {
+    "id": "controls_other_formats-12",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Neutral assertion: 'I saw you're hiring. You must be starting to think about ramp.'",
+        "result": "Labeled weak (asserts the prospect's problem)"
+      },
+      {
+        "description": "Educational: 'I saw you're hiring. According to {blog}, X% of new sales hires don't hit quota.'",
+        "result": "Labeled weak (lectures)"
+      },
+      {
+        "description": "Muddied CTA: 'Worth a chat about how we can improve you reply rates?'",
+        "result": "Labeled weak vs 'Worth a chat?'"
+      }
+    ],
+    "title": "Lavender: tentative tone openers ('I could be wrong, but are you starting to think about ramp?')",
+    "author_or_company": "Lavender (Will Allred)",
+    "format": "cold_email",
+    "market": "B2B sales tech to sales leaders",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://www.lavender.ai/blog/cold-email-tone-tips",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "I saw you might be hiring. I could be wrong, but are you starting to think about ramp? / Looks like you're hiring. Typically, this means sales leaders are starting to think about ramp. / CTA: Worth a chat?",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This earns a reply from a hiring sales leader on the promise of a relevant conversation about ramp time, because a hedged observation ('typically', 'I could be wrong') and a two-word CTA invite correction rather than demand a meeting.",
+      "hook": "Observation about hiring, hedged",
+      "mechanism": "Observation plus implied problem (ramp), tentatively stated",
+      "big_idea": "You are probably about to feel this problem",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "'Worth a chat?' or conditional 'If that sounds interesting, let's connect.'",
+      "voice_notes": "Short, hedged, zero or one question; no benefit claims in the CTA",
+      "length_words_est": 40
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Lavender's models: tentative tones 'lead to high reply rates'; emails with zero or one question get similar optimal reply rates, multiple questions lower them; clarity declines after about five tentative sentences. Figures are in a chart not available in text. Vendor data.",
+      "source_url": "https://www.lavender.ai/blog/cold-email-tone-tips"
+    },
+    "lessons": [
+      "Tentative over assumptive: hedge the inference, not the observation.",
+      "Zero or one question per email; the CTA carries no benefit claim.",
+      "Do not quote statistics at the reader in email one; it reads as a lecture."
+    ],
+    "notes": "Verbatim winning and losing sentence pairs; numeric lift not available in text. Directly supports Sec 9 cold email 'tentative over assumptive; 0-1 questions'."
+  },
+  {
+    "id": "controls_other_formats-13",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Transactional phrasing, generic templates, technical detail too early, unclear asks.",
+        "result": "Named by the source as what fails for HR buyers; no per-variant figure"
+      }
+    ],
+    "title": "Lavender HR benchmark: 231,818 emails, HR replies 3.4%, A-grade emails 4.3%",
+    "author_or_company": "Lavender (Cold Email Benchmark Report, 2026)",
+    "format": "cold_email",
+    "market": "B2B vendors selling to HR and People teams",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://www.lavender.ai/blog/benchmark-learnings-emailing-hr",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Example first line to a VP of People: 'The manager enablement work you've been sharing is really thoughtful.'",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This earns replies from HR leaders on the promise of a relevant people-team conversation, because the opener cites the reader's own published work and the ask is tiered to seniority.",
+      "hook": "Specific compliment on the reader's public work",
+      "mechanism": "Observation to people-challenge at their stage; one use case for directors; one workflow for managers",
+      "big_idea": "One email per seniority tier, not one template per department",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Simple CTA; executives invited to delegate",
+      "voice_notes": "Warm, people-focused wording; brevity; no technical detail early",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "From 231,818 cold emails: HR overall 3.4% reply; 12.3% of HR emails earned an A grade; A-grade HR emails 4.3% (27% lift). By level: C-suite 4.8%, VP 3.4%, Head 4.4%, Director 3.4% (senior A-grade 8.4%), Manager 4.3% (A-grade 6.3%), IC 5.3% (A-grade 8.0%). Vendor data; 'A grade' is Lavender's own score.",
+      "source_url": "https://www.lavender.ai/blog/benchmark-learnings-emailing-hr"
+    },
+    "lessons": [
+      "Persona-matched proof and depth: company-level for executives, one owned use case for directors, one workflow for managers, one task for ICs.",
+      "Reply-rate benchmarks per function and level let the judge score a cold email against a realistic base rate."
+    ],
+    "notes": "Largest documented cold-email dataset found with per-persona rates; the example is one line, not a full email."
+  },
+  {
+    "id": "controls_other_formats-14",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Long jargon-heavy emails, 'learn more' CTAs, broad product claims without context.",
+        "result": "Named as failures; no per-variant figure"
+      }
+    ],
+    "title": "Lavender technical-buyer benchmark: 'Read the post on moving to weekly releases. Big shift.'",
+    "author_or_company": "Lavender (Cold Email Benchmark Report, 2026)",
+    "format": "cold_email",
+    "market": "B2B dev tools sold to engineering and product leaders",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://www.lavender.ai/blog/benchmark-learnings-emailing-technical-buyers",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Read the post on moving to weekly releases. Big shift. Guessing team is wrapping every release in feature flags? / Saw the PR on the feature toggle setup. Looks like you're building it in-house.",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This earns a reply from an engineering leader on the promise of a peer-level technical conversation, because line one cites a specific public artifact (a post, a PR) and line two guesses at the implied tradeoff as a question.",
+      "hook": "A verifiable artifact: blog post, pull request, product change",
+      "mechanism": "Observation to technical inference, phrased as a guess",
+      "big_idea": "I read your work; here is the tradeoff you are probably facing",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "One ask, framed as a question or an invitation to compare approaches",
+      "voice_notes": "Clipped, technical, plain; no salesy tone",
+      "length_words_est": 45
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "From 231,818 emails: engineering and product reply rate 5.2%; A-grade emails 5.5% (6% lift); 11% of emails earned an A. Vendor data.",
+      "source_url": "https://www.lavender.ai/blog/benchmark-learnings-emailing-technical-buyers"
+    },
+    "lessons": [
+      "Line one must be a verifiable observation (a PR, a post), which is the Sec 9 cold email rule stated with examples.",
+      "Technical buyers show the smallest lift from polish (6%): relevance of the observation matters more than tone."
+    ],
+    "notes": "Four verbatim opener examples by role; counts as exemplar paragraphs for the prompt."
+  },
+  {
+    "id": "controls_other_formats-15",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Lavender length data: openers perform best at 25-50 words",
+    "author_or_company": "Lavender",
+    "format": "cold_email",
+    "market": "B2B sales emails (cross-industry)",
+    "funnel_position": "first-touch cold email and follow-ups",
+    "traffic": "cold",
+    "source_url": "https://www.lavender.ai/blog/best-length-cold-email",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "I think your whole team posted about open roles this week. Guessing you're scaling pretty quickly. With that, I imagine you've got a plan in place for ramp.",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This earns a reply from a scaling sales leader on the promise of help with ramp, because the whole email is an observation, an inference and a soft ask in under fifty words.",
+      "hook": "Team-wide hiring observation",
+      "mechanism": "Observation plus insight, reused across follow-ups",
+      "big_idea": "Short enough to answer from a phone",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "Soft ask; follow-ups restate who you are and why",
+      "voice_notes": "Hedged ('I think', 'guessing', 'I imagine'), conversational",
+      "length_words_est": 35
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Lavender data: optimal cold opener length 25-50 words; a chart shows a secondary peak near 225 words that the author calls sub-optimal. Cites Gong: follow-ups with four or more sentences got about 15x more meetings than three or fewer. No dataset size stated on this page.",
+      "source_url": "https://www.lavender.ai/blog/best-length-cold-email"
+    },
+    "lessons": [
+      "Cold email one: 25-50 words (the Sec 9 band of 40-90 should be checked against this lower figure).",
+      "Follow-ups are not one-liners: restate context and add a new piece of relevance."
+    ],
+    "notes": "Vendor data; the 40-90 word band in Sec 9 may be high for first-touch emails per this source."
+  },
+  {
+    "id": "controls_other_formats-16",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "A 250+ word, 9-sentence pitch email (shown as the counterexample).",
+        "result": "Contrasted with a ~50-word, 4-sentence email; no rates given"
+      },
+      {
+        "description": "Subject lines with buzzwords or numbers.",
+        "result": "Open rates down up to 17.9%"
+      }
+    ],
+    "title": "Gong / Outbound Squad analysis of 28M+ cold emails: pitching cuts replies by up to 57%",
+    "author_or_company": "Gong with Outbound Squad (Jason Bay)",
+    "format": "cold_email",
+    "market": "B2B sales emails (cross-industry)",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://www.gong.io/blog/does-cold-email-even-work-any-more-heres-what-the-data-says",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No winning email quoted in text. Findings as stated: 'Pitching reduces reply rates by as much as 57%'; ideal length 100 words or fewer with 3-4 sentences; buzzwords and numbers in subject lines reduce open rates by up to 17.9%.",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This is the base-rate evidence for cold email: emails that describe the reader's problem without pitching the product, in 3-4 sentences, with a one-word subject, outperform.",
+      "hook": "n/a (dataset)",
+      "mechanism": "Problem-led, pitch-free first email",
+      "big_idea": "Do not pitch in email one",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "n/a",
+      "voice_notes": "n/a",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "28M+ cold emails: top performers book 8.1x more meetings than average; average rep needs 344 cold emails per meeting; pitching cuts reply rates by as much as 57%; top reps get 4.2x more replies and 2.1x opens; buzzwords and numbers in subject lines reduce opens up to 17.9%. Vendor and consultancy data; no per-variant copy.",
+      "source_url": "https://www.gong.io/blog/does-cold-email-even-work-any-more-heres-what-the-data-says"
+    },
+    "lessons": [
+      "No product pitch in email one; the reply rate penalty is the largest documented single factor.",
+      "Subject lines: one word, no numbers, no buzzwords; social proof belongs in the body.",
+      "3-4 sentences, under 100 words."
+    ],
+    "notes": "Dataset benchmark rather than a single control. Supports Sec 9 cold email 'no links in email one; subject 1-3 words'."
+  },
+  {
+    "id": "controls_other_formats-17",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Meeting-request CTA ('do you have 15 minutes?') and buzzword-laden ROI claims.",
+        "result": "Underperform value-offer CTAs; figures only in charts"
+      }
+    ],
+    "title": "Gong executive cold email: offer-of-value CTA ('Open to reviewing it together?')",
+    "author_or_company": "Gong with Jen Allen-Knuth",
+    "format": "cold_email",
+    "market": "B2B vendors emailing C-level executives (example: higher education)",
+    "funnel_position": "first-touch cold email to executives",
+    "traffic": "cold",
+    "source_url": "https://www.gong.io/blog/do-execs-really-reply-to-cold-email-here-s-what-the-data-says",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "We pulled together a brief benchmark showing how your university compares to peer institutions on student retention. Open to reviewing it together?",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This earns an executive reply on the promise of a benchmark about their own institution, because an offer of value beats a meeting request and the whole email reads in under nine seconds.",
+      "hook": "A benchmark already built about the reader's organization",
+      "mechanism": "Peer comparison on an executive priority (retention)",
+      "big_idea": "Here is something about you; want to see it?",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "'Open to reviewing it together?' (value offer, not a calendar ask)",
+      "voice_notes": "Plain, no buzzwords ('AI', 'platform' named as reply killers), 50-100 words",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "1M+ executive sales cycles analyzed: C-level 30.2% less likely to reply than non-executives; 1-4 word subject lines perform best; executives decide to open in under three seconds and read in under nine; reply rates drop sharply above 100 words (best 50-100); buzzwords and vague ROI claims significantly reduce replies; an offer of value outperforms a meeting request. Exact percentages are in charts not available in text.",
+      "source_url": "https://www.gong.io/blog/do-execs-really-reply-to-cold-email-here-s-what-the-data-says"
+    },
+    "lessons": [
+      "CTA offers an artifact about the reader (a benchmark, an audit), not a meeting.",
+      "Executive emails: 50-100 words, subject 1-4 words, priorities plus social proof, no 'AI' or 'platform'."
+    ],
+    "notes": "One verbatim CTA example; the dataset supports Sec 9 cold email 'persona-matched proof' and the ban on 'I'd love to schedule a call'."
+  },
+  {
+    "id": "controls_other_formats-18",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Break-up template 'Closing your file' and problem-agitate 'Are you dealing with [specific problem]?' are offered as alternates.",
+        "result": "No figures"
+      }
+    ],
+    "title": "Alex Berman 'Foundation' cold email template: 'Quick question about [company name]'",
+    "author_or_company": "Alex Berman (X27)",
+    "format": "cold_email",
+    "market": "Agencies selling services to businesses",
+    "funnel_position": "first-touch cold email",
+    "traffic": "cold",
+    "source_url": "https://alexberman.com/cold-email-templates",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Quick question about [company name]. Hey [First Name], I noticed [specific observation about their company]. We help [their type of company] [specific outcome] without [common pain point].",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This books meetings for agencies on the promise of a specific outcome without a named pain, because a personalized observation, a one-line outcome and a single low-friction ask fit in four lines.",
+      "hook": "Observation about the company",
+      "mechanism": "Outcome-without-pain promise; 3C framework (Compliment, Case Study, Call to Action)",
+      "big_idea": "We already do this for companies like yours",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Single call request",
+      "voice_notes": "Casual ('Hey'), templated placeholders, short",
+      "length_words_est": 50
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "No template-level figures. Author claims the template was used 'to book thousands of meetings', $600,000 ARR in 60 days at X27, and 14,000+ agencies / 500,000+ meetings overall; article-level benchmarks (3.43%-5.1% average reply, 10-15% top performers, personalized up to 18%) are uncited. All self-reported.",
+      "source_url": "https://alexberman.com/cold-email-templates"
+    },
+    "lessons": [
+      "The observation / outcome / one-ask shape is the practitioner consensus; the engine should treat the figures as unverified.",
+      "A case-study line ('We helped [Similar Company] go from X to Y in [timeframe]') is the proof carrier in email one for agencies."
+    ],
+    "notes": "Asserted control with unverified claims; useful for shape, not for benchmarks."
+  },
+  {
+    "id": "controls_other_formats-19",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Steve Madden Afterpay Day follow-up text (23.1% CTR) and abandonment journeys",
+    "author_or_company": "Attentive for Steve Madden",
+    "format": "sms",
+    "market": "Footwear and accessories retail (US, CA, UK, AU)",
+    "funnel_position": "promotional follow-up and triggered abandonment SMS",
+    "traffic": "owned_list",
+    "source_url": "https://www.attentive.com/case-studies/steve-madden",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Message text not quoted; described as a follow-up text for 'Afterpay Day' (a buy-now-pay-later promotion) and location-personalized seasonal campaigns, plus MMS for launches.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This drives purchases from SMS subscribers on the promise of a payment-plan event, because the second send to non-clickers rides an external deadline the reader already knows.",
+      "hook": "External event (Afterpay Day) as the news",
+      "mechanism": "Installments via Afterpay; reminder sequencing",
+      "big_idea": "Last call on the pay-later event",
+      "proof_elements": [],
+      "offer_devices": [
+        "installments",
+        "deadline_with_mechanism"
+      ],
+      "close": "Link; triggered cart/browse/session journeys follow",
+      "voice_notes": "Brand-plain promotional",
+      "length_words_est": 25
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "23.1% CTR for the Afterpay Day follow-up text; cart abandonment journeys 15.7% CTR; browse 12.7%; session 9.8%; 20x total program ROI; 38% of SMS subscribers made 2+ purchases; +34% welcome journey revenue. Vendor-reported.",
+      "source_url": "https://www.attentive.com/case-studies/steve-madden"
+    },
+    "lessons": [
+      "A follow-up SMS tied to a real external deadline out-clicks the first send; the deadline mechanism is the event itself.",
+      "Triggered journeys (cart > browse > session) rank by intent in CTR; the engine's abandoned-cart sequence should be the SMS priority."
+    ],
+    "notes": "No verbatim text. Documented CTR by message type is the useful part."
+  },
+  {
+    "id": "controls_other_formats-20",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Prior program: about 75% of revenue from campaign blasts, one pop-up for all visitors.",
+        "result": "Replaced; year-over-year comparison only"
+      }
+    ],
+    "title": "Tatti Lashes: journeys over campaigns, 71% fewer sends, +325% revenue per send",
+    "author_or_company": "Attentive for Tatti Lashes",
+    "format": "sms",
+    "market": "Beauty (strip lashes), UK DTC",
+    "funnel_position": "SMS and email journeys plus category-tailored sign-up units",
+    "traffic": "owned_list",
+    "source_url": "https://www.attentive.com/case-studies/tatti-lashes",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No SMS text quoted. Strategy as stated: sign-up unit tailored to the product category being browsed with a teaser offer; automated journeys replace most campaign blasts; audience expansion via AI.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This grows SMS revenue from lash buyers on the promise of relevant, fewer messages, because the opt-in is matched to the category the shopper is viewing and journeys replace blasts.",
+      "hook": "Category-matched teaser offer at opt-in",
+      "mechanism": "Behavior-triggered journeys instead of calendar sends",
+      "big_idea": "Fewer texts, each one about what you were looking at",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "Link to the browsed category",
+      "voice_notes": "Not available",
+      "length_words_est": 25
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Revenue per send +325%; journeys revenue +116%; net subscribers +170%; unsubscribes -47%; 71% fewer messages YoY; total revenue +24%; SMS journeys revenue +235%. Compares August 2026 on Attentive with August 2025 on another platform; vendor-reported, no control.",
+      "source_url": "https://www.attentive.com/case-studies/tatti-lashes"
+    },
+    "lessons": [
+      "SMS volume is a cost: the documented win is fewer, triggered messages, which argues against invented 'almost gone' blasts.",
+      "Opt-in copy should name the category the reader is browsing."
+    ],
+    "notes": "Cross-platform YoY, weak evidence; recorded for the program-structure lesson."
+  },
+  {
+    "id": "controls_other_formats-21",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Control group received no SMS.",
+        "result": "Baseline for the 13% and 19% lifts"
+      }
+    ],
+    "title": "Urban Outfitters SMS holdout test: +13% demand vs control for active subscribers",
+    "author_or_company": "Attentive for Urban Outfitters",
+    "format": "sms",
+    "market": "Apparel and lifestyle retail",
+    "funnel_position": "promotional SMS to segmented subscribers with holdout control",
+    "traffic": "owned_list",
+    "source_url": "https://www.attentive.com/case-study/urban-outfitters-incremental-demand-mobile-channels",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No message text quoted. Design: SMS list split into Inactive (SMS only) and Active (also on other UO channels); each split into Test (received a promotional text) and Control (none).",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This proves SMS incrementality to a retailer on the promise of demand that would not have happened, because a true holdout group received no text.",
+      "hook": "Promotional text (content not stated)",
+      "mechanism": "Holdout measurement",
+      "big_idea": "Texts add demand on top of email and push",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "Shop link",
+      "voice_notes": "Not available",
+      "length_words_est": 25
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Active Test group: '13% increase in demand vs. the Control group'; subscribers also active in email: +19% demand; program ROI 27x+; YoY purchase volume +230%; onsite conversions +32%. Vendor-reported but with a stated no-send control; no sample sizes.",
+      "source_url": "https://www.attentive.com/case-study/urban-outfitters-incremental-demand-mobile-channels"
+    },
+    "lessons": [
+      "The only SMS evidence here with a holdout; incremental demand is modest (13-19%), which should temper SMS revenue claims in copy and in the eval.",
+      "SMS to subscribers already engaged on email adds more than to SMS-only subscribers."
+    ],
+    "notes": "Best-designed SMS result found; message copy absent."
+  },
+  {
+    "id": "controls_other_formats-22",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "True Classic abandoned-cart and browse-abandonment SMS tests (+12% and +29% EPM)",
+    "author_or_company": "Postscript for True Classic",
+    "format": "sms",
+    "market": "Men's t-shirts, DTC",
+    "funnel_position": "triggered abandonment SMS automations with AI-generated variants",
+    "traffic": "owned_list",
+    "source_url": "https://postscript.io/case-study-trueclassic",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No message text quoted. 'Infinity Testing' ran AI-written variants against the control messages in Abandoned Cart and Browse Abandonment automations.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This recovers carts for a t-shirt brand on the promise of the item they left, because continuously tested variants replace a static control.",
+      "hook": "Reminder of the abandoned item",
+      "mechanism": "Continuous variant testing",
+      "big_idea": "The message keeps getting better",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "Link back to cart",
+      "voice_notes": "Not available",
+      "length_words_est": 25
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Abandoned Cart: 12% lift in earnings per message (EPM); Browse Abandonment: 29% lift in EPM and 21% lift in orders per message; +$145k AI-generated revenue during beta, accurate as of July 8, 2024. Vendor-reported; winning and losing copy not shown.",
+      "source_url": "https://postscript.io/case-study-trueclassic"
+    },
+    "lessons": [
+      "Abandonment SMS has measurable headroom (12-29% EPM) from copy variants alone; the engine should emit 3-6 variants per trigger."
+    ],
+    "notes": "Documented as A/B against control, but no copy; useful as a magnitude reference."
+  },
+  {
+    "id": "controls_other_formats-23",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Double opt-in flow requiring a confirmation text.",
+        "result": "Beaten by 47% on desktop sign-ups"
+      }
+    ],
+    "title": "Jones Road Beauty onsite SMS opt-in with skin-type question (+82% mobile conversions)",
+    "author_or_company": "Postscript for Jones Road Beauty",
+    "format": "sms",
+    "market": "Clean beauty, DTC",
+    "funnel_position": "SMS opt-in pop-up (desktop and mobile) feeding personalized automations",
+    "traffic": "warm",
+    "source_url": "https://postscript.io/case-study-jones-road",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Pop-up and message copy not quoted. Strategy: single-step onsite opt-in replacing double opt-in; the pop-up asks skin type as a custom property used to personalize later texts.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This grows an SMS list for a beauty brand on the promise of texts about products for your skin type, because the opt-in collects the one fact that makes later messages relevant and removes the confirmation step.",
+      "hook": "Ask one qualifying question at opt-in",
+      "mechanism": "Custom property drives segmentation",
+      "big_idea": "Texts that already know your skin",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "Subscribe without leaving the site",
+      "voice_notes": "Not available",
+      "length_words_est": 20
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "+82% mobile conversions; +47% more SMS sign-ups on desktop vs double opt-in; more subscribers in two months than the prior full year; revenue 'surpassed initial forecasts by 3x'. Vendor-reported; no control.",
+      "source_url": "https://postscript.io/case-study-jones-road"
+    },
+    "lessons": [
+      "An SMS opt-in that asks one segmentation question outperforms a bare phone field when later copy uses the answer.",
+      "Every extra confirmation step is a documented loss."
+    ],
+    "notes": "Opt-in mechanics rather than message copy."
+  },
+  {
+    "id": "controls_other_formats-24",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Long-form page explaining features (itself +37.5% over the original).",
+        "result": "Lost to Person Page by 47% on paid signups"
+      },
+      {
+        "description": "Person Page with extra information appended below.",
+        "result": "Over 22% worse than original"
+      }
+    ],
+    "title": "Highrise plans/signup page: 'Person Page' beats long-form by 47%",
+    "author_or_company": "37signals (Jason Fried / Highrise team)",
+    "format": "other",
+    "market": "B2B SaaS CRM for small teams",
+    "funnel_position": "marketing homepage leading to plan selection and paid signup",
+    "traffic": "warm",
+    "source_url": "https://signalvnoise.com/posts/2991-behind-the-scenes-ab-testing-part-3-final",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Variant headlines appear only as screenshots in the post. 37signals' summary: 'Big photos of smiling customers work' and the Person Page 'had a 47% percent increase in paid signups than the Long Form design.'",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "2",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a small-business CRM to team leads on the promise of simple contact tracking, because a large customer photo with a short quote and a single plans CTA converts better than explanation.",
+      "hook": "Full-bleed photo of a real customer with a short quote",
+      "mechanism": "Not explained on the page; the product is simple enough to demo",
+      "big_idea": "Real people like you already use it",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "headline"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "One signup CTA; plans shown after the click",
+      "voice_notes": "Minimal, human, first-person customer quote",
+      "length_words_est": 120
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "'37.5% more people signed up for Highrise with the Long Form design' (vs original). Person Page: '47% percent increase in paid signups than the Long Form design'. Person Page with more information added at the bottom 'performed over 22% worse than the original design'. Self-reported by 37signals; no significance given.",
+      "source_url": "https://signalvnoise.com/posts/2991-behind-the-scenes-ab-testing-part-3-final"
+    },
+    "lessons": [
+      "Adding more copy to a winner can kill it; test the removal as well as the addition.",
+      "For a simple, solution-aware SaaS, a human testimonial as the hero beats feature explanation.",
+      "Long-form beat short-form, then a radically different short page beat long-form: test shape, not just length."
+    ],
+    "notes": "Part 1 of the series (post 1525) returned 404; results quoted from part 3. Classic documented pair, often cited; both directions on length are documented here."
+  },
+  {
+    "id": "controls_other_formats-25",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Zendrive thank-you page: 'You took the first step to upgrade your app with behavior-based insurance.'",
+    "author_or_company": "Zendrive (example documented by Unbounce)",
+    "format": "other",
+    "market": "B2B insurtech (behavior-based insurance for apps)",
+    "funnel_position": "thank-you page after demo/briefing request",
+    "traffic": "warm",
+    "source_url": "https://unbounce.com/landing-page-examples/thank-you-page/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "You took the first step to upgrade your app with behavior-based insurance. You will receive a message shortly with your invite to an executive briefing.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This confirms a briefing request to app executives on the promise that the upgrade has begun, because the page restates the decision's value, tells them exactly what arrives next, and links to one relevant article.",
+      "hook": "Reinforce the decision in the headline",
+      "mechanism": "Executive briefing invite arriving by message",
+      "big_idea": "You have already started",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [],
+      "close": "One link to a single blog post, not the whole blog",
+      "voice_notes": "Calm, second person, declarative",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "none",
+      "detail": "No results stated; cited by Unbounce as an exemplar of post-conversion communication.",
+      "source_url": "https://unbounce.com/landing-page-examples/thank-you-page/"
+    },
+    "lessons": [
+      "Thank-you page line one confirms the decision in the reader's terms; line two says what arrives and when.",
+      "One next step, one link; do not send them to a content hub."
+    ],
+    "notes": "Asserted control (live example), not documented. Verbatim headline and opening line available."
+  },
+  {
+    "id": "controls_other_formats-26",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Axis Social post-form 'bridge' page booking a strategy call (~30% landing conversion)",
+    "author_or_company": "Axis Social (documented by Unbounce)",
+    "format": "other",
+    "market": "Paid-social agency selling to businesses (B2B lead gen)",
+    "funnel_position": "MQL-to-SQL bridge page after form, cold paid social",
+    "traffic": "cold",
+    "source_url": "https://unbounce.com/landing-page-examples/thank-you-page/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Headline not quoted by the source. The page shows client logos and testimonials above the fold, walks through what the strategy call delivers ('predictable and reliable lead growth for your company'), and offers a custom Facebook Ads Blueprint.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This moves a cold lead to a booked strategy call on the promise of predictable lead growth, because logos and testimonials sit above the fold, the call is explained step by step, and a custom blueprint is the reward.",
+      "hook": "Social proof first, then the walkthrough",
+      "mechanism": "A strategy call that produces a custom ad blueprint",
+      "big_idea": "Here is exactly what happens on the call",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "lead"
+        },
+        {
+          "type": "testimonial",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "bonus"
+      ],
+      "close": "Book-a-call CTA with no pressure; visitors can leave",
+      "voice_notes": "Agency-plain, outcome words",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Managing Director quoted: 'our landing page conversion rates are nearly 30%' despite cold paid social and seven form fields; lead qualification matched other SQL approaches. Vendor-published quote.",
+      "source_url": "https://unbounce.com/landing-page-examples/thank-you-page/"
+    },
+    "lessons": [
+      "A seven-field form can convert cold traffic when proof is above the fold and the next step is spelled out.",
+      "Describe the call as a process with a deliverable, not as 'let's chat'."
+    ],
+    "notes": "Self-reported figure in a vendor article; headline not available verbatim."
+  },
+  {
+    "id": "controls_other_formats-27",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "H&M's 'New Customer' microcopy at the account step.",
+        "result": "Led many guest users to choose account creation (usability finding)"
+      }
+    ],
+    "title": "Baymard checkout benchmark: 11.3 average fields, 8 needed, 17% abandon for complexity",
+    "author_or_company": "Baymard Institute",
+    "format": "order_form",
+    "market": "E-commerce checkouts (344 top sites benchmarked)",
+    "funnel_position": "checkout flow",
+    "traffic": "warm",
+    "source_url": "https://baymard.com/blog/checkout-flow-average-form-fields",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Average checkout form fields in 2024: 11.3, 'slightly down from 11.8 in 2021 and 12.7 in 2019'; 'most sites need only 8 form fields in total for a checkout flow'; '17% of users have abandoned due to checkout complexity'.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "unknown",
+      "argument_sentence": "This is the research baseline for order forms: fewer fields, a single Full Name field, guest checkout with account creation offered at the end, and label wording that does not mislead.",
+      "hook": "n/a (research)",
+      "mechanism": "Field reduction and label clarity",
+      "big_idea": "Eight fields is enough",
+      "proof_elements": [],
+      "offer_devices": [],
+      "close": "n/a",
+      "voice_notes": "n/a",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "Usability research, not a split test: 5.1 average steps; 11.3 average fields; 8 recommended; 17% abandonment due to complexity; H&M 'New Customer' label misrouted guest users; Stance and Williams Sonoma reassured guests that an account can be created at the end.",
+      "source_url": "https://baymard.com/blog/checkout-flow-average-form-fields"
+    },
+    "lessons": [
+      "Order form limit of eight fields has a documented research basis.",
+      "A single 'Full Name' field; tell guests they can create an account after paying.",
+      "Microcopy on the account-choice step can misroute buyers; test labels, not just fields."
+    ],
+    "notes": "Not a copy control; included as the documented basis for the Sec 9 order form field rule."
+  },
+  {
+    "id": "controls_other_formats-28",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Two options only (web-only vs print+web).",
+        "result": "Majority shifted to the cheaper option"
+      }
+    ],
+    "title": "The Economist subscription decoy (Ariely): print+web at the same price as print",
+    "author_or_company": "Dan Ariely (experiment), reported by CXL",
+    "format": "other",
+    "market": "News magazine subscriptions",
+    "funnel_position": "pricing options",
+    "traffic": "unknown",
+    "source_url": "https://cxl.com/blog/pricing-experiments-you-might-not-know-but-can-learn-from/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Three options as reported: web-only $59, print-only $125, print and web $125. With the decoy present '16 chose option A and 84 chose option C'; with the print-only decoy removed, 'most people' chose the cheaper web option.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells the premium bundle to subscribers on the promise of getting print and web for the price of print alone, because a dominated middle option makes the bundle look like a gift.",
+      "hook": "Same price, more stuff",
+      "mechanism": "Decoy pricing (asymmetric dominance)",
+      "big_idea": "The bundle is the obvious choice",
+      "proof_elements": [],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Three-plan grid with a dominated middle plan",
+      "voice_notes": "Pure structure; no copy",
+      "length_words_est": 30
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "As CXL reports from Predictably Irrational: with decoy, 16 chose web-only and 84 chose print+web (MIT students); without decoy most chose web-only. Figures as stated by the secondary source; original is a classroom experiment, not a live test.",
+      "source_url": "https://cxl.com/blog/pricing-experiments-you-might-not-know-but-can-learn-from/"
+    },
+    "lessons": [
+      "Plan order and a dominated anchor change which plan sells; design the grid before writing plan copy.",
+      "Three plans, one deliberately dominated, is a legitimate pricing device when the dominated plan is a real option."
+    ],
+    "notes": "Secondary source; classic documented pricing experiment used for the Sec 9 'anchor against the expensive alternative' rule. CXL also reports Ash Maurya's single-plan-wins test and Gneezy's pay-what-you-wish field data on the same page."
+  },
+  {
+    "id": "controls_other_formats-29",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "A bump priced at the main product's price ($97 bump on $97 course).",
+        "result": "Asserted by SamCart to 'feel like a second purchase decision'; no test figure"
+      }
+    ],
+    "title": "SamCart order bump platform data: 30-40% take rate, priced at 20-40% of the main product",
+    "author_or_company": "SamCart",
+    "format": "order_bump",
+    "market": "Creators and course sellers (digital products)",
+    "funnel_position": "checkout page checkbox",
+    "traffic": "warm",
+    "source_url": "https://www.samcart.com/blog/the-complete-guide-to-order-bumps",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No live bump copy quoted. SamCart's guidance: pair a course with a workbook or software with a setup guide; 'order bumps convert at 30-40% on average'; 'Price your bump at 20-40% of the main product' (e.g., a $27 bump on a $97 course).",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This adds a small complementary item at checkout on the promise that it makes the main purchase work faster, because the buyer has already decided and the price is a fraction of the main ticket.",
+      "hook": "Checkbox with a bolded one-line offer",
+      "mechanism": "Complement that speeds the main product's result",
+      "big_idea": "Add the shortcut while you are here",
+      "proof_elements": [],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Checkbox; two or three sentences",
+      "voice_notes": "Imperative, short",
+      "length_words_est": 50
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Vendor platform data across '$7B+ in processed transactions': bumps 'convert at 30-40% on average'; sellers using bumps see '30%+ increase in average order value'. No methodology, sample or period disclosed.",
+      "source_url": "https://www.samcart.com/blog/the-complete-guide-to-order-bumps"
+    },
+    "lessons": [
+      "Bump price band 20-40% of the main price; same-priced bumps break the impulse frame.",
+      "Bump must be complementary to the main purchase, never unrelated.",
+      "Expect 30-40% take rates as the vendor benchmark; treat as self-reported."
+    ],
+    "notes": "Platform-level benchmark, not a single control. Supports Sec 9 order bump spec numerically."
+  },
+  {
+    "id": "controls_other_formats-30",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Fitness creator checkout: $17 nutrition guide bump on a $47 plan, 43% take rate",
+    "author_or_company": "SamCart (anonymized customer case)",
+    "format": "order_bump",
+    "market": "Fitness programs (digital)",
+    "funnel_position": "checkout order bump plus post-purchase upsell",
+    "traffic": "warm",
+    "source_url": "https://www.samcart.com/blog/upsell-strategies",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No copy quoted. Structure as stated: $47 workout plan; $17 nutrition guide order bump (43% take rate); $197 12-week coaching one-click upsell (11% take rate); AOV $47 to $78.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This adds a $17 nutrition guide to a $47 workout plan on the promise that the plan works faster with the diet handled, because the bump is 36% of the main price and directly tied to the result.",
+      "hook": "Complementary guide at checkout",
+      "mechanism": "Nutrition completes the training result",
+      "big_idea": "Train plus eat right equals the result you just bought",
+      "proof_elements": [],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Checkbox bump, then one-click $197 coaching upsell",
+      "voice_notes": "Not available",
+      "length_words_est": 50
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Bump take rate 43%; upsell take rate 11%; AOV from $47 to $78 (stated as +66%). Vendor-reported, anonymized; the stated take rates imply about $76 AOV, a small gap from $78.",
+      "source_url": "https://www.samcart.com/blog/upsell-strategies"
+    },
+    "lessons": [
+      "A bump tied to the result of the main product (not a related topic) can take above 40%.",
+      "Upsell at 4x the main price still takes 11% when it is the 'done with you' version of the same promise."
+    ],
+    "notes": "Anonymized vendor case; numbers slightly inconsistent, recorded as stated."
+  },
+  {
+    "id": "controls_other_formats-31",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "No downsell after a declined upsell (implied baseline).",
+        "result": "Downsell added 15% take on decliners"
+      }
+    ],
+    "title": "Business course upsell/downsell: $497 advanced course at $297 (8%), $97 templates downsell (15%)",
+    "author_or_company": "SamCart (anonymized customer case)",
+    "format": "upsell",
+    "market": "Business education (online course)",
+    "funnel_position": "post-purchase one-click upsell then downsell",
+    "traffic": "warm",
+    "source_url": "https://www.samcart.com/blog/upsell-strategies",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No copy quoted. Structure as stated: $297 course; upsell of a $497 advanced course offered at $297 (8% take rate); on decline, a $97 template bundle downsell (15% take rate); AOV $297 to $358 across 400+ monthly orders.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This offers the advanced course to new buyers at the price they just paid on the promise of the next level, because the discount is only available on this page and a cheaper tool bundle catches the decliners.",
+      "hook": "Same price you just paid for the next course",
+      "mechanism": "Advanced curriculum; templates as the shortcut",
+      "big_idea": "Go further now at today's price",
+      "proof_elements": [],
+      "offer_devices": [
+        "price_anchor",
+        "deadline_with_mechanism"
+      ],
+      "close": "Yes/No; No routes to a $97 downsell",
+      "voice_notes": "Not available",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Upsell 8% take; downsell 15% take; AOV $297 to $358; about $24,400/month extra across 400+ orders. Vendor-reported; the stated take rates imply roughly $38 uplift per order, not the $61 implied by the AOV change.",
+      "source_url": "https://www.samcart.com/blog/upsell-strategies"
+    },
+    "lessons": [
+      "Upsell price in the 1x-3x band of the first purchase; the 'only here' discount is the stated reason it is on this page.",
+      "A downsell at about 20% of the upsell price catches a meaningful share of decliners."
+    ],
+    "notes": "Numbers internally inconsistent in the source; recorded as stated. No page copy available."
+  },
+  {
+    "id": "controls_other_formats-32",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "$10 finance eBook to $97 course upsell (12% take) and $1,997 course (1% take)",
+    "author_or_company": "SamCart (anonymized customer case)",
+    "format": "upsell",
+    "market": "Personal finance information products",
+    "funnel_position": "post-purchase upsell chain after a tripwire eBook",
+    "traffic": "cold",
+    "source_url": "https://www.samcart.com/blog/upsell-strategies",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No copy quoted. Structure as stated: $10 eBook; Upsell #1 a $197 course at $97 (50% off), 12% take rate, $2,955 extra revenue; Upsell #2 a $1,997 course, 1% take rate.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This offers a half-price course to buyers of a $10 eBook on the promise of the full system, because a tripwire buyer is a proven buyer and the discount is tied to this moment.",
+      "hook": "Half off the course, right after the eBook",
+      "mechanism": "Full course behind the eBook's idea",
+      "big_idea": "You bought the summary; here is the system at half price",
+      "proof_elements": [],
+      "offer_devices": [
+        "price_anchor",
+        "deadline_with_mechanism"
+      ],
+      "close": "Two-step upsell chain; second step high ticket",
+      "voice_notes": "Not available",
+      "length_words_est": 400
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Upsell #1: 12% take, $2,955 extra revenue; Upsell #2: 1% take (no revenue stated). Vendor-reported, anonymized. Note the $97 upsell is about 9.7x the $10 base, outside the vendor's own 1-3x guidance.",
+      "source_url": "https://www.samcart.com/blog/upsell-strategies"
+    },
+    "lessons": [
+      "A tripwire changes the ratio rule: a low-ticket first purchase can carry a 10x upsell when it is the natural next step.",
+      "A 1% take on a $1,997 second upsell can still be worth a page; the engine should model revenue, not take rate alone."
+    ],
+    "notes": "Anonymized; no copy. Documents a tripwire funnel's upsell economics."
+  },
+  {
+    "id": "controls_other_formats-33",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Multi-step checkout without a bump.",
+        "result": "3.15% conversion"
+      }
+    ],
+    "title": "Single-page checkout with order bump replaces multi-step: 3.15% to 8.91%",
+    "author_or_company": "SamCart (anonymized seller)",
+    "format": "order_form",
+    "market": "Digital product sellers",
+    "funnel_position": "checkout page",
+    "traffic": "warm",
+    "source_url": "https://www.samcart.com/blog/checkout-page-optimization-9-changes-that-increase-conversions",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "No live checkout copy quoted. Recommendations: minimum fields, one-page layout, 'secure checkout' label near the payment field, one order bump, real-time order summary, post-purchase upsell.",
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This converts a buyer who has clicked to order on the promise of a quick, safe purchase, because everything (recap, total, bump, payment, trust label) is on one page with no extra steps.",
+      "hook": "One page, no steps",
+      "mechanism": "Fewer fields and a visible order summary",
+      "big_idea": "Finish in seconds",
+      "proof_elements": [
+        {
+          "type": "guarantee",
+          "placement": "order_form"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Pay button with trust label adjacent; bump checkbox above",
+      "voice_notes": "Functional",
+      "length_words_est": 80
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "One unnamed seller rose from 3.15% to 8.91% checkout conversion after switching to a single page with an order bump; one bump alone raised AOV 31% for another seller; with bump plus upsell, AOV +68% and revenue per sale +98% for another. Vendor-reported, unnamed.",
+      "source_url": "https://www.samcart.com/blog/checkout-page-optimization-9-changes-that-increase-conversions"
+    },
+    "lessons": [
+      "Order form: one page, recap, total and every cost visible, trust element in the payment area.",
+      "The bump belongs on the order form, not on a separate step."
+    ],
+    "notes": "Vendor claims, no named control. Use as directional support for Sec 9 order form spec."
+  },
+  {
+    "id": "controls_other_formats-34",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "No guarantee (original).",
+        "result": "Baseline"
+      },
+      {
+        "description": "Wordier guarantee versions.",
+        "result": "Beaten by the condensed one-sentence version by 24%"
+      }
+    ],
+    "title": "Geeks2U guarantee block: 'We guarantee that you'll love our service' (+49% orders over no guarantee)",
+    "author_or_company": "Conversion Rate Experts for Geeks2U",
+    "format": "other",
+    "market": "Australian in-home computer repair",
+    "funnel_position": "service page guarantee section near booking/call CTA",
+    "traffic": "cold",
+    "source_url": "https://conversion-rate-experts.com/guarantees/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "We guarantee that you'll love our service. (Full final guarantee shown only as an image; CRE reports the winning version was a condensed one-sentence guarantee with a simple visual.)",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells on-site computer repair to anxious home users on the promise that they will love the service or be made whole, because a specific, prominent, one-sentence guarantee signals confidence where heat maps showed visitors reading closely.",
+      "hook": "A positive promise in one sentence",
+      "mechanism": "Guarantee as confidence signal: the business is harmed if it fails",
+      "big_idea": "You cannot lose by booking",
+      "proof_elements": [
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
+      "close": "Guarantee adjacent to the booking CTA; calls to sales up 49%",
+      "voice_notes": "Warm, positive, no 'if you are not satisfied' phrasing",
+      "length_words_est": 40
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Test 1: first guarantee +11% orders; more specific and prominent variation +21% sales. Test 2: condensed one-sentence version with visual +24% over the previous winner. Overall +49% over the original page with no guarantee; calls to sales up 49%. Agency-reported.",
+      "source_url": "https://conversion-rate-experts.com/guarantees/"
+    },
+    "lessons": [
+      "Write the guarantee as a positive promise; 'get-out clause' wording built around dissatisfaction is the common loser.",
+      "Shorter and more specific beat longer; the guarantee is a proof element placed at the decision point.",
+      "Model invocation rates before launch; CRE reports they run far lower than companies expect."
+    ],
+    "notes": "The 49% figure is cumulative across two tests. Mobal (same page) tripled sales within 12 months to $9.1M after a 60-day guarantee longer than the average trip; self-reported."
+  },
+  {
+    "id": "controls_other_formats-35",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Mobal 60-day satisfaction guarantee, longer than the customer's trip",
+    "author_or_company": "Conversion Rate Experts for Mobal",
+    "format": "other",
+    "market": "International travel phones and SIMs",
+    "funnel_position": "offer block on product and order pages",
+    "traffic": "cold",
+    "source_url": "https://conversion-rate-experts.com/guarantees/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Guarantee wording not quoted; described as a 60-day satisfaction guarantee chosen so that it outlasts the average customer's trip abroad.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells travel phones to travelers worried the phone will fail abroad on the promise that they can return it after the trip, because the guarantee window exceeds the trip length.",
+      "hook": "A guarantee longer than your trip",
+      "mechanism": "60 days covers the full use period",
+      "big_idea": "Decide after you get home",
+      "proof_elements": [
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
+      "close": "Guarantee beside the buy button",
+      "voice_notes": "Not available",
+      "length_words_est": 30
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Conversion rose, returns 'much lower than forecast', sales tripled within 12 months to $9.1 million (agency-reported; no test figure for the guarantee alone).",
+      "source_url": "https://conversion-rate-experts.com/guarantees/"
+    },
+    "lessons": [
+      "Size the guarantee window to the use case (the trip), so the promise is 'decide after use'.",
+      "Guarantee invocation rates run below forecast; longer windows are cheaper than they look."
+    ],
+    "notes": "Weak attribution; included as a documented offer-device design decision."
+  },
+  {
+    "id": "controls_other_formats-36",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Prices unclear about per person vs per night and whether flights and hotel were included; no explanation for the absent phone number.",
+        "result": "Price clarity alone: +19% conversion"
+      }
+    ],
+    "title": "sunshine.co.uk booking flow: 'Where's our phone number?' objection reframe, price clarity and two guarantees",
+    "author_or_company": "Conversion Rate Experts for sunshine.co.uk",
+    "format": "order_form",
+    "market": "UK online package holidays (online-only agency)",
+    "funnel_position": "site-wide header plus booking and pricing pages",
+    "traffic": "cold",
+    "source_url": "https://conversion-rate-experts.com/sunshine-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Where's our phone number? — We don't have expensive call centres, so we can pass on these savings to you—making our holidays incredibly good value! Guarantee: If you can find a cheaper vacation, we'll refund the difference—and give you a fiver on top.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells package holidays to price-driven UK families on the promise of the lowest total price with no hidden fees, because the missing phone line is reframed as the reason for the savings and two denominated guarantees remove the risk.",
+      "hook": "Link where the phone number should be: 'Where's our phone number?'",
+      "mechanism": "No call centres, so lower prices; all fees included from the start",
+      "big_idea": "Cheaper because we are online-only, and we guarantee it",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        },
+        {
+          "type": "authority",
+          "placement": "order_form"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
+      "close": "Price shown per person, inclusive; ABTA bonding and supplier-failure refund beside the booking step",
+      "voice_notes": "Plain, friendly, British consumer; concrete ('a fiver on top')",
+      "length_words_est": 120
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Clarifying prices raised conversion 19%, adding £4 million annual revenue; six winning split tests nearly doubled conversion within six months; annual sales £17M (2009) to a forecast £31M (2010). Agency-reported; 2010 figure was a forecast.",
+      "source_url": "https://conversion-rate-experts.com/sunshine-case-study/"
+    },
+    "lessons": [
+      "Turn the visible weakness into the stated reason for the benefit (candor as proof).",
+      "On order forms, state the price basis and every added cost up front; ambiguity about totals is a documented 19% loss.",
+      "Denominate the guarantee ('refund the difference and a fiver on top'), never 'satisfaction guaranteed'."
+    ],
+    "notes": "Verbatim copy available for the objection reframe and guarantees. Fits order form 'price, total and every added cost' and 'guarantee verbatim beside the button'."
+  },
+  {
+    "id": "controls_other_formats-37",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Feature-limited free version as the entry offer.",
+        "result": "Replaced; team found it did not persuade upgrades"
+      }
+    ],
+    "title": "PhotoShelter: free plan replaced by $1 trial of the full product",
+    "author_or_company": "Conversion Rate Experts for PhotoShelter",
+    "format": "other",
+    "market": "Web app for photographers to sell, market and store photos",
+    "funnel_position": "trial offer CTA and plans",
+    "traffic": "warm",
+    "source_url": "https://conversion-rate-experts.com/photoshelter-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "CTA text not reproduced in the source; the offer is described as a 'no-risk $1 trial' of the fully functional paid version, replacing a feature-limited free tier.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a paid photo-website subscription to photographers on the promise of a working storefront, because a $1 trial of the real product persuades better than a crippled free plan.",
+      "hook": "Full product for $1",
+      "mechanism": "Hosted portfolio and storefront",
+      "big_idea": "Try the real thing, not a sample",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Reassuring CTA micro-copy about trial terms; linear onboarding after signup",
+      "voice_notes": "Plain SaaS",
+      "length_words_est": 150
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Company 'doubled its annual sales'; adding an Examples page to the nav 'increased the site's overall sales by 12%' in a split test; the $1 offer 'increased the profit' (no figure). Agency-reported.",
+      "source_url": "https://conversion-rate-experts.com/photoshelter-case-study/"
+    },
+    "lessons": [
+      "A paid trial of the full product can out-earn a free tier; the free tier teaches the wrong product.",
+      "Examples of other customers' live results (an Examples page) is a proof element strong enough to move total sales 12%."
+    ],
+    "notes": "Weak quantification on the offer change itself; the 12% nav test is the documented split test."
+  },
+  {
+    "id": "controls_other_formats-38",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Sign-up form 'lurking one layer down' from the homepage, no media logos near the Join button.",
+        "result": "Homepage lost by 17%; other flows by up to 74%"
+      }
+    ],
+    "title": "TopCashback homepage sign-up: 'Save money every time you shop online!' / 'Join Now—It's Free.'",
+    "author_or_company": "Conversion Rate Experts for TopCashback",
+    "format": "optin",
+    "market": "UK cashback/rebate website (free membership)",
+    "funnel_position": "homepage sign-up form (name, email, password)",
+    "traffic": "cold",
+    "source_url": "https://conversion-rate-experts.com/top-cashback-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Save money every time you shop online! Join Now—It's Free.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "2",
+      "lead_type": "promise",
+      "argument_sentence": "This signs up online shoppers for a free cashback account on the promise of saving on every purchase, because the short form sits on the homepage next to newspaper logos and a 'free' CTA.",
+      "hook": "Number-free but universal promise: every time you shop",
+      "mechanism": "Cashback paid on tracked purchases",
+      "big_idea": "Get paid to shop where you already shop",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [],
+      "close": "'Join Now—It's Free' beside the three-field form; media logos (The Guardian, The Independent) near the button",
+      "voice_notes": "Short, exclamatory, consumer-plain",
+      "length_words_est": 40
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Uplifts 'ranging from 17% on the homepage right through to 74% in one of the website's other key conversion flows' (Google Website Optimizer). Company ranked #5 in the 2011 Sunday Times Fast Track 100. Agency-reported.",
+      "source_url": "https://conversion-rate-experts.com/top-cashback-case-study/"
+    },
+    "lessons": [
+      "Put the opt-in form where the promise is made; a click to a form page is a leak.",
+      "Press logos adjacent to the button are a proof element for free sign-ups where skepticism is 'is this a scam'.",
+      "Button text states the benefit and removes the cost objection in four words."
+    ],
+    "notes": "Headline and CTA verbatim from the case study. Control status documented by agency split tests."
+  },
+  {
+    "id": "controls_other_formats-39",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Original pricing page presented the fee without reframing against the free-bank-account comparison.",
+        "result": "Lost by 36% on sign-ups"
+      }
+    ],
+    "title": "GoHenry pricing page reframed as a learning tool with free trial (+36% sign-ups)",
+    "author_or_company": "Conversion Rate Experts for GoHenry",
+    "format": "other",
+    "market": "FinTech, prepaid card and money app for children 8-18 (parents buy)",
+    "funnel_position": "pricing page",
+    "traffic": "warm",
+    "source_url": "https://conversion-rate-experts.com/gohenry-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Winning copy shown only in images; CRE describes the pricing page as reframing GoHenry as 'an online learning tool rather than a payment account, since bank accounts are free', with a free trial as the counter-objection to price.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a paid kids' money app to parents on the promise of teaching children money skills, because reframing the fee against paid education rather than free bank accounts, plus a free trial, removes the price objection.",
+      "hook": "Why pay when bank accounts are free? Because this is not a bank account",
+      "mechanism": "App plus card with parental controls; learning by doing",
+      "big_idea": "A money-skills course your child uses every day",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor"
+      ],
+      "close": "Free trial CTA repeated; Visa backing made prominent",
+      "voice_notes": "Parent-to-parent, plain, objection-led",
+      "length_words_est": 500
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Pricing page: sign-ups up 36% over the original. Also: new mobile landing page +78% sign-ups; Facebook ads +191%; homepage +23%; overall growth 470% in one year (agency-reported).",
+      "source_url": "https://conversion-rate-experts.com/gohenry-case-study/"
+    },
+    "lessons": [
+      "Choose the comparison set for the price: anchor against paid education, not free banking.",
+      "A free trial is the strongest counter to a price objection when the fee is recurring and small.",
+      "Borrowed trust (Visa) can be louder than the brand on a pricing page."
+    ],
+    "notes": "Pricing-page lift is one line in a multi-page case; control status documented by agency."
+  },
+  {
+    "id": "controls_other_formats-40",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Copy Posse subject-line report opt-in page (79% opt-in rate)",
+    "author_or_company": "Copy Posse (Alex Cattoni)",
+    "format": "optin",
+    "market": "Copywriters and marketers (info products)",
+    "funnel_position": "free lead magnet before a $27 course",
+    "traffic": "unknown",
+    "source_url": "https://copyposse.com/blog/two-high-converting-landing-pages-and-why-they-work/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "100 subject lines that drive more clicks and engagement.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This captures emails from marketers on the promise of 100 tested subject lines, because the offer, its benefit and the access button all sit above the fold under an authority banner.",
+      "hook": "A number plus a specific artifact (split-test results, not a guide)",
+      "mechanism": "Real split-test results from the author's own sends",
+      "big_idea": "Stop guessing subject lines; use the ones that won",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Above-fold button for instant access; below: contents breakdown, short bio, closing CTA",
+      "voice_notes": "Direct, benefit-first, no hedging",
+      "length_words_est": 150
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "79% opt-in: 3,528 sign-ups from 4,483 unique visitors (Kajabi/Google Analytics per author). A newer variant 'shows an 85% conversion rate so far', not yet significant per the author. Traffic source not stated.",
+      "source_url": "https://copyposse.com/blog/two-high-converting-landing-pages-and-why-they-work/"
+    },
+    "lessons": [
+      "Opt-in headline: number + artifact + outcome; the headline describes the result of using the thing, not the file.",
+      "Offer, benefit and button above the fold; an authority strip immediately below the headline.",
+      "Free offers still need sales-page-grade copy; the opt-in is a step in the buying journey."
+    ],
+    "notes": "Self-reported, traffic likely warm/owned (not stated). The companion $27 sales page is record 41."
+  },
+  {
+    "id": "controls_other_formats-41",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Copy Posse '365-Day Inbox Income' $27 sales page (14.33% conversion)",
+    "author_or_company": "Copy Posse (Alex Cattoni)",
+    "format": "landing_page",
+    "market": "Email marketing mini-course for marketers and owners",
+    "funnel_position": "low-ticket sales page after the free opt-in",
+    "traffic": "owned_list",
+    "source_url": "https://copyposse.com/blog/two-high-converting-landing-pages-and-why-they-work/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Headline not quoted by the source; the promise is described as 'a year of money-making emails made easy'. Page is about 4x shorter than the author's usual sales page, with a ~4-minute video and price plus buy button at the top.",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a $27 email-calendar course to marketers who downloaded the subject-line report on the promise of a year of emails planned, because the page is short, shows the price first and answers objections early.",
+      "hook": "A year of emails, made easy",
+      "mechanism": "Annual email calendar plus writing and promo frameworks",
+      "big_idea": "Plan the whole year once",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Buy button at top and bottom; three deliverables listed",
+      "voice_notes": "Direct, upbeat, short",
+      "length_words_est": 500
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "14.33% conversion: 1,035 sales from 7,223 unique visitors over 10 months; about 60% of visitors viewed the page at least twice before buying. Author-reported.",
+      "source_url": "https://copyposse.com/blog/two-high-converting-landing-pages-and-why-they-work/"
+    },
+    "lessons": [
+      "Low-ticket pages for product-aware list traffic: price and button above the fold, length cut to a quarter.",
+      "Expect repeat visits before purchase; the page must survive a second read."
+    ],
+    "notes": "Self-reported; traffic almost certainly owned list. Pairs with record 40."
+  },
+  {
+    "id": "controls_other_formats-42",
+    "full_text": null,
+    "losing_variants": [
+      {
+        "description": "Generic 'free updates' sidebar opt-in on the same article.",
+        "result": "0.54% conversion"
+      }
+    ],
+    "title": "Backlinko 'content upgrade' opt-in: post-specific checklist (0.54% to 4.82%)",
+    "author_or_company": "Brian Dean, Backlinko",
+    "format": "optin",
+    "market": "SEO and content marketing audience",
+    "funnel_position": "in-article opt-in (highlight box, end-of-post image, two-step popup)",
+    "traffic": "cold",
+    "source_url": "https://backlinko.com/increase-conversions",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Opt-in box copy appears only as screenshots in the post. The offer: a designed checklist of 'the 10 most important Google ranking factors' tied to the '200 Ranking Factors' article, offered in a yellow highlight box and again at the end of the post.",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This captures emails from readers of a ranking-factors article on the promise of a checklist of the ten factors that matter, because a bonus specific to the page they chose beats a generic 'free updates' form.",
+      "hook": "Yellow highlight box right after the intro pointing to the bonus",
+      "mechanism": "Two-step opt-in: click, then a LeadPages box asks for email only",
+      "big_idea": "The bonus matches the exact article you are reading",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "bonus"
+      ],
+      "close": "End-of-post download image replaces 'leave a comment'; popup converts 65% of those who open it",
+      "voice_notes": "Plain, practical, first person",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Page conversion rose from 0.54% to 4.82%, stated as a 785% increase 'compared to the previous month'; 65% opt-in rate from people who see the two-step box. Author-reported; no significance.",
+      "source_url": "https://backlinko.com/increase-conversions"
+    },
+    "lessons": [
+      "Specificity of the lead magnet to the page beats any generic newsletter offer by an order of magnitude.",
+      "Two-step opt-ins (click first, email second) raise completion; the form asks for email only.",
+      "Place the offer after the introduction, when the reader has committed, and again at the end."
+    ],
+    "notes": "Documented before/after on one page; verbatim box copy not available in text."
+  },
+  {
+    "id": "controls_other_formats-43",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "SaaS pricing page headlines that argue value: 'Cheaper than downtime' (Incident.io) and others",
+    "author_or_company": "Copyhackers (Joanna Wiebe's team) reviewing Incident.io, ProcureDesk, Flagsmith, Content Snare, Userbrain",
+    "format": "other",
+    "market": "B2B SaaS pricing pages across categories",
+    "funnel_position": "pricing page",
+    "traffic": "warm",
+    "source_url": "https://copyhackers.com/2025/03/saas-pricing-page-checklist/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Incident.io: 'Cheaper than downtime.' ProcureDesk: 'A small price to pay to get rid of 90% of manual approvals.' Userbrain guarantee: 'If you're not happy with one of our testers, you'll get a new one at no extra cost.'",
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "These sell SaaS plans to evaluating buyers on the promise that the price is small next to the cost of the problem, because each headline anchors against the status quo instead of saying 'Pricing'.",
+      "hook": "Price reframed against the cost of doing nothing",
+      "mechanism": "Varies; mechanism is in the plan descriptions",
+      "big_idea": "The problem costs more than the product",
+      "proof_elements": [
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "price_anchor"
+      ],
+      "close": "Plan cards with 'best for' lines, FAQ written as objections",
+      "voice_notes": "Short, declarative, sometimes cheeky",
+      "length_words_est": 60
+    },
+    "results": {
+      "type": "none",
+      "detail": "No test results stated; the post is a practitioner checklist with live examples. Cites Gartner (86% consider verified reviews critical) and Journal of Consumer Research 2023 on present-tense testimonials.",
+      "source_url": "https://copyhackers.com/2025/03/saas-pricing-page-checklist/"
+    },
+    "lessons": [
+      "Pricing page headline carries the value argument; 'Pick your plan' and 'Pricing' are wasted headlines.",
+      "Each plan gets a one-line 'best for [persona]' or 'for X looking to do Y' label.",
+      "FAQ headers phrased as the buyer's question or objection, in second person.",
+      "State the guarantee in denominated terms (what you get if unhappy), and make it prominent."
+    ],
+    "notes": "Asserted controls (live pages), not documented winners. Useful as exemplar headlines for the Sec 9 B2B pricing spec."
+  },
+  {
+    "id": "controls_other_formats-44",
+    "full_text": null,
+    "losing_variants": [],
+    "title": "Voices.com funnel: logos of household-name customers, segmented funnels, demo video (<5% to 22%)",
+    "author_or_company": "Conversion Rate Experts for Voices.com",
+    "format": "landing_page",
+    "market": "Two-sided marketplace for voice-over talent",
+    "funnel_position": "homepage and segmented signup funnels",
+    "traffic": "cold",
+    "source_url": "https://conversion-rate-experts.com/voices-case-study/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Winning copy not quoted; CRE's stated principle: 'People don't buy what they don't understand.' Changes: customer logos surfaced on the homepage, separate funnels for artists and buyers, a 'How it works' video.",
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "2",
+      "lead_type": "promise",
+      "argument_sentence": "This converts two audiences on a marketplace on the promise of a service the biggest brands already use, because household-name logos answer 'is this real' and a demo video answers 'how does it work' before signup.",
+      "hook": "Logos first",
+      "mechanism": "Demonstration video",
+      "big_idea": "Big brands hire voices here",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [],
+      "close": "Segmented signup CTAs by visitor type",
+      "voice_notes": "Not available",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Conversion rate from less than 5% to 22% ('over 400%') via eleven experiments across five funnel stages, informed by 510 visitor surveys. Agency-reported.",
+      "source_url": "https://conversion-rate-experts.com/voices-case-study/"
+    },
+    "lessons": [
+      "Surface 'claims to fame' (recognizable customers) on the first screen for solution-aware traffic.",
+      "Segment the funnel by reader type before writing; one page for two audiences loses."
+    ],
+    "notes": "Out of the slice's narrow format list but a documented control for the proof-placement rule."
+  }
+]

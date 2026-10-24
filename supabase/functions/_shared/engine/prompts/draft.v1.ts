@@ -96,10 +96,18 @@ export const draftPrompt: PromptModule<DraftArgs> = {
   user: (ctx, args) => {
     const spec = ctx.format;
     const options = parseOptions(ctx.generation.options);
-    const unitsText = args.call.units
-      .map((u) => (u.spec ? sectionSpecText(u.spec, { itemRole: u.item?.role ?? null }) : `- section_id "${u.id}": ${u.title}; length ${u.minWords}-${u.maxWords} words; one complete ${u.item?.name ?? "item"} following the format's section list below; set meta {"item":"${u.item?.index ?? 1}"${u.item?.role ? `,"role":"${u.item.role}"` : ""}} on every block`))
-      .join("\n");
-    const perItemSections = args.call.units.some((u) => u.item) ? `Inside each item, in order:\n${spec.sections.map((s) => sectionSpecText(s)).join("\n")}` : "";
+    const unitLines: string[] = [];
+    let lastItem: number | null = null;
+    for (const u of args.call.units) {
+      if (u.item && u.item.index !== lastItem) {
+        unitLines.push(`${u.item.name.toUpperCase()} ${u.item.index} of ${u.item.count}${u.item.role ? ` — role: ${u.item.role}` : ""} (section ids carry the "#${u.item.index}" suffix; set meta {"item":"${u.item.index}"${u.item.role ? `,"role":"${u.item.role}"` : ""}} on its blocks)`);
+        lastItem = u.item.index;
+      }
+      unitLines.push(sectionSpecText(u.spec, { id: u.id, itemRole: u.item?.role ?? null }));
+    }
+    const unitsText = unitLines.join("\n");
+    const multi = args.call.units.some((u) => u.item);
+    const perItemSections = multi ? `Each item is complete on its own and states the identical deal; a non-final item ends with a reason to open the next; never repeat a subject line, hook or story across items.` : "";
 
     let job: string;
     if (args.call.kind === "leads") {

@@ -22,7 +22,7 @@ Once that lands, `deno task -c supabase/functions/deno.json engine <command>` is
 | `run --brief <file.json> --format <id> [--out dir] [--workspace id] [--auto-approve] [--skip-offer]` | Creates an offer (brief, claims, config, optional dossier / approved offer / voice) and a generation in the workspace, then runs the pipeline step by step in the order `pipeline.ts` dictates, applying effects after each step exactly as the runner does. Writes every step output to the out dir. |
 | `run --generation <id> [--from <step>]` | Resumes an existing generation from a step (after a pause for offer approval, a failure, or to re-run reviews). |
 | `baseline --brief <file.json> --format <id> [--out dir] [--model id]` | One plain prompt ("write a <format> for this offer") on the drafter model, no pipeline, no ledger. Writes `baseline.md` for a blind comparison against `final.md`. |
-| `plan --format <id> [--items n]` | Prints the draft call plan for a format (offline, no keys needed). |
+| `plan --format <id> [--items n] [--sequence type]` | Prints the draft call plan for a format (offline, no keys needed). `--sequence` picks the email-sequence roles (welcome, launch, abandoned_cart, post_purchase, win_back). |
 | `formats` | Lists the format specs the engine knows. |
 | `eval` | TODO: runs a prompt-version set across `eval_briefs` into `eval_runs` / `eval_outputs` (plan item 1.12). Exits 2 with a message. |
 
@@ -54,7 +54,7 @@ Either a bare `OfferBrief` (`schemas/brief.ts`) or an envelope:
   "dossier": { /* Dossier (schemas/research.ts). When present the research step is skipped and this becomes the active dossier */ },
   "offer":   { "chosen": { /* ChosenOffer */ }, "options_sheet": [], "reasons": "", "gap_note": "" },
   "voice":   { "name": "...", "parameters": {}, "idiom_bank": [], "dead_words": [], "exemplar_paragraphs": [], "greeting": null, "readability_band": null },
-  "options": { "traffic": "cold", "segment": "Cold social", "awareness": "problem_aware", "skeptical": false, "control_text": "...", "item_count": 5, "skip_offer": false, "purpose": "..." }
+  "options": { "traffic": "cold", "segment": "Cold social", "awareness": "problem_aware", "skeptical": false, "control_text": "...", "item_count": 5, "sequence_type": "welcome", "skip_offer": false, "purpose": "..." }
 }
 ```
 
@@ -112,8 +112,28 @@ Promotional email (email_single): 1 draft call(s)
   1. sections: cta, body, hook, signoff, subject (≤704 words)
 ```
 
-Multi-item formats (sequences, ad sets, webinar packages) treat each item as a unit with its role in block `meta`;
-`--items` / `options.item_count` sets the count within the spec's range.
+Multi-item formats follow the convention in `formats/index.ts`: a repeated section carries the item index as a `#n`
+suffix on its id (`subject#3`, `primary_text#2`, `replay_email#5`), unsuffixed sections are item 0, and blocks carry
+`meta.item` / `meta.role`. The planner derives the item shape from the spec: sequences and ad sets repeat every section
+per item (one call per email; three ad variations in one call), the webinar repeats only `replay_email` after its fixed
+assets, and the Google RSA's items are blocks inside two unsuffixed sections. `--items` / `options.item_count` sets the
+count within the spec's range; `options.sequence_type` picks the roles from `SEQUENCE_ROLES`.
+
+```
+$ engine plan --format email_sequence --sequence abandoned_cart
+Email sequence (email_sequence): 3 draft call(s), 3 email(s) [repeat_all]
+  1. sections: cta#1, body#1, hook#1, next_open#1, signoff#1, subject#1 (≤724 words)
+  2. sections: cta#2, body#2, hook#2, next_open#2, signoff#2, subject#2 (≤724 words)
+  3. sections: cta#3, body#3, hook#3, next_open#3, signoff#3, subject#3 (≤724 words)
+
+$ engine plan --format meta_ad
+Meta and Instagram ad (meta_ad): 1 draft call(s), 3 variation(s) [repeat_all]
+  1. sections: cta_button#1, description#1, primary_text#1, headline#1, cta_button#2, ... headline#3 (≤429 words)
+```
+
+Single-call formats (ads, SMS, RSA, short emails) also run the spec's machine-checked hard gates (`tells.ts`
+`evaluateGates`) right after drafting; a failure is sent back to the writer once as a correction before the draft is
+stored. Multi-call formats leave that to the mechanical step and the revise loop.
 
 ## Notes and limits
 

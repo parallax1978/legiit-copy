@@ -20,6 +20,7 @@ export interface FormatSpec {
   sections: SectionSpec[];
   draft_order: string[];       // section ids in the order they are written (offer block and close first, headline last)
   lead_variants: number;       // 3 for long formats, 0 where there is no lead
+  lead_section_id?: string;    // which section the three-lead loop rewrites when its id is not "lead"
   skim_path_block_types: string[];
   hard_gates: string[];        // machine-checkable rules (e.g. "sms.chars<=240")
   cadence_floor_cv: number;    // flag when sentence-length CV is below this in 300+ words

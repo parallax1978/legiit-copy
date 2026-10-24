@@ -3,14 +3,23 @@
  *
  * Rules encoded here (docs/04-copy-standard.md §1 rule 28, docs/01-architecture.md §4 step 4):
  * - Sections are drafted in spec.draft_order (offer block and close first, body, leads, headline last).
- * - Each call drafts one group of consecutive sections. Small sections are grouped while the sum of their
- *   band maximums stays under GROUP_SOFT_LIMIT_WORDS; a group may absorb one more section when the total
- *   stays within GROUP_OVERFLOW of the soft limit, so a 150-word P.S. never costs its own call. A section
- *   whose own band exceeds the soft limit is drafted alone.
- * - When spec.lead_variants === 3 the lead section leaves the normal order and becomes a "leads" call that
- *   writes three leads of different type; the headline section is written after the leads in its own call.
- * - Multi-item formats (sequences, ad sets, webinar packages) treat each item as a unit; the spec's sections
- *   describe the inside of one item. Items are grouped by the same word rule.
+ * - Each call drafts one group of consecutive units. Small units are grouped while the sum of their band maximums
+ *   stays under GROUP_SOFT_LIMIT_WORDS; a group may absorb one more unit when the total stays within GROUP_OVERFLOW
+ *   of the soft limit, so a 150-word P.S. never costs its own call. A unit over the soft limit is drafted alone.
+ * - When spec.lead_variants === 3 and the spec has a lead section (id "lead" or a name containing "lead"), that
+ *   section leaves the normal order and becomes a "leads" call that writes three leads of different type; the
+ *   headline section is written after the leads in its own call. Formats with lead_variants 3 and no such section
+ *   (vsl_long, webinar_package) draft their opening once, in order.
+ *
+ * Multi-item formats follow the convention in formats/index.ts: a repeated section carries the item index as a
+ * `#n` suffix on its id (`subject#3`, `primary_text#2`, `replay_email#5`); unsuffixed sections are item 0. The item
+ * shape is derived from the spec:
+ * - "repeat_all": every section repeats per item (email_sequence, meta_ad). Items are drafted in order, one call
+ *   per item unless several items fit one call.
+ * - "repeat_section": the spec's sections are the assets and only the last role's section repeats, as many times
+ *   as the item count needs beyond the fixed assets (webinar_package: replay_email ×5-7).
+ * - "blocks": the items are blocks inside unsuffixed sections (google_rsa: 15 headline blocks, 4 descriptions);
+ *   the plan is the plain section plan and the hard gates count the blocks.
  */
 import type { FormatSpec, SectionSpec } from "../formats/spec.ts";
 
@@ -18,15 +27,16 @@ export const GROUP_SOFT_LIMIT_WORDS = 1200;
 export const GROUP_OVERFLOW = 0.15;
 
 export interface DraftUnit {
-  /** section_id the model must use (for items: `${item_name}_${n}`) */
+  /** section_id the model must use (`base#n` for a repeated section) */
   id: string;
+  /** the spec section id without the item suffix */
+  baseId: string;
   title: string;
   minWords: number;
   maxWords: number;
-  /** the section spec for a plain section; null for a multi-item unit */
-  spec: SectionSpec | null;
-  /** present for multi-item units */
-  item: { index: number; role: string | null; name: string } | null;
+  spec: SectionSpec;
+  /** set for a repeated section */
+  item: { index: number; role: string | null; name: string; count: number } | null;
 }
 
 export interface DraftCall {
@@ -36,11 +46,14 @@ export interface DraftCall {
   maxWords: number;
 }
 
+export type ItemShape = { kind: "none" } | { kind: "repeat_all" } | { kind: "repeat_section"; sectionId: string; fixedAssets: number } | { kind: "blocks" };
+
 export interface DraftPlan {
   calls: DraftCall[];
   leadSectionId: string | null;
   headlineSectionId: string | null;
-  multiItem: boolean;
+  shape: ItemShape;
+  /** items drafted (repeat_all: items; repeat_section: repeats of the repeating section; otherwise 1) */
   itemCount: number;
 }
 
@@ -58,42 +71,35 @@ export function headlineSectionId(spec: FormatSpec): string | null {
   return byType?.id ?? null;
 }
 
-export function sectionUnit(s: SectionSpec): DraftUnit {
-  return { id: s.id, title: s.name, minWords: s.band_words[0], maxWords: s.band_words[1], spec: s, item: null };
+export function sectionUnit(s: SectionSpec, item: DraftUnit["item"] = null): DraftUnit {
+  const id = item ? `${s.id}#${item.index}` : s.id;
+  return { id, baseId: s.id, title: item ? `${s.name} (${item.name} ${item.index}${item.role ? `: ${item.role}` : ""})` : s.name, minWords: s.band_words[0], maxWords: s.band_words[1], spec: s, item };
 }
 
-/** Clamp the requested item count into the spec's range; default is one per listed role, else the minimum. */
-export function itemCount(spec: FormatSpec, requested?: number): number {
+/** How the items of a multi-item format map onto sections (see the file comment). */
+export function itemShape(spec: FormatSpec): ItemShape {
+  const mi = spec.multi_item;
+  if (!mi) return { kind: "none" };
+  const roles = mi.item_roles ?? [];
+  const sectionIds = new Set(spec.sections.map((s) => s.id));
+  const namesSections = roles.some((r) => sectionIds.has(r));
+  if (namesSections) {
+    const last = roles[roles.length - 1];
+    if (sectionIds.has(last)) return { kind: "repeat_section", sectionId: last, fixedAssets: roles.length - 1 };
+  }
+  const minWordsPerItem = spec.sections.reduce((n, s) => n + s.band_words[0], 0);
+  if (!roles.some((r) => r.includes(":")) && mi.min * Math.max(1, minWordsPerItem) > spec.length_band_words[1]) return { kind: "blocks" };
+  return { kind: "repeat_all" };
+}
+
+/** Clamp the requested item count into the spec's range; the default is the role list's length, else the minimum. */
+export function itemCount(spec: FormatSpec, requested?: number, roles?: string[]): number {
   const mi = spec.multi_item;
   if (!mi) return 1;
-  const def = mi.item_roles?.length ?? mi.min;
-  const n = requested ?? def;
-  return Math.max(mi.min, Math.min(mi.max, n));
-}
-
-/** Words one item of a multi-item format may run to: the sum of its section bands, else the format band. */
-export function itemBand(spec: FormatSpec): [number, number] {
-  if (spec.sections.length) {
-    return [spec.sections.reduce((n, s) => n + s.band_words[0], 0), spec.sections.reduce((n, s) => n + s.band_words[1], 0)];
-  }
-  return spec.length_band_words;
-}
-
-export function itemUnits(spec: FormatSpec, count: number): DraftUnit[] {
-  const mi = spec.multi_item;
-  if (!mi) return [];
-  const [min, max] = itemBand(spec);
-  return Array.from({ length: count }, (_, i) => {
-    const role = mi.item_roles?.[i] ?? null;
-    return {
-      id: `${mi.item_name}_${i + 1}`,
-      title: `${mi.item_name} ${i + 1}${role ? ` (${role})` : ""}`,
-      minWords: min,
-      maxWords: max,
-      spec: null,
-      item: { index: i + 1, role, name: mi.item_name },
-    };
-  });
+  const shape = itemShape(spec);
+  if (shape.kind === "blocks") return 1;
+  const def = roles?.length ?? (mi.item_roles && !mi.item_roles.some((r) => r.includes(":")) && shape.kind === "repeat_all" ? mi.item_roles.length : mi.min);
+  return Math.max(mi.min, Math.min(mi.max, requested ?? def));
 }
 
 /** Greedy consecutive grouping by band maximum. */
@@ -122,35 +128,64 @@ export function groupUnits(units: DraftUnit[], soft = GROUP_SOFT_LIMIT_WORDS, ov
   return groups;
 }
 
-export function planDraft(spec: FormatSpec, opts: { itemCount?: number } = {}): DraftPlan {
-  if (spec.multi_item) {
-    const n = itemCount(spec, opts.itemCount);
-    const units = itemUnits(spec, n);
-    const calls: DraftCall[] = groupUnits(units).map((g) => ({ kind: "sections", units: g, maxWords: g.reduce((a, u) => a + u.maxWords, 0) }));
-    return { calls, leadSectionId: null, headlineSectionId: null, multiItem: true, itemCount: n };
-  }
-
+function orderedSections(spec: FormatSpec): SectionSpec[] {
   const byId = new Map(spec.sections.map((s) => [s.id, s]));
   const order = spec.draft_order.length ? spec.draft_order : spec.sections.map((s) => s.id);
-  // sections missing from draft_order are drafted after the listed ones, in reading order
   const listed = new Set(order);
-  const fullOrder = [...order.filter((id) => byId.has(id)), ...spec.sections.filter((s) => !listed.has(s.id)).map((s) => s.id)];
+  return [...order.filter((id) => byId.has(id)).map((id) => byId.get(id)!), ...spec.sections.filter((s) => !listed.has(s.id))];
+}
+
+const toCalls = (groups: DraftUnit[][]): DraftCall[] => groups.map((g) => ({ kind: "sections", units: g, maxWords: g.reduce((a, u) => a + u.maxWords, 0) }));
+
+export interface PlanOptions {
+  itemCount?: number;
+  /** role per item index (1-based order), e.g. SEQUENCE_ROLES[type] for an email sequence */
+  roles?: string[];
+}
+
+export function planDraft(spec: FormatSpec, opts: PlanOptions = {}): DraftPlan {
+  const shape = itemShape(spec);
+  const sections = orderedSections(spec);
+  const mi = spec.multi_item;
+
+  if (shape.kind === "repeat_all" && mi) {
+    const n = itemCount(spec, opts.itemCount, opts.roles);
+    const plainRoles = opts.roles ?? (mi.item_roles && !mi.item_roles.some((r) => r.includes(":")) ? mi.item_roles : []);
+    const units: DraftUnit[] = [];
+    for (let i = 1; i <= n; i++) {
+      const item = { index: i, role: plainRoles[i - 1] ?? null, name: mi.item_name, count: n };
+      for (const s of sections) units.push(sectionUnit(s, item));
+    }
+    // never split an item across calls: group whole items by their summed band
+    const perItem = sections.reduce((a, s) => a + s.band_words[1], 0);
+    const itemBlocks: DraftUnit[] = [];
+    for (let i = 1; i <= n; i++) itemBlocks.push({ ...units[(i - 1) * sections.length], maxWords: perItem });
+    const groups = groupUnits(itemBlocks).map((g) => g.flatMap((u) => units.filter((x) => x.item?.index === u.item?.index)));
+    return { calls: toCalls(groups), leadSectionId: null, headlineSectionId: null, shape, itemCount: n };
+  }
+
+  let repeats = 1;
+  let expanded: DraftUnit[] = sections.map((s) => sectionUnit(s));
+  if (shape.kind === "repeat_section" && mi) {
+    const total = Math.max(mi.min, Math.min(mi.max, opts.itemCount ?? mi.min));
+    repeats = Math.max(1, total - shape.fixedAssets);
+    expanded = sections.flatMap((s) => (s.id === shape.sectionId ? Array.from({ length: repeats }, (_, i) => sectionUnit(s, { index: i + 1, role: opts.roles?.[i] ?? shape.sectionId, name: mi.item_name, count: repeats })) : [sectionUnit(s)]));
+  }
 
   const withLeads = spec.lead_variants === 3;
   const leadId = withLeads ? leadSectionId(spec) : null;
-  const headId = withLeads ? headlineSectionId(spec) : null;
-
-  const normal = fullOrder.filter((id) => id !== leadId && id !== headId).map((id) => sectionUnit(byId.get(id)!));
-  const calls: DraftCall[] = groupUnits(normal).map((g) => ({ kind: "sections", units: g, maxWords: g.reduce((a, u) => a + u.maxWords, 0) }));
+  const headId = withLeads && leadId ? headlineSectionId(spec) : null;
+  const normal = expanded.filter((u) => u.id !== leadId && u.id !== headId);
+  const calls = toCalls(groupUnits(normal));
   if (leadId) {
-    const u = sectionUnit(byId.get(leadId)!);
+    const u = sectionUnit(spec.sections.find((s) => s.id === leadId)!);
     calls.push({ kind: "leads", units: [u], maxWords: u.maxWords * 3 });
   }
   if (headId) {
-    const u = sectionUnit(byId.get(headId)!);
+    const u = sectionUnit(spec.sections.find((s) => s.id === headId)!);
     calls.push({ kind: "headline", units: [u], maxWords: u.maxWords });
   }
-  return { calls, leadSectionId: leadId, headlineSectionId: headId, multiItem: false, itemCount: 1 };
+  return { calls, leadSectionId: leadId, headlineSectionId: headId, shape, itemCount: shape.kind === "repeat_section" ? repeats : 1 };
 }
 
 /** One line per call, for the CLI and the progress timeline. */
