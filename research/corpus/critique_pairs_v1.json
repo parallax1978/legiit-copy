@@ -144,7 +144,9 @@
    "thesis_4_polished_but_does_nothing",
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P43",
@@ -290,7 +292,9 @@
    "thesis_2_explains_everything",
    "thesis_4_polished_but_does_nothing"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source fetched 2026-10-24; transcript garbled but states 'by almost 50%' and 'amplified persuasion'. Not a test result."
  },
  {
   "id": "P49",
@@ -946,7 +950,9 @@
    "thesis_3_hedging_vs_candor",
    "thesis_1_obvious_angle"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P77",
@@ -970,7 +976,9 @@
   "ai_failure_map": [
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P78",
@@ -994,7 +1002,9 @@
   "ai_failure_map": [
    "thesis_3_needless_caution"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P79",
@@ -1018,7 +1028,9 @@
   "ai_failure_map": [
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P80",
@@ -1040,7 +1052,9 @@
   "evidence": "documented_result",
   "confidence": "medium",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P81",
@@ -1062,7 +1076,9 @@
   "evidence": "documented_result",
   "confidence": "low",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P82",
@@ -1273,7 +1289,9 @@
   "evidence": "documented_result",
   "confidence": "medium",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P91",
@@ -1321,7 +1339,9 @@
   "ai_failure_map": [
    "thesis_3_generic_specificity"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P93",
@@ -1345,7 +1365,9 @@
   "ai_failure_map": [
    "thesis_2_proof_buried"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P94",
@@ -1466,7 +1488,9 @@
   "ai_failure_map": [
    "thesis_1_describes_every_feature"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P99",
@@ -1490,7 +1514,9 @@
   "ai_failure_map": [
    "thesis_1_describes_every_feature"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P100",
@@ -1512,7 +1538,9 @@
   "evidence": "author_opinion",
   "confidence": "low",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P101",
@@ -1536,7 +1564,9 @@
   "ai_failure_map": [
    "thesis_1_describes_every_feature"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P102",
@@ -1550,17 +1580,19 @@
   "defect": "FEATURE_NOT_OUTCOME",
   "defect_named": "Only 'communication' (what it is); no impact, no persuasion: reader's reaction 'No s***. I just googled that' (verbatim)",
   "principle": "Impact, then what, then why",
-  "reason": "Bou's founder says it is their best performing ad (no metrics).",
+  "reason": "Harry Dry relays that 'Jesse from Bou' tells him it is their best performing ad (secondhand, no metrics).",
   "tested": {
    "status": "documented_result",
-   "result": "vendor says best-performing ad; no figure"
+   "result": "Bou staff say best-performing ad (secondhand via Dry); no figure"
   },
   "evidence": "practitioner_critique",
   "confidence": "medium",
   "ai_failure_map": [
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page. Corrected: page says 'Jesse from Bou', not founder."
  },
  {
   "id": "P103",
@@ -1584,7 +1616,9 @@
   "ai_failure_map": [
    "thesis_1_describes_every_feature"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P104",
@@ -1608,7 +1642,9 @@
   "ai_failure_map": [
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source fetched 2026-10-24; page states 'going from 20% conversion to 70% conversion on opt-in pages' with no data or source. Not tied to this email."
  },
  {
   "id": "P105",
@@ -1654,7 +1690,9 @@
   "evidence": "split_test",
   "confidence": "high",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P107",
@@ -1676,7 +1714,9 @@
   "evidence": "split_test",
   "confidence": "high",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page. Page results table shows rounded 0.00%/0.01%; the 0.88%/1.75% instant conversion figures and 117.6% lift come from the page narrative."
  },
  {
   "id": "P108",
@@ -1698,7 +1738,9 @@
   "evidence": "split_test",
   "confidence": "medium",
   "ai_failure_map": [],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P109",
@@ -1722,7 +1764,9 @@
   "ai_failure_map": [
    "thesis_1_wrong_central_argument"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  },
  {
   "id": "P110",
@@ -1770,6 +1814,8 @@
   "ai_failure_map": [
    "thesis_3_needless_caution"
   ],
-  "rights_status": "publicly_posted_copyrighted"
+  "rights_status": "publicly_posted_copyrighted",
+  "verification": "passed",
+  "verification_note": "Source URL fetched 2026-10-24; stated figure confirmed on page."
  }
 ]

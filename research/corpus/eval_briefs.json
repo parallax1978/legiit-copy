@@ -78,7 +78,7 @@
       {"claim": "\"4.9 App Store Rating based on 280k reviews\"", "evidence": "Stated on membership page", "url": "https://ouraring.com/membership"},
       {"claim": "\"5+ Million Oura Members\"", "evidence": "Stated on membership page", "url": "https://ouraring.com/membership"},
       {"claim": "Press: The Guardian \"a stunning generational leap for smart rings\"; Esquire \"It's Thinner Than We Could've Imagined\"; CNET \"The New Gold Standard\"", "evidence": "Pull quotes on homepage", "url": "https://ouraring.com/"},
-      {"claim": "Member testimonials, including one that Oura \"didn't just track my health — it saved my life\" and one describing an A-fib diagnosis after a resting-heart-rate alert", "evidence": "Named first-name testimonials (Ted N., Rhonda C.); the Health Radar footnote states it is \"intended for general wellness purposes only\" and \"not intended to diagnose, treat, cure, mitigate, monitor, or prevent any disease\"", "url": "https://ouraring.com/membership"},
+      {"claim": "Member testimonials, including Ted N. (Heart Health) stating \"tests determined I had A-fib\" and Rhonda C. (Sleep) on tracking sleep habits", "evidence": "Named first-name testimonials (Ted N., Rhonda C.) on the membership page", "url": "https://ouraring.com/membership", "verification": "partial", "verification_note": "2026-10-24 fetch: the A-fib testimonial is on the page; the quote \"didn't just track my health — it saved my life\" and the Health Radar \"general wellness purposes only / not intended to diagnose\" disclaimer were NOT found in the page text and have been removed; do not ledger them"},
       {"claim": "Battery \"between 5–8 days\"; \"Water resistant up to 100m/328 ft\"", "evidence": "Spec statements on rings page with a \"results will vary\" footnote on battery", "url": "https://ouraring.com/product/rings"}
     ],
     "competitors": ["Whoop", "Apple Watch", "Samsung Galaxy Ring", "RingConn", "Ultrahuman Ring Air"],
@@ -166,7 +166,7 @@
     "positioning": "\"From first projects to enterprise scale, Ahrefs' plans help your business stay discoverable in search, AI, and beyond\"; the data company (\"world's second-most active crawler\")",
     "proof_available": [
       {"claim": "\"the world's second-most active crawler\" and \"10+ years of web-scale data\"", "evidence": "Stated on pricing page; no third-party citation on the page", "url": "https://ahrefs.com/pricing"},
-      {"claim": "\"496 million+ organic prompts\" in the Brand Radar AI database", "evidence": "Stated on pricing page", "url": "https://ahrefs.com/pricing"},
+      {"claim": "\"502 million+ organic prompts\" in the Brand Radar AI database", "evidence": "Stated on pricing page; the figure is a growing counter (an earlier capture read 496 million+), so copy must carry an as-of date or round down", "url": "https://ahrefs.com/pricing", "verification_note": "2026-10-24 fetch shows 502 million+, not 496 million+; corrected"},
       {"claim": "Enterprise \"backed by the data and infrastructure trusted by Fortune 500 teams\"", "evidence": "Statement only; no logos or named customers on the page", "url": "https://ahrefs.com/pricing"},
       {"claim": "Testimonial from Tim Soulo, CMO at Ahrefs", "evidence": "Internal staff quote, not a customer", "url": "https://ahrefs.com/pricing"}
     ],
@@ -198,7 +198,7 @@
     "proof_available": [
       {"claim": "\"10,000+ successful students\" / \"10,000+ Alumni Shippers\"; 24 live cohorts", "evidence": "Stated on page; the purchase button reads \"Join 800+ other writers,\" an internal discrepancy", "url": "https://www.ship30for30.com/"},
       {"claim": "\"View our 1000+ testimonials!\"", "evidence": "Link to testimonial collection", "url": "https://www.ship30for30.com/"},
-      {"claim": "Student results: Neil Sutton 200 followers, 400 tweets, 15,000+ impressions, 6,000 profile visits after 30 days; Sam Semako \"shipping 45 essays in 45 days\"; Ryan Dreyer \"Ship 30 got me right within 1 month\"", "evidence": "Named testimonials with figures as stated by the students", "url": "https://www.ship30for30.com/"},
+      {"claim": "Student results: Neil Sutton 200 followers, 400 tweets, \"over 15,000 impressions,\" 6,000 profile visits after 30 days; Sam Semako \"shipping 45 essays in 45 days\"; Ryan Dreyer \"Ship 30 got me right within 1 month\"", "evidence": "Named testimonials with figures as stated by the students", "url": "https://www.ship30for30.com/"},
       {"claim": "Instructor audiences: Dickie Bush 450,000 X / 150,000 LinkedIn; Nicolas Cole 250,000 X / 120,000 LinkedIn; 200,000+ combined email audience", "evidence": "Stated on page", "url": "https://www.ship30for30.com/"}
     ],
     "competitors": ["Write of Passage (David Perell)", "Justin Welsh's Content OS", "Dan Koe's 2-Hour Writer", "Skool writing communities", "Free Substack and YouTube advice"],
@@ -578,7 +578,7 @@
     "company": "Copyhackers",
     "offer_url": "https://copyschool.co/",
     "market": "info products and courses (copywriting training and certification)",
-    "price": "Not captured: the pricing table on the page did not render in the fetched text; the page states each 10X course was \"previously sold… individually for $997\" and that \"today, you can own the entire collection when you say yes to Copy School\"",
+    "price": "Not captured: the pricing table on the page did not render in the fetched text, and the claim that each 10X course was previously sold individually for $997 could not be found on the page (2026-10-24 fetch), so no price anchor is available",
     "deliverables": [
       "10X Emails, 10X Landing Pages, 10X Web Copy, 10X Facebook Ads, 10X Sales Pages and further courses in the 10X collection (list truncated on fetch)",
       "\"every framework, SOP, technique, and skill you need to crush ANY type of copy\"",
@@ -590,7 +590,7 @@
     "positioning": "\"Be the real deal. With Copy School.\" ... trade \"good enough\" for \"being the mastermind behind the most lucrative copy your clients have ever seen\"",
     "proof_available": [
       {"claim": "Student income claims: \"I booked my first $35k month.\" (Jesse Gernigin); \"I had my first $20k month.\" (Aja Stuart); \"On my way to a $200K year.\" (Jacob Suckow)", "evidence": "Named student testimonials as stated", "url": "https://copyschool.co/"},
-      {"claim": "\"I immediately 10X'd my rates\" (Abi Prendergast); \"I now have four clients on retainer\" (Michelle Murtha); a 10X Sales Pages student page that \"converted at 13%\" and generated \"well over $300K\" for one client", "evidence": "Named testimonials as stated; no verification offered", "url": "https://copyschool.co/"},
+      {"claim": "\"I immediately 10X'd my rates\" (Abi Prendergast)", "evidence": "Named testimonial as stated; no verification offered", "url": "https://copyschool.co/", "verification": "partial", "verification_note": "2026-10-24 fetch: the 10X'd-my-rates quote is on the page; the \"four clients on retainer\" (Michelle Murtha), \"converted at 13%\" and \"well over $300K\" claims were NOT found in the page text and have been removed as unverified"},
       {"claim": "Logo strips: \"Copywriters and marketers from the brands you love choose Copy School\" (Shopify, Amazon, Thinkific, Teamwork, Balsamiq, ConvertKit, Typeform, Mailchimp) and \"Our students go on to land gigs with\" (Shopify, Amazon, Monday.com, ClickFunnels, Pinterest, HubSpot)", "evidence": "Logo images; the page does not define the relationship", "url": "https://copyschool.co/"},
       {"claim": "\"There are 123 million people calling themselves copywriters on LinkedIn\"", "evidence": "No source on the page", "url": "https://copyschool.co/"},
       {"claim": "\"every word on the page is rooted in scientific data and research\"", "evidence": "Statement without citation", "url": "https://copyschool.co/"},

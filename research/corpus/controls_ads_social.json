@@ -19,13 +19,25 @@
       "hook": "A single price as the headline",
       "mechanism": "none stated; trust facts substitute for mechanism",
       "big_idea": "One price, five reasons to trust us",
-      "proof_elements": [{"type": "process_specifics", "placement": "body"}],
-      "offer_devices": ["price_anchor"],
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
       "close": "Contact Us Today",
       "voice_notes": "Plain local-service register; no humor, no story.",
       "length_words_est": 40
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 3276935695920103; start date March 24, 2022; 1,624 days running when verified live on September 3, 2026. Source cautions the long run likely reflects a small budget left on, not tested performance.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 3276935695920103; start date March 24, 2022; 1,624 days running when verified live on September 3, 2026. Source cautions the long run likely reflects a small budget left on, not tested performance.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Local-service offer lead: price in the headline, trust facts as bullets, literal CTA.",
@@ -53,13 +65,23 @@
       "hook": "Result (fluency), timeframe (1 year), mechanism (TV clips) in one line",
       "mechanism": "learning from native TV clips",
       "big_idea": "Fluency by watching TV",
-      "proof_elements": [{"type": "demonstration", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "Download",
       "voice_notes": "Direct, promise-first; first frame shows the product in use on a phone with the promise as caption.",
       "length_words_est": 30
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 897899378791711; start December 17, 2024; 625 days running as of September 3, 2026 (no versions flag). Source notes the run shows continued spend, not proven results.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 897899378791711; start December 17, 2024; 625 days running as of September 3, 2026 (no versions flag). Source notes the run shows continued spend, not proven results.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Promise lead for solution-aware traffic: desire, timeframe and named mechanism in the first line.",
@@ -87,13 +109,27 @@
       "hook": "Product plus one number in the image; claims in the text",
       "mechanism": "niacinamide concentration",
       "big_idea": "One ingredient, one number, proven",
-      "proof_elements": [{"type": "authority", "placement": "body"}, {"type": "specific_result", "placement": "headline"}],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        }
+      ],
       "offer_devices": [],
       "close": "not stated by source",
       "voice_notes": "Bullet list with emoji markers; benefit then proof.",
       "length_words_est": 60
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 1742086950046918; start April 29, 2025; 492 days running as of September 3, 2026 (multiple versions).", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 1742086950046918; start April 29, 2025; 492 days running as of September 3, 2026 (multiple versions).",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Split the job: image carries product and the one number, text carries the claims and proof.",
@@ -121,13 +157,27 @@
       "hook": "Naming competitors' products the reader is already comparing",
       "mechanism": "independent testing of named models",
       "big_idea": "Check before you buy",
-      "proof_elements": [{"type": "authority", "placement": "headline"}, {"type": "process_specifics", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "Subscribe",
       "voice_notes": "Warning register; promises an answer, sells the answer.",
       "length_words_est": 40
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 1584467826181628; start March 4, 2026; 183 days running as of September 3, 2026; this creative and text appear in 4 ads.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 1584467826181628; start March 4, 2026; 183 days running as of September 3, 2026; this creative and text appear in 4 ads.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Intercept the decision moment: name the specific products the buyer is weighing.",
@@ -155,13 +205,29 @@
       "hook": "One specification against the category",
       "mechanism": "high-protein prepared meals",
       "big_idea": "Us vs every other meal kit on one number",
-      "proof_elements": [{"type": "demonstration", "placement": "lead"}, {"type": "specific_result", "placement": "body"}],
-      "offer_devices": ["price_anchor"],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
       "close": "50 percent off first box",
       "voice_notes": "Product-photo-with-motion; comparison label does the arguing.",
       "length_words_est": 40
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 947487921506032; start March 12, 2026; 175 days running as of September 3, 2026 (multiple versions).", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 947487921506032; start March 12, 2026; 175 days running as of September 3, 2026 (multiple versions).",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Stage-4 market: one specification, framed against the whole category, is the differentiator.",
@@ -195,7 +261,12 @@
       "voice_notes": "Brand register; no product name, no offer.",
       "length_words_est": 12
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 1279489107485101; start April 1, 2026; 155 days running as of September 3, 2026; 3 ads use this creative and text. Source notes it works only because the brand is already known.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 1279489107485101; start April 1, 2026; 155 days running as of September 3, 2026; 3 ads use this creative and text. Source notes it works only because the brand is already known.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Anti-pattern for a DR brief: no proof, no offer, no CTA works only for an established brand; the rubric should penalize this for unknown advertisers.",
@@ -223,13 +294,26 @@
       "hook": "Sale announcement in caps",
       "mechanism": "red light therapy (asserted, not explained)",
       "big_idea": "Biggest sale ever, BOGO",
-      "proof_elements": [{"type": "demonstration", "placement": "lead"}],
-      "offer_devices": ["bonus", "price_anchor"],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "bonus",
+        "price_anchor"
+      ],
       "close": "Shop Now",
       "voice_notes": "Promotional caps; person using product at top, offer as largest text, fake button last in eye path.",
       "length_words_est": 30
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 2010645566183162; start April 17, 2026; 139 days running as of September 3, 2026 (no versions flag).", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 2010645566183162; start April 17, 2026; 139 days running as of September 3, 2026 (no versions flag).",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Offer lead for product-aware traffic: deal in line one, product in use, button restated in the image.",
@@ -257,13 +341,23 @@
       "hook": "The reader's own excuse, in their words",
       "mechanism": "book online with insurance shown",
       "big_idea": "The reason you're putting it off is the thing we remove",
-      "proof_elements": [{"type": "process_specifics", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "Book Now",
       "voice_notes": "Conversational objection-first; video and text target different objections for the same answer.",
       "length_words_est": 40
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 4163899043741831; start June 4, 2026; 91 days running as of September 3, 2026 (multiple versions).", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 4163899043741831; start June 4, 2026; 91 days running as of September 3, 2026 (multiple versions).",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Problem-aware lead that names the need in the reader's words without 'Are you tired of'.",
@@ -291,13 +385,29 @@
       "hook": "Borrowed genre (zombie film) for the first seconds",
       "mechanism": "supportive footwear (not detailed in excerpt)",
       "big_idea": "Foot pain is the real casualty",
-      "proof_elements": [{"type": "social_proof_count", "placement": "offer"}, {"type": "process_specifics", "placement": "body"}],
-      "offer_devices": ["guarantee_denominated"],
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "offer"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
       "close": "not stated by source",
       "voice_notes": "Entertaining hook, then plain proof does the selling.",
       "length_words_est": 50
     },
-    "results": {"type": "longevity", "detail": "Meta Ad Library ID 1339489931715040; start July 6, 2026; 59 days running as of September 3, 2026 (multiple versions).", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Meta Ad Library ID 1339489931715040; start July 6, 2026; 59 days running as of September 3, 2026 (multiple versions).",
+      "source_url": "https://moda.app/blog/facebook-ad-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Attention device and proof are separate jobs; the hook borrows a genre, the body uses counts and policies.",
@@ -325,13 +435,25 @@
       "hook": "Price anchor against the expensive alternative, then a question",
       "mechanism": "direct-to-consumer bundle",
       "big_idea": "Same bundle, a fraction of $4,000, a year to decide",
-      "proof_elements": [{"type": "guarantee", "placement": "headline"}],
-      "offer_devices": ["price_anchor", "trial"],
+      "proof_elements": [
+        {
+          "type": "guarantee",
+          "placement": "headline"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor",
+        "trial"
+      ],
       "close": "Start the 365-Night Trial",
       "voice_notes": "Rhetorical question lead; feature bullets follow.",
       "length_words_est": 60
     },
-    "results": {"type": "none", "detail": "Meta Ad Library ID 1073276592055585; start August 20, 2026; only 14 days running when verified September 3, 2026. Too new for longevity to mean anything.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "none",
+      "detail": "Meta Ad Library ID 1073276592055585; start August 20, 2026; only 14 days running when verified September 3, 2026. Too new for longevity to mean anything.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples"
+    },
     "losing_variants": [],
     "lessons": [
       "Anchor first, then offer the risk reversal as the headline rather than the price.",
@@ -359,13 +481,22 @@
       "hook": "Competitor-conditional question",
       "mechanism": "broader language catalog",
       "big_idea": "For the languages Duolingo skips",
-      "proof_elements": [{"type": "candor", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "Try Now",
       "voice_notes": "Real person on camera, caption establishes the speaker is human.",
       "length_words_est": 25
     },
-    "results": {"type": "none", "detail": "Meta Ad Library ID 924573780049552; start August 12, 2026; 22 days running as of September 3, 2026.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "none",
+      "detail": "Meta Ad Library ID 924573780049552; start August 12, 2026; 22 days running as of September 3, 2026.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples"
+    },
     "losing_variants": [],
     "lessons": [
       "Stage-4 positioning: define the product by the leader's gap rather than by a bigger claim.",
@@ -394,12 +525,19 @@
       "mechanism": "none",
       "big_idea": "Free meals to start, free breakfast forever",
       "proof_elements": [],
-      "offer_devices": ["bonus", "trial"],
+      "offer_devices": [
+        "bonus",
+        "trial"
+      ],
       "close": "Sign Up",
       "voice_notes": "UGC register from a brand account.",
       "length_words_est": 40
     },
-    "results": {"type": "none", "detail": "Meta Ad Library ID 912167651413741; start August 11, 2026; 23 days running as of September 3, 2026. Source treats it as a test in progress.", "source_url": "https://moda.app/blog/facebook-ad-examples"},
+    "results": {
+      "type": "none",
+      "detail": "Meta Ad Library ID 912167651413741; start August 11, 2026; 23 days running as of September 3, 2026. Source treats it as a test in progress.",
+      "source_url": "https://moda.app/blog/facebook-ad-examples"
+    },
     "losing_variants": [],
     "lessons": [
       "Offer lead for a saturated category: stack the bonus in the headline field and keep the primary text as a creator hook.",
@@ -433,10 +571,21 @@
       "voice_notes": "Professional copywriter; test held creative constant.",
       "length_words_est": 150
     },
-    "results": {"type": "split_test", "detail": "$1,000 over 14 days, about $142.90 per ad, 1% US lookalike (about 2.1M people), one ad per ad set, optimized for conversions. Stated: \"The trend that we observed is that the mid to long ad text produced the lowest CPA and the maximum number of leads.\" One-sentence and emoji-bullet versions had \"significantly higher\" CPA; \"Poorly performing ad text costs 2.4 times per lead than the best version.\" Campaign CPC about $5, CPM about $46, 79% landing conversion rate. 135 marketers polled: 89% voted for the three worst versions.", "source_url": "https://adespresso.com/blog/facebook-ad-copy-length-experiment/"},
+    "results": {
+      "type": "split_test",
+      "detail": "$1,000 over 14 days, about $142.90 per ad, 1% US lookalike (about 2.1M people), one ad per ad set, optimized for conversions. Stated: \"The trend that we observed is that the mid to long ad text produced the lowest CPA and the maximum number of leads.\" One-sentence and emoji-bullet versions had \"significantly higher\" CPA; \"Poorly performing ad text costs 2.4 times per lead than the best version.\" Campaign CPC about $5, CPM about $46, \"79% conversion rate\" (page does not specify landing page). 135 votes from a pool of experienced marketers: \"89% of marketers voted for the 3 versions that performed the worst.\"",
+      "source_url": "https://adespresso.com/blog/facebook-ad-copy-length-experiment/",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "One-sentence ad text (two versions)", "result": "Significantly higher cost per lead; among the three worst"},
-      {"description": "Bullet points with emojis", "result": "Significantly higher cost per lead"}
+      {
+        "description": "One-sentence ad text (two versions)",
+        "result": "Significantly higher cost per lead; among the three worst"
+      },
+      {
+        "description": "Bullet points with emojis",
+        "result": "Significantly higher cost per lead"
+      }
     ],
     "lessons": [
       "For a B2B lead magnet to cold lookalikes, mid-to-long primary text beat one-liners by up to 2.4x on cost per lead.",
@@ -453,7 +602,7 @@
     "market": "business education events",
     "funnel_position": "ticket sale",
     "traffic": "cold",
-    "source_url": "https://adespresso.com/?p=58912",
+    "source_url": "https://adespresso.com/blog/facebook-ads-split-testing-101/",
     "rights_status": "publicly_posted_copyrighted",
     "excerpt": "Revised ad used storytelling copy that previewed what attendees would learn (original and revised ads shown only as images on the source; text not reproduced).",
     "full_text": null,
@@ -465,21 +614,34 @@
       "hook": "Story preview of what attendees will learn",
       "mechanism": "curriculum preview",
       "big_idea": "Show the lesson, not the event",
-      "proof_elements": [{"type": "process_specifics", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "ticket purchase",
       "voice_notes": "Narrative, longer, educational.",
       "length_words_est": 200
     },
-    "results": {"type": "self_reported", "detail": "Original campaign spent $4,433.53 over about three weeks for 1 sale. Revised copy \"took the event from 1 purchase to 92, with an average CPA of $123.45\"; source calls it \"a 96.72% decrease in cost from changing the copy alone.\" Reported by the agency and AdEspresso, not an independent split test.", "source_url": "https://adespresso.com/?p=58912"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Original campaign spent $4,433.53 over about three weeks for 1 sale. Revised copy \"took the event from 1 purchase to 92, with an average CPA of $123.45\"; source calls it \"a 96.72% decrease in cost from changing the copy alone.\" Reported by the agency and AdEspresso, not an independent split test.",
+      "source_url": "https://adespresso.com/blog/facebook-ads-split-testing-101/",
+      "verification_note": "Original URL https://adespresso.com/?p=58912 resolves to the copy-length experiment, not this case. Figures ($4,433.53, 1 to 92 purchases, CPA $123.45, 96.72%) confirmed 2026-10-24 in AdEspresso's 'Ultimate Guide to Facebook Split Testing', which names Strategyzer, AOK Marketing and Sarah Sal."
+    },
     "losing_variants": [
-      {"description": "Original announcement-style ad (audience and image tested first)", "result": "1 purchase on $4,433.53 spend"}
+      {
+        "description": "Original announcement-style ad (audience and image tested first)",
+        "result": "1 purchase on $4,433.53 spend"
+      }
     ],
     "lessons": [
       "Changing argument and tone outperformed changing audience and image; copy is the higher-order variable.",
       "For an event, preview the content as story and specifics instead of announcing the date."
     ],
-    "notes": "Vendor-reported; original and revised copy not legible in source text."
+    "notes": "Vendor-reported; original and revised copy not legible in source text. Source URL corrected during verification."
   },
   {
     "id": "controls_ads_social-15",
@@ -502,14 +664,24 @@
       "mechanism": "unknown",
       "big_idea": "unknown",
       "proof_elements": [],
-      "offer_devices": ["trial"],
+      "offer_devices": [
+        "trial"
+      ],
       "close": "Sign Up",
       "voice_notes": "unknown",
       "length_words_est": 0
     },
-    "results": {"type": "split_test", "detail": "\"Sign Up\" CTA outperformed \"Learn More\" by 14.5% (metric not specified by the secondary source; original attributed to AdEspresso's '5 Facebook Ads Split Tests with Game-Changing Results'). Secondary source notes some of its cited tests fall short of 10,000 impressions / 500 clicks.", "source_url": "https://www.advertisemint.com/?p=4621"},
+    "results": {
+      "type": "split_test",
+      "detail": "\"Sign Up\" CTA outperformed \"Learn More\" by 14.5% (metric not specified by the secondary source; original attributed to AdEspresso's '5 Facebook Ads Split Tests with Game-Changing Results'). Secondary source notes some of its cited tests fall short of 10,000 impressions / 500 clicks.",
+      "source_url": "https://www.advertisemint.com/?p=4621",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Identical ad with \"Learn More\" button", "result": "14.5% worse"}
+      {
+        "description": "Identical ad with \"Learn More\" button",
+        "result": "14.5% worse"
+      }
     ],
     "lessons": [
       "The literal CTA (the action the ad wants) beat the soft CTA; matches the standard's 'one literal CTA'."
@@ -542,9 +714,17 @@
       "voice_notes": "Version without exclamation mark read as less salesy.",
       "length_words_est": 0
     },
-    "results": {"type": "split_test", "detail": "CTR 2.32% without exclamation mark vs 1.10% with; source also claims 187% better cost per click for the version without. Attributed to AdEspresso.", "source_url": "https://www.advertisemint.com/?p=4621"},
+    "results": {
+      "type": "split_test",
+      "detail": "CTR 2.32% without exclamation mark vs 1.10% with; source also claims 187% better cost per click for the version without. Attributed to AdEspresso.",
+      "source_url": "https://www.advertisemint.com/?p=4621",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Same copy ending in an exclamation mark", "result": "CTR 1.10%"}
+      {
+        "description": "Same copy ending in an exclamation mark",
+        "result": "CTR 1.10%"
+      }
     ],
     "lessons": [
       "One data point against reflexive exclamation marks in primary text; consistent with the tell detector treating them at human rates, not as hype markers."
@@ -577,9 +757,17 @@
       "voice_notes": "unknown",
       "length_words_est": 0
     },
-    "results": {"type": "split_test", "detail": "CTR 0.846% with emoji vs 0.351% without (about 2.4x). Attributed to AdEspresso.", "source_url": "https://www.advertisemint.com/?p=4621"},
+    "results": {
+      "type": "split_test",
+      "detail": "CTR 0.846% with emoji vs 0.351% without (about 2.4x). Attributed to AdEspresso.",
+      "source_url": "https://www.advertisemint.com/?p=4621",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Same headline without the flag emoji", "result": "CTR 0.351%"}
+      {
+        "description": "Same headline without the flag emoji",
+        "result": "CTR 0.351%"
+      }
     ],
     "lessons": [
       "A geographic marker in the headline field can double CTR for geo-targeted B2B; the gain is relevance, not decoration."
@@ -606,13 +794,29 @@
       "hook": "Founder on camera, profane product claim in the title",
       "mechanism": "subscription delivery of basic blades",
       "big_idea": "Stop paying for shave tech you don't need",
-      "proof_elements": [{"type": "candor", "placement": "lead"}, {"type": "demonstration", "placement": "body"}],
-      "offer_devices": ["price_anchor"],
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
       "close": "join the club at the URL",
       "voice_notes": "Deadpan founder monologue; humor as proof of confidence.",
       "length_words_est": 250
     },
-    "results": {"type": "revenue", "detail": "Video \"prompted 12,000 orders in a two-day span after it was released\"; server overwhelmed within the first hour; over 27 million views as of November 2020; Ad Age Viral Video Award 2012 \"Best Out-of-Nowhere Video Campaign\". Cited to LA Times (Aug 16, 2013) and NYT (Apr 11, 2013).", "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club"},
+    "results": {
+      "type": "revenue",
+      "detail": "Video \"prompted 12,000 orders in a two-day span after it was released\"; server overwhelmed within the first hour; over 27 million views as of November 2020; Ad Age Viral Video Award 2012 \"Best Out-of-Nowhere Video Campaign\". Cited to LA Times (Aug 16, 2013) and NYT (Apr 11, 2013).",
+      "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "A founder as narrator who exists is the strongest form of the 'narrator exists' rule.",
@@ -640,13 +844,27 @@
       "hook": "Absurd visual metaphor for an unmentionable",
       "mechanism": "squat posture unkinks the colon (puborectalis explanation)",
       "big_idea": "You've been pooping wrong",
-      "proof_elements": [{"type": "mechanism", "placement": "body"}, {"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "buy at the site",
       "voice_notes": "Fairy-tale narrator; mechanism taught in full before the product; humor lowers the taboo.",
       "length_words_est": 450
     },
-    "results": {"type": "revenue", "detail": "Company-reported: from the October 2015 debut to end of January 2016 online sales up 600 percent and retail sales up 200 percent; CEO Bobby Edwards: \"We had estimated sales of $12 million last year. We reached $18 million.\" 2016 goal $25 million. Wikipedia (citing The Guardian) states the ad \"went viral and increased sales\" and more than five million units sold lifetime.", "source_url": "https://www.utahbusiness.com/potty-talk-marketing-unconventional-product/"},
+    "results": {
+      "type": "revenue",
+      "detail": "Company-reported: from the October 2015 debut to end of January 2016 online sales up 600 percent and retail sales up 200 percent; CEO Bobby Edwards: \"We had estimated sales of $12 million last year. We reached $18 million.\" 2016 goal $25 million. Wikipedia (citing The Guardian) states the ad \"went viral and increased sales\" and more than five million units sold lifetime.",
+      "source_url": "https://www.utahbusiness.com/potty-talk-marketing-unconventional-product/",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Unaware market: teach the mechanism inside a story before naming the product.",
@@ -674,13 +892,23 @@
       "hook": "Fairy-tale character with a dietary twist",
       "mechanism": "complete keto nutrition in a shake",
       "big_idea": "The witch went keto",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "not stated by source",
       "voice_notes": "Harmon Brothers comedic spokesperson format.",
       "length_words_est": 400
     },
-    "results": {"type": "self_reported", "detail": "Agency-reported: \"In a single year Keto Chow went from hundreds of thousands to several millions in revenue\"; co-founder Chris Bair: \"Three months after we launched the first ad, our revenue increased 121%.\" Second campaign: \"In less than six months from the release of that campaign Keto Chow brought in an additional $7.1M.\" Now \"eight figures in annual revenue.\"", "source_url": "https://harmonbrothers.com/keto-chow-advertising"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Agency-reported: \"In a single year Keto Chow went from hundreds of thousands to several millions in revenue\"; co-founder Chris Bair: \"Three months after we launched the first ad, our revenue increased 121%.\" Second campaign: \"In less than six months from the release of that campaign Keto Chow brought in an additional $7.1M.\" Now \"eight figures in annual revenue.\"",
+      "source_url": "https://harmonbrothers.com/keto-chow-advertising",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "A story lead can serve a solution-aware market when the story's twist is the product's category.",
@@ -708,13 +936,23 @@
       "hook": "Comedic spokesperson on a familiar frustration",
       "mechanism": "traction board under the wheel",
       "big_idea": "If it can free a firetruck it can free you",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "not stated by source",
       "voice_notes": "Lower-budget 'Sprint' format: less fantastical spokesperson, funny edge.",
       "length_words_est": 300
     },
-    "results": {"type": "self_reported", "detail": "Agency-reported: \"Half of GoTREADS' 2020 sales came in December, the month the campaign launched\"; first ten days of January 2021 brought 20% of the previous year's revenue; met 5-year goal 5 months after release; \"less than one year after launching, GoTREADS grew 4,300%.\"", "source_url": "https://harmonbrothers.com/gotreads-growth"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Agency-reported: \"Half of GoTREADS' 2020 sales came in December, the month the campaign launched\"; first ten days of January 2021 brought 20% of the previous year's revenue; met 5-year goal 5 months after release; \"less than one year after launching, GoTREADS grew 4,300%.\"",
+      "source_url": "https://harmonbrothers.com/gotreads-growth",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Demonstration at an extreme (firetruck) is the proof for a physical product; claim never exceeds what is shown.",
@@ -724,7 +962,7 @@
   },
   {
     "id": "controls_ads_social-22",
-    "title": "Skull Shaver: Beast Trimmer video ads, CPC down 40%, wholesale orders tripled (Harmon Brothers)",
+    "title": "Skull Shaver: Beast Trimmer video ads, CPC reduced, wholesale orders tripled (Harmon Brothers)",
     "author_or_company": "Skull Shaver / Harmon Brothers",
     "format": "youtube_ad",
     "market": "men's grooming (head and body shavers)",
@@ -742,13 +980,23 @@
       "hook": "unknown",
       "mechanism": "unknown",
       "big_idea": "unknown",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "unknown",
       "voice_notes": "unknown",
       "length_words_est": 0
     },
-    "results": {"type": "self_reported", "detail": "Agency-reported: \"reduced their Cost Per Click, tripled wholesale orders, and supercharged online sales in two months\"; image label \"40% reduction of CPC\"; agency homepage adds \"over 100 Million views in 3 months.\" Context: post iOS 14.5 paid social.", "source_url": "https://harmonbrothers.com/skull-shaver-video-ads-results/"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Agency-reported: \"Skull Shaver reduced their Cost Per Click, tripled wholesale orders, and supercharged online sales in two months.\" A 40% CPC figure appears only in an image filename and a hypothetical form question (\"HOW WOULD A 40% REDUCTION IN CPC LOOK ON YOUR BUSINESS?\"), not as a stated result. The 'over 100 Million views in 3 months' claim is from the agency homepage, not this page. Context: post iOS14.5 paid social.",
+      "source_url": "https://harmonbrothers.com/skull-shaver-video-ads-results/",
+      "verification_note": "Checked 2026-10-24: CPC reduction, tripled wholesale orders and Peter Gold quote are stated; the 40% CPC reduction is not stated in page text and was removed from the title."
+    },
     "losing_variants": [],
     "lessons": [
       "Record the metric the client chose (CPC) and what it does not show (conversion); a results field should name the metric."
@@ -775,13 +1023,27 @@
       "hook": "Reframe of the current product as detergent",
       "mechanism": "natural cold-process soap vs chemical detergent",
       "big_idea": "You're not a dish",
-      "proof_elements": [{"type": "mechanism", "placement": "lead"}, {"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "visit DrSquatch.com",
       "voice_notes": "Comedic spokesman, mechanism-first, long for social (3 minutes).",
       "length_words_est": 450
     },
-    "results": {"type": "self_reported", "detail": "Agency-reported: more than 120 million views and 100,000 shares across YouTube and Facebook; No. 1 on YouTube's 2020 TrueView for Action Advertising Leaderboard; partnership began 2017 and the agency says it \"helped grow sales 30X to over $100M in annual revenue\" (not attributed to this video alone). CEO quote cites \"over 300 million views\" for the body of work.", "source_url": "https://raindrop.agency/work/dr-squatch"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Agency-reported: more than 120 million views and 100,000 shares across YouTube and Facebook; No. 1 on YouTube's 2020 TrueView for Action Advertising Leaderboard; partnership began 2017 and the agency says it \"helped grow sales 30X to over $100M in annual revenue\" (not attributed to this video alone). CEO quote cites \"over 300 million views\" for the body of work.",
+      "source_url": "https://raindrop.agency/work/dr-squatch",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Unaware market: open by renaming the reader's current solution, then teach the mechanism.",
@@ -809,13 +1071,23 @@
       "hook": "Direct address to the buyer, not the user",
       "mechanism": "none",
       "big_idea": "Smell like a man, man",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "brand tag",
       "voice_notes": "Hyper-confident deadpan monologue; one unbroken shot.",
       "length_words_est": 90
     },
-    "results": {"type": "longevity", "detail": "Online release February 4, 2010; TV February 8, 2010. Over 11 million online views by end of June 2010; 8 of the top 11 most-popular YouTube videos mid-July 2010 (Adweek); over 60 million views as of February 22, 2022; Cannes Lions Grand Prix for Film June 2010; Primetime Emmy nomination/win for Outstanding Commercial 2010; 2011 Gold Cannes Lion for Creative Effectiveness (Old Spice article). 186 personalized response videos filmed over two and a half days. Sales percentages not given in the fetched sources.", "source_url": "https://en.wikipedia.org/wiki/Old_Spice"},
+    "results": {
+      "type": "longevity",
+      "detail": "Online release February 4, 2010; TV February 8, 2010. Over 11 million online views by end of June 2010; 8 of the top 11 most-popular YouTube videos mid-July 2010 (Adweek); over 60 million views as of February 22, 2022; Cannes Lions Grand Prix for Film June 2010; Primetime Emmy nomination/win for Outstanding Commercial 2010; 2011 Gold Cannes Lion for Creative Effectiveness (Old Spice article). 186 personalized response videos filmed over two and a half days. Sales percentages not given in the fetched sources.",
+      "source_url": "https://en.wikipedia.org/wiki/Old_Spice",
+      "verification_note": "Checked 2026-10-24: release dates, 11M views (June 2010), Adweek top-11, 60M views (Feb 2022), Cannes Grand Prix and Emmy are on the campaign article; 186 response videos over two and a half days and 2011 Gold Cannes Lions for Creative Effectiveness are on the Old_Spice article (results.source_url). No sales percentage on either page."
+    },
     "losing_variants": [],
     "lessons": [
       "Address the purchaser rather than the user when they differ.",
@@ -843,13 +1115,23 @@
       "hook": "A question the viewer wants answered",
       "mechanism": "motor power demonstrated by extreme objects",
       "big_idea": "Will it blend?",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "caption 'Yes, it blends!'",
       "voice_notes": "Lab-coat deadpan; identical structure every episode.",
       "length_words_est": 120
     },
-    "results": {"type": "longevity", "detail": "Series ran October 30, 2006 to November 10, 2020. September 2007: videos earned about $15,000 from host Revver (USA Today). Nominated 2007 YouTube Award Best Series; Net magazine 2007 Viral Video Campaign of the Year; bronze Clio 2008 (citation needed per source). Sales lift figures not present in fetched sources.", "source_url": "https://en.wikipedia.org/wiki/Will_It_Blend%3F"},
+    "results": {
+      "type": "longevity",
+      "detail": "Series ran October 30, 2006 to November 10, 2020. September 2007: videos earned about $15,000 from host Revver (USA Today). Nominated 2007 YouTube Award Best Series; Net magazine 2007 Viral Video Campaign of the Year; bronze Clio 2008 (citation needed per source). Sales lift figures not present in fetched sources.",
+      "source_url": "https://en.wikipedia.org/wiki/Will_It_Blend%3F",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Pure demonstration proof: the claim is the demonstration, the strongest C9 score.",
@@ -877,13 +1159,27 @@
       "hook": "Elegant woman, unmentionable subject",
       "mechanism": "essential-oil film traps odor below the water",
       "big_idea": "Girls don't poop",
-      "proof_elements": [{"type": "mechanism", "placement": "body"}, {"type": "demonstration", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "buy at site",
       "voice_notes": "Refined register colliding with crude subject; mechanism explained in plain terms.",
       "length_words_est": 300
     },
-    "results": {"type": "longevity", "detail": "Video \"seen more than 31 million times\"; USA Today named it one of 2013's worst advertisements. Company: over 17 million bottles sold by January 2016, $300 million valuation 2016, over 60 million bottles and 350 million combined video views by May 2019 (company-level, not video-specific).", "source_url": "https://en.wikipedia.org/wiki/Poo-Pourri"},
+    "results": {
+      "type": "longevity",
+      "detail": "Video \"seen more than 31 million times\"; USA Today named it one of 2013's worst advertisements. Company: over 17 million bottles sold by January 2016, $300 million valuation 2016, over 60 million bottles and 350 million combined video views by May 2019 (company-level, not video-specific).",
+      "source_url": "https://en.wikipedia.org/wiki/Poo-Pourri",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Critics' 'worst ad' lists and sales results diverge; the rubric should predict beat/lose, not taste.",
@@ -912,14 +1208,27 @@
       "mechanism": "daily rides over a year",
       "big_idea": "The gift that gives back",
       "voice_notes": "Earnest vlog-diary; read by viewers as implying the husband wanted her thinner.",
-      "proof_elements": [{"type": "testimonial", "placement": "close"}],
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "close"
+        }
+      ],
       "offer_devices": [],
       "close": "brand tag",
       "length_words_est": 60
     },
-    "results": {"type": "revenue", "detail": "The Guardian (Dec 4, 2019): \"Peloton loses $1.5bn in value over 'dystopian, sexist' exercise bike ad.\" Peloton defended it as celebrating a \"fitness and wellness journey\" (Ad Age, Dec 3, 2019). Aviation Gin hired the actress for a spoof, \"The Gift That Doesn't Give Back\" (CNN, Dec 7, 2019).", "source_url": "https://en.wikipedia.org/wiki/Peloton_Interactive"},
+    "results": {
+      "type": "revenue",
+      "detail": "The Guardian (Dec 4, 2019): \"Peloton loses $1.5bn in value over 'dystopian, sexist' exercise bike ad.\" Peloton defended it as celebrating a \"fitness and wellness journey\" (Ad Age, Dec 3, 2019). Aviation Gin hired the actress for a spoof, \"The Gift That Doesn't Give Back\" (CNN, Dec 7, 2019).",
+      "source_url": "https://en.wikipedia.org/wiki/Peloton_Interactive",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "The ad itself is the loser: an already-fit wife receiving exercise equipment from her husband", "result": "Backlash; $1.5bn market value loss reported"}
+      {
+        "description": "The ad itself is the loser: an already-fit wife receiving exercise equipment from her husband",
+        "result": "Backlash; $1.5bn market value loss reported"
+      }
     ],
     "lessons": [
       "Market-first failure: the premise insulted the buyer segment; no line-level fix repairs a wrong-premise story.",
@@ -947,13 +1256,22 @@
       "hook": "Luxury car plus a contradiction (books matter more)",
       "mechanism": "67 daily lessons",
       "big_idea": "Knowledge over things, said in front of the things",
-      "proof_elements": [{"type": "demonstration", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "click to learn the 67 steps",
       "voice_notes": "Casual direct-to-camera; the car does the proving.",
       "length_words_est": 300
     },
-    "results": {"type": "none", "detail": "Source states the ad \"became viral\" and \"prompted parodies and spoofs\" (VICE, Sept 14, 2015; Intelligencer, Oct 6, 2025); no views, spend or sales figures given. Course criticized for not allowing cancellations and for upselling.", "source_url": "https://en.wikipedia.org/wiki/Tai_Lopez"},
+    "results": {
+      "type": "none",
+      "detail": "Source states the ad \"became viral\" and \"prompted parodies and spoofs\" (VICE, Sept 14, 2015; Intelligencer, Oct 6, 2025); no views, spend or sales figures given. Course criticized for not allowing cancellations and for upselling.",
+      "source_url": "https://en.wikipedia.org/wiki/Tai_Lopez"
+    },
     "losing_variants": [],
     "lessons": [
       "Implied-income proof via lifestyle display is the pattern the standard forbids (effortless-income claims); keep as a negative exemplar.",
@@ -981,15 +1299,34 @@
       "hook": "A question that makes the reader check themselves",
       "mechanism": "Cody's 100% self-correcting method (coupon for free book)",
       "big_idea": "Your English is being judged every time you speak",
-      "proof_elements": [{"type": "authority", "placement": "body"}, {"type": "process_specifics", "placement": "body"}],
-      "offer_devices": ["trial"],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
       "close": "mail the coupon for the free book",
       "voice_notes": "Plain, slightly stern; examples carry the shame.",
       "length_words_est": 900
     },
-    "results": {"type": "longevity", "detail": "Campaign ran \"more than 40 years\" in pulp and slick magazines, comics and newspapers; course bought by over 150,000 students from 1918. Schwab's ten-year comparison found response \"near three times better\" than the alternative headline \"How to Speak and Write Masterly English\" (Schwab, Printers' Ink Monthly, Sept 1939; NYT, July 16, 1956).", "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody"},
+    "results": {
+      "type": "longevity",
+      "detail": "Campaign ran \"more than 40 years\" in pulp and slick magazines, comics and newspapers; course bought by over 150,000 students from 1918. Schwab's ten-year comparison found response \"near three times better\" than the alternative headline \"How to Speak and Write Masterly English\" (Schwab, Printers' Ink Monthly, Sept 1939; NYT, July 16, 1956).",
+      "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Headline \"How to Speak and Write Masterly English\"", "result": "About one-third the response of the question headline over ten years of testing"}
+      {
+        "description": "Headline \"How to Speak and Write Masterly English\"",
+        "result": "About one-third the response of the question headline over ten years of testing"
+      }
     ],
     "lessons": [
       "A problem-aware question headline beat a promise headline ~3:1 over a decade; the headline named the reader's fear, not the course.",
@@ -1017,13 +1354,23 @@
       "hook": "A romantic failure with an unspoken cause",
       "mechanism": "kills the germs that cause 'halitosis'",
       "big_idea": "You may have halitosis and no one will tell you",
-      "proof_elements": [{"type": "authority", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "use Listerine daily",
       "voice_notes": "Story vignette, clinical term as the turn.",
       "length_words_est": 250
     },
-    "results": {"type": "revenue", "detail": "Per Freakonomics (Levitt & Dubner, 2009, p. 87), cited by Wikipedia: \"In just seven years, the company's revenues rose from $115,000 to more than $8 million.\" Twitchell: \"Listerine did not make mouthwash as much as it made halitosis.\"", "source_url": "https://en.wikipedia.org/wiki/Listerine"},
+    "results": {
+      "type": "revenue",
+      "detail": "Per Freakonomics (Levitt & Dubner, 2009, p. 87), cited by Wikipedia: \"In just seven years, the company's revenues rose from $115,000 to more than $8 million.\" Twitchell: \"Listerine did not make mouthwash as much as it made halitosis.\"",
+      "source_url": "https://en.wikipedia.org/wiki/Listerine",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Unaware market created by naming the problem; story lead with the mechanism word as the pivot.",
@@ -1051,15 +1398,28 @@
       "hook": "A frank discussion of what no one mentions",
       "mechanism": "stops perspiration (not just masks odor)",
       "big_idea": "Others notice, you don't",
-      "proof_elements": [{"type": "candor", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "buy at the druggist",
       "voice_notes": "Editorial, confiding, slightly shaming.",
       "length_words_est": 500
     },
-    "results": {"type": "revenue", "detail": "Wikipedia (Edna Murphey): in 1919, after Odorono switched to portraying sweating as an embarrassing problem, sales rose 112 percent (no inline citation given). The 'Within the Curve' headline is cited to Better Homes and Gardens, June 1935, p. 171, a later run.", "source_url": "https://en.wikipedia.org/wiki/Edna_Murphey"},
+    "results": {
+      "type": "revenue",
+      "detail": "Wikipedia (Edna Murphey): in 1919, after Odorono switched to portraying sweating as an embarrassing problem, sales rose 112 percent (no inline citation given). The 'Within the Curve' headline is cited to Better Homes and Gardens, June 1935, p. 171, a later run.",
+      "source_url": "https://en.wikipedia.org/wiki/Edna_Murphey",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Earlier hygiene-framed Odorono ads (pre-1919)", "result": "Slower sales; the shift to social embarrassment produced the 112% rise, per source"}
+      {
+        "description": "Earlier hygiene-framed Odorono ads (pre-1919)",
+        "result": "Slower sales; the shift to social embarrassment produced the 112% rise, per source"
+      }
     ],
     "lessons": [
       "The same product sold twice as fast when the ad changed the problem from hygiene to social judgment: market and desire above mechanism.",
@@ -1087,13 +1447,29 @@
       "hook": "Open loop in the headline (laughed... but when)",
       "mechanism": "learn at home without a teacher (print-and-picture lessons)",
       "big_idea": "The revenge of the quiet one",
-      "proof_elements": [{"type": "testimonial", "placement": "lead"}, {"type": "process_specifics", "placement": "body"}],
-      "offer_devices": ["trial"],
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
       "close": "mail the coupon for the free book and demonstration lesson",
       "voice_notes": "First-person narrative, dialogue, party scene; long copy.",
       "length_words_est": 1100
     },
-    "results": {"type": "longevity", "detail": "Wikipedia (citing White 1971): the ad was \"highly successful\" and is \"considered one of the 100 greatest advertisements of all time.\" swiped.co lists it as \"Ran 1927\" and \"Quite possibly the most swiped advertisement ever.\" No response figures in fetched sources.", "source_url": "https://en.wikipedia.org/wiki/John_Caples"},
+    "results": {
+      "type": "longevity",
+      "detail": "Wikipedia (citing White 1971): the ad was \"highly successful\" and is \"considered one of the 100 greatest advertisements of all time.\" swiped.co lists it as \"Ran 1927\" and \"Quite possibly the most swiped advertisement ever.\" No response figures in fetched sources.",
+      "source_url": "https://en.wikipedia.org/wiki/John_Caples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Story lead with the payoff withheld in the headline; the ad is itself a testimonial scene (note: a fictional narrator, forbidden under the modern standard).",
@@ -1121,13 +1497,26 @@
       "hook": "Two-word contrarian imperative",
       "mechanism": "small car: parking, fuel, insurance, repairs",
       "big_idea": "The flaw is the feature",
-      "proof_elements": [{"type": "candor", "placement": "headline"}, {"type": "process_specifics", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "none",
       "voice_notes": "Dry, honest, self-deprecating; sans-serif, black and white.",
       "length_words_est": 150
     },
-    "results": {"type": "none", "detail": "Advertising Age (Garfield, March 29, 1999) ranked it the best advertising campaign of the 20th century; the Wikipedia article gives no sales figures.", "source_url": "https://en.wikipedia.org/wiki/Think_Small"},
+    "results": {
+      "type": "none",
+      "detail": "Advertising Age (Garfield, March 29, 1999) ranked it the best advertising campaign of the 20th century; the Wikipedia article gives no sales figures.",
+      "source_url": "https://en.wikipedia.org/wiki/Think_Small"
+    },
     "losing_variants": [],
     "lessons": [
       "Candor against the category's idea (C8 differentiation at level 3: the opposite of the category idea).",
@@ -1155,15 +1544,34 @@
       "hook": "A specific, verifiable detail quoted from a motor magazine",
       "mechanism": "engineering process specifics (numbered facts)",
       "big_idea": "Quiet is the proof of quality",
-      "proof_elements": [{"type": "authority", "placement": "headline"}, {"type": "process_specifics", "placement": "body"}],
-      "offer_devices": ["price_anchor"],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
       "close": "dealer and price",
       "voice_notes": "Factual, long, editorial; no superlatives.",
       "length_words_est": 700
     },
-    "results": {"type": "self_reported", "detail": "Source: ran 1958-1962; Ogilvy tested 26 headlines with colleagues before choosing; \"Rolls-Royce sales in 1958 rose 50 percent over 1957\" (figure from Ogilvy's own account, not independently verified by the source).", "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Source: ran 1958-1962; Ogilvy tested 26 headlines with colleagues before choosing; \"Rolls-Royce sales in 1958 rose 50 percent over 1957\" (figure from Ogilvy's own account, not independently verified by the source).",
+      "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "25 alternative headlines reviewed internally", "result": "Rejected in favor of the clock line; no public data"}
+      {
+        "description": "25 alternative headlines reviewed internally",
+        "result": "Rejected in favor of the clock line; no public data"
+      }
     ],
     "lessons": [
       "Headline precision matches evidence: a quoted observation beats a claim.",
@@ -1191,13 +1599,27 @@
       "hook": "Admission of being number two",
       "mechanism": "underdog effort: clean ashtrays, full tanks (service specifics)",
       "big_idea": "Second place tries harder",
-      "proof_elements": [{"type": "candor", "placement": "headline"}, {"type": "process_specifics", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "none",
       "voice_notes": "Candid, short, declarative.",
       "length_words_est": 120
     },
-    "results": {"type": "longevity", "detail": "Slogan used about 50 years until the 2012 rebrand to \"It's Your Space\" (CNBC 2012, via Avis article). Profit/loss and market-share figures not present in fetched sources.", "source_url": "https://en.wikipedia.org/wiki/Avis_Car_Rental"},
+    "results": {
+      "type": "longevity",
+      "detail": "Slogan used about 50 years until the 2012 rebrand to \"It's Your Space\" (CNBC 2012, via Avis article). Profit/loss and market-share figures not present in fetched sources.",
+      "source_url": "https://en.wikipedia.org/wiki/Avis_Car_Rental",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Candor as positioning: name the weakness and make it the reason for the benefit.",
@@ -1225,13 +1647,27 @@
       "hook": "Bold claim plus a time-bound big number",
       "mechanism": "3-part framework distilled from observation",
       "big_idea": "Steal the fastest-growing creator's playbook",
-      "proof_elements": [{"type": "specific_result", "placement": "lead"}, {"type": "process_specifics", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "framework delivered in thread; newsletter link",
       "voice_notes": "Short lines, numbers, one promise sentence packing what, why, who.",
       "length_words_est": 600
     },
-    "results": {"type": "self_reported", "detail": "Author-stated final stats: 2,400,502 impressions, 7,294 likes, 1,382 retweets, 171 replies, 1,000+ new email subscribers; introduction says it helped lock in 5,000 followers. The hooks guide also credits the hook's striking image.", "source_url": "https://www.ship30for30.com/post/6-tips-to-write-viral-twitter-threads-with-ease"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Author-stated final stats: 2,400,502 impressions, 7,294 likes, 1,382 retweets, 171 replies, 1,000+ new email subscribers; introduction says it helped lock in 5,000 followers. The hooks guide also credits the hook's striking image.",
+      "source_url": "https://www.ship30for30.com/post/6-tips-to-write-viral-twitter-threads-with-ease",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Hook formula: moment in time, big specific number, credibility from stated effort, one-sentence promise with who/what/why.",
@@ -1265,7 +1701,12 @@
       "voice_notes": "Minimal; curiosity gap by omission.",
       "length_words_est": 400
     },
-    "results": {"type": "self_reported", "detail": "Ship 30 states the thread earned over 50,000 likes; author not named on the page.", "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Ship 30 states the thread earned over 50,000 likes; author not named on the page.",
+      "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Call-out and disqualifier in the first line (YouTube 0-5s rule applied to text).",
@@ -1293,13 +1734,29 @@
       "hook": "Silent controversial opinion the reader already holds",
       "mechanism": "study of legendary copywriters distilled",
       "big_idea": "The writing education college owed you, free",
-      "proof_elements": [{"type": "process_specifics", "placement": "lead"}, {"type": "candor", "placement": "lead"}],
-      "offer_devices": ["price_anchor"],
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        },
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
       "close": "Here they are for free",
       "voice_notes": "Four beats: opinion, credibility, contrast, delivery.",
       "length_words_est": 500
     },
-    "results": {"type": "self_reported", "detail": "Author states the cost-comparison line \"gives the free insights far more perceived value\" and \"drove most of the thread's success\"; no numeric metrics given on the page.", "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Author attributes \"100% of it to the 4th sentence\" (the $120,000 contrast), which made the free insights \"10x more valuable to the reader\"; no numeric metrics given on the page.",
+      "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples",
+      "verification_note": "Checked 2026-10-24: earlier paraphrases ('perceived value', 'drove most of the thread's success') were not on the page; replaced with the page's wording."
+    },
     "losing_variants": [],
     "lessons": [
       "Price anchor works in organic: contrast the free thing against the expensive alternative in one line.",
@@ -1327,13 +1784,26 @@
       "hook": "Time-based opener plus a credibility count",
       "mechanism": "curation by someone who did the reading",
       "big_idea": "Most business books are one idea; here are the ten that aren't",
-      "proof_elements": [{"type": "process_specifics", "placement": "lead"}, {"type": "candor", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        },
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "Read these 10 (directional arrow)",
       "voice_notes": "Confessional count, blunt verdict, directional CTA.",
       "length_words_est": 400
     },
-    "results": {"type": "none", "detail": "No metrics stated on the page; annotated as a model hook by Ship 30.", "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples"},
+    "results": {
+      "type": "none",
+      "detail": "No metrics stated on the page; annotated as a model hook by Ship 30.",
+      "source_url": "https://www.ship30for30.com/post/how-to-write-viral-twitter-thread-hooks-with-6-clear-examples"
+    },
     "losing_variants": [],
     "lessons": [
       "Credibility stated as a number of hours or books, never as a title.",
@@ -1367,7 +1837,11 @@
       "voice_notes": "Four words, question, emotional recall; Welsh posts daily with an image and adds the link after publishing (Josh Spector).",
       "length_words_est": 150
     },
-    "results": {"type": "none", "detail": "Ranked #1 of the top 50 LinkedIn hooks for the two weeks before May 17, 2025 by a third-party tool with an undefined 'Popularity' score of 2604.19; no reactions, comments or impressions stated. Welsh's account-level figures per Josh Spector: 471,000 LinkedIn followers, '$5 million solopreneur business', one post per day.", "source_url": "https://mycircles.beehiiv.com/p/top-50-hooks-from-the-last-2-weeks"},
+    "results": {
+      "type": "none",
+      "detail": "Ranked #1 of the top 50 LinkedIn hooks for the two weeks before May 17, 2025 by a third-party tool with an undefined 'Popularity' score of 2604.19; no reactions, comments or impressions stated. Welsh's account-level figures per Josh Spector: 471,000 LinkedIn followers, '$5 million solopreneur business', one post per day.",
+      "source_url": "https://mycircles.beehiiv.com/p/top-50-hooks-from-the-last-2-weeks"
+    },
     "losing_variants": [],
     "lessons": [
       "The shortest hook in the top 50 is a question that names a feeling, not a benefit.",
@@ -1395,13 +1869,22 @@
       "hook": "Tiny input, specific dollar output",
       "mechanism": "a positioning shift (revealed in body)",
       "big_idea": "Small shift, big deal",
-      "proof_elements": [{"type": "specific_result", "placement": "headline"}],
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        }
+      ],
       "offer_devices": [],
       "close": "unknown",
       "voice_notes": "Case-study hook with a number; sales intent inside the story.",
       "length_words_est": 200
     },
-    "results": {"type": "none", "detail": "Ranked #6 of 50 by third-party 'Popularity' score 615.65; no engagement figures stated.", "source_url": "https://mycircles.beehiiv.com/p/top-50-hooks-from-the-last-2-weeks"},
+    "results": {
+      "type": "none",
+      "detail": "Ranked #6 of 50 by third-party 'Popularity' score 615.65; no engagement figures stated.",
+      "source_url": "https://mycircles.beehiiv.com/p/top-50-hooks-from-the-last-2-weeks"
+    },
     "losing_variants": [],
     "lessons": [
       "Organic sales post pattern: client result with a dollar figure in line one; the standard requires that figure to carry a ledger ID."
@@ -1428,13 +1911,23 @@
       "hook": "POV motion, music, calm face",
       "mechanism": "none",
       "big_idea": "Contentment on a skateboard",
-      "proof_elements": [{"type": "demonstration", "placement": "lead"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        }
+      ],
       "offer_devices": [],
       "close": "none",
       "voice_notes": "No words spoken; product visible throughout.",
       "length_words_est": 0
     },
-    "results": {"type": "longevity", "detail": "Over 50 million views worldwide (Wikipedia, ref. 160). \"Dreams\" reached No. 1 on Billboard Rock Digital Song Sales in October 2020 and re-entered the Hot 100 at No. 21 (Oct 17, 2020), rising to No. 12; Top 50 most-streamed on Spotify and Apple Music in US, UK, Australia, NZ. Ocean Spray gave Apodaca a new truck. No Ocean Spray sales figures in fetched sources.", "source_url": "https://en.wikipedia.org/wiki/Nathan_Apodaca"},
+    "results": {
+      "type": "longevity",
+      "detail": "Over 50 million views worldwide (Wikipedia, ref. 160). \"Dreams\" reached No. 1 on Billboard Rock Digital Song Sales in October 2020 and re-entered the Hot 100 at No. 21 (Oct 17, 2020), rising to No. 12; Top 50 most-streamed on Spotify and Apple Music in US, UK, Australia, NZ. Ocean Spray gave Apodaca a new truck. No Ocean Spray sales figures in fetched sources.",
+      "source_url": "https://en.wikipedia.org/wiki/Nathan_Apodaca",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [],
     "lessons": [
       "Real person on camera, proposition (mood) in the first second, product shown not described: the Reels spec in its purest form.",
@@ -1448,7 +1941,7 @@
     "author_or_company": "Hyram Yarbro (organic; CeraVe / L'Oréal benefited)",
     "format": "organic_social",
     "market": "drugstore skincare",
-    "funnel_position": "none at the time (later paid partnership)",
+    "funnel_position": "none (organic creator reviews)",
     "traffic": "cold",
     "source_url": "https://en.wikipedia.org/wiki/CeraVe",
     "rights_status": "publicly_posted_copyrighted",
@@ -1462,13 +1955,27 @@
       "hook": "Independent expert verdict on a cheap product",
       "mechanism": "ceramides and ingredient analysis",
       "big_idea": "The $15 bottle the experts actually use",
-      "proof_elements": [{"type": "authority", "placement": "lead"}, {"type": "mechanism", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "none",
       "voice_notes": "Reviewer register; candor about brands he dislikes.",
       "length_words_est": 150
     },
-    "results": {"type": "revenue", "detail": "Wikipedia: videos \"reportedly led to an 89% increase in its global sales in 2020\" (Ozuem & Willis 2022, Palgrave; i-D, Aug 3, 2020); about $3.2 million in media impact value (WWD, Dec 7, 2020). Led to a paid L'Oréal partnership (Allure, June 3, 2021). Attribution is reported, not proven.", "source_url": "https://en.wikipedia.org/wiki/CeraVe"},
+    "results": {
+      "type": "revenue",
+      "detail": "Wikipedia: videos \"reportedly led to an 89% increase in its global sales in 2020\"; about $3.2 million in media impact value (page cites a 2024 book by Michael Smith). Attribution is reported, not proven.",
+      "source_url": "https://en.wikipedia.org/wiki/CeraVe",
+      "verification_note": "Checked 2026-10-24: 89% and $3.2M are stated; WWD, the paid L'Oréal partnership and Allure 2021 are not on the page and were removed."
+    },
     "losing_variants": [],
     "lessons": [
       "Third-party authority plus mechanism (ingredients) sells a stage-4 category without the brand speaking.",
@@ -1492,19 +1999,36 @@
       "awareness": "unaware",
       "sophistication": "2",
       "lead_type": "story",
-      "argument_sentence": "This sold a discontinued-in-waiting tumbler to women on the promise of a cup that fits the car and keeps ice all day because trusted peers showed it in daily life.",
+      "argument_sentence": "This sold a tumbler Stanley had stopped restocking to women on the promise of a cup that fits the car and keeps ice all day because trusted peers showed it in daily life.",
       "hook": "Peer recommendation, product in hand",
       "mechanism": "40oz, handle, car-cup-holder fit, ice retention",
       "big_idea": "The cup you carry everywhere",
-      "proof_elements": [{"type": "demonstration", "placement": "body"}, {"type": "social_proof_count", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "buy link",
       "voice_notes": "Lifestyle, color-drop urgency.",
       "length_words_est": 100
     },
-    "results": {"type": "revenue", "detail": "Wikipedia: The Buy Guide sold 5,000 Quenchers, after which Stanley resumed production; Quencher sales rose 275% from 2020 to 2021 (NYT Jan 5, 2024; Seattle Times Jan 12, 2024); Stanley annual sales about $70 million in 2019 and an estimated $750 million in 2023 (CNBC Dec 23, 2023), attributed primarily to the Quencher.", "source_url": "https://en.wikipedia.org/wiki/Stanley_1913"},
+    "results": {
+      "type": "revenue",
+      "detail": "Wikipedia: The Buy Guide sold 5,000 Quenchers, after which Stanley resumed production; Quencher sales rose 275% from 2020 to 2021 (NYT Jan 5, 2024; Seattle Times Jan 12, 2024); Stanley annual sales about $70 million in 2019 and an estimated $750 million in 2023 (CNBC Dec 23, 2023), attributed primarily to the Quencher.",
+      "source_url": "https://en.wikipedia.org/wiki/Stanley_1913",
+      "verification_note": "Checked 2026-10-24: 5,000 units, 275% rise 2020-2021, $70M (2019) to est. $750M (2023) stated. Page does not say the Quencher was 'slated for discontinuation'; losing variant reworded to the page's statement."
+    },
     "losing_variants": [
-      {"description": "Stanley's own prior marketing of the Quencher to its traditional male outdoor audience", "result": "Product was slated for discontinuation before the influencer push, per source"}
+      {
+        "description": "Stanley's own prior marketing of the Quencher to its traditional male outdoor audience",
+        "result": "Stanley \"stopped restocking and marketing it in 2019\" before the influencer push, per source"
+      }
     ],
     "lessons": [
       "Same product, new market: the market decision outranked every copy decision.",
@@ -1532,15 +2056,28 @@
       "hook": "n/a",
       "mechanism": "asset combination by the auction",
       "big_idea": "n/a",
-      "proof_elements": [{"type": "specific_result", "placement": "body"}],
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
       "offer_devices": [],
       "close": "n/a",
       "voice_notes": "n/a",
       "length_words_est": 0
     },
-    "results": {"type": "self_reported", "detail": "Google internal data (Aug 15-20, 2025): improving Ad Strength from Poor to Excellent, advertisers \"find 15% more clicks & conversions on average\"; going from one to two RSAs in an ad group, \"a 6.6% increase in conversions at a similar cost per conversion on average\"; two to three RSAs, \"an average 3.7% increase in conversions.\"", "source_url": "https://support.google.com/google-ads/answer/7684791"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Google internal data (Aug 15-20, 2025): improving Ad Strength from Poor to Excellent, advertisers \"find 15% more clicks & conversions on average\"; going from one to two RSAs in an ad group, \"a 6.6% increase in conversions at a similar cost per conversion on average\"; two to three RSAs, \"an average 3.7% increase in conversions.\"",
+      "source_url": "https://support.google.com/google-ads/answer/7684791",
+      "verification_note": "Verified 2026-10-24: figures in detail are stated on source_url."
+    },
     "losing_variants": [
-      {"description": "Pinning two headlines to the same position", "result": "Reduces combinations; Google's example shows ads then alternate only those two"}
+      {
+        "description": "Pinning two headlines to the same position",
+        "result": "Reduces combinations; Google's example shows ads then alternate only those two"
+      }
     ],
     "lessons": [
       "Supports the spec's 15 distinct headline shapes: asset diversity (Ad Strength) is the measured lever.",
@@ -1550,7 +2087,7 @@
   },
   {
     "id": "controls_ads_social-46",
-    "title": "Dickie Bush: first LinkedIn post, ~500k views and 4,500 likes",
+    "title": "Dickie Bush: first LinkedIn post, 500k views and 4,500 likes",
     "author_or_company": "Dickie Bush, Ship 30 for 30",
     "format": "organic_social",
     "market": "online writers",
@@ -1570,14 +2107,19 @@
       "big_idea": "unknown",
       "proof_elements": [],
       "offer_devices": [],
-      "close": "question or takeaway prompt; link in first comment",
+      "close": "question or takeaway prompt; CTA placed in a comment on the post",
       "voice_notes": "Short sentences, line breaks, one sentence then three bullets pattern.",
       "length_words_est": 200
     },
-    "results": {"type": "self_reported", "detail": "Ship 30 states the first LinkedIn post reached about 500k views and 4,500 likes with no existing LinkedIn following. Separately, the Twitter guide reports a Dickie Bush thread reaching about 5M views when the account had roughly 9,000 followers, and the ultimate guide cites 4.6 million people reached from a tweet at ~20,000 followers.", "source_url": "https://www.ship30for30.com/post/how-to-write-a-great-linkedin-post"},
+    "results": {
+      "type": "self_reported",
+      "detail": "Ship 30 states: \"Dickie's very first post on the platform garnered 500k views and 4,500 likes.\"",
+      "source_url": "https://www.ship30for30.com/post/how-to-write-a-great-linkedin-post",
+      "verification_note": "Checked 2026-10-24: 500k views and 4,500 likes stated. 'No existing LinkedIn following', the 5M-view thread at ~9,000 followers and the 4.6M-reach tweet are not on this page and were removed; 'link in first comment' is the page's advice to put the CTA in a comment, not specifically the first."
+    },
     "losing_variants": [],
     "lessons": [
-      "Organic social spec confirmed by a practitioner with numbers: five lines to earn 'see more', lead-in / points / CTA, link in a comment.",
+      "Organic social spec confirmed by a practitioner with numbers: five lines to earn 'see more', lead-in / points / CTA, CTA in a comment.",
       "Ship 30 explicitly advises against the Twitter-style recap on LinkedIn."
     ],
     "notes": "Excerpt unavailable; structure rules recorded."
