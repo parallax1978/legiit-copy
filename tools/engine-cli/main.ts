@@ -26,6 +26,9 @@ import { getFormat, listFormats } from "../../supabase/functions/_shared/engine/
 import { describePlan, planDraft } from "../../supabase/functions/_shared/engine/draft/plan.ts";
 import { callModel } from "../../supabase/functions/_shared/engine/llm.ts";
 
+/** NOT NULL jsonb columns take NonNullable<Json>; values are validated objects, so this is a type shim. */
+const J = (v: unknown) => v as NonNullable<Json>;
+
 // ---------------------------------------------------------------- brief file
 
 const VoiceInput = z.object({
@@ -113,7 +116,7 @@ async function resolveWorkspace(db: Db, wanted: string | undefined): Promise<str
 async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offerId: string; hasActiveResearch: boolean; hasApprovedOffer: boolean; variantId: string | null; voiceId: string | null }> {
   const b = file.brief;
   const offer = must(
-    await db.from("offers").insert({ workspace_id: ws, name: b.product_name, status: "ready", brief: b as unknown as Json, audience: b.audience.who, price: b.price.text, guarantee: b.guarantee.text, positioning: b.positioning }).select("id").single(),
+    await db.from("offers").insert({ workspace_id: ws, name: b.product_name, status: "ready", brief: J(b), audience: b.audience.who, price: b.price.text, guarantee: b.guarantee.text, positioning: b.positioning }).select("id").single(),
     "create offer",
   );
   if (file.claims.length) {
@@ -124,7 +127,7 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
       claim_type: c.claim_type,
       role: c.role,
       evidence_grade: c.evidence_grade,
-      evidence: c.evidence as Json,
+      evidence: J(c.evidence),
       precision: c.precision,
       typical_result: c.typical_result,
       earnings_context: c.earnings_context as Json,
@@ -145,12 +148,12 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
   }
   if (file.config) {
     const c = file.config;
-    const ins = await db.from("offer_config").insert({ offer_id: offer.id, workspace_id: ws, vertical: c.vertical, business_opportunity: c.business_opportunity, notice_recipient: c.notice_recipient, humor_policy: c.humor_policy as Json, greeting: c.greeting, edge_tolerance: c.edge_tolerance, refund_window_days: c.refund_window_days, first_week_experience: c.first_week_experience });
+    const ins = await db.from("offer_config").insert({ offer_id: offer.id, workspace_id: ws, vertical: c.vertical, business_opportunity: c.business_opportunity, notice_recipient: c.notice_recipient, humor_policy: J(c.humor_policy), greeting: c.greeting, edge_tolerance: c.edge_tolerance, refund_window_days: c.refund_window_days, first_week_experience: c.first_week_experience });
     if (ins.error) throw new Error(`offer_config: ${ins.error.message}`);
   }
   let hasActiveResearch = false;
   if (file.dossier) {
-    const ins = await db.from("offer_research").insert({ offer_id: offer.id, workspace_id: ws, version: 1, dossier: file.dossier as unknown as Json, sources: file.dossier.sources as unknown as Json, active: true, model: "cli-supplied" });
+    const ins = await db.from("offer_research").insert({ offer_id: offer.id, workspace_id: ws, version: 1, dossier: J(file.dossier), sources: J(file.dossier.sources), active: true, model: "cli-supplied" });
     if (ins.error) throw new Error(`offer_research: ${ins.error.message}`);
     hasActiveResearch = true;
   }
@@ -158,7 +161,7 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
   if (file.offer) {
     const o = file.offer;
     const v = must(
-      await db.from("offer_variants").insert({ offer_id: offer.id, workspace_id: ws, options_sheet: o.options_sheet as Json, chosen: o.chosen as unknown as Json, reasons: o.reasons, guarantee: o.chosen.guarantee as unknown as Json, deadline: o.chosen.deadline as unknown as Json, gap_note: o.gap_note, status: "approved", approved_at: new Date().toISOString() }).select("id").single(),
+      await db.from("offer_variants").insert({ offer_id: offer.id, workspace_id: ws, options_sheet: J(o.options_sheet), chosen: o.chosen as unknown as Json, reasons: o.reasons, guarantee: o.chosen.guarantee as unknown as Json, deadline: o.chosen.deadline as unknown as Json, gap_note: o.gap_note, status: "approved", approved_at: new Date().toISOString() }).select("id").single(),
       "offer_variants",
     );
     variantId = v.id;
@@ -167,7 +170,7 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
   if (file.voice) {
     const v = file.voice;
     const row = must(
-      await db.from("voice_profiles").insert({ workspace_id: ws, offer_id: offer.id, name: v.name, parameters: v.parameters as Json, idiom_bank: v.idiom_bank as Json, dead_words: v.dead_words as Json, exemplar_paragraphs: v.exemplar_paragraphs as Json, story_inventory: v.story_inventory as Json, greeting: v.greeting, readability_band: v.readability_band }).select("id").single(),
+      await db.from("voice_profiles").insert({ workspace_id: ws, offer_id: offer.id, name: v.name, parameters: J(v.parameters), idiom_bank: J(v.idiom_bank), dead_words: J(v.dead_words), exemplar_paragraphs: J(v.exemplar_paragraphs), story_inventory: J(v.story_inventory), greeting: v.greeting, readability_band: v.readability_band }).select("id").single(),
       "voice_profiles",
     );
     voiceId = row.id;
@@ -328,7 +331,7 @@ async function cmdRun(args: ReturnType<typeof parseArgs>) {
     const gen = must(
       await db
         .from("generations")
-        .insert({ workspace_id: ws, offer_id: setup.offerId, format, status: "running", options: { ...file.options, ...(skipOffer ? { skip_offer: true } : {}) } as Json, step_order: stepOrder as unknown as Json, variant_id: setup.variantId, voice_profile_id: setup.voiceId, model_set: Object.fromEntries(Object.entries(STEP_DEFAULTS).map(([k, v]) => [k, v.model])) as Json })
+        .insert({ workspace_id: ws, offer_id: setup.offerId, format, status: "running", options: J({ ...file.options, ...(skipOffer ? { skip_offer: true } : {}) }), step_order: J(stepOrder), variant_id: setup.variantId, voice_profile_id: setup.voiceId, model_set: J(Object.fromEntries(Object.entries(STEP_DEFAULTS).map(([k, v]) => [k, v.model]))) })
         .select("id")
         .single(),
       "create generation",

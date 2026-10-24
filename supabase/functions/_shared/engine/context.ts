@@ -12,6 +12,9 @@ import { Dossier } from "./schemas/research.ts";
 import type { AngleRow, DraftRow, OfferVariantRow, StepContext, StepResult, VoiceProfileRow } from "./steps/types.ts";
 import { parseOptions } from "./draft/options.ts";
 
+/** jsonb columns declared NOT NULL take NonNullable<Json>; our values are validated objects, so the cast is a type shim only. */
+const J = (v: unknown) => v as NonNullable<Json>;
+
 function fail(what: string, error: { message: string } | null): never {
   throw new Error(`${what}: ${error?.message ?? "not found"}`);
 }
@@ -161,7 +164,7 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
     const version = (prev.data?.[0]?.version ?? 0) + 1;
     const off = await db.from("offer_research").update({ active: false }).eq("offer_id", oid).eq("active", true);
     if (off.error) fail("offer_research deactivate", off.error);
-    const ins = await db.from("offer_research").insert({ offer_id: oid, workspace_id: ws, version, dossier: fx.research.dossier as unknown as Json, sources: (fx.research.sources ?? []) as Json, active: true, model: result.model ?? null }).select("id").single();
+    const ins = await db.from("offer_research").insert({ offer_id: oid, workspace_id: ws, version, dossier: J(fx.research.dossier), sources: J(fx.research.sources ?? []), active: true, model: result.model ?? null }).select("id").single();
     if (ins.error || !ins.data) fail("offer_research insert", ins.error);
     out.researchId = ins.data.id;
     const upd = await db.from("generations").update({ research_id: ins.data.id }).eq("id", gid);
@@ -170,7 +173,7 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
 
   if (fx.offerVariant) {
     const v = fx.offerVariant;
-    const ins = await db.from("offer_variants").insert({ offer_id: oid, workspace_id: ws, options_sheet: v.optionsSheet as Json, chosen: v.chosen as Json, reasons: v.reasons, guarantee: v.guarantee as Json, deadline: v.deadline as Json, gap_note: v.gapNote, status: "proposed" }).select("id").single();
+    const ins = await db.from("offer_variants").insert({ offer_id: oid, workspace_id: ws, options_sheet: J(v.optionsSheet), chosen: v.chosen as Json, reasons: v.reasons, guarantee: v.guarantee as Json, deadline: v.deadline as Json, gap_note: v.gapNote, status: "proposed" }).select("id").single();
     if (ins.error || !ins.data) fail("offer_variants insert", ins.error);
     out.variantId = ins.data.id;
   }
@@ -187,7 +190,7 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
         claim_type: c.claim_type,
         role: c.role,
         evidence_grade: c.evidence_grade,
-        evidence: c.evidence as Json,
+        evidence: J(c.evidence),
         precision: c.precision,
         typical_result: c.typical_result,
         earnings_context: c.earnings_context as Json,
@@ -213,9 +216,9 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
       generation_id: gid,
       workspace_id: ws,
       rank: a.rank,
-      candidate: a.candidate as Json,
-      gates: (a.gates ?? {}) as Json,
-      scores: (a.scores ?? {}) as Json,
+      candidate: J(a.candidate),
+      gates: J(a.gates ?? {}),
+      scores: J(a.scores ?? {}),
       total: a.total,
       is_finalist: a.isFinalist,
       is_winner: a.isWinner,
@@ -244,7 +247,7 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
     const d = fx.newDraft;
     const ins = await db
       .from("drafts")
-      .insert({ generation_id: gid, workspace_id: ws, version, origin: d.origin, label: d.label ?? step, blocks: d.blocks as Json, markdown: d.markdown, skim_path: d.skimPath as Json, ledger_refs: d.ledgerRefs as Json, word_count: d.wordCount, created_by: null })
+      .insert({ generation_id: gid, workspace_id: ws, version, origin: d.origin, label: d.label ?? step, blocks: J(d.blocks), markdown: d.markdown, skim_path: d.skimPath as Json, ledger_refs: J(d.ledgerRefs), word_count: d.wordCount, created_by: null })
       .select("id,version")
       .single();
     if (ins.error || !ins.data) fail("drafts insert", ins.error);

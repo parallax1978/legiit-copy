@@ -30,7 +30,7 @@ export async function callStep<A, S extends z.ZodTypeAny>(
   const model = overrides.model ?? r.model ?? d.model;
   const effort = overrides.effort ?? (r.effort as Effort | undefined) ?? d.effort;
   const maxTokens = Math.min(overrides.maxTokens ?? r.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL);
-  return await callModel<S>({
+  const res = await callModel<S>({
     model,
     effort,
     maxTokens,
@@ -39,6 +39,8 @@ export async function callStep<A, S extends z.ZodTypeAny>(
     schema,
     log: { db: ctx.db, workspaceId: ctx.generation.workspace_id, generationId: ctx.generation.id, step, attempt: ctx.attempt, purpose, promptVersionId: r.promptVersionId },
   });
+  // Infer<S> resolves to z.infer<S> once S is concrete; the conditional type cannot be reduced for a generic S.
+  return res as unknown as CallResult<z.infer<S>>;
 }
 
 /** The latest completed output of an earlier step, parsed; null when absent or malformed. */

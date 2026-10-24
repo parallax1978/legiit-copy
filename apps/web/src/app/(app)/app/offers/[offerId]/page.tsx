@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { getOffer, getOfferSources, getOfferQuestions } from "@/lib/data/offers";
 import { normalizeBrief, isBriefEmpty, toSourceView } from "@/components/offers/normalize";
@@ -13,8 +13,13 @@ export async function generateMetadata({ params }: { params: Promise<{ offerId: 
   return { title: offer ? `${offer.name} · Brief` : "Offer" };
 }
 
-export default async function OfferBriefPage({ params }: { params: Promise<{ offerId: string }> }) {
+const TAB_ROUTES: Record<string, string> = { offer: "offer", variants: "offer", ledger: "claims", claims: "claims", research: "research", voice: "voice", settings: "settings", config: "settings" };
+
+export default async function OfferBriefPage({ params, searchParams }: { params: Promise<{ offerId: string }>; searchParams?: Promise<{ tab?: string }> }) {
   const { offerId } = await params;
+  const tab = (await searchParams)?.tab;
+  // Other areas link to tabs by query string; the tabs are nested routes.
+  if (tab && TAB_ROUTES[tab]) redirect(`/app/offers/${offerId}/${TAB_ROUTES[tab]}`);
   const { role, workspace } = await requireWorkspace();
   const offer = await getOffer(offerId, workspace.id);
   if (!offer) notFound();

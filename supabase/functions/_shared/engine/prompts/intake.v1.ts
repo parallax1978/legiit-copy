@@ -74,13 +74,20 @@ export interface ClaimLike {
   establishment_signal?: boolean;
 }
 
+/** How a user decision on a flagged row reads to the model. 'drop' rows never reach a prompt. */
+const USER_DECISION_NOTE: Record<string, string> = {
+  keep: "user_decision=keep (the user accepted the flag; usable as written)",
+  rewrite: "user_decision=rewrite (claim_text is already the user's rewritten text)",
+};
+
 /** One block per row, headed by the handle the model must cite: [[L:<id>]]. Dropped rows are left out. */
 export function renderClaims(claims: ClaimLike[]): string {
   const rows = claims
     .filter((c) => c.user_decision !== "drop")
     .map((c) => {
+      const decision = c.user_decision ? ` ${USER_DECISION_NOTE[c.user_decision] ?? `user_decision=${c.user_decision}`}` : "";
       const lines = [
-        `[[L:${c.id}]] type=${c.claim_type} role=${c.role ?? "-"} grade=${c.evidence_grade ?? "-"} status=${c.status}${c.user_decision ? ` user_decision=${c.user_decision}` : ""}`,
+        `[[L:${c.id}]] type=${c.claim_type} role=${c.role ?? "-"} grade=${c.evidence_grade ?? "-"} status=${c.status}${decision}`,
         `  claim: ${neutralizeTags(c.claim_text)}`,
       ];
       const extras: string[] = [];
