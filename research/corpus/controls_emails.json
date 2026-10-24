@@ -32,7 +32,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Author-stated anecdotes, quoted as written: real estate client 'got dozens of replies and tons of engagement' and 'sold several other properties over the next couple of months'; motorcycle-jeans maker 'sold over $9,000 in less than a week'; yacht broker 'uncovered a buyer for a $100 million custom yacht'; postcard company 'went from 5% click-through to over 30%'; author says 'it's not uncommon to send emails that get 60%+ response rates'. No sample sizes or independent verification.",
-      "source_url": "https://deanjackson.com/blog/9-word-email-variations/"
+      "source_url": "https://deanjackson.com/blog/9-word-email-variations/",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -78,7 +80,9 @@
     "results": {
       "type": "split_test",
       "detail": "Seven tests reported as winner's margin over loser in open rate: 7%, 4.6%, 4.4%, 4.2%, 2%, 1.5%, 0.9%. Follow-up brand-tag test: 'startup Qs about landing pages + emails [Copyhackers]' 36.4% open vs the same line without the tag 32% open. No sample sizes stated; the author treats these as directional.",
-      "source_url": "https://copyhackers.com/2013/03/email-subject-lines/"
+      "source_url": "https://copyhackers.com/2013/03/email-subject-lines/",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -163,8 +167,10 @@
     },
     "results": {
       "type": "self_reported",
-      "detail": "Author states 'up to 200% readership' defined as relative content consumed versus an email-only series, 'not 200% OPEN RATES'; one subscriber's session described as 'NINETY-TWO MINUTES'; open-rate comparison shown only as an unlabelled graph image; deliverability claim from 'my own (unscientific) tests'. No revenue stated. Testimonials attributed to initials only.",
-      "source_url": "https://persuasivepage.com/parallel-welcome-sequence/"
+      "detail": "Page headline: 'Gets Up To 200% Engagement From Your New Subscribers'; body explains the figure as copy volume ('some readers will end up reading literally 200% of the amount of copy they would be reading if you just had an email sequence'), not a measured open or revenue lift. One subscriber 'spent a whopping NINETY-TWO MINUTES bingeing'; open-rate comparison shown only as an unlabelled graph image; deliverability claim from 'my own (unscientific) tests'. No revenue stated. Testimonials attributed to initials only.",
+      "source_url": "https://persuasivepage.com/parallel-welcome-sequence/",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: page fetched. Earlier detail quoted 'up to 200% readership' and 'not 200% OPEN RATES', which do not appear on the page; replaced with the page's actual wording."
     },
     "losing_variants": [],
     "lessons": [
@@ -215,8 +221,10 @@
     },
     "results": {
       "type": "self_reported",
-      "detail": "Vendor-stated figures on the sales page: Big Reveal '$82,358' (Success Triggers launch); Free Taste '$28,721' (How to Talk to Anybody); Last Chance '$165,803 in a few hours' (Zero to Launch funnel); the trio '$379,643' in the example launch; Mental Mastery launch '$617,944 in about a week, with over 60% of revenue from the Power Trio'; 'over $5,000,000' through an evergreen funnel. No list sizes given.",
-      "source_url": "https://www.iwillteachyoutoberich.com/behind-the-sales-email/"
+      "detail": "Vendor-stated figures on the sales page: Big Reveal '$82,358' (Success Triggers launch); Free Taste '$28,721' (How to Talk to Anybody); Last Chance '$165,803 in a few hours' (Zero to Launch funnel); the trio '$379,643' in the example launch; Mental Mastery launch '$617,944 in about a week, Power Trio 'brought in over 60% of all our revenue''; 'over $5,000,000' through an evergreen funnel. No list sizes given.",
+      "source_url": "https://www.iwillteachyoutoberich.com/behind-the-sales-email/",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -270,7 +278,9 @@
     "results": {
       "type": "none",
       "detail": "Systeme.io states 'most sales happen on day one and peak on the last day' with no figures; Walker's own emails and numbers are not public. Article's figures ('$1 Billion in sales' helped students gain) are biography, not email results.",
-      "source_url": "https://systeme.io/blog/jeff-walker-millions"
+      "source_url": "https://systeme.io/blog/jeff-walker-millions",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: page fetched; quoted statements ('most of your sales happen on day one and peak on the last day', 'tsunami', '$1 Billion', three emails on day five) confirmed. No figures claimed."
     },
     "losing_variants": [],
     "lessons": [
@@ -447,8 +457,10 @@
     },
     "results": {
       "type": "longevity",
-      "detail": "Curator notes the same email was reused in 2014 and 2015 with updated content, which the curator treats as evidence it was a proven performer; no figures.",
-      "source_url": "https://swiped.co/file/email-trial-deiss/"
+      "detail": "Curator states the emails 'were sent by distinguished marketer Ryan Deiss in both 2014 & 2015' as 'the same email with recent information swapped in'; key takeaway frames this as 'reusing emails that worked & fit well previously'. No figures; the curator does not use the phrase 'proven performer'.",
+      "source_url": "https://swiped.co/file/email-trial-deiss/",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched; reuse across 2014 and 2015 confirmed. 'Proven performer' was the researcher's paraphrase and has been replaced with the curator's wording."
     },
     "losing_variants": [],
     "lessons": [
@@ -625,8 +637,10 @@
     },
     "results": {
       "type": "self_reported",
-      "detail": "Handpicked-emails page: '#2 ... (split test with winning subj: kill my housemate)' and received the 'Email of the Week' honour from Chris Orzechowski (The Email Copywriter, 29 Jan 2020). Collection-level claim: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "detail": "Handpicked-emails page: '#2 ... (split test with winning subj: kill my housemate)' and '#2 gets the \"Email of the Week\" honor, where email copywriting expert Chris Orzechowski breaks it down passage by passage.' Collection-level claim: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: handpicked page fetched; split-test note, Email of the Week honour and collection-level claim confirmed. The '29 Jan 2020' date previously given for the Email of the Week is not on the page and was removed (unverified)."
     },
     "losing_variants": [
       {
@@ -683,7 +697,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -729,7 +745,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -775,7 +793,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Handpicked page: 'World's worst fish (split tested with winning subj: \"worst I ever had\")'; the archived email carries the winning subject. Collection-level engagement claim only.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -828,7 +848,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Handpicked page notes #6 received the 'Copy Chief' tribute (Kevin Rogers). Collection-level engagement claim only.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -878,7 +900,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -920,7 +944,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -972,7 +998,9 @@
     "results": {
       "type": "self_reported",
       "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
-      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [],
     "lessons": [
@@ -1420,8 +1448,10 @@
     },
     "results": {
       "type": "split_test",
-      "detail": "Donor conversion: C $35 ask 0.10%; T1 $50 ask 0.05% (-52.3%, 99.9% confidence); T2 'Generous Gift' ask 0.14% (+43.1%, 97.4% confidence). Sample 203,864 (12,823 required); stated valid, 05/15/2016-05/24/2016. Page also states T2 'generated a higher average gift than the control' (no figure).",
-      "source_url": "https://www.nextafter.com/?p=12774"
+      "detail": "Donor conversion: C $35 ask 0.10%; T1 $50 ask 0.05% (-52.3%, 99.9% confidence); T2 'Generous Gift' ask 0.14% (+43.1%, 97.4% confidence). Sample 203,864 (12,823 required); stated valid, 05/15/2016-05/24/2016. Page also states T2 'generated a higher average gift than the control' (no figure). Note: the page's Flux Metrics section lists 0% change in average gift, which conflicts with that key-learnings statement.",
+      "source_url": "https://www.nextafter.com/?p=12774",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -1470,7 +1500,9 @@
     "results": {
       "type": "split_test",
       "detail": "Conversion rate: C soft CTA 0.06%; T1 direct asks 0.20% (+246.1%, 99.2% confidence). Sample 19,137 (4,683 required), 02/16/2017-02/21/2017, stated valid. Flux: -10.7% average gift, +209.0% revenue, and a statistically significant 67% decrease in visitors to the donation page.",
-      "source_url": "https://www.nextafter.com/?p=13419"
+      "source_url": "https://www.nextafter.com/?p=13419",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -1520,7 +1552,9 @@
     "results": {
       "type": "split_test",
       "detail": "Click rate: C without testimony 1.7%; T1 with testimony 2.0% (+22.2%, 100.0% confidence). Sample 65,184 (10,330 required), 06/01/2017-06/20/2017, stated valid. Flux: +22.2% traffic, 0% change in conversion rate and average gift.",
-      "source_url": "https://www.nextafter.com/?p=13749"
+      "source_url": "https://www.nextafter.com/?p=13749",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -1566,7 +1600,9 @@
     "results": {
       "type": "split_test",
       "detail": "Click rate: C 0.21%; T1 0.44% (+109.2%, 100.0% confidence). Sample 119,721 (4,750 required), 03/08/2016-03/14/2016, stated valid. Flux: +109.2% traffic, 0% change in conversion rate and average gift.",
-      "source_url": "https://www.nextafter.com/?p=12535"
+      "source_url": "https://www.nextafter.com/?p=12535",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -1619,7 +1655,9 @@
     "results": {
       "type": "split_test",
       "detail": "Click rate: C marketing email 0.31%; T1 personal tone 0.60% (+91.3%, 99.0% confidence). Sample 14,619 (4,248 required), 05/15/2016-05/20/2016, stated valid. Page reports a directional but not statistically valid increase in Torchbearer conversions.",
-      "source_url": "https://www.nextafter.com/?p=12763"
+      "source_url": "https://www.nextafter.com/?p=12763",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: source page fetched and stated figures confirmed."
     },
     "losing_variants": [
       {
@@ -1676,7 +1714,9 @@
     "results": {
       "type": "none",
       "detail": "No figures; curator's verdict: 'a damn good welcome email. Smooth like butter.' and that 'any e-commerce brand owner can model' it.",
-      "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-53-brain-fm"
+      "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-53-brain-fm",
+      "verification": "verified",
+      "verification_note": "Verified 2026-10-24: page fetched; curator verdict quotes confirmed. No figures claimed."
     },
     "losing_variants": [],
     "lessons": [

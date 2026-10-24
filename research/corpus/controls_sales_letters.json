@@ -45,14 +45,15 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co annotation: ran from 1975 to 2003 with only minor edits and 'sold $2 billion worth of Wall St. Journal subscriptions'. Copyblogger states 'an estimated $2 billion in revenue'; other secondary sources (e.g. Doug D'Anna) put it at about $1 billion. Treat the dollar figure as an estimate; the 28-year run is consistently reported.",
-      "source_url": "https://swiped.co/file/wallstreet-letter-conroy/"
+      "source_url": "https://swiped.co/file/wallstreet-letter-conroy/",
+      "verification_note": "verified 2026-10-24: swiped.co page states 'ran from 1975-2003' and 'sold $2 billion worth of Wall St. Journal subscriptions'."
     },
     "losing_variants": [],
     "lessons": [
       "A story lead that never names the product until the turn can hold a control for decades when the parable maps one-to-one onto the promise.",
       "The mechanism is stated as a single abstraction (applied knowledge) and then made concrete by the product's deliverables; no statistics were needed.",
       "Offer order: low-priced trial first, bigger annual offer second, tax note in the P.S.; the close restates the lead rather than summarizing benefits.",
-      "Lineage matters: the parable descends from Bruce Barton's Alexander Hamilton Institute ads (swiped.co notes this), so argument structures can be reused across decades with a new product."
+      "Lineage matters: the parable descends from Bruce Barton's Alexander Hamilton Institute ads (swiped.co's Barton page, record 15, says Conroy swiped them), so argument structures can be reused across decades with a new product."
     ],
     "notes": "Full text widely reposted (copyblogger.com/the-greatest-sales-letter-of-all-time/ reproduces the opening and comments quote the P.S.). The Agora Financial swipe of this letter (swiped.co/file/wallstreet-agora/) keeps the sentence structure and expands the deliverables section; no results are published for the swipe."
   },
@@ -97,7 +98,8 @@
     "results": {
       "type": "longevity",
       "detail": "Chief Marketer obituary: written in 1959, 'remained unbeaten for 15 years', beat 'dozens of letters that tested against it', reportedly reached more than 150 million people. AWAI: control for 15 years, mailed to over 150 million people, brought in more new subscriptions than any other letter in that period.",
-      "source_url": "https://www.awai.com/2022/03/single-decision-could-speed-up-your-earning-power/"
+      "source_url": "https://www.awai.com/2022/03/single-decision-could-speed-up-your-earning-power/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -163,7 +165,8 @@
     "results": {
       "type": "longevity",
       "detail": "AWAI: Bonner 'wrote the 25-year control that launched International Living (#5 in AWAI's Hall of Fame collection)'. swiped.co labels the PDF 'The Famous Letter That Launched International Living'. No revenue figures published.",
-      "source_url": "https://www.awai.com/2010/03/agora-founder-bill-bonner-to-speak-at-bootcamp/"
+      "source_url": "https://www.awai.com/2010/03/agora-founder-bill-bonner-to-speak-at-bootcamp/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -213,9 +216,10 @@
       "length_words_est": 360
     },
     "results": {
-      "type": "self_reported",
+      "type": "unverified",
       "detail": "No fetched source gives a documented figure. LinkedIn/Bray: 'massively successful', Halbert 'made tons of money'. thegaryhalbertletter.com calls it 'one of the most successful direct marketing pieces in history'. Secondary blogs circulate a '$600 million' total and a '$300,000 per day' (inflation-adjusted) figure; neither cites a primary record. Postal Service action against Halbert's Inc. marketing in 1995 is reported by genealogy sites.",
-      "source_url": "https://www.thegaryhalbertletter.com/MarkJoyner/hp2.htm"
+      "source_url": "https://www.thegaryhalbertletter.com/MarkJoyner/hp2.htm",
+      "verification_note": "verified 2026-10-24: thegaryhalbertletter.com page says only 'one of the most successful direct marketing pieces in history'; no revenue, run-length or response figure appears on any fetched source. The circulating $600 million and $300,000-per-day figures are unsourced."
     },
     "losing_variants": [],
     "lessons": [
@@ -279,8 +283,9 @@
     },
     "results": {
       "type": "longevity",
-      "detail": "Ran from 1973 (updated version 1979) in newspapers across North America; book sold 'over 2.7 million copies' (The Essence) / 'over three million copies' (Butler-Bowdon) / 'nearly 3 million' (Walrus via search); never sold in bookstores. Price $10 (Los Angeles magazine). Figures are Karbo's and his biographers'.",
-      "source_url": "https://lamag.com/ask-chris/who-was-that-get-rich-quick-guy-who-used-to-advertise-in-l-a/"
+      "detail": "Ran from 1973 (updated version 1979) in newspapers (The Essence); book sold 'over 2.7 million copies' (The Essence). Los Angeles magazine: 'Millions sent in $10 for his self-improvement ideas', book written 1973. Other counts ('over three million', Butler-Bowdon; 'nearly 3 million', Walrus) and the 'never sold in bookstores' claim come from secondary sources not fetched. Figures are Karbo's and his biographers'.",
+      "source_url": "https://lamag.com/ask-chris/who-was-that-get-rich-quick-guy-who-used-to-advertise-in-l-a/",
+      "verification_note": "verified 2026-10-24: lamag.com confirms $10 price and 1973; theessence.substack.com (record source_url) confirms 'sold over 2.7 million copies', 'running first in 1973', 'the updated ad, which ran in 1979', the accountant's sworn statement and the 31-day uncashed check. 'Across North America' and 'never sold in bookstores' were not found on either page and were removed from detail."
     },
     "losing_variants": [],
     "lessons": [
@@ -335,7 +340,8 @@
     "results": {
       "type": "longevity",
       "detail": "First ran New York Times, Oct 19 1948; swiped.co says it ran 1948-1965 and drew 'over 10,000 responses' for the booklet; A Wealth of Common Sense reports Merrill said it received 'more than 3 million responses' over its life. Figures conflict; the multi-year national run is consistent across sources.",
-      "source_url": "https://awealthofcommonsense.com/2018/08/the-first-modern-investing-advertisement/"
+      "source_url": "https://awealthofcommonsense.com/2018/08/the-first-modern-investing-advertisement/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -394,7 +400,8 @@
     "results": {
       "type": "self_reported",
       "detail": "swiped.co: sales rose 50 percent in 1958 over 1957; campaign ran 1958-1962 in The New Yorker and major-city newspapers; budget $50,000; Ogilvy wrote 26 headlines and six agency writers picked this one. Journal of Antiques and Encyclopedia.com repeat the 50% figure (Encyclopedia.com gives a $25,000 cost).",
-      "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/"
+      "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/",
+      "verification_note": "verified 2026-10-24: swiped.co states 'sales in 1958 rose 50 percent from 1957', 'Ran 1958-1962', '$50,000', '26 different headlines'; it says 'half a dozen writers', not six."
     },
     "losing_variants": [
       {
@@ -458,7 +465,8 @@
     "results": {
       "type": "self_reported",
       "detail": "swiped.co: 'one of the BluBlocker ads that helped Joe Sugarman sell 20 million pairs'; ran 1987. The 20-million figure covers the whole BluBlocker business (print, catalog and infomercial) and comes from Sugarman and obituaries, not audited records.",
-      "source_url": "https://swiped.co/file/vision-break-through-blublocker-ad-by-joe-sugarman/"
+      "source_url": "https://swiped.co/file/vision-break-through-blublocker-ad-by-joe-sugarman/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -516,7 +524,8 @@
     "results": {
       "type": "self_reported",
       "detail": "Duhigg (Power of Habit, Slate excerpt): demand surged about three weeks after the first ads; within a decade Pepsodent was among the top-selling toothpastes worldwide and daily brushing went from rare to a ritual for more than half the US population; Hopkins wrote he 'made for myself a million dollars on Pepsodent'. The film theme ran unchanged in substance from at least 1920 (this ad) to 1927 (record 10).",
-      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html"
+      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -570,7 +579,8 @@
     "results": {
       "type": "longevity",
       "detail": "Same campaign premise as the 1920 ad seven years on; Duhigg quotes the 'Just run your tongue across your teeth' line as the campaign's signature; Pepsodent among the top-selling toothpastes worldwide within a decade of the campaign (Slate excerpt).",
-      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html"
+      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html",
+      "verification_note": "verified 2026-10-24: Slate excerpt confirms the tongue line and top-seller claim; Lantern page confirms Motion Picture Magazine, 1927. The longevity claim is the researcher's inference from the 1920 and 1927 ads sharing one premise."
     },
     "losing_variants": [],
     "lessons": [
@@ -624,8 +634,9 @@
     },
     "results": {
       "type": "self_reported",
-      "detail": "Story Power Marketing: the copy 'sold mountains of home-study courses' and became one of the most copied ads ever written; Campaign (via search) reports 'a record number of coupons' in Physical Culture. Written 1925; variants ran through at least 1927 (see record 12). No dollar figures.",
-      "source_url": "https://storypowermarketing.com/the-story-behind-one-of-the-greatest-ads-ever/"
+      "detail": "Story Power Marketing: the copy 'sold mountains of home-study courses for the U.S. School of Music' and is 'one of the most celebrated — and copied — ads ever written'. Written 1925; variants ran through at least 1927 (see record 12). No dollar or response figures.",
+      "source_url": "https://storypowermarketing.com/the-story-behind-one-of-the-greatest-ads-ever/",
+      "verification_note": "verified 2026-10-24: quotes confirmed on storypowermarketing.com. A 'record number of coupons' claim attributed to Campaign via a search snippet was not verified and was removed."
     },
     "losing_variants": [],
     "lessons": [
@@ -680,7 +691,8 @@
     "results": {
       "type": "longevity",
       "detail": "A 1927 sibling of the 1925 control, showing the story template still running two years on with the proof count updated; no response figures in the fetched source.",
-      "source_url": "https://lantern.mediahist.org/catalog/screenland15unse_0271"
+      "source_url": "https://lantern.mediahist.org/catalog/screenland15unse_0271",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -738,7 +750,8 @@
     "results": {
       "type": "longevity",
       "detail": "Wikipedia: the campaign ran for more than 40 years; over 150,000 students bought the course from 1918. Victor Schwab compared this headline against 'How to Speak and Write Masterly English' over a ten-year period; the 'mistakes' headline drew responses at nearly three times the rate.",
-      "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody"
+      "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -793,7 +806,8 @@
     "results": {
       "type": "self_reported",
       "detail": "swiped.co: ran 1929; 'the first ad was the most successful ad he created for them'. An earlier 'Retirement Income Plan' ad had pulled best but declined from running so often; this ad reused its elements. No figures.",
-      "source_url": "https://swiped.co/file/quit-work-ad-john-caples/"
+      "source_url": "https://swiped.co/file/quit-work-ad-john-caples/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -848,7 +862,8 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co: 'very successful'; the Institute campaign ran 1923-1934 (over a decade); these ads were the basis for Martin Conroy's WSJ letter, 'often called the most profitable sales letter ever'. No figures.",
-      "source_url": "https://swiped.co/file/know-it-all-ad-bruce-barton/"
+      "source_url": "https://swiped.co/file/know-it-all-ad-bruce-barton/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -898,7 +913,8 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co: the Institute's best-performing ad, ran 1936-1953 and in variations for '2-3 decades'; no response figures.",
-      "source_url": "https://swiped.co/file/getstarted-writing-ad/"
+      "source_url": "https://swiped.co/file/getstarted-writing-ad/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -944,7 +960,8 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co: ran 1926-1931, 'ran for 5+ years'; no response figures.",
-      "source_url": "https://swiped.co/file/magic-secrets-advertisement/"
+      "source_url": "https://swiped.co/file/magic-secrets-advertisement/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -998,7 +1015,8 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co: ran frequently 1967-1974 with a similar formula; of three headline approaches (trial duration, amount of advice, end-date urgency) the duration-based '4/8 weeks' headline ran most often, which swiped.co reads as the best performer. No response figures.",
-      "source_url": "https://swiped.co/file/dollar-stock-advice-ads/"
+      "source_url": "https://swiped.co/file/dollar-stock-advice-ads/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -1055,7 +1073,8 @@
     "results": {
       "type": "longevity",
       "detail": "swiped.co tags the strategy 'Control' and notes Motley Fool 'has been using this type of promotion for many years now', with ads spanning 2011-2015. No conversion data.",
-      "source_url": "https://swiped.co/file/motleyfool-deathof-strategy/"
+      "source_url": "https://swiped.co/file/motleyfool-deathof-strategy/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -1104,8 +1123,9 @@
     },
     "results": {
       "type": "longevity",
-      "detail": "swiped.co annotation: written 1979, ran 1981 onward 'for about two decades in direct mail and print'; Schwartz said mailings in one January exceeded all mailings in the ad's first eight years; the author was paid 'well over a million dollars' in royalties (Schwartz interview quoted on the page).",
-      "source_url": "https://swiped.co/burn-disease-ad-by-eugene-schwartz"
+      "detail": "swiped.co annotation: 'Originally written in 1979, this promotion ran for two decades in direct mail & as a print ad'; Schwartz (interview quoted on the page): 'We are mailing more in January than we mailed for the first eight years of the mailing' and 'We paid the author well over a million dollars'.",
+      "source_url": "https://swiped.co/burn-disease-ad-by-eugene-schwartz",
+      "verification_note": "verified 2026-10-24: all three quotations confirmed on swiped.co page; the earlier wording 'royalties' was not in the source and was removed."
     },
     "losing_variants": [],
     "lessons": [
@@ -1157,7 +1177,8 @@
     "results": {
       "type": "self_reported",
       "detail": "swiped.co: 'very successful' four-page letter, ran 1988; Boardroom has sold hundreds of millions of newsletters and books since 1972. No conversion data for this letter.",
-      "source_url": "https://swiped.co/file/boardroom-reports-eugene-schwartz/"
+      "source_url": "https://swiped.co/file/boardroom-reports-eugene-schwartz/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [],
     "lessons": [
@@ -1208,7 +1229,8 @@
     "results": {
       "type": "revenue",
       "detail": "Brian Kurtz: Boardroom mailed more than 20 million names for the book, one drop of 9 million (the largest single mailing Boardroom ever did for one book); the book sold over 500,000 copies, roughly $20 million in sales. Mel Martin was Boardroom's behind-the-scenes copywriter from the late 1970s to 1994.",
-      "source_url": "https://realbriankurtz.substack.com/p/the-original-bullet-man"
+      "source_url": "https://realbriankurtz.substack.com/p/the-original-bullet-man",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -1269,7 +1291,8 @@
     "results": {
       "type": "longevity",
       "detail": "AWAI editor's note: the package beat the original control and 'mailed for 5 years to 30 million names'. No revenue figures.",
-      "source_url": "https://www.awai.com/2003/05/john-carlton-reveals-his-secrets/"
+      "source_url": "https://www.awai.com/2003/05/john-carlton-reveals-his-secrets/",
+      "verification_note": "verified 2026-10-24: figures in detail confirmed on results.source_url."
     },
     "losing_variants": [
       {
@@ -1383,13 +1406,14 @@
     },
     "results": {
       "type": "revenue",
-      "detail": "Tim Ferriss interview (2011): more than 500,000 copies sold since 2005; annual revenue grew to $3.6M, $6M, then about $11M net of ClickBank fees (gross estimated $20-25M); about half of sales via affiliates, half via Geary's media buys; price tested from $29.95 to $97 with $47 as the 'sweet spot'. Self-reported by the owner.",
-      "source_url": "https://tim.blog/2011/11/02/the-truth-about-abs-mike-geary/"
+      "detail": "Tim Ferriss interview (2011): 'sold more than 500,000 copies since 2005'; annual revenue grew to $3.6M, $6M, then $11M (whole business, net of ClickBank fees; Geary guesses gross 'around $20MM-$25MM per year'); affiliates about 50% of sales at 75% commission. Price points $29.95-$97 were tested across Geary's fitness info products generally, with $47 found to be the 'sweet spot' for most of them. Self-reported by the owner.",
+      "source_url": "https://tim.blog/2011/11/02/the-truth-about-abs-mike-geary/",
+      "verification_note": "verified 2026-10-24: figures confirmed on tim.blog; the price-test and $47 statements apply to Geary's fitness info products in general, so detail and losing_variants were narrowed accordingly."
     },
     "losing_variants": [
       {
-        "description": "Price points $29.95, $39.95, $67, $77, $79 and $97 tested against $47.",
-        "result": "$47 maximized front-end revenue and customer count (Geary's account; no lift figures)."
+        "description": "Price points $29.95, $39.95, $67, $77, $79 and $97 tested against $47 across Geary's fitness info products (not stated to be this page alone).",
+        "result": "$47 described as the 'sweet spot for most online fitness info products' (Geary's account; no lift figures)."
       }
     ],
     "lessons": [

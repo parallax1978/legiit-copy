@@ -1,0 +1,729 @@
+[
+  {
+    "id": "brief-01",
+    "offer_name": "DS-01 Daily Synbiotic",
+    "company": "Seed Health",
+    "offer_url": "https://seed.com/daily-synbiotic",
+    "market": "supplements (probiotic / gut health)",
+    "price": "$49.99 per 30-day supply, delivered monthly; subscription required (FAQ answers \"Yes\" to \"Do I have to sign up for a subscription?\"); 3- and 6-month Sustainable Refill options listed without prices; free US shipping",
+    "deliverables": [
+      "60 capsules per month (24-strain probiotic + prebiotic, ViaCap delivery)",
+      "Complimentary Welcome Kit with first order: reusable glass jar, Seed reading materials, travel vial with a week's supply",
+      "Pause or cancel anytime"
+    ],
+    "guarantee": "\"30-day risk-free guarantee.\" Full product cost refunded, less shipping, VAT and duties, \"no questions asked,\" within 30 days of delivery of the first order; refills are final sale 30 days after delivery",
+    "audience": "Adults 25-55 with bloating, gas or irregularity who have tried a grocery-store probiotic and are unsure it worked; skews female, wellness-literate, subscription-tolerant",
+    "positioning": "The clinically tested, high-strain probiotic that actually survives to the colon, versus rivals with \"10 or less strains\" that are \"Rarely validated to reach the gut\"",
+    "proof_available": [
+      {"claim": "\"Daily probiotic + prebiotic clinically validated to relieve bloating, gas, and irregularity\"", "evidence": "Statement that DS-01 was \"Tested in multiple full formulation randomized, placebo-controlled clinical trials\"; the page links to trial results but does not reproduce them", "url": "https://seed.com/daily-synbiotic"},
+      {"claim": "\"24 strain formula for transformative gut benefits\"", "evidence": "Blend table per two-capsule dose: Digestive Health 224 mg / 38.7 billion AFU; Dermatological 36 mg / 3.34 billion AFU; Cardiovascular 13 mg / 4.21 billion AFU; Micronutrient Synthesis 36 mg / 7.32 billion AFU", "url": "https://seed.com/daily-synbiotic"},
+      {"claim": "4.8 out of 5 stars", "evidence": "15,742 reviews shown on page; review summary is labelled AI-generated", "url": "https://seed.com/daily-synbiotic"},
+      {"claim": "Digestive effects \"in as little as 24-48 hours\"", "evidence": "Stated on page; cardiovascular and gut-immune benefits \"may take longer\"; no study cited for the timing", "url": "https://seed.com/daily-synbiotic"},
+      {"claim": "Tested for heavy metals, glyphosate, AMPA and allergens; Prop. 65 compliant; no binders or preservatives", "evidence": "Testing list on page; note the page says \"Formulated without gluten, soy, and dairy\" while the FAQ says \"tested for\" those allergens, which are different claims", "url": "https://seed.com/daily-synbiotic"}
+    ],
+    "competitors": ["Ritual Synbiotic+", "Culturelle", "Garden of Life Dr. Formulated Probiotics", "Align", "AG1 (adjacent daily greens with probiotics)"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Problem-aware: knows bloating and irregularity, has heard of probiotics, distrusts them because the last one did nothing; the mechanism (survival to the colon) is the new information",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["meta_ad", "advertorial", "email_sequence", "product_description"],
+    "notes": "Regulated structure/function territory: \"relieve bloating\" sits near a disease claim and the ad spec forbids \"cure, heal, eliminate\"; forced subscription is a real objection the copy must handle honestly; proof is strong but the trial results are behind a link, so the ledger holds the claim of trials, not their figures; one allergen inconsistency on the page tests whether the engine chooses the narrower claim"
+  },
+  {
+    "id": "brief-02",
+    "offer_name": "Pod 6 Cover + Hub",
+    "company": "Eight Sleep",
+    "offer_url": "https://www.eightsleep.com/product/pod-cover/",
+    "market": "ecommerce physical goods (sleep technology)",
+    "price": "Pod 6 Standard (Queen) $2,899; Autopilot Enhanced plan $25/mo or $299 billed annually; page total shown as $3,198 \"includes Autopilot plan\"; whether Autopilot is required was not visible in the fetched text",
+    "deliverables": [
+      "The Cover (\"only 1-inch thick,\" fits \"any mattress\")",
+      "The Hub (temperature unit)",
+      "Autopilot plan with nightly auto-adjustment and sleep/health data",
+      "Add-ons sold separately: Base (3\" thick, supports up to 750 lbs), Blanket, Pillow Cover"
+    ],
+    "guarantee": "\"30-night risk-free trial,\" \"Free returns,\" \"Free shipping,\" \"5-year warranty\" (return policy text not in fetched content)",
+    "audience": "Dual-income couples 30-55 who run hot or sleep with a partner who runs cold, already own a good mattress, track health with a wearable, and have spent on fitness or recovery gear",
+    "positioning": "\"A connected system that works with any bed to maintain your ideal temperature and comfort all night long\" ... \"the most powerful Pod ever made\"",
+    "proof_available": [
+      {"claim": "4.5 stars", "evidence": "40,660 reviews shown on the product page", "url": "https://www.eightsleep.com/product/pod-cover/"},
+      {"claim": "\"Over one million nights of sleep improved and counting\"", "evidence": "Stated on page without a method or definition of \"improved\"", "url": "https://www.eightsleep.com/product/pod-cover/"},
+      {"claim": "\"Reduce snoring by up to 45% with real-time adjustments.\"", "evidence": "Carries an asterisk; footnote text not visible in fetched content", "url": "https://www.eightsleep.com/product/pod-cover/"},
+      {"claim": "\"Clinical-grade sensors track nightly sleep and health data\"; Cover makes \"up to 40 micro-adjustments\" per night", "evidence": "Feature statements; several carry footnote markers whose text was not visible", "url": "https://www.eightsleep.com/product/pod-cover/"}
+    ],
+    "competitors": ["Sleepme Chilipad Dock Pro", "BedJet 3", "Ooler", "Tempur-Pedic / Purple cooling mattresses", "A $30 cooling mattress topper"],
+    "traffic_assumption": "warm",
+    "awareness_hypothesis": "Solution-aware for retargeting and YouTube-review traffic (knows cooling bed systems exist, comparing); problem-aware for cold social (hot sleeper, partner fights over the thermostat)",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["sales_letter", "youtube_ad", "email_sequence", "meta_ad"],
+    "notes": "High ticket plus a subscription on top: price presentation and the stack test; the snoring and one-million-nights claims have unresolved footnotes, so the ledger must mark them as unverified and the copy must keep the exact \"up to\" phrasing; health-adjacent benefit claims (snoring, recovery) must stay on the wellness side of the line; abandoned-cart sequence at $3,198 is a genuine objection-handling problem"
+  },
+  {
+    "id": "brief-03",
+    "offer_name": "Oura Ring 5 + Oura Membership",
+    "company": "Oura",
+    "offer_url": "https://ouraring.com/",
+    "market": "ecommerce physical goods (wearables / health tracking)",
+    "price": "Ring hardware price not shown on any page fetched (homepage, /membership, /product/rings); Membership \"$5.99 USD/month or $69.99 USD/annually before tax,\" \"Free trial month for new members\"; FSA or HSA eligible",
+    "deliverables": [
+      "Oura Ring (Ring 5 described as \"the world's smallest smart ring,\" \"40% smaller than Oura Ring 4\"); box contents listed for Ring 4: ring, size-specific charger, USB-C cable",
+      "Membership: Oura App tracking \"over 50 health metrics\" across Sleep, Activity, Stress, Heart Health, Women's Health, Longevity",
+      "Oura Advisor (\"Oura's AI-powered health companion\"), Symptom Radar, Health Radar",
+      "New features and enhancements as added"
+    ],
+    "guarantee": "none visible in fetched content (return and warranty sections were truncated)",
+    "audience": "Health-optimizing adults 28-50 who dislike wearing a watch to bed, are curious about sleep and readiness scores, and may already be on a GLP-1, training plan or fertility journey",
+    "positioning": "\"Wear your best life\" ... \"Get a clearer picture of your health with the world's smallest smart ring\"; insights \"unique to your body, so every day adds up to a longer, healthier life\"",
+    "proof_available": [
+      {"claim": "\"86% of Oura Members see their health improve\"", "evidence": "Footnote 1: \"Based on a 2026 survey with 3,501 Oura members after using Oura Ring for 30 days\" (self-reported survey, not a clinical measure)", "url": "https://ouraring.com/"},
+      {"claim": "\"4.9 App Store Rating based on 280k reviews\"", "evidence": "Stated on membership page", "url": "https://ouraring.com/membership"},
+      {"claim": "\"5+ Million Oura Members\"", "evidence": "Stated on membership page", "url": "https://ouraring.com/membership"},
+      {"claim": "Press: The Guardian \"a stunning generational leap for smart rings\"; Esquire \"It's Thinner Than We Could've Imagined\"; CNET \"The New Gold Standard\"", "evidence": "Pull quotes on homepage", "url": "https://ouraring.com/"},
+      {"claim": "Member testimonials, including one that Oura \"didn't just track my health — it saved my life\" and one describing an A-fib diagnosis after a resting-heart-rate alert", "evidence": "Named first-name testimonials (Ted N., Rhonda C.); the Health Radar footnote states it is \"intended for general wellness purposes only\" and \"not intended to diagnose, treat, cure, mitigate, monitor, or prevent any disease\"", "url": "https://ouraring.com/membership"},
+      {"claim": "Battery \"between 5–8 days\"; \"Water resistant up to 100m/328 ft\"", "evidence": "Spec statements on rings page with a \"results will vary\" footnote on battery", "url": "https://ouraring.com/product/rings"}
+    ],
+    "competitors": ["Whoop", "Apple Watch", "Samsung Galaxy Ring", "RingConn", "Ultrahuman Ring Air"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware: knows wearables exist and probably owns or abandoned one; the ring form factor and sleep-first framing are the differentiators; skeptical about another subscription",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["short_landing_page", "meta_ad", "youtube_ad", "product_description"],
+    "notes": "Tests a ledger gap: the hardware price was not on the pages fetched, so the engine must either leave price out or flag it rather than invent one; the strongest emotional proof (A-fib, \"saved my life\") is exactly the proof the wellness disclaimer forbids leaning on, so the factual review must catch disease-claim drift; the 86% figure is a self-report survey and precision must match that; crowded wearables market with a hardware plus subscription objection"
+  },
+  {
+    "id": "brief-04",
+    "offer_name": "Motley Fool Epic",
+    "company": "The Motley Fool",
+    "offer_url": "https://www.fool.com/premium/stock-advisor/",
+    "market": "financial newsletters / investment research",
+    "price": "$499 per year (no introductory price shown on the fetched page)",
+    "deliverables": [
+      "Seven stock recommendations per month across Epic's scorecards and the Epic Portfolio",
+      "Epic Portfolio: model portfolio of 50+ stocks with cautious, moderate and aggressive allocations",
+      "Match Calculator converting model allocations into dollar amounts",
+      "Fool 5Y Score and monthly Stock Rankings (Top 10 updated monthly)",
+      "Fool IQ+ research toolkit and GamePlan+ retirement planning",
+      "Member-exclusive podcast"
+    ],
+    "guarantee": "\"If Epic isn't for you, cancel within 30 days and you'll receive every penny of your membership fee back. No questions asked.\"",
+    "audience": "Self-directed US retail investors 35-65 with $50k+ in a brokerage account who already read free Fool content or subscribe to Stock Advisor and want a complete portfolio rather than picks",
+    "positioning": "\"Motley Fool Epic hands you everything needed to build a powerhouse portfolio—minus the Wall Street stuffiness\"; the bundle of the Fool's premium services",
+    "proof_available": [
+      {"claim": "\"over 20 years of proven success\"; Stock Advisor has \"a 20+ year track record of beating the market\"", "evidence": "Stated on page; no benchmark figures, end dates or S&P 500 comparison given on this page", "url": "https://www.fool.com/premium/stock-advisor/"},
+      {"claim": "Selected picks: Shopify up 7,931% (rec. 2/24/2016); MercadoLibre up 12,817% (2/17/2009); Tesla up 17,766% (11/23/2011); Nvidia \"up up 130,293%\" (4/15/2005)", "evidence": "Single-stock examples with recommendation dates; no as-of date, no losing picks shown; cherry-picked by construction", "url": "https://www.fool.com/premium/stock-advisor/"},
+      {"claim": "\"We've invested $100,000 of our own money and contribute $2,000 monthly\" to the Epic Portfolio", "evidence": "Stated on page", "url": "https://www.fool.com/premium/stock-advisor/"},
+      {"claim": "\"Tens of thousands of members trust Epic for their portfolio guidance.\"", "evidence": "Stated on page, no figure", "url": "https://www.fool.com/premium/stock-advisor/"},
+      {"claim": "Disclaimer", "evidence": "\"As always, The Motley Fool cannot provide personalized investment advice, and the Match Calculator should not be construed as such.\"", "url": "https://www.fool.com/premium/stock-advisor/"}
+    ],
+    "competitors": ["Seeking Alpha Premium", "Morningstar Investor", "Zacks Premium", "Stansberry's Investment Advisory", "Free index-fund advice"],
+    "traffic_assumption": "owned_list",
+    "awareness_hypothesis": "Product-aware: existing Stock Advisor or free-newsletter readers who know the Fool brand and need a reason to pay $499 for the bundle; for cold traffic, solution-aware and deeply skeptical of newsletter track records",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["sales_letter", "email_sequence", "upsell_oto", "vsl_long"],
+    "notes": "The most sophisticated newsletter market in direct response; proof consists of cherry-picked winners with no as-of date, so precision and the \"claim never bigger than proof\" rule are under maximum stress; regulated (investment advice disclaimers, performance presentation); tests the upsell spec from a $199-class product to a $499 bundle; YouTube/Meta specs forbid improbable-result claims, which conflicts with the page's own headline figures"
+  },
+  {
+    "id": "brief-05",
+    "offer_name": "HighLevel (Starter / Unlimited / Agency Pro)",
+    "company": "HighLevel Inc.",
+    "offer_url": "https://www.gohighlevel.com/pricing",
+    "market": "software for agencies (all-in-one CRM and marketing platform)",
+    "price": "Starter $97/month or $970/year; Unlimited $297/month or $2,970/year (\"MOST POPULAR\"); Agency Pro $497/month or $4,970/year; Enterprise custom; \"Start with a FREE 14-day trial on any plan\"",
+    "deliverables": [
+      "Starter: three sub-accounts, unlimited contacts and users, 24/7 support, all core features",
+      "Unlimited: everything in Starter plus unlimited sub-accounts, phone and email rebilling at no markup, basic API access",
+      "Agency Pro: everything in Unlimited plus SaaS mode, automated sub-account creation, rebilling with markup, user/agent reporting, advanced API access",
+      "Enterprise: dedicated CSM and account manager, custom development, dedicated Slack channel, white-label mobile app, HIPAA compliance, quarterly business reviews"
+    ],
+    "guarantee": "none; 14-day free trial, \"Billing begins automatically at the end of any free trial unless canceled, and usage-based fees... may apply during the trial\"; month-to-month, no long-term contracts",
+    "audience": "Owners of marketing agencies with 3-50 local-business clients, paying for ClickFunnels, ActiveCampaign, Calendly and a CRM separately, who want to white-label software and add recurring revenue",
+    "positioning": "\"Unlimited contacts, unlimited Users. Scale your business without a tax on growth\"; consolidation of the agency tool stack into one white-label platform",
+    "proof_available": [
+      {"claim": "Consolidating tools \"often saves agencies hundreds if not thousands of dollars per month\"", "evidence": "FAQ statement, no figures or method", "url": "https://www.gohighlevel.com/pricing"},
+      {"claim": "Three video testimonials", "evidence": "Titles: \"Why I Stopped Building Custom Automations and Switched to HighLevel,\" \"Should You Use HighLevel? Here's an Honest Take After 4 Years,\" \"How Martin Scaled Fast Using HighLevel\"; no transcripts or figures in text", "url": "https://www.gohighlevel.com/pricing"},
+      {"claim": "\"a massive community of users\"", "evidence": "FAQ statement with no count", "url": "https://www.gohighlevel.com/pricing"}
+    ],
+    "competitors": ["Vendasta", "Keap", "HubSpot", "Kartra", "ClickFunnels + ActiveCampaign stack", "Legiit (marketplace alternative to building an agency stack)"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware: agency owners know all-in-one platforms exist and have heard the HighLevel name from affiliates; the decision is whether the consolidation is real and whether their clients will tolerate white-labelled software",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["b2b_pricing_page", "webinar", "email_sequence", "youtube_ad"],
+    "notes": "Crowded, affiliate-saturated market where every competitor claims all-in-one; the pricing page has no customer counts, so proof is thin and the engine must not borrow numbers from affiliate sites; three tiers plus Enterprise tests the pricing-page spec (three plans, anchor against the expensive alternative, no gated price without a reason); trial-with-auto-billing is the honest risk statement the copy must carry"
+  },
+  {
+    "id": "brief-06",
+    "offer_name": "Ahrefs (Lite / Standard / Advanced / Enterprise)",
+    "company": "Ahrefs",
+    "offer_url": "https://ahrefs.com/pricing",
+    "market": "SaaS (SEO and AI-search visibility tools)",
+    "price": "Starter $29/mo; Lite $129/mo; Standard $249/mo; Advanced $449/mo; Enterprise $1,499/mo with annual commitment; \"Pay annually, save up to 17%\"; Brand Radar AI from $199/mo; add-ons Report Builder $99/mo, Project Boost Pro $20/mo per project, Project Boost Max $200/mo per project; Ahrefs Free at $0",
+    "deliverables": [
+      "Lite: 750 tracked keywords, 150 AI prompt checks, 100,000 crawl credits, 6 months historical data, 1 user (add 2 at $40/mo each)",
+      "Standard: 2,000 tracked keywords, 300 AI prompt checks, 500,000 crawl credits, 2 years history, Portfolios, Content Explorer, Looker Studio integration, 1 user (add 5 at $60/mo each)",
+      "Advanced: 5,000 tracked keywords, 600 AI prompt checks, 1,500,000 crawl credits, 5 years history, 1 user (add 10 at $80/mo each)",
+      "Enterprise: uncapped API, custom endpoints, SSO, access management and audit log, unlimited history, forecasting and trends, no training on your data"
+    ],
+    "guarantee": "none stated on the pricing page (no trial, refund or guarantee wording)",
+    "audience": "In-house SEO leads and agency SEOs at companies with 10-500 staff who currently pay Semrush or juggle Moz plus Google Search Console, and are now being asked about AI-search visibility by their boss",
+    "positioning": "\"From first projects to enterprise scale, Ahrefs' plans help your business stay discoverable in search, AI, and beyond\"; the data company (\"world's second-most active crawler\")",
+    "proof_available": [
+      {"claim": "\"the world's second-most active crawler\" and \"10+ years of web-scale data\"", "evidence": "Stated on pricing page; no third-party citation on the page", "url": "https://ahrefs.com/pricing"},
+      {"claim": "\"496 million+ organic prompts\" in the Brand Radar AI database", "evidence": "Stated on pricing page", "url": "https://ahrefs.com/pricing"},
+      {"claim": "Enterprise \"backed by the data and infrastructure trusted by Fortune 500 teams\"", "evidence": "Statement only; no logos or named customers on the page", "url": "https://ahrefs.com/pricing"},
+      {"claim": "Testimonial from Tim Soulo, CMO at Ahrefs", "evidence": "Internal staff quote, not a customer", "url": "https://ahrefs.com/pricing"}
+    ],
+    "competitors": ["Semrush", "Moz Pro", "SE Ranking", "Similarweb", "Google Search Console (free)"],
+    "traffic_assumption": "warm",
+    "awareness_hypothesis": "Product-aware comparers on the pricing page (Semrush vs Ahrefs search) and solution-aware for category search; price is the objection, not belief in SEO tools",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["b2b_pricing_page", "google_rsa", "cold_email", "organic_social"],
+    "notes": "No risk reversal of any kind and the only testimonial is an employee, so the engine must sell a $129-$1,499 tool on data claims alone; nine price points on one page stress the three-plan rule in the pricing spec; directly relevant to Legiit's SEO-agency users; the Google RSA spec (15 headlines, proof headlines) has little quantified proof to draw on beyond crawler and prompt-count claims"
+  },
+  {
+    "id": "brief-07",
+    "offer_name": "Ship 30 for 30 (October 2026 cohort, via AI Writing Skool)",
+    "company": "Ship 30 for 30 / Dickie Bush and Nicolas Cole",
+    "offer_url": "https://www.ship30for30.com/",
+    "market": "info products and courses (online writing)",
+    "price": "$99 per month billed through AI Writing Skool; \"$99 today\" then $99 monthly starting 30 days later; cancel anytime; page states Ship 30 \"used to cost $800 on its own\" and is now included with the membership",
+    "deliverables": [
+      "Live cohort Oct 5 to Nov 9, 2026: onboarding week Oct 5-9, 30 days of writing Oct 10 to Nov 8",
+      "11 live sessions with Dickie & Cole, Mondays and Thursdays 12 PM ET, with replays",
+      "30-day online writing curriculum with assignments for accountability",
+      "30-day roadmap to build a \"Digital Brain\"",
+      "Private Skool community with optional introductions to other writers",
+      "Bonuses: 24/7 access to \"AI Cole\" (listed at $5,000+ value), AI Writing Skool Mini-Course Vault, free 30-day Typeshare trial"
+    ],
+    "guarantee": "\"No-Questions-Asked Refund Policy,\" conditional: \"If you complete the entire 30-day writing program, complete all the assignments\" and implement the frameworks 30 days in a row, then submit your 30 pieces, you receive a full refund",
+    "audience": "Knowledge workers and aspiring creators 25-45 who have wanted to write online for years, have a drafts folder and no published posts, and fear publishing; \"people who still want to use their brains in the age of AI Slop\"",
+    "positioning": "\"Start Writing Online In 30 Days\" through a cohort-based challenge that ends with 30 published pieces; accountability and a system, not writing theory",
+    "proof_available": [
+      {"claim": "\"10,000+ successful students\" / \"10,000+ Alumni Shippers\"; 24 live cohorts", "evidence": "Stated on page; the purchase button reads \"Join 800+ other writers,\" an internal discrepancy", "url": "https://www.ship30for30.com/"},
+      {"claim": "\"View our 1000+ testimonials!\"", "evidence": "Link to testimonial collection", "url": "https://www.ship30for30.com/"},
+      {"claim": "Student results: Neil Sutton 200 followers, 400 tweets, 15,000+ impressions, 6,000 profile visits after 30 days; Sam Semako \"shipping 45 essays in 45 days\"; Ryan Dreyer \"Ship 30 got me right within 1 month\"", "evidence": "Named testimonials with figures as stated by the students", "url": "https://www.ship30for30.com/"},
+      {"claim": "Instructor audiences: Dickie Bush 450,000 X / 150,000 LinkedIn; Nicolas Cole 250,000 X / 120,000 LinkedIn; 200,000+ combined email audience", "evidence": "Stated on page", "url": "https://www.ship30for30.com/"}
+    ],
+    "competitors": ["Write of Passage (David Perell)", "Justin Welsh's Content OS", "Dan Koe's 2-Hour Writer", "Skool writing communities", "Free Substack and YouTube advice"],
+    "traffic_assumption": "owned_list",
+    "awareness_hypothesis": "Problem-aware to solution-aware: the list knows they want to write and knows cohorts exist; the real belief to displace is that they need more ideas or better prose before publishing",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["email_sequence", "sales_letter", "organic_social", "meta_ad"],
+    "notes": "A dated cohort deadline tests the launch sequence and the no-extended-deadline rule; the \"$800 to $99/month\" repositioning and the conditional refund are honest but easy to over-sell; the 10,000+ vs 800+ discrepancy tests whether the engine picks the narrower, defensible figure; student results are follower counts, so the copy cannot promise income; strong voice exemplars exist, so voice capture can be tested"
+  },
+  {
+    "id": "brief-08",
+    "offer_name": "Pilot Bookkeeping (Essentials / Core / Custom) with Tax, CFO and Operations plans",
+    "company": "Pilot.com",
+    "offer_url": "https://pilot.com/pricing",
+    "market": "B2B services (outsourced bookkeeping, tax and finance for startups and small businesses)",
+    "price": "Bookkeeping Essentials $99/month for up to $100,000 monthly expenses; Core \"starts at $0/month billed annually\" as rendered on the fetched page (likely a pricing-widget artifact); Custom unpriced; Tax from $1,000+/year (Single Member LLC), $2,000+/year (Partnerships and S-Corps), $2,450+/year (C-Corps), each requiring Pilot Bookkeeping; CFO Basic $1,750/month, Essentials $3,150/month, Custom $5,250/month billed annually; Operations Starter $750 one-time, Essentials $850/month",
+    "deliverables": [
+      "Essentials: cash-basis bookkeeping from bank and card feeds, standard chart of accounts, year-end package for the tax preparer, AI answers about transactions and cash flow, in-app messaging support",
+      "Core: US-based bookkeeper, cash or accrual accounting with more integrations, custom chart of accounts, reports on the 10th business day, dedicated team",
+      "Custom: QuickBooks retention, complex structures, reports on the 6th business day, full AR and AP, payroll administration, CFO advisory",
+      "CFO plans: custom financial model, budget vs. actuals, scenario planning, KPI dashboard, monthly to weekly CFO calls, 13-week cash flow at the top tier",
+      "Stock administration $399/hr (free for pre-seed founders with up to five cap-table holders); R&D tax credit work at 20% of credit received"
+    ],
+    "guarantee": "none stated",
+    "audience": "Founders and owners of venture-backed startups and professional-services firms (agencies, consultancies, law firms) with $50k-$2M monthly expenses who are behind on books, facing a tax deadline or a fundraise, and tired of a part-time bookkeeper",
+    "positioning": "\"Simple, transparent pricing plans for Bookkeeping, Tax, CFO, and COO services\"; \"the largest startup and small business accounting firm in the US\"",
+    "proof_available": [
+      {"claim": "\"the largest startup and small business accounting firm in the US\"", "evidence": "Stated on page without a source or metric", "url": "https://pilot.com/pricing"},
+      {"claim": "\"trusted by thousands of companies\"", "evidence": "Stated on page", "url": "https://pilot.com/pricing"},
+      {"claim": "Customer logos: OpenAI, Lattice, Airtable, Scale AI", "evidence": "Shown under \"Just a few of the companies we've supported over the years\"", "url": "https://pilot.com/pricing"},
+      {"claim": "Delivery timing: reports on the 10th business day (Core) or 6th business day (Custom)", "evidence": "Plan feature statements", "url": "https://pilot.com/pricing"}
+    ],
+    "competitors": ["QuickBooks Live", "Bench", "Zeni", "Kruze Consulting", "indinero", "A local CPA firm"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware: knows outsourced bookkeeping exists, is comparing on price, accuracy and whether a human is involved; for the CFO tier, problem-aware founders who have never had a finance function",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["b2b_pricing_page", "cold_email", "short_landing_page", "email_sequence"],
+    "notes": "A $0 price artifact on the live page tests whether the engine reproduces an implausible figure or flags it; four product lines and a dozen prices stress the pricing-page spec; proof is logos and a superlative with no method, so the engine must decide what the ledger can carry; wide price band from $99/month to $5,250/month within one brand lets the same brief test low- and high-ticket copy"
+  },
+  {
+    "id": "brief-09",
+    "offer_name": "Design Pickle creative-as-a-service subscription",
+    "company": "Design Pickle",
+    "offer_url": "https://www.designpickle.com/pricing/",
+    "market": "B2B services (subscription graphic design / creative production)",
+    "price": "Not published: \"Flat-rate, not hourly. No retainers.\" and \"You get the number on the call\"; quarterly or annual billing; price set after a 30-minute consultation",
+    "deliverables": [
+      "Brand-trained design team with a production coordinator and an art director when needed",
+      "\"First drafts next business day\"; most requests back \"within one to two business days, depending on scope\"",
+      "\"Revisions included\" with \"no per-change fees\"",
+      "Requests dashboard, Slack integration, light DAM, templates, API and integrations, support",
+      "AI-assisted briefs and drafts, image generation, automated routing; human review on every deliverable",
+      "Files delivered in Adobe, Canva and Google Slides formats; \"Full rights to everything we create, the moment it's delivered\""
+    ],
+    "guarantee": "none beyond cancellation: cancel \"anytime before your next renewal date,\" account stays active through the current billing period",
+    "audience": "Marketing managers and founders at 20-300 person companies producing 30+ design assets a month who are waiting on an overloaded in-house designer or paying agency rates for banner ads",
+    "positioning": "\"Tell us the problem. Leave with the plan.\" Flat-rate, unlimited-request creative team as a replacement for freelancers and agencies",
+    "proof_available": [
+      {"claim": "\"Trusted by the world's fastest growing startups and established brands\"", "evidence": "Statement only; no customer counts, delivered-design counts or additional logos on the page", "url": "https://www.designpickle.com/pricing/"},
+      {"claim": "Testimonial from Jamie Theron, Growth Lead at Shopify", "evidence": "Single named testimonial on the pricing page", "url": "https://www.designpickle.com/pricing/"},
+      {"claim": "Turnaround: next-business-day first drafts", "evidence": "Stated in delivery section and FAQ", "url": "https://www.designpickle.com/pricing/"}
+    ],
+    "competitors": ["Superside", "Penji", "Kimp", "ManyPixels", "Fiverr Pro / Legiit freelancers", "An in-house junior designer"],
+    "traffic_assumption": "warm",
+    "awareness_hypothesis": "Solution-aware: knows unlimited-design subscriptions exist (the category Design Pickle helped create) and has probably tried one; wants to know price and quality before a call",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["short_landing_page", "cold_email", "b2b_pricing_page", "organic_social"],
+    "notes": "The pricing-page spec forbids gated pricing without a stated reason and \"Contact us\" as the only CTA, which is exactly what the live page does; tests whether the engine can state an honest reason for the gate or recommend against it; proof on the page is one testimonial and a superlative, so this is a thin-proof B2B brief; a mature, copied category where differentiation by adjective is the default failure"
+  },
+  {
+    "id": "brief-10",
+    "offer_name": "Magic Spoon Cereal Variety 4-Pack",
+    "company": "Magic Spoon",
+    "offer_url": "https://magicspoon.com/",
+    "market": "ecommerce physical goods (consumer packaged food, high-protein cereal)",
+    "price": "$39 for a Cereal Variety 4-Pack; Treats Variety 6-Pack $39; Granola Variety 4-Pack $39; Build Your Own Bundle $39+; \"Subscribe & Save 26%\"; free bowl set for new subscribers",
+    "deliverables": [
+      "Four boxes of cereal, mix-and-match flavors",
+      "\"12-14g complete protein in every bowl,\" \"0-2g Sugar,\" \"No cane sugar, corn syrup, or sugar alcohol\"",
+      "Subscription perks: free bowl set with first order, VIP access to limited-edition launches, change flavors anytime, skip or cancel anytime",
+      "Also sold at Whole Foods, Sprouts, Target, Costco, Walmart, Kroger"
+    ],
+    "guarantee": "\"Happiness 100% Guaranteed\" with a link to \"SEE TERMS OF USE\"; terms not reproduced on the page",
+    "audience": "Adults 28-45 who grew up on Froot Loops, now eat keto, high-protein or low-sugar, and feel guilty about breakfast; parents buying \"better\" cereal for kids",
+    "positioning": "\"Childhood Classics. Grown-Up Ingredients.\" ... \"High-Protein Cereal That Actually Tastes Like Cereal\"; \"Sweet without the crash\"",
+    "proof_available": [
+      {"claim": "\"80,000+ 5-Star Reviews\"", "evidence": "Banner claim repeated throughout the page", "url": "https://magicspoon.com/"},
+      {"claim": "Product ratings 4.6/5: Cereal Variety 4-Pack 25,926 reviews; Build Your Own Bundle 31,094 reviews; Cocoa 3,376; Fruity 4.7 from 4,978", "evidence": "Per-product rating widgets on the page", "url": "https://magicspoon.com/"},
+      {"claim": "Nutrition: Cereal 12-14g protein, 0-2g sugar; Granola 13-14g protein, 2g sugar, 7-8g fiber; Oatmeal 15g protein, 1g sugar, 6g fiber", "evidence": "Stated per product on the page", "url": "https://magicspoon.com/"},
+      {"claim": "Pastries \"80% Less Sugar*\"", "evidence": "Footnote: \"*Than the leading toaster pastry competitor\"", "url": "https://magicspoon.com/"},
+      {"claim": "Customer quotes", "evidence": "\"This was like a box of good news coming to my house finally.\" (Ferdinand R.); \"Good macros and tastes great.\" (Adam B.)", "url": "https://magicspoon.com/"}
+    ],
+    "competitors": ["Catalina Crunch", "Three Wishes", "Kashi GO", "Premier Protein cereal", "Cheerios / Kellogg's at $4 a box"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware for keto and high-protein shoppers who already read labels; problem-aware for the nostalgic adult who skipped cereal because of sugar and has not heard a cereal can be high-protein",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["meta_ad", "tiktok_reels", "product_description", "sms"],
+    "notes": "The price-per-box objection (~$10 versus $4) is the whole game; nutrition claims are FDA-regulated label claims, so precision must match the stated ranges and no \"healthy\" or weight-loss promise can be made; the guarantee terms are not on the page, so copy can only quote \"Happiness 100% Guaranteed\"; the \"80% less sugar\" comparison applies to pastries only and must not migrate to cereal; strong review counts make it a good test of proof placement within two sentences of a claim"
+  },
+  {
+    "id": "brief-11",
+    "offer_name": "YNAB (You Need A Budget) subscription",
+    "company": "YNAB",
+    "offer_url": "https://www.ynab.com/pricing",
+    "market": "apps (personal finance / budgeting)",
+    "price": "Annual Plan $109 paid annually (\"$9.08/month,\" \"30 cents a day,\" saves $70); Monthly Plan $14.99/month; plus tax where applicable; 34-day free trial with no credit card when signing up directly",
+    "deliverables": [
+      "Budgeting app with real-time syncing across devices",
+      "Subscription sharing with up to six people for the price of one",
+      "Saving goals and targets with progress tracking",
+      "Debt management with an integrated loan calculator",
+      "Direct bank import for select US, Canadian, UK and EU banks; file-based import otherwise",
+      "College students: free 365-day trial with proof of enrollment"
+    ],
+    "guarantee": "none stated (no refund policy on the page); trial ends on day 34 with no charge unless you subscribe",
+    "audience": "Couples and individuals 25-45 with irregular income or credit-card debt who have tried Mint-style trackers, feel out of control monthly, and are paycheck-to-paycheck despite decent income",
+    "positioning": "\"Save $600 in one month, $6,000 in one year\"; a method (give every dollar a job) rather than a tracker",
+    "proof_available": [
+      {"claim": "\"On average, new YNABers save $600 their first month, and more than $6,000 their first year.\"", "evidence": "Stated as an average on the pricing page; no method, sample or date given; FAQ adds they \"enjoy more control and less stress\"", "url": "https://www.ynab.com/pricing"},
+      {"claim": "Customer stories", "evidence": "Testimonials from Eric, Patti, Kat and Rene; link to blog post \"is-ynab-worth-it-12-customers-weigh-in\"", "url": "https://www.ynab.com/pricing"},
+      {"claim": "34-day trial, no credit card required", "evidence": "Trial terms stated on page, including reminder email one week before trial end", "url": "https://www.ynab.com/pricing"}
+    ],
+    "competitors": ["Monarch Money", "Copilot", "EveryDollar", "Rocket Money", "A free spreadsheet"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Problem-aware: knows money feels out of control and that budgeting apps exist; does not believe a budget will work for them because every budget has failed; the method is the new idea",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["email_sequence", "meta_ad", "youtube_ad", "short_landing_page"],
+    "notes": "The headline savings figure is a vendor-reported average with no method, which tests whether the engine keeps the \"on average\" qualifier and attribution rather than hardening it into a promise; paying for a budget app while in debt is a sharp objection; welcome and trial-conversion sequence (34 days, no card) is a realistic sequence test; no guarantee, so risk reversal must come from the trial alone"
+  },
+  {
+    "id": "brief-12",
+    "offer_name": "Keeps hair-loss treatment plans (finasteride, minoxidil and compounded combinations)",
+    "company": "Keeps",
+    "offer_url": "https://www.keeps.com/",
+    "market": "supplements and telehealth (men's hair loss, prescription and OTC)",
+    "price": "No prices on the homepage; claims \"at half the price you would pay at your local pharmacy\" and \"Less than you'd pay at your local pharmacy\"; delivery every three, six or twelve months",
+    "deliverables": [
+      "Treatments listed: Chew+ 5-In-1 (Dutasteride & Minoxidil), Chew 3-In-1 (Finasteride & Minoxidil), Drop+ 11-In-1, Drop 4-In-1, Topical Finasteride & Minoxidil, Finasteride, Minoxidil Foam/Solution, Oral Minoxidil, Minoxidil+ Spray, Ketoconazole Shampoo, Thickening Shampoo/Conditioner/Pomade, Daily Hair Defense Supplement",
+      "\"Free one-time consultation for your new purchase to ensure your treatment plan is right for you\"; a licensed medical provider confirms the plan",
+      "Shipped to your door; adjust, pause or cancel anytime"
+    ],
+    "guarantee": "none stated; footer links to a returns policy",
+    "audience": "Men 22-40 noticing a receding hairline or thinning crown, embarrassed to see a dermatologist, price-sensitive, who have seen Hims and Keeps ads for years and done nothing",
+    "positioning": "\"Keep your hair. Regrow what you lost.\" ... \"FDA-approved treatments delivered to you\" at \"Half the cost\" of the pharmacy",
+    "proof_available": [
+      {"claim": "\"FDA-approved treatments delivered to you\"", "evidence": "Headline claim; applies to the active ingredients (finasteride, minoxidil), not to Keeps' compounded combinations as products", "url": "https://www.keeps.com/"},
+      {"claim": "\"Regrow hair in as fast as 3 months\"", "evidence": "Stated on page without a cited study", "url": "https://www.keeps.com/"},
+      {"claim": "\"2 out of 3 guys will experience hair loss by the age of 35.\"", "evidence": "Stated without a source", "url": "https://www.keeps.com/"},
+      {"claim": "\"Clinically-proven treatments and science-backed formulas\"", "evidence": "Statement only; no efficacy percentages, studies or customer counts on the page", "url": "https://www.keeps.com/"},
+      {"claim": "\"Real results\" testimonials from Nick, Paul, Anton and Sho", "evidence": "Before/after style testimonials; disclaimer \"*Individual results may vary\" appears on the page", "url": "https://www.keeps.com/"}
+    ],
+    "competitors": ["Hims", "Ro", "Happy Head", "Nutrafol", "Generic finasteride from a local pharmacy with a GoodRx coupon"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Problem-aware: knows he is losing hair and that pills exist, afraid of side effects and of looking vain; the mechanism (DHT, early intervention) and the price are the levers",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["meta_ad", "youtube_ad", "advertorial", "email_sequence"],
+    "notes": "Prescription telehealth: FDA and FTC constraints on efficacy claims, and the Meta ad spec forbids \"Do you have [condition]\" openers; the ledger can carry \"FDA-approved\" only as applied to the ingredients; the page's \"as fast as 3 months\" and \"2 out of 3 guys\" have no sources, so the factual review must reject or source them; no price on the page means the copy can only say \"less than the pharmacy\"; the standard forbids repairing compliance with \"results vary\" hedges, which is exactly what the live page does"
+  },
+  {
+    "id": "brief-13",
+    "offer_name": "Unleash the Power Within, Nov 5-8 2026, Miami (Ultimate All-Access Virtual Pass)",
+    "company": "Robbins Research International (Tony Robbins)",
+    "offer_url": "https://www.tonyrobbins.com/events/unleash-the-power-within",
+    "market": "coaching and personal-development events",
+    "price": "Ultimate All-Access Virtual Pass $545 (retail $695); in-person ticket prices not listed on the page; group deals by phone (858-290-4113) or booked call",
+    "deliverables": [
+      "Virtual admission to the 4-day event, Nov 5-8, 2026, Eastern time",
+      "\"Front-Row POV Experience\" (\"Brand new for 2026!\") and behind-the-scenes access (virtual only)",
+      "Board Break Experience",
+      "Post-Event Implementation Workshop",
+      "Private UPW Community",
+      "25 meals donated toward Tony's 100 Billion Meals Challenge",
+      "Agenda: Day 1 \"Discover your true identity\"; Day 2 \"Create unstoppable momentum\"; Day 3 \"Transform from the inside out\"; Day 4 \"Awaken boundless vitality\""
+    ],
+    "guarantee": "unknown: the FAQ asks \"Is there a money-back guarantee if I'm not satisfied?\" but the answer was not in the fetched content",
+    "audience": "Professionals and small-business owners 30-55, mostly already on the Robbins list or podcast audience, in a stuck season (divorce, plateaued business, health scare) who have consumed self-help content for years without a breakthrough",
+    "positioning": "\"The Life You Want Is Still Waiting for You\" ... \"Get all the tools and strategies you need to break through barriers, harness your power, and create a life you love\"; an immersive event versus passive content",
+    "proof_available": [
+      {"claim": "A \"peer-reviewed, randomized, controlled study co-authored by researchers from Stanford University School of Medicine\"", "evidence": "Figures as stated: \"~300%\" improved cognitive capacity to learn; \"~170%\" increase in a key learning hormone with \"100% of learning gains retained 30 days later\"; \"~135%\" increase in testosterone to cortisol ratio; study title, journal and sample size not on the page", "url": "https://www.tonyrobbins.com/events/unleash-the-power-within"},
+      {"claim": "\"Join the millions who have used Tony's science-backed strategies\"", "evidence": "Statement, no attendee figure", "url": "https://www.tonyrobbins.com/events/unleash-the-power-within"},
+      {"claim": "Attendee testimonials", "evidence": "Jaci, Enrique, David, Claudia, Anthony, Adam; e.g., \"At the end of the day, what Tony did was got me out of my head and into my heart.\" (Adam, Stand-up Comedian)", "url": "https://www.tonyrobbins.com/events/unleash-the-power-within"},
+      {"claim": "Price anchor: $545 against \"retail $695\"", "evidence": "Stated on the ticket card", "url": "https://www.tonyrobbins.com/events/unleash-the-power-within"}
+    ],
+    "competitors": ["Landmark Forum", "Mindvalley", "Brendon Burchard's High Performance events", "Date With Destiny (Robbins' own higher-ticket event)", "A therapist or a book"],
+    "traffic_assumption": "owned_list",
+    "awareness_hypothesis": "Product-aware for the list (knows UPW, has not bought); unaware or skeptical for cold traffic, which needs an indirect lead; the belief to displace is that one event cannot change a pattern",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["webinar", "email_sequence", "vsl_long", "meta_ad"],
+    "notes": "Highest-sophistication self-improvement market with a hard dated deadline and a celebrity founder; the study claims are specific percentages without a citation on the page, so the engine must attribute exactly and not harden \"~300%\" into a promise about the reader; guarantee unknown is a ledger hole the copy must not fill; registration-page and reminder specs apply almost literally to a four-day virtual event"
+  },
+  {
+    "id": "brief-14",
+    "offer_name": "Belkins appointment-setting retainers (Growth / Growth Plus / Small business / Enterprise)",
+    "company": "Belkins",
+    "offer_url": "https://belkins.io/pricing",
+    "market": "B2B services (outsourced lead generation and appointment setting)",
+    "price": "No dollar prices listed for any plan; monthly retainer packages; \"Talk to our expert to find out what pricing plan suits you more\"",
+    "deliverables": [
+      "Growth: 100+ yearly appointments; cold email, LinkedIn, intent-based cold calling, Messenger/WhatsApp, executive dinner series, conference activation",
+      "Growth Plus (\"Best value\"): 200+ yearly appointments; adds cold calling/voicemails, account-based marketing, paid advertising, webinar support",
+      "For small business: 30+ yearly appointments via cold email and LinkedIn, \"delivered through partnering agencies from the Belkins ecosystem\"",
+      "Every package: \"full sales audit and strategy mapping,\" transparent reports, copywriting and editing, appointment scheduling and no-show recovery, tech support",
+      "Enterprise: custom strategy, CRM integrations, Dedicated Center of Excellence, custom SLAs, \"Built-in support for SOC 2, ISO, and data privacy requirements\""
+    ],
+    "guarantee": "none stated on the pricing page",
+    "audience": "VPs of Sales and founders at B2B companies with $2M-$50M revenue, average deal size $15k+, whose SDR hiring failed or who never built outbound, and who are being pitched by ten lead-gen agencies a week",
+    "positioning": "\"monthly retainer packages, custom-built for your growth goals, markets, and preferred channels\"; multi-channel outbound with appointments as the unit of value",
+    "proof_available": [
+      {"claim": "Appointment volumes: 100+ (Growth), 200+ (Growth Plus), 30+ (small business) per year", "evidence": "Plan comparison table; stated as minimums, not guarantees", "url": "https://belkins.io/pricing"},
+      {"claim": "\"Save up to $10,000 annually on premium lead generation and marketing tools included in our retainer\"", "evidence": "Stated with tech-partner logos (Reply, HubSpot, Expandi, Chilipiper, Nooks, Apollo, Dreamdata, Google Workspace); these are tools, not clients", "url": "https://belkins.io/pricing"},
+      {"claim": "Proprietary tools: Folderly (\"AI-driven SaaS platform for email deliverability\"), Frostbite, Charge", "evidence": "Named on the page", "url": "https://belkins.io/pricing"}
+    ],
+    "competitors": ["CIENCE", "Martal Group", "SalesRoads", "Callbox", "Hiring an in-house SDR", "DIY with Apollo or Clay"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware and jaded: has heard every lead-gen pitch, suspects appointments will be unqualified; wants a mechanism for qualification and a number they can hold the vendor to",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["cold_email", "b2b_pricing_page", "short_landing_page", "organic_social"],
+    "notes": "A cold-email agency sold by cold email: the cold-email spec's must-nots (\"I'd love to schedule a call,\" \"Thoughts?\") are the category's own clichés; no prices and no client proof on the page, so the engine has only appointment counts and tool-stack savings to work with; tests whether \"100+ appointments\" is presented as a stated minimum, not a guarantee"
+  },
+  {
+    "id": "brief-15",
+    "offer_name": "Warrior Pro flagship membership (bundle offer)",
+    "company": "Warrior Trading",
+    "offer_url": "https://www.warriortrading.com/warrior-pro/",
+    "market": "financial education (day-trading courses and chat room)",
+    "price": "$3,997 \"one-time membership fee\" with coupon SUMMER26BUNDLE; listed at $6,202, \"a savings of $2205\"; add-ons outside the bundle: Day Trade Dash with Simulator $197/mo, Live Stream & Chat $147/mo, Real-Time Data Simulator $97/mo",
+    "deliverables": [
+      "\"10 courses | 200+ hrs\" of trading education with \"3 years of course access\"",
+      "\"1 year of Live Stream & Chat\"",
+      "\"90 days of Day Trade Dash Software\"",
+      "Access to Ross's broker statements (\"View Ross's Broker Statements\")"
+    ],
+    "guarantee": "none stated; footer links to a Refund Policy whose text was not in the fetched content",
+    "audience": "Men 25-45 with $5k-$50k of savings, a day job and a brokerage app, who have watched trading YouTube for a year and lost money on their own and believe the missing piece is a system and a mentor",
+    "positioning": "\"The Premiere Membership for Momentum Day Traders of All Levels\"; a complete education library plus live trading room from a founder with audited statements",
+    "proof_available": [
+      {"claim": "Ross \"has turned $583 into $20 million trading on average less than 3 hrs per day\"", "evidence": "Stated with a link to broker statements; the same section states \"Ross's results are not typical\"", "url": "https://www.warriortrading.com/warrior-pro/"},
+      {"claim": "Ross's \"10+ year career\"", "evidence": "Stated on page", "url": "https://www.warriortrading.com/warrior-pro/"},
+      {"claim": "Risk disclosure", "evidence": "\"Trading is risky, and most day traders lose money.\" \"Day Trading is a high risk activity and can result in the loss of your entire investment.\" \"Available research data suggests that most day traders are NOT profitable.\" Footer cites three academic studies (2003, 2005, 2014) and states at least 50% of aspiring day traders will not be profitable", "url": "https://www.warriortrading.com/warrior-pro/"},
+      {"claim": "No student results or audited statements for other traders appear on the page", "evidence": "Absence noted on fetch", "url": "https://www.warriortrading.com/warrior-pro/"}
+    ],
+    "competitors": ["Bear Bull Traders", "Investors Underground", "Timothy Sykes", "Humbled Trader Academy", "Free YouTube and a paper-trading account"],
+    "traffic_assumption": "warm",
+    "awareness_hypothesis": "Solution-aware: knows trading education and chat rooms exist, has consumed free Warrior content; the purchase decision is trust in the founder's record and whether the system transfers",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["webinar", "vsl_long", "email_sequence", "youtube_ad"],
+    "notes": "The most earnings-claim-sensitive brief in the set: the only result on the page is the founder's, flagged \"not typical,\" alongside the vendor's own disclosure that most day traders lose; the engine must keep the disclosure adjacent to the claim, never imply effortless income (forbidden in the Meta spec) or improbable results (YouTube spec), and must not borrow student results that are not on the page; $3,997 with a coupon-coded anchor tests price presentation and honest urgency"
+  },
+  {
+    "id": "brief-16",
+    "offer_name": "1-800-GOT-JUNK? full-service junk removal",
+    "company": "1-800-GOT-JUNK? (O2E Brands)",
+    "offer_url": "https://www.1800gotjunk.com/us_en/pricing",
+    "market": "local services (junk removal, franchised)",
+    "price": "Volume-based: single items priced individually by size; multiple items by truck volume in 1/8 increments with a minimum charge; free onsite estimate with exact price before work; Flex outdoor pickup \"Instant pricing from $39\"; no other dollar amounts listed",
+    "deliverables": [
+      "Removal \"from anywhere\" in the home, no need to move items outside",
+      "All loading and clean-up",
+      "Disposal and environmental fees included",
+      "Team \"fully licensed and insured\"",
+      "Items removed right away once the price is accepted; no follow-up appointment",
+      "Truck holds \"roughly two tons of junk,\" the same as \"Eight standard sized refrigerators\" or \"six full-sized three-seater sofas\""
+    ],
+    "guarantee": "none formal; \"No hidden fees. No deposit. No obligation to proceed.\" and \"There's no obligation, so you can say no at any time\"",
+    "audience": "Homeowners 35-65 clearing a garage, a parent's estate or a move-out, time-poor, searching \"junk removal near me\" on a phone, worried about being overcharged",
+    "positioning": "\"Simple, all inclusive pricing\" ... \"Your price is based on how much space your items take up\"; the national brand with the most reviews",
+    "proof_available": [
+      {"claim": "\"4.98 Average Rating\" on Google", "evidence": "Stated on pricing page", "url": "https://www.1800gotjunk.com/us_en/pricing"},
+      {"claim": "\"732,000+ verified customer reviews\"", "evidence": "Stated on pricing page", "url": "https://www.1800gotjunk.com/us_en/pricing"},
+      {"claim": "Load ranges: minimum to 1/4 load 50-100 ft³; 1/4 to 1/2 load 100-200 ft³; 1/2 to full 200-400 ft³", "evidence": "Table on page with no dollar figures", "url": "https://www.1800gotjunk.com/us_en/pricing"}
+    ],
+    "competitors": ["College Hunks Hauling Junk", "Junk King", "LoadUp", "A dumpster rental", "A Craigslist hauler with a pickup"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Most-aware to solution-aware high-intent search traffic: the job is decided, the vendor is not; price transparency and speed decide",
+    "sophistication_hypothesis": "2",
+    "formats_to_test": ["google_rsa", "sms", "short_landing_page", "meta_ad"],
+    "notes": "Local service with no published prices beyond \"from $39\": the Google RSA spec wants benefit-with-number headlines and the engine must not invent a price for a truckload; the two-ton and eight-refrigerators comparisons are the kind of concrete detail the copy should use; strong review counts, weak guarantee; franchise copy must work in any city"
+  },
+  {
+    "id": "brief-17",
+    "offer_name": "Building a Second Brain Foundation (self-paced)",
+    "company": "Forte Labs",
+    "offer_url": "https://www.buildingasecondbrain.com/foundation",
+    "market": "info products and courses (productivity / personal knowledge management)",
+    "price": "$499 one-time; Klarna and Afterpay/Clearpay interest-free installments (US only); Purchasing Power Parity pricing by location; reduced pricing on request for nonprofit/NGO employees, educators, students, retirees and veterans",
+    "deliverables": [
+      "6 modules of short instructional videos",
+      "Quiz and guidelines for choosing and setting up a notetaking app",
+      "Guided implementation steps",
+      "The BASB Playbook (reference \"cheat sheet\")",
+      "Lifetime access",
+      "Bonus official Second Brain Notion Template",
+      "Separately marketed Membership: 4 live cohorts per year, private community, monthly Q&As with Tiago, signed hardcover, a year of Readwise Premium (price not shown)"
+    ],
+    "guarantee": "\"30-day money-back guarantee\": email support@fortelabs.com within 30 days of purchase if the course \"didn't deliver on its promise\"",
+    "audience": "Knowledge workers, creators and graduate students 25-45 drowning in saved articles, Notion pages and screenshots who have read the book or seen the YouTube summaries and still cannot find anything when they need it",
+    "positioning": "\"6 Questions Every Knowledge Worker, Creator And Life-Long Learner Must Answer\"; a method for turning saved information into finished work, taught by the author of the method",
+    "proof_available": [
+      {"claim": "Tiago has spent more than 10 years researching the method; 5,000 students taught; over 3,000 community members", "evidence": "Stated on page", "url": "https://www.buildingasecondbrain.com/foundation"},
+      {"claim": "Previously charged \"$25,000 to $50,000\" to teach elite professionals", "evidence": "Stated on page as a price anchor", "url": "https://www.buildingasecondbrain.com/foundation"},
+      {"claim": "Students \"improve by 40% on average in one cohort\"", "evidence": "Based on self-rated confidence (0-10) at the start and end of each cohort, as the page describes", "url": "https://www.buildingasecondbrain.com/foundation"},
+      {"claim": "Filtering \"will free up 50% more head space\"", "evidence": "No supporting data on the page", "url": "https://www.buildingasecondbrain.com/foundation"},
+      {"claim": "Testimonial that a course \"increased my IQ by 20 points\"", "evidence": "The reviewer qualifies it as not literally true", "url": "https://www.buildingasecondbrain.com/foundation"},
+      {"claim": "Global information volume will double from 2022 to 2025", "evidence": "Attributed on the page to a Statista forecast", "url": "https://www.buildingasecondbrain.com/foundation"}
+    ],
+    "competitors": ["The Building a Second Brain book (about $20)", "Ali Abdaal's productivity courses", "Linking Your Thinking (Nick Milo)", "Free Notion and Obsidian templates", "YouTube summaries of the method"],
+    "traffic_assumption": "owned_list",
+    "awareness_hypothesis": "Problem-aware to solution-aware: the list has read the book or newsletter and knows the method's name; the belief to displace is that the $20 book is enough",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["sales_letter", "email_sequence", "opt_in_page", "organic_social"],
+    "notes": "The page's own proof is mostly self-rated or unsupported (40% confidence gain, 50% head space, an IQ joke), which tests whether the engine downgrades precision to match; the author's cheaper book is the main competitor, a classic cannibalization objection; the page is inconsistent on enrollment status and carries a stale Black Friday deadline, so the engine must not copy a dead deadline"
+  },
+  {
+    "id": "brief-18",
+    "offer_name": "Close CRM (Solo / Essentials / Growth / Scale)",
+    "company": "Close",
+    "offer_url": "https://www.close.com/pricing",
+    "market": "SaaS (sales CRM for small teams)",
+    "price": "Per user per month, two prices shown under a \"SAVE UP TO 50%\" badge (monthly vs annual not labelled on the fetched page): Solo $19 / $9; Essentials $49 / $35; Growth $109 / $99 (\"Most popular\"); Scale $149 / $139; custom pricing for larger teams; calling and SMS billed at cost (about $0.02 per minute, phone numbers from about $1 per month); Call Assistant add-on $50 per month per organization plus $0.02 per minute",
+    "deliverables": [
+      "Solo: core CRM, 1 user, 10k leads, 500 AI credits per month, no workflows",
+      "Essentials: unlimited contacts and leads, built-in forms, email, calling and SMS, 1,000 AI credits, no workflows",
+      "Growth: automated workflows, Chloe (built-in AI sales agent) in Workflows, power dialer, custom activities, bulk email, 1,500 AI credits",
+      "Scale: role-based access, lead visibility rules, predictive dialer, unlimited call recording retention, live call coaching, 2,000 AI credits",
+      "Chloe included on every plan; SOC2 Type 2 compliance"
+    ],
+    "guarantee": "\"Try Close free for 14 Days\" with \"$5 of calling and enrichment credits,\" no credit card required; \"30-day money-back guarantee\" described as \"Get a full refund, no questions asked\"",
+    "audience": "Founders and sales leads at 2-30 rep inside-sales teams (bootcamps, agencies, SMB SaaS) doing high-volume calling and email who find HubSpot bloated and Salesforce absurd",
+    "positioning": "\"Scale your sales team without adding headcount\" ... \"The CRM with everything your team needs to sell faster — calling, email, SMS, and workflows\"",
+    "proof_available": [
+      {"claim": "\"4.7 stars on G2 with 2000+ reviews\"", "evidence": "Stated on pricing page", "url": "https://www.close.com/pricing"},
+      {"claim": "Customer testimonials", "evidence": "Jem Millett, Senior Director of Admissions at Flatiron School; Max Bietti, System Administrator at Career Evolved (\"Chloe is a 9/10\")", "url": "https://www.close.com/pricing"},
+      {"claim": "SOC2 Type 2 compliance", "evidence": "Listed on page", "url": "https://www.close.com/pricing"}
+    ],
+    "competitors": ["HubSpot Sales Hub", "Pipedrive", "Salesforce", "Zoho CRM", "Apollo"],
+    "traffic_assumption": "warm",
+    "awareness_hypothesis": "Product-aware comparers landing from \"Close vs Pipedrive\" searches and trial sign-ups; they believe in CRMs and want the per-seat math and the AI agent explained without hype",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["b2b_pricing_page", "google_rsa", "cold_email", "email_sequence"],
+    "notes": "Four plans on the live page against the spec's three-plan rule, and an unlabelled dual price that the engine must not misstate as monthly or annual; the \"without adding headcount\" promise plus an AI agent invites the \"replace your SDRs\" overclaim the ledger cannot support; trial-to-paid sequence with usage-based calling costs is a realistic SaaS sequence test"
+  },
+  {
+    "id": "brief-19",
+    "offer_name": "AgencyAnalytics core plan",
+    "company": "AgencyAnalytics",
+    "offer_url": "https://agencyanalytics.com/pricing",
+    "market": "software for agencies (client reporting dashboards)",
+    "price": "$20 USD per client per month billed annually (\"Save 20% annually\"); monthly plans with no commitment; discounted per-client pricing for 25+ clients; add-ons: AI Tracker (Beta) $20.83/month per 250 credits, Rank Tracker $41.67/month per 500 keywords, billed annually",
+    "deliverables": [
+      "Unlimited data sources, reports, dashboards and staff accounts per client",
+      "85+ marketing integrations",
+      "Automated client reporting and a white-labeled client portal",
+      "Goals, alerts and anomaly detection",
+      "AgencyAI insights and analysis; benchmarks and forecasting",
+      "MCP access (ChatGPT and Claude)",
+      "25+ clients: dedicated onboarding, database connectors, priority support"
+    ],
+    "guarantee": "\"Free 14-day trial\" with \"No credit card required\"; FAQ states a 30-day money-back guarantee, \"no questions asked\"; annual plans require a 1-year commitment",
+    "audience": "Owners and account managers at digital marketing and SEO agencies with 5-50 clients who spend the first week of every month building reports in Looker Studio and screenshots",
+    "positioning": "\"Only pay for the clients you manage\" ... \"Simple & Transparent Pricing\"; the reporting tool built for agencies rather than for in-house teams",
+    "proof_available": [
+      {"claim": "\"Join 7,000+ agencies that run client reporting on AgencyAnalytics\"", "evidence": "Stated on pricing page", "url": "https://agencyanalytics.com/pricing"},
+      {"claim": "\"Based on 500+ Reviews\" across G2 and Capterra", "evidence": "Rating widget on page; badges \"G2 Users Love Us,\" \"G2 Leader, Winter 2026,\" \"G2 Momentum Leader, Winter 2026\"", "url": "https://agencyanalytics.com/pricing"},
+      {"claim": "Testimonial", "evidence": "Kim Walker, Founder: \"The only regret we have about switching to AgencyAnalytics is not doing it sooner.\"", "url": "https://agencyanalytics.com/pricing"},
+      {"claim": "2026 Marketing Agency Benchmarks Report based on 494 agency professionals", "evidence": "Referenced on page", "url": "https://agencyanalytics.com/pricing"}
+    ],
+    "competitors": ["DashThis", "Databox", "Whatagraph", "Swydo", "Looker Studio (free)"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware: knows reporting tools exist, is using a free one badly; the per-client pricing model is the thing to explain and the time saved is the promise",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["b2b_pricing_page", "meta_ad", "cold_email", "webinar"],
+    "notes": "Audience overlaps Legiit's own agency users, so this brief doubles as a dogfooding check; per-client pricing needs a worked example, which tests the \"indicated price\" rule for B2B pages; the free alternative (Looker Studio) is the real objection; good proof density (count, reviews, badges) lets the engine practice proof placement without inventing anything"
+  },
+  {
+    "id": "brief-20",
+    "offer_name": "Copy School (10X course collection)",
+    "company": "Copyhackers",
+    "offer_url": "https://copyschool.co/",
+    "market": "info products and courses (copywriting training and certification)",
+    "price": "Not captured: the pricing table on the page did not render in the fetched text; the page states each 10X course was \"previously sold… individually for $997\" and that \"today, you can own the entire collection when you say yes to Copy School\"",
+    "deliverables": [
+      "10X Emails, 10X Landing Pages, 10X Web Copy, 10X Facebook Ads, 10X Sales Pages and further courses in the 10X collection (list truncated on fetch)",
+      "\"every framework, SOP, technique, and skill you need to crush ANY type of copy\"",
+      "Topics: stages of awareness, tone and voice, customer research, systems and SOPs, expectation matching, messaging hierarchies, cognitive biases, AI copy",
+      "\"the copywriting certifications employers request specifically\""
+    ],
+    "guarantee": "none visible in the fetched content",
+    "audience": "Freelance copywriters and in-house marketers 25-45 earning $40k-$90k who get \"good enough\" feedback, undercharge, and want a system and a credential to justify premium rates in a market flooded with AI-written copy",
+    "positioning": "\"Be the real deal. With Copy School.\" ... trade \"good enough\" for \"being the mastermind behind the most lucrative copy your clients have ever seen\"",
+    "proof_available": [
+      {"claim": "Student income claims: \"I booked my first $35k month.\" (Jesse Gernigin); \"I had my first $20k month.\" (Aja Stuart); \"On my way to a $200K year.\" (Jacob Suckow)", "evidence": "Named student testimonials as stated", "url": "https://copyschool.co/"},
+      {"claim": "\"I immediately 10X'd my rates\" (Abi Prendergast); \"I now have four clients on retainer\" (Michelle Murtha); a 10X Sales Pages student page that \"converted at 13%\" and generated \"well over $300K\" for one client", "evidence": "Named testimonials as stated; no verification offered", "url": "https://copyschool.co/"},
+      {"claim": "Logo strips: \"Copywriters and marketers from the brands you love choose Copy School\" (Shopify, Amazon, Thinkific, Teamwork, Balsamiq, ConvertKit, Typeform, Mailchimp) and \"Our students go on to land gigs with\" (Shopify, Amazon, Monday.com, ClickFunnels, Pinterest, HubSpot)", "evidence": "Logo images; the page does not define the relationship", "url": "https://copyschool.co/"},
+      {"claim": "\"There are 123 million people calling themselves copywriters on LinkedIn\"", "evidence": "No source on the page", "url": "https://copyschool.co/"},
+      {"claim": "\"every word on the page is rooted in scientific data and research\"", "evidence": "Statement without citation", "url": "https://copyschool.co/"},
+      {"claim": "Named endorsers include Marie Forleo, Tarzan Kay, Prerna Malik, Nikki Elbaz, Marian Schembari", "evidence": "Testimonials labelled by role (Copy School student, Freelance Copywriter, Copy Chief)", "url": "https://copyschool.co/"}
+    ],
+    "competitors": ["AWAI", "Copy That! (Sean Vosler)", "Copy Posse Launch Files", "Kopywriting Kourse (Neville Medhora)", "Free YouTube and swipe files", "Legiit Copy itself"],
+    "traffic_assumption": "owned_list",
+    "awareness_hypothesis": "Solution-aware: the Copyhackers list already believes in training and knows the 10X brand; the belief to displace is that AI has made the skill worthless or that they can learn it free",
+    "sophistication_hypothesis": "5",
+    "formats_to_test": ["sales_letter", "email_sequence", "webinar", "organic_social"],
+    "notes": "Earnings-claim testimonials ($35k month, $200K year) are the FTC-sensitive proof type and the engine must present them as individual results without implying typicality; the unsourced \"123 million copywriters\" stat must be excluded from the ledger; price unknown is a ledger hole; selling copy training to copywriters is the harshest audience for AI tells, so the tell detector is under maximum load"
+  },
+  {
+    "id": "brief-21",
+    "offer_name": "Precision platform (post-acquisition of SaaS Academy) with Growth Session",
+    "company": "Precision (formerly SaaS Academy / Dan Martell)",
+    "offer_url": "https://www.precision.co/saasacademy",
+    "market": "coaching and B2B software (AI agents with coaching for professional-services businesses)",
+    "price": "No prices listed; entry is a booked \"Growth Session\" for operators or \"Talk to Matt\" for coaching businesses; \"Coaching is part of being on Precision, not a separate line item\"",
+    "deliverables": [
+      "Precision platform installed \"alongside your team, on our software\"",
+      "AI agents across sales, support, finance and ops, run by talking to \"Claudia\"",
+      "Access to 350+ growth playbooks",
+      "Coaching included with the platform",
+      "For coaching businesses: build their own agents and methodology on Precision"
+    ],
+    "guarantee": "none stated",
+    "audience": "Founders of consulting, recruiting and agency businesses with $1M-$20M revenue and 10-100 staff, who know they should be using AI agents, have tried ChatGPT prompts, and distrust both software vendors and business coaches",
+    "positioning": "\"Precision Acquires SaaS Academy.\" ... \"The methodology behind 52 exits, now built into the platform teams use to install AI agents that actually work.\" ... \"Putting AI to work in a business without the operating expertise behind it? That era is over.\"",
+    "proof_available": [
+      {"claim": "3,000+ founders coached", "evidence": "Stated on page", "url": "https://www.precision.co/saasacademy"},
+      {"claim": "52 exits since 2017", "evidence": "Stated on page; no list of companies or definition of exit", "url": "https://www.precision.co/saasacademy"},
+      {"claim": "350+ growth playbooks", "evidence": "Stated on page", "url": "https://www.precision.co/saasacademy"},
+      {"claim": "Logos of companies \"using\" the product: Assistant Launch, CADTalk, Coach Catalyst, Ellerbrock-Norris, Miller Bros", "evidence": "Logo strip; no case studies, testimonials or revenue figures on the page", "url": "https://www.precision.co/saasacademy"}
+    ],
+    "competitors": ["Acquisition.com (Hormozi) workshops", "EO and YPO peer groups", "Scaling Up certified coaches", "Fractional COO consultancies", "Building agents in-house with Zapier or n8n"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Unaware to problem-aware: the market does not yet have a category word for \"AI agents plus operating coaching\"; a Story or Proclamation lead is required and the product cannot be named early",
+    "sophistication_hypothesis": "4",
+    "formats_to_test": ["cold_email", "short_landing_page", "organic_social", "youtube_ad"],
+    "notes": "A pivoted brand with an abstract offer, no price and only aggregate proof (exits, founders coached) inherited from a prior business; tests whether the engine can build a concrete promise and mechanism from thin material without inventing case studies; unaware market tests indirect leads; call-booking funnel with no stated price tests the B2B demo-page spec's indicated-price rule"
+  },
+  {
+    "id": "brief-22",
+    "offer_name": "HVAC repair and installation offers (Phoenix metro)",
+    "company": "George Brazil Air Conditioning & Heating",
+    "offer_url": "https://www.georgebrazilhvac.com/",
+    "market": "local services (residential HVAC, single-metro contractor)",
+    "price": "No base prices listed; offers: \"$1,500 Off Ductless Mini-Split System Installation\" (expires 12/31/2026); \"$75 Off Any Service or Repair\" (\"SAVE $75 ON ANY SERVICE OR REPAIR OVER $500,\" expires 12/31/2026); \"0% Financing for 24 months\" (\"Approved Credit Required\"); all offers note \"Terms and conditions may apply*\"",
+    "deliverables": [
+      "AC repair and installation; furnace, heat pump and mini-split service; indoor air quality (humidifiers, dehumidifiers, duct installation and sealing); smart thermostats; commercial HVAC",
+      "\"Same-Day Service Available\"; emergency repair \"24/7\"",
+      "VIP Maintenance Plan with extended coverage",
+      "\"Every installation carries the 10-year Worry-Free Coverage warranty\"",
+      "\"What We Quote is What You Pay\" / \"No hidden fees or surprises\""
+    ],
+    "guarantee": "\"10-year Worry-Free Coverage warranty\" on installations; \"All customers receive warranty coverage for repairs and installations. VIP members get extended coverage\"; quote-is-price promise",
+    "audience": "Phoenix-area homeowners 35-70, many retirees in Sun City and Surprise, with a 12-20 year old AC unit in a 110-degree summer, afraid of a $15k replacement pitch and of being upsold",
+    "positioning": "\"HVAC and Indoor Air Quality Experts in Phoenix, AZ\" ... \"George Brazil has serviced Valley homes since 1955\"; the 71-year local name with thousands of 5-star reviews",
+    "proof_available": [
+      {"claim": "In business since 1955 (\"71 Years of Quality Service\")", "evidence": "Stated on page", "url": "https://www.georgebrazilhvac.com/"},
+      {"claim": "\"Thousands of 5-star Reviews\"; Google 4.9/5 from 4,663 reviews", "evidence": "Rating widget and headline on page; sample reviews attributed to first names or initials (KEN, Dave Anderson, Diane J. Saine)", "url": "https://www.georgebrazilhvac.com/"},
+      {"claim": "Credentials and awards: Trane Comfort Specialist, BBB Accredited A+, NATE, Energy Star Partner, Mitsubishi Electric, York Certified Comfort Expert, Arizona Heat Pump Council, BBB Torch Awards", "evidence": "Logos on page without descriptions", "url": "https://www.georgebrazilhvac.com/"},
+      {"claim": "Service area", "evidence": "21 listed cities from Apache Junction to Tempe, plus additional cities in structured data", "url": "https://www.georgebrazilhvac.com/"}
+    ],
+    "competitors": ["Parker & Sons", "Goettl Air Conditioning", "Day & Night Air", "Howard Air", "Chas Roberts"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Most-aware emergency searchers (\"AC repair Phoenix\" at 6 p.m. in July) want an offer lead with price, deal and availability in line one; replacement shoppers are solution-aware and comparing warranties and financing",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["google_rsa", "sms", "short_landing_page", "podcast_read"],
+    "notes": "A real local contractor with documented offers and real expiry dates, so the deadline-as-fact rule can be tested without invention; pairs with brief-24 (direct competitor in the same metro) for head-to-head evals; two phone numbers and a stale structured-data date on the page test whether the engine picks the visible, current facts; emergency intent tests the offer lead"
+  },
+  {
+    "id": "brief-23",
+    "offer_name": "Molly Maid residential cleaning (recurring and one-time)",
+    "company": "Molly Maid (Neighborly)",
+    "offer_url": "https://www.mollymaid.com/",
+    "market": "local services (franchised house cleaning)",
+    "price": "No prices listed and no pricing method explained; \"Choose a plan to fit your needs\" with \"no contracts\"; free estimate requested online in \"under 2 minutes\"",
+    "deliverables": [
+      "Residential: recurring, one-time, occasional, apartment and condo, move-in, move-out, special event and eco-friendly cleaning",
+      "Light commercial: recurring, occasional and one-time cleaning",
+      "Add-ons: refrigerator and oven cleaning",
+      "\"44-point checklist\" for cleaning quality",
+      "Staff \"trained, insured and background checked\"",
+      "Gift certificates; Ms. Molly Foundation supporting victims of domestic violence"
+    ],
+    "guarantee": "Neighborly Done Right Promise: \"If your service isn't right, contact us by the next business day and we'll make it right, at no extra cost.\"",
+    "audience": "Dual-income households and busy parents 30-55 in suburban metros who have had a flaky independent cleaner and want reliability, insurance and the same crew each visit",
+    "positioning": "\"Every Home Deserves a Friend Like Molly\"; the 40-year national brand with trained, insured, background-checked teams",
+    "proof_available": [
+      {"claim": "\"Trusted for 40+ years to get the job done right\"; founded 1984", "evidence": "Stated on page and FAQ", "url": "https://www.mollymaid.com/"},
+      {"claim": "\"Over 1.5M customers served since the 1980s\" (banner); \"over a million customers\" (FAQ)", "evidence": "Two figures on the same page; use the smaller or attribute each", "url": "https://www.mollymaid.com/"},
+      {"claim": "\"44-point checklist\"", "evidence": "Stated on page", "url": "https://www.mollymaid.com/"},
+      {"claim": "Customer rating", "evidence": "Rating widget rendered as \"0/5\" with no review count on fetch; testimonials not present in extracted text", "url": "https://www.mollymaid.com/"}
+    ],
+    "competitors": ["The Maids", "Merry Maids", "Handy", "Thumbtack independents", "A neighbor's recommended cleaner"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Solution-aware: knows cleaning services exist and has probably used one; the decision is trust and consistency, not price alone",
+    "sophistication_hypothesis": "2",
+    "formats_to_test": ["google_rsa", "meta_ad", "short_landing_page", "email_sequence"],
+    "notes": "Franchise with gated pricing and a broken rating widget: the engine must not invent a star rating or a price, and must handle two conflicting customer counts; the Done Right Promise is a specific, quotable guarantee for the objection block; the estimate-follow-up sequence (quote requested, not booked) is a realistic local-services sequence"
+  },
+  {
+    "id": "brief-24",
+    "offer_name": "HVAC, plumbing and electrical services (Phoenix metro)",
+    "company": "Parker & Sons (Environmental Conditioning, LLC)",
+    "offer_url": "https://www.parkerandsons.com/",
+    "market": "local services (residential home services, single-metro contractor)",
+    "price": "No dollar prices or coupon codes listed; no extra charge for nights, weekends and holidays; maintenance membership with \"discounted pricing, priority scheduling, and peace of mind\"; financing described as \"a variety of payment plans\"",
+    "deliverables": [
+      "Air conditioning and heating: repair, tune-up, installation, air quality",
+      "Plumbing: repair, maintenance, water heaters, leak detection, kitchen and bath renovation; drain and sewer services including jetting and video inspection",
+      "Electrical: repairs, panels, EV chargers, generators, smoke and CO detectors, surge protection, lighting",
+      "Water quality (softeners, reverse osmosis, testing) and attic insulation",
+      "24/7 service, 365 days a year; \"Always a Live Person to Answer Your Calls\"",
+      "\"All Employees Trust Certified®\"; licensed, bonded and insured (ROC152654, ROC152656, ROC233298, ROC258885, ROC300696)"
+    ],
+    "guarantee": "\"Dedicated to 100% customer satisfaction, we stand behind our work with exclusive parts and labor warranties\"; \"Industry-Leading Warranties and Guarantees\" with no terms specified",
+    "audience": "Phoenix-area homeowners 35-70 who want one company for AC, plumbing and electrical, value a live answer at 2 a.m., and have been burned by a contractor who did not show",
+    "positioning": "\"We're Not Your Average Joe!\" ... \"For nearly 50 years, Parker & Sons has been helping Arizona homeowners stay comfortable, with honest, expert service in HVAC, plumbing, electrical, and more\"",
+    "proof_available": [
+      {"claim": "\"trusted for over 50 years\" and \"nearly 50 years\"", "evidence": "Both appear on the same page; inconsistent", "url": "https://www.parkerandsons.com/"},
+      {"claim": "\"What More Than 15,000 People Are Saying\" (Google reviews)", "evidence": "Section heading; no average star rating shown", "url": "https://www.parkerandsons.com/"},
+      {"claim": "\"Voted #1 by Consumers 14 Years in a Row!\"", "evidence": "No voting body or publication named", "url": "https://www.parkerandsons.com/"},
+      {"claim": "\"Most Award-Winning Company in Arizona\"", "evidence": "No basis given", "url": "https://www.parkerandsons.com/"},
+      {"claim": "BBB A+ rating; BBB Torch Award for Ethics; HomeAdvisor Top Rated; Ranking Arizona; Neighborhood Favorite; Industry Leaders of Arizona", "evidence": "Badges on page", "url": "https://www.parkerandsons.com/"}
+    ],
+    "competitors": ["George Brazil Air Conditioning & Heating", "Goettl Air Conditioning", "Day & Night Air", "Howard Air", "Chas Roberts"],
+    "traffic_assumption": "cold",
+    "awareness_hypothesis": "Most-aware for emergency repair searches; solution-aware for replacement and whole-home service shoppers comparing the two or three big Valley names",
+    "sophistication_hypothesis": "3",
+    "formats_to_test": ["google_rsa", "youtube_ad", "sms", "podcast_read"],
+    "notes": "Direct competitor to brief-22 in the same metro, so the two briefs support a head-to-head eval on identical formats; the page's proof is heavy on unsupported superlatives (\"Most Award-Winning,\" \"Voted #1\" with no body) and an internal years-in-business contradiction, which tests whether the engine drops or qualifies unledgered authority claims rather than repeating them; no offers or prices on the page forces benefit and proof headlines in the RSA spec"
+  }
+]
