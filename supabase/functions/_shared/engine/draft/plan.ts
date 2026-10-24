@@ -6,10 +6,10 @@
  * - Each call drafts one group of consecutive units. Small units are grouped while the sum of their band maximums
  *   stays under GROUP_SOFT_LIMIT_WORDS; a group may absorb one more unit when the total stays within GROUP_OVERFLOW
  *   of the soft limit, so a 150-word P.S. never costs its own call. A unit over the soft limit is drafted alone.
- * - When spec.lead_variants === 3 and the spec has a lead section (id "lead" or a name containing "lead"), that
- *   section leaves the normal order and becomes a "leads" call that writes three leads of different type; the
- *   headline section is written after the leads in its own call. Formats with lead_variants 3 and no such section
- *   (vsl_long, webinar_package) draft their opening once, in order.
+ * - When spec.lead_variants === 3 and the spec has a lead section (spec.lead_section_id, else id "lead", else a name
+ *   containing "lead"), that section leaves the normal order and becomes a "leads" call that writes three leads of
+ *   different type; the headline section is written after the leads in its own call. Formats with lead_variants 3
+ *   and no such section draft their opening once, in order.
  *
  * Multi-item formats follow the convention in formats/index.ts: a repeated section carries the item index as a
  * `#n` suffix on its id (`subject#3`, `primary_text#2`, `replay_email#5`); unsuffixed sections are item 0. The item
@@ -58,6 +58,7 @@ export interface DraftPlan {
 }
 
 export function leadSectionId(spec: FormatSpec): string | null {
+  if (spec.lead_section_id && spec.sections.some((s) => s.id === spec.lead_section_id)) return spec.lead_section_id;
   const byId = spec.sections.find((s) => s.id === "lead");
   if (byId) return byId.id;
   const byName = spec.sections.find((s) => /\blead\b/i.test(s.name));

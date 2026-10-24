@@ -2,9 +2,15 @@
  * Step 4, draft. Section by section in the standard's order (offer block and close first, body, three leads,
  * headline last), each call within the decided argument, the approved offer and the claims ledger.
  * Pre-draft interrogation happens in code: no argument, no proof on the winner or unknown awareness → pause.
+ *
+ * Resumable: the step saves a DraftPartial after every call group (ctx.savePartial). Before starting a group it
+ * checks the invocation's wall-clock budget (ctx.timeBudgetMs from ctx.startedAt, DRAFT_CALL_ESTIMATE_MS per call)
+ * and, when the next group would not fit, returns the partial with `continueLater` so the runner re-enqueues the
+ * step; the next invocation restores the partial (same format, same plan fingerprint) and skips the groups done.
+ * At least one group runs per invocation so progress is guaranteed. A wall-clock kill loses at most one group.
  */
 import { z } from "zod";
-import type { StepFn } from "./types.ts";
+import type { StepContext, StepFn, StepResult } from "./types.ts";
 import { DraftOutput, LeadVariant, Section, SectionDraft } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
@@ -18,11 +24,15 @@ import { interrogate, knownClaimIds, targetAwareness, unknownLedgerRefs, usableC
 import { LEAD_IDS, leadTypesForAwareness } from "../draft/leads.ts";
 import { assembleDraft, orderSections, provisionalLeadSection, toDraftEffect, type LeadVariantT } from "../draft/assemble.ts";
 import { callStep, describeArgument, stepOutput } from "../draft/step_util.ts";
+import { type DraftPartial, emptyPartial, restoreState, resumePartial, withGroup } from "../draft/partial.ts";
 
 /** Several sections in one call (small sections grouped). */
 export const SectionGroupDraft = z.object({ sections: z.array(Section), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
 /** Three leads in one call. */
 export const LeadsDraft = z.object({ leads: z.array(LeadVariant), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
+
+/** Wall-clock estimate for one model call; the budget check uses it for the next group. */
+export const DRAFT_CALL_ESTIMATE_MS = 75_000;
 
 /** Block ids are "<section_id>-<n>"; the desk numbers them, not the model. */
 export function normalizeSection(section: Section, sectionId: string, meta: Record<string, string> | null = null): Section {
@@ -62,8 +72,8 @@ export function validateSections(sections: Section[], call: DraftCall, known: Se
   if (unknown.length) problems.push(`these ledger ids do not exist in the ledger or were dropped by the user: ${unknown.join(", ")}. Cite only ids shown in the CLAIMS LEDGER, or write [[NEEDS SOURCE]].`);
   for (const [i, s] of sections.entries()) {
     const u = call.units[i];
-    if (s.blocks.length === 0 && !(u.spec?.optional)) problems.push(`section "${u.id}" came back empty; it is required.`);
-    const allowed = u.spec?.block_types;
+    if (s.blocks.length === 0 && !u.spec.optional) problems.push(`section "${u.id}" came back empty; it is required.`);
+    const allowed = u.spec.block_types;
     if (allowed?.length) {
       const bad = s.blocks.filter((b) => !allowed.includes(b.type)).map((b) => `${b.id}:${b.type}`);
       if (bad.length) problems.push(`section "${u.id}" uses block types it does not allow (${bad.join(", ")}); allowed: ${allowed.join(", ")}.`);
@@ -92,7 +102,14 @@ export function validateLeads(leads: LeadVariantT[], types: LeadType[], known: S
   return problems;
 }
 
-export const draftStep: StepFn = async (ctx) => {
+/** The model caller, injectable so the step's control flow can be tested without the API. */
+export interface DraftDeps {
+  call: typeof callStep;
+  now?: () => number;
+}
+
+export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepResult> {
+  const now = deps.now ?? Date.now;
   const spec = ctx.format;
   const options = parseOptions(ctx.generation.options);
   const target = targetAwareness(ctx.dossier, options);
@@ -117,7 +134,20 @@ export const draftStep: StepFn = async (ctx) => {
   const seqType = options.sequence_type && options.sequence_type in SEQUENCE_ROLES ? (options.sequence_type as keyof typeof SEQUENCE_ROLES) : null;
   const roles = spec.id === "email_sequence" ? SEQUENCE_ROLES[seqType ?? "welcome"] : undefined;
   const plan = planDraft(spec, { itemCount: options.item_count, roles });
-  await ctx.progress(`Drafting ${spec.name} in ${plan.calls.length} call${plan.calls.length === 1 ? "" : "s"}: ${describePlan(plan).join("; ")}`);
+
+  // (2) resume: a partial from the previous attempt counts only for this format and this exact plan
+  const resumed = resumePartial(ctx.partial, spec, plan);
+  let partial: DraftPartial = resumed ?? emptyPartial(spec, plan);
+  const state = restoreState(partial);
+  const drafted: Section[] = state.drafted;
+  const needsSource: string[] = state.needsSource;
+  let leads: LeadVariantT[] | null = state.leads;
+  let model: string | undefined = state.model;
+  let callsThisInvocation = 0;
+  let groupsThisInvocation = 0;
+  if (resumed) await ctx.progress(`Resuming ${spec.name}: ${partial.completed.length}/${plan.calls.length} call groups already drafted`);
+  else if (ctx.partial) console.warn("draft: saved partial ignored (different format or plan); starting over");
+  else await ctx.progress(`Drafting ${spec.name} in ${plan.calls.length} call${plan.calls.length === 1 ? "" : "s"}: ${describePlan(plan).join("; ")}`);
 
   let examplesText = "";
   try {
@@ -130,11 +160,6 @@ export const draftStep: StepFn = async (ctx) => {
   const leadTypes = plan.leadSectionId ? leadTypesForAwareness(target.awareness, options.skeptical) : null;
   const argumentText = describeArgument(ctx.winningAngle, ctx.angles);
   const sophistication = ctx.dossier?.sophistication.stage ?? "unknown";
-  const drafted: Section[] = [];
-  const needsSource: string[] = [];
-  let leads: LeadVariantT[] | null = null;
-  let model: string | undefined;
-  let calls = 0;
 
   const baseArgs = (call: DraftCall, i: number): DraftArgs => ({
     call,
@@ -153,58 +178,74 @@ export const draftStep: StepFn = async (ctx) => {
   });
 
   /** One sections call with one retry on a code-side rejection (wrong shape, unknown ledger id, empty required section, disallowed block type). */
-  const runSections = async (call: DraftCall, i: number, extraNote: string | null): Promise<{ sections: Section[]; needs: string[] }> => {
+  const runSections = async (call: DraftCall, i: number, extraNote: string | null): Promise<{ sections: Section[]; needs: string[]; calls: number }> => {
     const args = baseArgs(call, i);
     const single = call.units.length === 1;
     let attempt = 0;
     let note: string | null = extraNote;
     for (;;) {
       const res = single
-        ? await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionDraft, `draft ${call.units[0].id}${attempt ? " (retry)" : ""}`)
-        : await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionGroupDraft, `draft ${call.units.map((u) => u.id).join("+")}${attempt ? " (retry)" : ""}`);
-      calls++;
+        ? await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionDraft, `draft ${call.units[0].id}${attempt ? " (retry)" : ""}`)
+        : await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, SectionGroupDraft, `draft ${call.units.map((u) => u.id).join("+")}${attempt ? " (retry)" : ""}`);
+      callsThisInvocation++;
       model = res.model;
       const returned = "section" in res.output ? [res.output.section] : res.output.sections;
       const matched = matchSections(returned, call);
       const problems = matched ? validateSections(matched, call, known) : [`return exactly ${call.units.length} section(s) with section_id ${call.units.map((u) => `"${u.id}"`).join(", ")}.`];
-      if (matched && problems.length === 0) return { sections: matched, needs: res.output.needs_source };
+      if (matched && problems.length === 0) return { sections: matched, needs: res.output.needs_source, calls: attempt + 1 };
       if (attempt++ >= 1) throw new Error(`draft call for ${call.units.map((u) => u.id).join(", ")} rejected twice: ${problems.join(" ")}`);
       note = [extraNote, ...problems].filter(Boolean).join("\n");
     }
   };
 
-  for (const [i, call] of plan.calls.entries()) {
-    const label = call.kind === "leads" ? "three leads" : call.units.map((u) => u.title).join(", ");
-    await ctx.progress(`Drafting ${label} (${i + 1}/${plan.calls.length})`);
+  const runLeads = async (call: DraftCall, i: number): Promise<{ leads: LeadVariantT[]; needs: string[]; calls: number }> => {
     const args = baseArgs(call, i);
+    let attempt = 0;
+    let note: string | null = null;
+    for (;;) {
+      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, LeadsDraft, `draft leads${attempt ? " (retry)" : ""}`);
+      callsThisInvocation++;
+      model = res.model;
+      const normalized = normalizeLeads(res.output.leads, leadTypes!);
+      const problems = validateLeads(normalized, leadTypes!, known);
+      if (problems.length === 0) return { leads: normalized, needs: res.output.needs_source, calls: attempt + 1 };
+      if (attempt++ >= 1) throw new Error(`leads rejected twice: ${problems.join(" ")}`);
+      note = problems.join("\n");
+    }
+  };
 
-    if (call.kind === "leads") {
-      let attempt = 0;
-      let note: string | null = null;
-      for (;;) {
-        const res = await callStep(ctx, "draft", draftPrompt, { ...args, retryNote: note }, LeadsDraft, `draft leads${attempt ? " (retry)" : ""}`);
-        calls++;
-        model = res.model;
-        const normalized = normalizeLeads(res.output.leads, leadTypes!);
-        const problems = validateLeads(normalized, leadTypes!, known);
-        if (problems.length === 0) {
-          leads = normalized;
-          needsSource.push(...res.output.needs_source);
-          break;
-        }
-        if (attempt++ >= 1) throw new Error(`leads rejected twice: ${problems.join(" ")}`);
-        note = problems.join("\n");
-      }
-      continue;
+  const remaining = plan.calls.map((c, i) => [c, i] as const).filter(([, i]) => !state.done.has(i));
+  for (const [call, i] of remaining) {
+    // (4) budget: the next group must fit in what is left of this invocation; the first group of an invocation always runs
+    const elapsed = now() - ctx.startedAt;
+    if (groupsThisInvocation > 0 && elapsed + DRAFT_CALL_ESTIMATE_MS > ctx.timeBudgetMs) {
+      const done = partial.completed.length;
+      const reason = `${done}/${plan.calls.length} call groups done`;
+      await ctx.progress(`Drafting continues in the next invocation (${reason}; ${Math.round(elapsed / 1000)}s used of ${Math.round(ctx.timeBudgetMs / 1000)}s)`);
+      return { output: partial, model, summary: "drafting continues", continueLater: { reason } };
     }
 
-    const r = await runSections(call, i, null);
-    drafted.push(...r.sections);
-    needsSource.push(...r.needs);
+    const label = call.kind === "leads" ? "three leads" : call.units.map((u) => u.title).join(", ");
+    await ctx.progress(`Drafting ${label} (${i + 1}/${plan.calls.length})`);
+
+    if (call.kind === "leads") {
+      const r = await runLeads(call, i);
+      leads = r.leads;
+      needsSource.push(...r.needs);
+      partial = withGroup(partial, { index: i, kind: call.kind, unit_ids: call.units.map((u) => u.id), sections: [], leads: r.leads, needs_source: r.needs, model: model ?? null, calls_made: r.calls });
+    } else {
+      const r = await runSections(call, i, null);
+      drafted.push(...r.sections);
+      needsSource.push(...r.needs);
+      partial = withGroup(partial, { index: i, kind: call.kind, unit_ids: call.units.map((u) => u.id), sections: r.sections, leads: null, needs_source: r.needs, model: model ?? null, calls_made: r.calls });
+    }
+    groupsThisInvocation++;
+    // (3) persist after every group so a wall-clock kill loses at most one
+    await ctx.savePartial(partial);
   }
 
   // single-call formats (ads, SMS, RSA, short emails): run the format's hard gates now and give the writer one shot at them
-  if (plan.calls.length === 1 && plan.calls[0].kind === "sections") {
+  if (plan.calls.length === 1 && plan.calls[0].kind === "sections" && groupsThisInvocation > 0) {
     let failures: string[] = [];
     try {
       failures = evaluateGates(orderSections(spec, drafted), spec).failures;
@@ -227,7 +268,10 @@ export const draftStep: StepFn = async (ctx) => {
   const draft = assembleDraft({ spec, sections: drafted, leads, chosenLeadId: null, needsSource });
   DraftOutput.parse(draft);
 
-  const summary = `Drafted ${draft.word_count} words in ${calls} call${calls === 1 ? "" : "s"}${plan.shape.kind !== "none" ? ` (${plan.itemCount} ${spec.multi_item?.item_name ?? "item"}${plan.itemCount === 1 ? "" : "s"})` : ""}${leads ? `, three leads (${leads.map((l) => l.lead_type).join(", ")}) awaiting the cold read` : ""}; ${draft.ledger_refs_used.length} ledger rows cited; ${draft.needs_source.length} NEEDS SOURCE`;
+  const totalCalls = partial.calls_made + (callsThisInvocation - remaining.reduce((n, [, i]) => n + (partial.completed.find((g) => g.index === i)?.calls_made ?? 0), 0));
+  const summary = `Drafted ${draft.word_count} words in ${Math.max(totalCalls, partial.calls_made)} call${totalCalls === 1 ? "" : "s"}${resumed ? ` (${resumed.completed.length} group${resumed.completed.length === 1 ? "" : "s"} resumed)` : ""}${plan.shape.kind !== "none" ? ` (${plan.itemCount} ${spec.multi_item?.item_name ?? "item"}${plan.itemCount === 1 ? "" : "s"})` : ""}${leads ? `, three leads (${leads.map((l) => l.lead_type).join(", ")}) awaiting the cold read` : ""}; ${draft.ledger_refs_used.length} ledger rows cited; ${draft.needs_source.length} NEEDS SOURCE`;
   await ctx.progress(summary);
   return { output: draft, model, summary, effects: { newDraft: toDraftEffect(draft, "system", "draft") } };
-};
+}
+
+export const draftStep: StepFn = (ctx) => runDraft(ctx, { call: callStep });

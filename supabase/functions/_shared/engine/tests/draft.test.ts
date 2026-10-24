@@ -347,3 +347,158 @@ Deno.test("normalizeLeads assigns stable ids and types; validateLeads enforces t
   assert(validateLeads(leads.slice(0, 2), types, new Set([A])).some((p) => /three leads/.test(p)));
   assert(validateLeads(leads, types, new Set()).some((p) => p.includes(A)));
 });
+
+// ---------------------------------------------------------------- resumable drafting (fake model, real control flow)
+
+import { advertorial } from "../formats/specs/advertorial.ts";
+import { DRAFT_CALL_ESTIMATE_MS, runDraft } from "../steps/draft.ts";
+import { DraftPartial, planFingerprint } from "../draft/partial.ts";
+import type { callStep } from "../draft/step_util.ts";
+import type { DraftArgs } from "../prompts/draft.v1.ts";
+import type { StepContext } from "../steps/types.ts";
+import type { DraftUnit } from "../draft/plan.ts";
+import { DraftOutput } from "../schemas/draft.ts";
+
+function fakeCtx(over: Partial<StepContext> = {}): StepContext & { saves: unknown[] } {
+  const saves: unknown[] = [];
+  const ctx = {
+    db: {} as StepContext["db"],
+    generation: { id: "gen-1", workspace_id: "ws-1", options: { awareness: "problem_aware" } } as unknown as StepContext["generation"],
+    offer: { id: "off-1", name: "The Audit" } as unknown as StepContext["offer"],
+    brief: null,
+    claims: [{ id: A, claim_text: "212 audits", claim_type: "statistic", role: "proof", evidence_grade: "B", user_decision: null, status: "verified" } as unknown as StepContext["claims"][number]],
+    config: null,
+    variant: null,
+    dossier: null,
+    voice: null,
+    format: advertorial,
+    angles: [],
+    winningAngle: { id: "ang-1", candidate: candidate([A]), thesis: "This draft exists to prove the night-before pull is a superior way to a 4-hour audit." } as unknown as StepContext["winningAngle"],
+    drafts: [],
+    latestDraft: null,
+    stepOutputs: {},
+    revisionCycles: 0,
+    attempt: 1,
+    promptVersions: {},
+    progress: async () => {},
+    partial: null,
+    savePartial: async (p: unknown) => {
+      saves.push(structuredClone(p));
+    },
+    timeBudgetMs: 300_000,
+    startedAt: Date.now(),
+    ...over,
+  } as StepContext & { saves: unknown[] };
+  ctx.saves = saves;
+  return ctx;
+}
+
+/** A deterministic stand-in for the model: one block per section of the first allowed type, every lead of its assigned type. */
+function fakeCaller(made: string[]): typeof callStep {
+  const blocksFor = (u: DraftUnit) => [blk(`${u.id}-x`, `${u.title} copy with a fact [[L:${A}]].`, (u.spec.block_types?.[0] ?? "paragraph") as Block["type"], u.spec.block_types?.[0] === "bullets" ? ["one"] : null)];
+  return (async (_ctx, _step, _mod, args, schema) => {
+    const a = args as unknown as DraftArgs;
+    made.push(`${a.call.kind}:${a.call.units.map((u) => u.id).join(",")}`);
+    let output: unknown;
+    if (a.call.kind === "leads") {
+      output = { leads: a.leadTypes!.map((t, i) => ({ id: `model-${i}`, lead_type: t, reader_hypothesis: `reader ${i}`, blocks: [blk("x", `Lead of type ${t}: a doubtable claim [[L:${A}]].`)] })), ledger_refs_used: [A], needs_source: [] };
+    } else if (a.call.units.length === 1) {
+      output = { section: { section_id: a.call.units[0].id, title: null, blocks: blocksFor(a.call.units[0]) }, ledger_refs_used: [A], needs_source: [] };
+    } else {
+      output = { sections: a.call.units.map((u) => ({ section_id: u.id, title: null, blocks: blocksFor(u) })), ledger_refs_used: [A], needs_source: [] };
+    }
+    return { output: schema.parse(output), text: "", model: "fake-model", usage: { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0, web_searches: 0 }, costUsd: 0, latencyMs: 0, stopReason: "end_turn", requestId: null, sources: [] };
+  }) as typeof callStep;
+}
+
+Deno.test("draft step: a full run makes one call per group, saves a partial after every group, assembles the draft", async () => {
+  const made: string[] = [];
+  const ctx = fakeCtx();
+  const result = await runDraft(ctx, { call: fakeCaller(made) });
+  const plan = planDraft(advertorial);
+  assertEquals(plan.calls.length, 4);
+  assertEquals(made.length, 4);
+  assertEquals(made.map((m) => m.split(":")[0]), ["sections", "sections", "leads", "headline"]);
+  assertEquals(ctx.saves.length, 4, "one savePartial per group");
+  assertEquals(result.continueLater, undefined);
+  assert(result.effects?.newDraft);
+  const out = DraftOutput.parse(result.output);
+  assertEquals(out.leads?.length, 3);
+  assertEquals(out.chosen_lead_id, null);
+  assertEquals(out.sections.map((s) => s.section_id), advertorial.sections.map((s) => s.id));
+  assertEquals(out.ledger_refs_used, [A]);
+  const last = DraftPartial.parse(ctx.saves[3]);
+  assertEquals(last.completed.length, 4);
+  assertEquals(last.plan_fingerprint, planFingerprint(advertorial, plan));
+  assertEquals(last.calls_made, 4);
+});
+
+Deno.test("draft step: resuming from a partial with 2 of 4 groups done makes only the 2 remaining calls and the same draft", async () => {
+  const full: string[] = [];
+  const first = fakeCtx();
+  const reference = await runDraft(first, { call: fakeCaller(full) });
+  const twoDone = DraftPartial.parse(first.saves[1]);
+  assertEquals(twoDone.completed.map((g) => g.index), [0, 1]);
+
+  const made: string[] = [];
+  const ctx = fakeCtx({ partial: twoDone });
+  const result = await runDraft(ctx, { call: fakeCaller(made) });
+  assertEquals(made.length, 2);
+  assertEquals(made.map((m) => m.split(":")[0]), ["leads", "headline"]);
+  assertEquals(result.continueLater, undefined);
+  assertEquals(DraftOutput.parse(result.output).sections, DraftOutput.parse(reference.output).sections, "the resumed draft equals the uninterrupted one");
+  assert(result.summary.includes("2 groups resumed"));
+
+  // a partial from another plan is ignored and the run starts over
+  const foreign = { ...twoDone, plan_fingerprint: "email_single|none:1|sections=cta,body,hook,signoff,subject" };
+  const again: string[] = [];
+  await runDraft(fakeCtx({ partial: foreign }), { call: fakeCaller(again) });
+  assertEquals(again.length, 4);
+  const garbage: string[] = [];
+  await runDraft(fakeCtx({ partial: { nope: true } }), { call: fakeCaller(garbage) });
+  assertEquals(garbage.length, 4);
+});
+
+Deno.test("draft step: a tiny budget drafts exactly one group, saves it and returns continueLater with no effects", async () => {
+  const made: string[] = [];
+  const ctx = fakeCtx({ timeBudgetMs: 10, startedAt: Date.now() });
+  const result = await runDraft(ctx, { call: fakeCaller(made) });
+  assertEquals(made.length, 1, "the first group always runs so every invocation makes progress");
+  assertEquals(ctx.saves.length, 1);
+  assertEquals(result.continueLater, { reason: "1/4 call groups done" });
+  assertEquals(result.summary, "drafting continues");
+  assertEquals(result.effects, undefined);
+  const partial = DraftPartial.parse(result.output);
+  assertEquals(partial.completed.length, 1);
+  assertEquals(partial.completed[0].unit_ids, planDraft(advertorial).calls[0].units.map((u) => u.id));
+  assertEquals(partial.ledger_refs, [A]);
+
+  // the budget check is per next group: with time for exactly two calls, two groups run
+  const two: string[] = [];
+  const ctx2 = fakeCtx({ timeBudgetMs: DRAFT_CALL_ESTIMATE_MS + 1, startedAt: Date.now() });
+  const r2 = await runDraft(ctx2, { call: fakeCaller(two) });
+  assertEquals(two.length, 1);
+  assert(r2.continueLater);
+  const ctx2b = fakeCtx({ timeBudgetMs: DRAFT_CALL_ESTIMATE_MS * 2 + 1, startedAt: Date.now() });
+  const r2b = await runDraft(ctx2b, { call: fakeCaller([]) });
+  assertEquals(ctx2b.saves.length, 4, "with no real elapsed time the estimate alone never exhausts a two-call budget");
+  assertEquals(r2b.continueLater, undefined);
+
+  // the next invocation picks the partial up and finishes
+  const rest: string[] = [];
+  const ctx3 = fakeCtx({ partial: result.output });
+  const r3 = await runDraft(ctx3, { call: fakeCaller(rest) });
+  assertEquals(rest.length, 3);
+  assertEquals(r3.continueLater, undefined);
+  assert(r3.effects?.newDraft);
+});
+
+Deno.test("lead_section_id on the spec points the three-lead loop at that section", () => {
+  const vsl = { ...vsl_long, lead_section_id: "interrupt" };
+  const plan = planDraft(vsl);
+  assertEquals(plan.leadSectionId, "interrupt");
+  const leads = plan.calls.find((c) => c.kind === "leads")!;
+  assertEquals(leads.units[0].id, "interrupt");
+  assertEquals(plan.calls.filter((c) => c.kind === "sections").flatMap((c) => c.units.map((u) => u.id)).includes("interrupt"), false);
+  assertEquals(planDraft({ ...vsl_long, lead_section_id: "not-a-section" }).leadSectionId, null, "an id the spec lacks is ignored");
+});

@@ -135,12 +135,23 @@ Single-call formats (ads, SMS, RSA, short emails) also run the spec's machine-ch
 `evaluateGates`) right after drafting; a failure is sent back to the writer once as a correction before the draft is
 stored. Multi-call formats leave that to the mechanical step and the revise loop.
 
+## Resumable drafting
+
+The draft step is resumable (`StepContext.partial`, `savePartial`, `timeBudgetMs`, `startedAt`; `StepResult.continueLater`).
+After every call group it saves a `DraftPartial` (`draft/partial.ts`: format, plan fingerprint, the finished groups'
+sections or leads, ledger refs, NEEDS SOURCE). Before each group it checks whether one more call (estimated at 75s)
+fits the invocation's budget; if not, it returns the partial as the attempt output with `continueLater: { reason: "k/n
+call groups done" }` and no effects, and the runner re-enqueues the step. The next invocation restores the partial
+when the format and plan fingerprint match and skips the finished groups. The first group of an invocation always
+runs, so a wall-clock kill loses at most one group. The CLI runs with the default 300s budget and a no-op `savePartial`
+set by `buildContext`; the run-step function overrides both. `engine run` loops on `continueLater` by re-running the
+same step until it completes.
+
 ## Notes and limits
 
 - The pipeline loop mirrors `run-step`: `initialSteps` → run → `applyEffects` → `nextSteps`. Review steps fan out
   after the cold read; the loop revises at most `MAX_REVISION_CYCLES` times, then ships.
-- A sales letter is seven Opus calls in the draft step alone. Inside an Edge Function that is more than one 400s
-  invocation can hold; the CLI does not care, and the runner's job is to chain or split them (architecture doc §5
-  names the long-running worker as the escape hatch).
+- A sales letter is seven Opus calls in the draft step; with the resumable contract the runner splits them across
+  invocations (see above), so no single invocation needs to hold them all.
 - `eval` is not implemented. Until it is, `run` and `baseline` on the same brief produce comparable markdown for a
   manual blind read.
