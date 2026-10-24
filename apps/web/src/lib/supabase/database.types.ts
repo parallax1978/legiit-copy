@@ -856,6 +856,9 @@ isOneToOne: false
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"leave_workspace":
+{ Args: { "ws": string }; Returns: undefined
+                           },
 "match_critiques":
 { Args: { "match_count"?: number,"match_format": string,"query_embedding": string }; Returns: {
               "chief": string,"defect_named": string,"format": string,"id": string,"principle": string,"similarity": number,"strong_revision": string,"weak_draft": string
