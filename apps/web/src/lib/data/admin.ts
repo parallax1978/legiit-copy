@@ -609,7 +609,7 @@ export function mapCritiqueRecord(r: LooseRecord): Tables["critiques"]["Insert"]
     source: str(r.source),
     source_url: str(r.source_url ?? r.url),
     chief: str(r.chief),
-    format: str(r.format),
+    format: aliasFormat(str(r.format)),
     brief: str(r.brief),
     weak_draft: str(r.weak_draft ?? r.before),
     strong_revision: str(r.strong_revision ?? r.after),
@@ -661,7 +661,7 @@ export function mapSplitTestRecord(r: LooseRecord): Tables["split_test_pairs"]["
     external_id: str(r.external_id ?? r.id),
     source: str(r.source),
     source_url: str(r.source_url ?? r.url),
-    format: str(r.format),
+    format: aliasFormat(str(r.format)),
     element_tested: str(r.element_tested),
     variant_a: str(r.variant_a),
     variant_b: str(r.variant_b),
@@ -723,7 +723,10 @@ export function mapExampleRecord(r: LooseRecord): Tables["examples"]["Insert"] {
 }
 
 /** Older research files name formats loosely; map them onto FORMAT_IDS. */
-const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social" };
+function aliasFormat<T extends string | null | undefined>(f: T): T | string {
+  return f ? (FORMAT_ALIASES[f] ?? f) : f;
+}
+export const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", donation_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", single_email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social", product_page: "product_description" };
 
 /** Accepts an eval_briefs-shaped record or a research/corpus/eval_briefs.json record (offer_name, formats_to_test, the record itself is the brief). */
 export function mapEvalBriefRecord(r: LooseRecord): Tables["eval_briefs"]["Insert"] {

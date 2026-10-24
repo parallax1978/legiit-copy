@@ -24,6 +24,10 @@ async function readJson(path: string): Promise<unknown[] | null> {
   }
 }
 
+/** Older research files name formats loosely; map them onto the engine's FORMAT_IDS. */
+const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", donation_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", single_email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social", product_page: "product_description" };
+const fmt = (f: unknown) => (typeof f === "string" ? (FORMAT_ALIASES[f] ?? f) : "other");
+
 function clip(s: unknown, n = 400): string | null {
   if (typeof s !== "string") return null;
   return s.length > n ? s.slice(0, n - 1) + "…" : s;
@@ -67,7 +71,7 @@ for (const file of ["controls_sales_letters", "controls_emails", "controls_webin
     workspace_id: null,
     title: r.title ?? "untitled",
     author: r.author_or_company ?? r.author ?? null,
-    format: r.format ?? "other",
+    format: fmt(r.format),
     market: r.market ?? null,
     funnel_position: r.funnel_position ?? null,
     traffic: r.traffic ?? null,
@@ -95,7 +99,7 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
     external_id: r.id,
     source: r.source ?? null,
     source_url: r.source_url ?? null,
-    format: r.format ?? null,
+    format: r.format ? fmt(r.format) : null,
     element_tested: r.element_tested ?? null,
     variant_a: clip(r.variant_a, 2000),
     variant_b: clip(r.variant_b, 2000),
@@ -115,7 +119,6 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
 }
 
 // ---- eval briefs ----
-const FORMAT_ALIASES: Record<string, string> = { short_landing_page: "landing_page_short", landing_page: "landing_page_short", b2b_pricing_page: "pricing_page", webinar: "webinar_package", upsell_oto: "upsell", oto: "upsell", opt_in_page: "optin", opt_in: "optin", email: "email_single", sales_page: "sales_letter", vsl: "vsl_long", facebook_ad: "meta_ad", instagram_ad: "meta_ad", tiktok: "tiktok_reels", social_post: "organic_social" };
 {
   const rows = await readJson("research/corpus/eval_briefs.json");
   if (rows) {
