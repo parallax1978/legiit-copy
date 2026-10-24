@@ -83,13 +83,14 @@ export interface CallTotals {
 
 export async function sumLlmCalls(
   db: Db,
-  filter: { generationId?: string; step?: string; attempt?: number; evalOutputId?: string },
+  filter: { generationId?: string; step?: string; attempt?: number; attempts?: number[]; evalOutputId?: string },
 ): Promise<CallTotals> {
   let q = db.from("llm_calls").select("model, input_tokens, output_tokens, cost_usd, error, created_at");
   if (filter.generationId) q = q.eq("generation_id", filter.generationId);
   if (filter.evalOutputId) q = q.eq("eval_output_id", filter.evalOutputId);
   if (filter.step) q = q.eq("step", filter.step);
   if (filter.attempt !== undefined) q = q.eq("attempt", filter.attempt);
+  if (filter.attempts) q = q.in("attempt", filter.attempts);
   const { data, error } = await q.order("created_at", { ascending: true });
   if (error) throw new Error(`llm_calls sum failed: ${error.message}`);
   const t: CallTotals = { calls: 0, input_tokens: 0, output_tokens: 0, cost_usd: 0, model: null };
@@ -223,10 +224,16 @@ export async function loadOfferContext(db: Db, offerId: string, purpose: string,
     progress: async () => {},
     partial: null,
     savePartial: async () => {},
-    timeBudgetMs: 300_000,
+    timeBudgetMs: stepTimeBudgetMs(),
     startedAt: Date.now(),
   };
   return { ctx, offer, generationId: generation.id };
+}
+
+/** Wall-clock budget a step may spend in one invocation (env STEP_TIME_BUDGET_MS, default 300s; the function limit is 400s). */
+export function stepTimeBudgetMs(): number {
+  const n = Number(Deno.env.get("STEP_TIME_BUDGET_MS"));
+  return Number.isFinite(n) && n > 0 ? n : 300_000;
 }
 
 // ---------- claims ledger writes ----------

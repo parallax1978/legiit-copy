@@ -7,10 +7,13 @@
  * for a step that already completed in the current pass is acked and dropped; a message for a dead
  * generation is archived; a failed attempt is left unacked so the queue redelivers it after the visibility
  * timeout, until MAX_STEP_ATTEMPTS, when the generation is marked failed and the message archived.
+ * Resumable steps: a step may checkpoint with ctx.savePartial and return `continueLater` when its time budget is
+ * spent; the attempt is marked 'continued', the same step is enqueued again and the next attempt receives the
+ * checkpoint as ctx.partial. Interrupted and failed attempts that saved a checkpoint resume the same way.
  */
 import { z } from "zod";
 import { type Db, serviceClient } from "shared/supabase.ts";
-import { background, errorMessage, recordUsageSafe, sumLlmCalls } from "shared/http.ts";
+import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { nextSteps, type PipelineState } from "engine/pipeline.ts";
@@ -182,8 +185,19 @@ async function runMessage(body: Body): Promise<void> {
     }
   }
 
+  // a running row older than the visibility timeout belongs to a dead invocation; make that explicit before resuming
+  for (const r of thisPass) {
+    if (r.status === "running" && (!r.started_at || Date.now() - Date.parse(r.started_at) >= VISIBILITY_MS)) {
+      await db.from("generation_steps").update({ status: "interrupted", error: "attempt never finished", finished_at: new Date().toISOString() }).eq("id", r.id).eq("status", "running");
+      r.status = "interrupted";
+    }
+  }
+
   const attempt = history.filter((r) => r.step === step).reduce((m, r) => Math.max(m, r.attempt), 0) + 1;
+  // 'continued' attempts are a step pausing on purpose: never a failure, never a duplicate
   const failedBefore = thisPass.filter((r) => r.status === "failed" || r.status === "interrupted").length;
+  const continuedAttempts = thisPass.filter((r) => r.status === "continued").map((r) => r.attempt);
+  const resumeFrom = resumePartial(thisPass);
 
   // 3. running row + generation status
   const startedAt = new Date().toISOString();
@@ -206,9 +220,26 @@ async function runMessage(body: Body): Promise<void> {
   let ctx: StepContext;
   let result: StepResult;
   let applied: AppliedEffects = {};
+  let savedPartial = false;
   try {
     ctx = await buildContext(db, generationId, attempt, progress);
+    ctx.startedAt = startedMs;
+    ctx.timeBudgetMs = stepTimeBudgetMs();
+    ctx.partial = resumeFrom;
+    ctx.savePartial = async (partial: unknown) => {
+      const { error } = await db.from("generation_steps").update({ output: { partial } as unknown as Json }).eq("id", stepRow.id);
+      if (error) console.error(`${tag} savePartial failed`, error.message);
+      savedPartial = !error;
+    };
+    if (resumeFrom !== null) console.log(`${tag} resuming from the checkpoint of an earlier attempt`);
+
     result = await STEPS[step](ctx);
+
+    if (result.continueLater) {
+      running.delete(stepRow.id);
+      await continueLater(db, { tag, gen, step, attempt, msgId, stepRowId: stepRow.id, startedMs }, result, savedPartial);
+      return;
+    }
     applied = await applyEffects(db, ctx, step, result);
   } catch (e) {
     running.delete(stepRow.id);
@@ -244,14 +275,16 @@ async function runMessage(body: Body): Promise<void> {
 
   // 6. usage + totals, then routing. Nothing below re-runs the model; errors here are logged and the message still acked
   //    only when routing succeeded (an unacked message re-enters at step 2 and re-issues the fan-out).
+  // usage for the step is recorded once, on completion, and covers the 'continued' attempts of this pass too
+  const chain = continuedAttempts.length ? await sumLlmCalls(db, { generationId, step, attempts: [...continuedAttempts, attempt] }).catch(() => totals) : totals;
   await recordUsageSafe(db, {
     workspaceId: gen.workspace_id,
     generationId,
     step,
     attempt,
     kind: "step_completed",
-    tokens: totals.input_tokens + totals.output_tokens,
-    cost: totals.cost_usd,
+    tokens: chain.input_tokens + chain.output_tokens,
+    cost: chain.cost_usd,
   });
   const genTotals = await sumLlmCalls(db, { generationId }).catch((e) => {
     console.error(`${tag} generation totals failed`, e);
@@ -312,6 +345,57 @@ async function runMessage(body: Body): Promise<void> {
     return;
   }
   await ack(db, msgId);
+}
+
+// ---------- continuation ----------
+interface ContinueArgs {
+  tag: string;
+  gen: GenerationRow;
+  step: StepName;
+  attempt: number;
+  msgId: number;
+  stepRowId: string;
+  startedMs: number;
+}
+
+/**
+ * The step checkpointed and asked for another invocation: mark the attempt 'continued' (its output holds the
+ * partial), keep the generation running, enqueue the same step again, then ack. No usage is recorded yet; the
+ * completing attempt bills the whole chain. If the enqueue fails the message is left unacked so the redelivery
+ * resumes from the checkpoint.
+ */
+async function continueLater(db: Db, a: ContinueArgs, result: StepResult, savedPartial: boolean): Promise<void> {
+  const reason = result.continueLater?.reason ?? "continuing";
+  const totals = await sumLlmCalls(db, { generationId: a.gen.id, step: a.step, attempt: a.attempt }).catch(() => null);
+  const patch: Database["public"]["Tables"]["generation_steps"]["Update"] = {
+    status: "continued",
+    error: null,
+    model: result.model ?? totals?.model ?? null,
+    input_tokens: totals?.input_tokens ?? 0,
+    output_tokens: totals?.output_tokens ?? 0,
+    cost_usd: totals?.cost_usd ?? 0,
+    duration_ms: Date.now() - a.startedMs,
+    finished_at: new Date().toISOString(),
+  };
+  // the step should have checkpointed through savePartial; if it did not, its output is the checkpoint
+  if (!savedPartial && result.output !== undefined && result.output !== null) patch.output = { partial: result.output } as unknown as Json;
+  const { error } = await db.from("generation_steps").update(patch).eq("id", a.stepRowId);
+  if (error) throw new Error(`generation_steps 'continued' update failed: ${error.message}`);
+
+  await db.from("generations").update({ status: "running", current_step: a.step, progress_message: reason.slice(0, 500) }).eq("id", a.gen.id);
+  await enqueue(db, a.gen.id, a.step);
+  console.log(`${a.tag} continued after ${Date.now() - a.startedMs}ms: ${reason}`);
+  await ack(db, a.msgId);
+}
+
+/** The checkpoint to resume from: the newest attempt of this pass that stopped (continued, interrupted, failed) with output.partial. */
+function resumePartial(thisPass: StepRowLite[]): unknown | null {
+  for (const r of [...thisPass].reverse()) {
+    if (r.status !== "continued" && r.status !== "interrupted" && r.status !== "failed") continue;
+    const out = asRecord(r.output);
+    if (out && "partial" in out && out.partial !== undefined) return out.partial ?? null;
+  }
+  return null;
 }
 
 // ---------- failure ----------

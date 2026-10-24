@@ -279,15 +279,16 @@
     "lift": "+90.2% click rate (0.96% to 1.8%) for 'Find Out More'; donor-centric CTA -42.3%; conversion rate and average gift unchanged",
     "metric": "click rate",
     "sample_size": "181,647 (990 required)",
-    "confidence": "100.0% for T2 and T3; valid",
+    "confidence": "T2 'Find Out More' 90.2% (results table column unlabelled; matches the 90.2% flux-metrics traffic lift); T3 100.0%; T1 87.3%. NextAfter marks the experiment valid overall, but the T2 winner itself is below 95%",
     "why_it_won": "Source: the softer CTA drove incremental traffic and additional gifts; response rate did not reach 95% confidence. Our reading: lowering the ask in the email ('find out more') outperformed both a harder ask and a reader-flattering 'donor centric' line.",
     "principle": "A 'reader-centric' label on a CTA is not the same as a lower-cost action. The standard's CTA rule (verb, object, location) holds; the loser here shows 'donor centric language' can read as manipulation.",
     "results": {
-      "type": "split_test",
+      "type": "split_test_winner_below_95",
       "stated_at": "experiment #573 results table, 12/15/2014-12/17/2014"
     },
     "quote_status": "paraphrase",
-    "organization": "The Heritage Foundation"
+    "organization": "The Heritage Foundation",
+    "verification_note": "Verified 2026-10-24 against source. Corrected: earlier record stated 100.0% confidence for T2; the page shows 90.2% for T2 and the key learnings say the response rate did not reach 95% confidence."
   },
   {
     "id": "split_tests_email_ads_sms-13",
@@ -471,7 +472,7 @@
     "lift": "Image change: +227.7% donor conversion (99.5%), click rate 0.7% to 1.3% (100%). Copy-only change: clicks down to 0.5% (100%), conversion not validated",
     "metric": "donor conversion rate; click rate",
     "sample_size": "558,376 (75,620 required)",
-    "confidence": "99.5% for T2; T1 45.9% (not valid)",
+    "confidence": "T2 99.5% in results table (key learnings text says 99.4%); T1 45.9% (not valid)",
     "why_it_won": "Source (Rebekah Josefy): the verse image drove the click lift; the 'experiential' copy alone reduced clicks and did not validate on conversion. Next test pairs the new copy with the new image.",
     "principle": "Section 9 Meta ads: image carries the stop; a copy rewrite that adds experiential adjectives without a new proof or mechanism lost. Supports: tone adjectives are not an angle (prompts carry parameters, not tone).",
     "results": {
@@ -479,7 +480,8 @@
       "stated_at": "experiment #69006 results table, 3 weeks ending 08/09/2021"
     },
     "quote_status": "verbatim",
-    "organization": "Dallas Theological Seminary"
+    "organization": "Dallas Theological Seminary",
+    "verification_note": "Verified 2026-10-24 against source; page is internally inconsistent on T2 confidence (99.5% table vs 99.4% text)."
   },
   {
     "id": "split_tests_email_ads_sms-21",
@@ -1267,7 +1269,7 @@
     "format": "cold_email",
     "element_tested": "other",
     "variant_a": "Campaign with a single cold email and no follow-up: 9% average reply rate (16% for the most experienced users)",
-    "variant_b": "Campaign with at least one follow-up: 13% average reply rate (27% for the most experienced users); first follow-up about 40% higher reply than the initial email (e.g. 6% to 8.5%); 2-3 follow-ups most effective",
+    "variant_b": "Campaign with at least one follow-up: 13% average reply rate (27% for the most experienced users); first follow-up about 40% higher reply than the initial email; 2-3 follow-ups most effective",
     "winner": "b",
     "lift": "+4 points reply rate overall (9% to 13%); +11 points for experienced users (16% to 27%); a campaign with one follow-up converts about 22% more prospects",
     "metric": "reply rate",
@@ -1280,7 +1282,8 @@
       "stated_at": "article body"
     },
     "quote_status": "paraphrase",
-    "element_detail": "sequence_follow_up_count"
+    "element_detail": "sequence_follow_up_count",
+    "verification_note": "Verified 2026-10-24 against source. Removed the '6% to 8.5%' example from variant_b: the page presents it as a hypothetical illustration, not a measured result. The 22% claim is the author's own unpublished research."
   },
   {
     "id": "split_tests_email_ads_sms-55",
