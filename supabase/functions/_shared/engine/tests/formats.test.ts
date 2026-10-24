@@ -55,6 +55,24 @@ Deno.test("lead variants are 3 only for the four long formats", () => {
   for (const spec of specs) assertEquals(spec.lead_variants, three.has(spec.id) ? 3 : 0, spec.id);
 });
 
+Deno.test("every spec with three lead variants has a lead section, and lead_section_id always names a real section", () => {
+  for (const spec of specs) {
+    const ids = spec.sections.map((s) => s.id);
+    if (spec.lead_section_id !== undefined) assert(ids.includes(spec.lead_section_id), `${spec.id}: lead_section_id "${spec.lead_section_id}" is not a section`);
+    if (spec.lead_variants === 3) {
+      const lead = spec.lead_section_id ?? "lead";
+      assert(ids.includes(lead), `${spec.id}: no section "${lead}" for the three-lead loop`);
+      assert(!spec.sections.find((s) => s.id === lead)?.optional, `${spec.id}: the lead section cannot be optional`);
+    }
+  }
+  assertEquals(FORMATS.webinar_package.lead_section_id, "presentation_open");
+  assertEquals(FORMATS.vsl_long.lead_section_id, "lead");
+});
+
+Deno.test("no section band exceeds one drafting call (about 1,800 words)", () => {
+  for (const spec of specs) for (const s of spec.sections) assert(s.band_words[1] <= 1800, `${spec.id}.${s.id}: band max ${s.band_words[1]}`);
+});
+
 Deno.test("markdown headings are disallowed everywhere; emoji bullets only in meta_ad", () => {
   for (const spec of specs) {
     assertEquals(spec.allow_markdown_headings, false, spec.id);
