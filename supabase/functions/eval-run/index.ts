@@ -64,18 +64,22 @@ async function start(db: Db, run: EvalRun, body: z.infer<typeof Body>, userId: s
   const { data: existing } = await db.from("generations").select("id, format, options").contains("options", { eval_run_id: run.id });
   const have = new Set((existing ?? []).map((g) => `${(g.options as Record<string, unknown>)?.eval_brief_id}:${g.format}`));
 
+  // the admin run form stores the chosen formats on the run (model_set.formats); a brief's own list is the fallback
+  const runFormats = body.formats ?? strings((run.model_set as Record<string, unknown> | null)?.formats);
+
   const created: { generation_id: string; offer_id: string; brief_id: string; format: string }[] = [];
   const skipped: { brief_id: string; format: string; reason: string }[] = [];
 
   for (const eb of briefs) {
-    const formats = body.formats ?? (Array.isArray(eb.formats) ? (eb.formats as unknown[]).filter((f): f is string => typeof f === "string") : []);
+    const formats = runFormats.length ? runFormats : strings(eb.formats);
     if (!formats.length) {
       skipped.push({ brief_id: eb.id, format: "*", reason: "brief lists no formats and none were given" });
       continue;
     }
-    const parsed = OfferBrief.safeParse(eb.brief);
-    const b = parsed.success ? parsed.data : null;
     const raw = (eb.brief ?? {}) as Record<string, unknown>;
+    const parsed = OfferBrief.safeParse(eb.brief);
+    // research/corpus/eval_briefs.json records are flat; shape them into the brief the pipeline's steps require
+    const b = parsed.success ? parsed.data : briefFromRaw(raw);
 
     for (const format of formats) {
       if (!(format in FORMATS)) {
@@ -93,7 +97,7 @@ async function start(db: Db, run: EvalRun, body: z.infer<typeof Body>, userId: s
           workspace_id: evalWs,
           name: `[eval] ${eb.name} · ${format} · ${run.name}`,
           status: "ready",
-          brief: (eb.brief ?? {}) as JsonValue,
+          brief: (b ?? raw) as unknown as JsonValue,
           audience: b?.audience.who ?? str(raw.audience) ?? null,
           price: b?.price.text ?? str(raw.price) ?? null,
           guarantee: b?.guarantee.text ?? str(raw.guarantee) ?? null,
@@ -139,6 +143,42 @@ async function start(db: Db, run: EvalRun, body: z.infer<typeof Body>, userId: s
 
 function str(v: unknown): string | null {
   return typeof v === "string" && v.trim() ? v : null;
+}
+function strings(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((f): f is string => typeof f === "string" && f.trim().length > 0) : [];
+}
+
+/**
+ * An OfferBrief from a flat eval brief record (research/corpus/eval_briefs.json: offer_name, price and guarantee as
+ * text, proof_available with url, offer_url, competitors as names). The research and argument steps refuse to run
+ * without a brief that parses, so the eval offer must carry one. Null when the record has no product name.
+ */
+export function briefFromRaw(raw: Record<string, unknown>): OfferBrief | null {
+  const name = str(raw.product_name) ?? str(raw.offer_name) ?? str(raw.name);
+  if (!name) return null;
+  const who = str(raw.audience) ?? (typeof raw.audience === "object" && raw.audience ? str((raw.audience as Record<string, unknown>).who) : null);
+  const proofs = (Array.isArray(raw.proof_available) ? raw.proof_available : [])
+    .map((p) => {
+      const r = (p ?? {}) as Record<string, unknown>;
+      return { claim: str(r.claim) ?? "", evidence: str(r.evidence) ?? "", source: str(r.source) ?? str(r.url) };
+    })
+    .filter((p) => p.claim);
+  const candidate = {
+    product_name: name,
+    one_line: str(raw.one_line) ?? str(raw.positioning) ?? `${name} for ${who ?? "its market"}`,
+    deliverables: strings(raw.deliverables),
+    price: { text: str(raw.price) ?? "", amount: null, currency: null, plan: null },
+    terms: str(raw.terms),
+    guarantee: { text: str(raw.guarantee), type: null, days: null, denominated: false },
+    audience: { who: who ?? "", situation: str(raw.awareness_hypothesis), verbatim_sources: [] },
+    positioning: str(raw.positioning),
+    proof_available: proofs,
+    competitors: strings(raw.competitors),
+    urls: [str(raw.offer_url), ...strings(raw.urls)].filter((u): u is string => !!u),
+    unknowns: strings(raw.unknowns),
+  };
+  const parsed = OfferBrief.safeParse(candidate);
+  return parsed.success ? parsed.data : null;
 }
 
 /** A starter ledger from the brief: proof items, price, guarantee, deliverables. Grades stay null (unverified). */

@@ -21,7 +21,7 @@ export function StepTimeline({ generation, steps, compact = false }: { generatio
   return (
     <ol className="relative space-y-0">
       {entries.map((e, i) => {
-        const { Icon, className, spin } = ICON[e.status];
+        const { Icon, className, spin } = ICON[e.status] ?? ICON.pending;
         const isCurrent = generation.current_step === e.step && live;
         const last = i === entries.length - 1;
         return (

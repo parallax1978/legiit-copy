@@ -636,7 +636,7 @@ export function mapControlRecord(r: LooseRecord): Tables["controls"]["Insert"] {
   return {
     external_id: str(r.external_id ?? r.id),
     title,
-    author: str(r.author),
+    author: str(r.author ?? r.author_or_company),
     format,
     market: str(r.market),
     funnel_position: str(r.funnel_position),
@@ -696,7 +696,7 @@ export function mapExampleRecord(r: LooseRecord): Tables["examples"]["Insert"] {
   const documented = str(r.documented_result) ?? (r.results !== undefined ? str(r.results) : null);
   return {
     title,
-    author: str(r.author),
+    author: str(r.author ?? r.author_or_company),
     format,
     market: str(r.market),
     selling_situation: str(r.selling_situation),
@@ -722,16 +722,17 @@ export function mapExampleRecord(r: LooseRecord): Tables["examples"]["Insert"] {
   };
 }
 
+/** Accepts an eval_briefs-shaped record or a research/corpus/eval_briefs.json record (offer_name, formats_to_test, the record itself is the brief). */
 export function mapEvalBriefRecord(r: LooseRecord): Tables["eval_briefs"]["Insert"] {
-  const name = str(r.name) ?? str(r.title);
-  if (!name) throw new Error("record is missing name");
+  const name = str(r.name) ?? str(r.title) ?? str(r.offer_name);
+  if (!name) throw new Error(`record ${str(r.id) ?? "(no id)"} is missing name`);
   const brief = r.brief !== undefined ? (r.brief as Json) : (r as Json);
   return {
     external_id: str(r.external_id ?? r.id),
     name,
     brief: (brief ?? {}) as NonNullable<Json>,
     market: str(r.market),
-    formats: arr(r.formats),
+    formats: arr(r.formats ?? r.formats_to_test),
     notes: str(r.notes),
   };
 }

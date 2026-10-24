@@ -87,8 +87,10 @@ serve(async (req) => {
 
 // ---------- blocks ----------
 
+/** drafts.blocks holds a whole DraftOutput ({ sections, leads, ... }, see engine/draft/assemble.ts toDraftEffect); older rows may hold Section[] or Block[]. */
 function parseSections(raw: unknown): SectionT[] | null {
-  const s = z.array(LooseSection).safeParse(raw);
+  const nested = raw && typeof raw === "object" && !Array.isArray(raw) && Array.isArray((raw as { sections?: unknown }).sections) ? (raw as { sections: unknown }).sections : raw;
+  const s = z.array(LooseSection).safeParse(nested);
   if (s.success && s.data.length) return s.data.map((sec) => ({ ...sec, blocks: sec.blocks.map(fill) }));
   const b = z.array(LooseBlock).safeParse(raw);
   if (b.success && b.data.length) return [{ section_id: "all", title: null, blocks: b.data.map(fill) }];

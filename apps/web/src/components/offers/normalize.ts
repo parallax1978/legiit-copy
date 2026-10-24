@@ -237,9 +237,22 @@ export function normalizeExemplars(json: Json | null | undefined): ExemplarParag
     .filter(([, v]) => typeof v === "string" && v.length > 0)
     .map(([k, v]) => ({ label: k, text: v as string }));
 }
+/**
+ * Lists stored as strings or objects. idiom_bank and dead_words are strings; the voice-profile function writes
+ * story_inventory as {event, date, numbers, people, ...}, which reads as one line per event.
+ */
 export function normalizeStringList(json: Json | null | undefined): string[] {
   if (!Array.isArray(json)) return [];
-  return json.map((x) => (typeof x === "string" ? x : str(obj(x).text ?? obj(x).word ?? obj(x).phrase))).filter(Boolean);
+  return json
+    .map((x) => {
+      if (typeof x === "string") return x;
+      const o = obj(x);
+      const direct = o.text ?? o.word ?? o.phrase;
+      if (typeof direct === "string") return direct;
+      if (typeof o.event === "string") return [o.event, nstr(o.date), nstr(o.numbers), nstr(o.people)].filter(Boolean).join(" · ");
+      return "";
+    })
+    .filter(Boolean);
 }
 export function normalizeRecord(json: Json | null | undefined): Record<string, Json> {
   return obj(json) as Record<string, Json>;

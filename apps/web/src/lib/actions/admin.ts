@@ -184,12 +184,36 @@ export async function retryGeneration(generationId: string): Promise<ActionResul
 // Embeddings
 // ---------------------------------------------------------------------------------------------
 
-/** embed {table, id?}: with an id embeds one row; without, the function embeds every row missing an embedding. */
+type EmbedResponse = { table?: string; embedded?: number; failed?: { id: string; error: string }[]; remaining?: number };
+const EMBED_BATCH = 50;
+const EMBED_MAX_BATCHES = 40;
+
+/**
+ * embed {table, id?}: with an id embeds one row. Without one the function embeds a single batch of rows missing an
+ * embedding and reports `remaining`, so this loops until nothing is left (or a batch makes no progress).
+ */
 export async function embedRows(table: "examples" | "critiques" | "controls" | "example_sections", id?: string): Promise<ActionResult> {
-  const res = await invokeFunction("embed", id ? { table, id } : { table });
-  if (!res.ok) return res;
+  let embedded = 0;
+  let failed = 0;
+  let firstError: string | null = null;
+  let remaining = 0;
+  for (let batch = 0; batch < EMBED_MAX_BATCHES; batch++) {
+    const res = await invokeFunction<EmbedResponse>("embed", id ? { table, id } : { table, limit: EMBED_BATCH });
+    if (!res.ok) return embedded ? { ok: false, error: `${res.error} (${embedded} row${embedded === 1 ? "" : "s"} embedded before the error)` } : res;
+    const d = res.data ?? {};
+    embedded += d.embedded ?? 0;
+    failed += d.failed?.length ?? 0;
+    firstError ??= d.failed?.[0]?.error ?? null;
+    remaining = d.remaining ?? 0;
+    // rows that fail stay unembedded, so a batch with no progress would loop on the same failures forever
+    if (id || remaining === 0 || (d.embedded ?? 0) === 0) break;
+  }
   revalidatePath(`/admin/${table === "critiques" ? "critiques" : table === "controls" ? "controls" : "library"}`, "layout");
-  return { ok: true, message: id ? "Embedded" : `Embedding queued for every ${table} row without one` };
+  if (id) return { ok: true, message: failed ? `Not embedded: ${firstError ?? "unknown error"}` : "Embedded" };
+  const parts = [`Embedded ${embedded} ${table.replace(/_/g, " ")} row${embedded === 1 ? "" : "s"}`];
+  if (failed) parts.push(`${failed} failed (${firstError})`);
+  if (remaining) parts.push(`${remaining} still missing; run again`);
+  return { ok: true, message: parts.join("; ") };
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -57,6 +57,16 @@ export const getShip = (steps: StepRow[]) => latestOutput<ShipOutput>(steps, "sh
 export const getOffer = (steps: StepRow[]) => latestOutput<OfferConstruction>(steps, "offer");
 
 export type TimelineStatus = "completed" | "running" | "pending" | "failed" | "queued" | "skipped" | "interrupted" | "paused";
+const TIMELINE_STATUSES: readonly TimelineStatus[] = ["completed", "running", "pending", "failed", "queued", "skipped", "interrupted", "paused"];
+
+/**
+ * generation_steps.status → timeline status. 'continued' is a resumable step (the draft) checkpointing between
+ * invocations: the step is still running, never failed. Anything unknown renders as pending rather than crashing.
+ */
+export function timelineStatus(raw: string): TimelineStatus {
+  if (raw === "continued") return "running";
+  return (TIMELINE_STATUSES as readonly string[]).includes(raw) ? (raw as TimelineStatus) : "pending";
+}
 
 export interface TimelineEntry {
   step: StepName;
@@ -81,16 +91,18 @@ export function buildTimeline(generation: GenerationRow, steps: StepRow[]): Time
     const completedRows = rows.filter((r) => r.status === "completed");
     let status: TimelineStatus = "pending";
     if (latest) {
-      status = latest.status as TimelineStatus;
+      status = timelineStatus(latest.status);
       if (status === "completed" && generation.current_step === step && (gStatus === "running" || gStatus === "queued") && REVIEW_LOOP.includes(step)) status = "running";
     } else if (generation.current_step === step) {
       status = gStatus === "running" ? "running" : gStatus === "queued" ? "queued" : gStatus === "failed" ? "failed" : gStatus === "needs_input" ? "paused" : "pending";
     } else if (currentIdx >= 0 && idx < currentIdx) {
       status = "completed";
     }
-    if (gStatus === "needs_input" && step === "offer" && latest?.status === "completed") status = "paused";
+    // a step that completed with a pause (offer approval, no surviving argument, drafting blocked) is waiting on the user
+    if (gStatus === "needs_input" && generation.current_step === step && status === "completed") status = "paused";
     if (gStatus === "failed" && generation.current_step === step && status !== "completed") status = "failed";
     if (gStatus === "cancelled" && status === "running") status = "interrupted";
+    if (gStatus === "completed" && status === "running") status = "completed";
     const cycles = REVIEW_LOOP.includes(step) ? completedRows.length : 0;
     const cost = rows.reduce((n, r) => n + Number(r.cost_usd ?? 0), 0);
     return {
@@ -119,6 +131,8 @@ export function summarize(step: StepName, output: unknown): string | null {
   const o = obj(output);
   if (!o) return typeof output === "string" ? output.slice(0, 160) : null;
   if (str(o.summary)) return str(o.summary);
+  // a step that paused the pipeline stores { paused: true, reason } instead of its usual output
+  if (o.paused === true && str(o.reason)) return `Paused: ${str(o.reason)}`;
   switch (step) {
     case "research": {
       const d = (obj(o.dossier) ?? o) as Partial<Dossier> & Loose;

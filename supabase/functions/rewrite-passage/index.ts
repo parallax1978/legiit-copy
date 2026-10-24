@@ -124,7 +124,8 @@ serve(async (req) => {
       const newBlock = applied;
       if (parsed.kind === "sections") {
         const sections = parsed.sections.map((s) => ({ ...s, blocks: s.blocks.map((b) => (b.id === newBlock.id ? newBlock : b)) }));
-        blocks = sections as unknown as JsonValue;
+        // keep the DraftOutput wrapper (format, leads, chosen_lead_id, skim_path) the editor and the engine read
+        blocks = (parsed.container ? { ...parsed.container, sections } : sections) as unknown as JsonValue;
         markdown = renderMarkdown({ sections });
         sectionsForCount = sections;
       } else {
@@ -145,6 +146,9 @@ serve(async (req) => {
   const allText = sectionsForCount ? sectionsForCount.flatMap((s) => s.blocks.flatMap((b) => [b.text, ...(b.items ?? [])])).join("\n") : markdown;
   const refs = Array.from(new Set(ledgerRefs(allText)));
   const words = sectionsForCount ? draftWordCount({ sections: sectionsForCount }) : wordCount(markdown);
+  if (replacedIn === "block" && parsed?.kind === "sections" && parsed.container) {
+    blocks = { ...(blocks as Record<string, unknown>), ledger_refs_used: refs, word_count: words } as unknown as JsonValue;
+  }
 
   const { data: latest } = await db.from("drafts").select("version").eq("generation_id", gen.id).order("version", { ascending: false }).limit(1).maybeSingle();
   const version = (latest?.version ?? draft.version) + 1;
@@ -186,11 +190,14 @@ serve(async (req) => {
 
 // ---------- blocks ----------
 
-type Parsed = { kind: "sections"; sections: SectionT[] } | { kind: "blocks"; blocks: BlockT[] };
+/** `container` is the DraftOutput wrapper around the sections when the row holds one, so the new version keeps it. */
+type Parsed = { kind: "sections"; sections: SectionT[]; container: Record<string, unknown> | null } | { kind: "blocks"; blocks: BlockT[] };
 
+/** drafts.blocks holds a whole DraftOutput ({ sections, leads, ... }, see engine/draft/assemble.ts toDraftEffect); older rows may hold Section[] or Block[]. */
 function parseBlocks(raw: unknown): Parsed | null {
-  const s = z.array(LooseSection).safeParse(raw);
-  if (s.success && s.data.length) return { kind: "sections", sections: s.data.map((sec) => ({ ...sec, blocks: sec.blocks.map(fill) })) };
+  const container = raw && typeof raw === "object" && !Array.isArray(raw) && Array.isArray((raw as { sections?: unknown }).sections) ? (raw as Record<string, unknown>) : null;
+  const s = z.array(LooseSection).safeParse(container ? container.sections : raw);
+  if (s.success && s.data.length) return { kind: "sections", sections: s.data.map((sec) => ({ ...sec, blocks: sec.blocks.map(fill) })), container };
   const b = z.array(LooseBlock).safeParse(raw);
   if (b.success && b.data.length) return { kind: "blocks", blocks: b.data.map(fill) };
   return null;
