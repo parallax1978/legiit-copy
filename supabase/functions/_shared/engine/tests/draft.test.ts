@@ -218,7 +218,8 @@ Deno.test("assembleDraft orders by the spec, computes skim path, refs, word coun
   assertEquals(draft.skim_path, ["The 4-hour audit", "Deck line", "Click the button; the files arrive in two minutes.", "Start my audit", "P.S. The guarantee is 60 days."]);
   assertEquals(draft.ledger_refs_used, [A]);
   assertEquals(draft.needs_source, ["Our last client lost 9 hours a week [[NEEDS SOURCE]].", "No carrier for the 40% figure"], "text-detected first, model list merged without case duplicates");
-  assertEquals(draft.word_count, 4 + 2 + 7 + 3 + 6 + 17);
+  // headline 3 + deck 2 + lead 17 + cta 9 + button 3 + ps 6: tags and markers are not words
+  assertEquals(draft.word_count, 3 + 2 + 17 + 9 + 3 + 6);
   assertEquals(draft.chosen_lead_id, null);
   assertEquals(draft.leads, null);
   const fx = toDraftEffect(draft, "system", "draft");

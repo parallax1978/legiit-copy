@@ -51,7 +51,8 @@ export function assembleDraft(input: AssembleInput): DraftOutput {
     skim_path: extractSkimPath({ sections }, input.spec.skim_path_block_types).map(readerText).filter(Boolean),
     ledger_refs_used: collectLedgerRefs(sections),
     needs_source: needs,
-    word_count: draftWordCount({ sections }),
+    // words of copy as the reader sees them: ledger tags and NEEDS SOURCE markers are not words
+    word_count: draftWordCount({ sections: sections.map((s) => ({ ...s, blocks: s.blocks.map((b) => ({ ...b, text: readerText(b.text), items: b.items ? b.items.map(readerText) : null })) })) }),
   };
   return DraftOutput.parse(draft);
 }
