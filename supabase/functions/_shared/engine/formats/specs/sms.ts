@@ -14,7 +14,7 @@ export const sms: FormatSpec = {
   lead_variants: 0,
   skim_path_block_types: ["paragraph"],
   hard_gates: ["sms.chars<=240", "sms.stop_wording", "sms.links<=1", "sms.no_dollar_off"],
-  cadence_floor_cv: 0.7,
+  cadence_floor_cv: 0.5,
   allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,

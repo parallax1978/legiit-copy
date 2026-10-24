@@ -69,6 +69,13 @@ Deno.test("every spec with three lead variants has a lead section, and lead_sect
   assertEquals(FORMATS.vsl_long.lead_section_id, "lead");
 });
 
+Deno.test("cadence floor is 0.50 for email, message and social formats and 0.70 elsewhere (human calibration)", () => {
+  for (const spec of specs) {
+    const expected = spec.family === "email" || spec.family === "message" || spec.family === "social" ? 0.5 : 0.7;
+    assertEquals(spec.cadence_floor_cv, expected, spec.id);
+  }
+});
+
 Deno.test("no section band exceeds one drafting call (about 1,800 words)", () => {
   for (const spec of specs) for (const s of spec.sections) assert(s.band_words[1] <= 1800, `${spec.id}.${s.id}: band max ${s.band_words[1]}`);
 });

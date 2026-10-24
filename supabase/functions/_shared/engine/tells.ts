@@ -4,8 +4,9 @@
  * Ported from research/tells/analyze.py (the regexes and the structural counters) and shaped by
  * docs/04-copy-standard.md §7: Tier 0 hard rejects, Tier 1 weight 4, Tier 2 weight 2 by density per 1,000 words,
  * Tier 3 weight 1 and never alone. Score = sum of weights per 300 words; review flag at 6, hard fail at 10 or any
- * Tier 0 hit. The non-tells in §7 are never scanned: exclamation marks, ellipses, ALL CAPS, fragments,
- * "Here's what / how / why", "Dear Friend", "P.S.", em dashes.
+ * Tier 0 hit. Density thresholds are the human per-document p90 from research/tells/human_calibration_report.md
+ * (899 public DR documents), per format profile where the report gives one. The non-tells in §7 are never scanned:
+ * exclamation marks, ellipses, ALL CAPS, fragments, "Here's what / how / why", "Dear Friend", "P.S.", em dashes.
  *
  * Two entry points:
  *  - analyzeDraft(sections, spec): block-aware. Headline, deck and crosshead blocks are legitimate display text, so
@@ -28,6 +29,34 @@ import { draftWordCount } from "./render.ts";
 export type Tier = 0 | 1 | 2 | 3;
 export type TellScope = "all" | "body" | "paragraph" | "structural";
 
+/** Human-corpus profile a format is calibrated against (human_calibration_report.md §3). */
+export type DensityProfile = "email" | "social" | "optin" | "page" | "ad";
+export const DENSITY_PROFILES: Record<FormatId, DensityProfile> = {
+  email_single: "email",
+  email_sequence: "email",
+  cold_email: "email",
+  sms: "email",
+  organic_social: "social",
+  tiktok_reels: "social",
+  optin: "optin",
+  sales_letter: "page",
+  landing_page_short: "page",
+  upsell: "page",
+  order_bump: "page",
+  order_form: "page",
+  thank_you: "page",
+  webinar_package: "page",
+  vsl_long: "page",
+  vsl_short: "page",
+  youtube_ad: "page",
+  advertorial: "page",
+  product_description: "page",
+  pricing_page: "page",
+  podcast_read: "page",
+  meta_ad: "ad",   // no human control yet; carries the page thresholds
+  google_rsa: "ad",
+};
+
 export interface TellRule {
   tier: Tier;
   name: string;
@@ -36,8 +65,12 @@ export interface TellRule {
   weight: number;
   example: string;
   fix: string;
-  /** Tier 2 only: flag when hits per 1,000 words exceed this. 0 means any hit is flagged. */
+  /** Density rule: flag only the hits above this many per 1,000 words. 0 means any hit is flagged. */
   density_per_1000?: number;
+  /** Per-profile override of density_per_1000 (human p90 by format). */
+  density_by_profile?: Partial<Record<DensityProfile, number>>;
+  /** Hits exempt before counting (e.g. "cancel anytime" said once in the offer block). */
+  free_hits?: number;
   /** Where the rule is scanned: every block; body prose and bullet items; paragraph blocks only; or code. */
   scope: TellScope;
   note?: string;
@@ -49,6 +82,10 @@ export const TELL_THRESHOLDS = { flag: 6, hard_fail: 10 } as const;
 export const SCORE_FLOOR_WORDS = 300;
 /** Density thresholds are per 1,000 words; copy shorter than this uses this denominator so one hit in an SMS is not a density. */
 export const DENSITY_FLOOR_WORDS = 500;
+/** §7 "not a tell": em dashes at or below this rate are never counted; above it they carry no weight either (human email p90 11.9, AI 0.70). */
+export const EM_DASH_NON_TELL_CEILING_PER_1000 = 12;
+/** Check-mark bullets on web sales and opt-in pages are human practice at low density: one per this many words. */
+export const CHECK_BULLET_WORDS_PER_ALLOWED = 300;
 
 const A = "['’]?"; // optional straight or curly apostrophe
 
@@ -69,13 +106,14 @@ export const TELLS: TellRule[] = [
     regex: /(?<!\[)\[(?!\[)(?:[A-Za-z][^[\]\n]{0,40}|\$?(?:X[X,.\d]*|_{2,}[^\]\n]{0,20})|\d+(?:[-–/]\d+)*|\.\.\.)\](?!\()/g,
     example: "[Product Name] helps [target audience]",
     fix: "Fill from the ledger or stop and ask. Never ship a bracket.",
-    note: "Any bracketed word, XXX, blanks or bare numbers. Ledger tags [[L:id]], [[NEEDS SOURCE]] and markdown links are excluded; timestamps like [0:12] are not matched.",
+    note: "Any bracketed word, XXX, blanks or bare numbers. Ledger tags [[L:id]], [[NEEDS SOURCE]] and markdown links are excluded; timestamps like [0:12] are not matched. One hit in 879k human words.",
   },
   {
     tier: 0, name: "bold_label_colon", weight: 10, scope: "body",
     regex: /\*\*[^*\n]{1,45}:\*\*|\*\*[^*\n]{1,45}\*\*\s*:|__[^_\n]{1,45}:__/g,
     example: "**Speed:** get reports in minutes",
     fix: "A sentence with the claim and its carrier.",
+    note: "Markdown branches only. analyze.py's plain-text `Label:` branch fires on 55% of human documents (92% of sales pages) and is demoted to Tier 3 as label_colon_line.",
   },
   {
     tier: 0, name: "markdown_heading", weight: 10, scope: "body",
@@ -86,30 +124,18 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 0, name: "emoji_bullet", weight: 10, scope: "body",
-    regex: /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})/gmu,
+    regex: /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[✓✔✅☑])/gmu,
     example: "✅ Syncs your sales automatically.",
-    fix: "A plain sentence. Meta ads may keep up to three.",
-    note: "Formats with allow_emoji_bullets keep an allowance (Meta: 3); the excess is a Tier 2 flag instead.",
+    fix: "A plain sentence. Meta ads may keep three emoji bullets; web pages may keep one check-mark bullet per 300 words.",
+    note: "Tier 0 in email, video, message, social and audio formats (human email 0.02 per 1,000). On page and commerce formats check marks (✓ ✔ ✅ ☑) are allowed at one per 300 words and only the excess, or any other emoji, is flagged. Meta ads keep an allowance of three.",
   },
 
-  // ---- Tier 1: weight 4 ----
-  {
-    tier: 1, name: "designed_to", weight: 4, scope: "all",
-    regex: /\b(?:designed|built|crafted|engineered|tailored|curated) (?:to|for|specifically)\b/gi,
-    example: "designed to help busy founders",
-    fix: "Say what it does: \"pulls the number when the client opens the report\".",
-  },
+  // ---- Tier 1: weight 4 (phrases at 0.00-0.02 per 1,000 in 879k human words) ----
   {
     tier: 1, name: "thats_why_we_built", weight: 4, scope: "all",
     regex: new RegExp(`\\bthat${A}s why (?:we|I) (?:created|built|made|designed|developed|put together)\\b`, "gi"),
     example: "That's why we built Reportly.",
     fix: "A reason-why turn: discovery, failed fixes, cause.",
-  },
-  {
-    tier: 1, name: "cancel_anytime_triad", weight: 4, scope: "all",
-    regex: /\bcancel anytime\b|\bno (?:long[- ]term )?contracts?\b|\bno set-?up fees?\b/gi,
-    example: "Cancel anytime. No contracts. No setup fees.",
-    fix: "The denominated guarantee, once.",
   },
   {
     tier: 1, name: "youre_not_alone", weight: 4, scope: "all",
@@ -146,7 +172,7 @@ export const TELLS: TellRule[] = [
     regex: /^\s*(?:#{1,6}\s*)?\*\*[^*\n]{3,80}\?\*\*\s*$/gm,
     example: "### Why only $49?",
     fix: "A crosshead that states the answer.",
-    note: "Also counts crosshead and deck blocks that end with a question mark.",
+    note: "Also counts crosshead and deck blocks that end with a question mark. 0.00 per 1,000 in human copy.",
   },
   {
     tier: 1, name: "bold_leadin_bullet", weight: 4, scope: "body",
@@ -162,51 +188,61 @@ export const TELLS: TellRule[] = [
     note: "Counted once per run of list lines inside a paragraph block, not per line.",
   },
 
-  // ---- Tier 2: weight 2 by density per 1,000 words ----
+  // ---- Tier 2: weight 2 by density per 1,000 words (human p90 by format) ----
   {
-    tier: 2, name: "rule_of_three", weight: 2, scope: "all", density_per_1000: 3,
+    tier: 2, name: "designed_to", weight: 2, scope: "all", density_per_1000: 1,
+    regex: /\b(?:designed|built|crafted|engineered|tailored|curated) (?:to|for|specifically)\b/gi,
+    example: "designed to help busy founders",
+    fix: "Say what it does: \"pulls the number when the client opens the report\".",
+    note: "Human sales pages p90 about 1 per 1,000 (AI 1.25, 35% of drafts); per-hit weight 4 flagged a product page on its second mention, so it is a density tell.",
+  },
+  {
+    tier: 2, name: "cancel_anytime_triad", weight: 2, scope: "all", density_per_1000: 0, free_hits: 1,
+    regex: /\bcancel anytime\b|\bno (?:long[- ]term )?contracts?\b|\bno set-?up fees?\b/gi,
+    example: "Cancel anytime. No contracts. No setup fees.",
+    fix: "The denominated guarantee, once.",
+    note: "Allowed once (the offer block says it; 28% of human subscription sales pages do). The second and later mentions are the triad.",
+  },
+  {
+    tier: 2, name: "rule_of_three", weight: 2, scope: "all", density_per_1000: 7, density_by_profile: { email: 4, social: 4, page: 7, optin: 11, ad: 7 },
     regex: /(?<![,\w])[^,.;:\n()]{2,28}, [^,.;:\n()]{2,28},? and [^,.;:\n()]{2,28}(?:[.?!\n]|$)/gm,
     example: "faster, cheaper, and easier.",
     fix: "Break the third item or add a fourth with a number.",
+    note: "Human per-document p90: email 4.0, social 4.2, sales page 6.7, opt-in 10.9 per 1,000. The AI pooled rate (3.99) sits at the human sales-page median, so this only discriminates at the extreme.",
   },
   {
-    tier: 2, name: "trailing_participle", weight: 2, scope: "structural", density_per_1000: 0.6,
+    tier: 2, name: "trailing_participle", weight: 2, scope: "structural", density_per_1000: 2,
     regex: /,\s+([a-z]{2,}ing)\b[^.?!\n]{0,80}[.?!]/g,
     example: ", giving you more time with your family.",
     fix: "A new sentence with a subject.",
-    note: "analyze.py required eight letters and so missed \", giving you\"; the port accepts five and keeps a stop list of -ing nouns and prepositions (during, including, morning...).",
+    note: "Human p90 1.7-2.5 across long formats (AI 0.78). analyze.py required eight letters and missed \", giving you\"; the port accepts five and keeps a stop list of -ing nouns and prepositions.",
   },
   {
-    tier: 2, name: "hedge", weight: 2, scope: "body", density_per_1000: 1,
+    tier: 2, name: "hedge", weight: 2, scope: "body", density_per_1000: 2,
     regex: /\b(?:[Uu]sually|[Oo]ften|may|might|[Tt]ypically|[Gg]enerally|tends? to|in many cases|can help|may help|helps? support|supports? (?:a |your )?(?:healthy|normal)|results (?:may )?vary|individual results|many (?:people|customers|users|parents|owners|agents) (?:say|report|find|notice))\b/g,
     example: "usually saves most users a few hours",
     fix: "State the claim at the ledger grade; compliance is handled line by line in the factual review, never with \"may\".",
-    note: "Testimonial and disclosure blocks are excluded (the customer's hedges are theirs).",
+    note: "Human p90 1.5-2.6 (AI 0.67). Testimonial and disclosure blocks are excluded. A bare vocabulary count; the ledger match inside claim sentences belongs to the factual review.",
   },
   {
-    tier: 2, name: "intensifier", weight: 2, scope: "all", density_per_1000: 2,
+    tier: 2, name: "intensifier", weight: 2, scope: "all", density_per_1000: 2, density_by_profile: { optin: 4, social: 4 },
     regex: /\bactually\b|\bexactly\b|\bevery single\b/gi,
     example: "exactly what you need, every single day",
     fix: "Cut.",
+    note: "The one Tier 2 density tell that still separates: AI 3.65 vs human 1.08 per 1,000. Human p90: email 3.3, sales page 2.2, opt-in 4.7, social 3.9.",
   },
   {
     tier: 2, name: "anaphora_triad", weight: 2, scope: "structural", density_per_1000: 1.5,
     regex: null,
     example: "They skip it. They forget it. They regret it.",
     fix: "One plain sentence.",
-    note: "Three or more consecutive sentences opening with the same word.",
+    note: "Three or more consecutive sentences opening with the same word. Exempt in social formats (human threads 2.74 per 1,000, list style).",
   },
   {
     tier: 2, name: "no_no_just", weight: 2, scope: "all", density_per_1000: 0,
     regex: /\bNo [^.?!\n]{1,30}\.\s*No [^.?!\n]{1,30}\.(?:\s*No [^.?!\n]{1,30}\.)?\s*(?:Just|Only)\b/g,
     example: "No fluff. No theory. Just results.",
     fix: "One plain sentence.",
-  },
-  {
-    tier: 2, name: "rather_than", weight: 2, scope: "all", density_per_1000: 6.67,
-    regex: /\brather than\b/gi,
-    example: "rather than guessing",
-    fix: "Above two per 300 words, state the chosen thing alone.",
   },
   {
     tier: 2, name: "generic_emotion", weight: 2, scope: "body", density_per_1000: 1,
@@ -227,6 +263,7 @@ export const TELLS: TellRule[] = [
     regex: new RegExp(`\\b(?:it${A}s|this is|that${A}s|this isn${A}t|it isn${A}t) not (?:just |only |about )?[^.?!\\n]{1,60}[.;—–-]\\s*(?:It${A}s|It is|This is|That${A}s)\\b`, "gi"),
     example: "It's not a diet. It's a system.",
     fix: "Allowed once per 1,000 words when it corrects a belief the reader holds; otherwise state the thing.",
+    note: "Human p95 0.0-0.14 per 1,000; fires on about 2% of human documents.",
   },
   {
     tier: 2, name: "not_this_that_clip", weight: 2, scope: "all", density_per_1000: 2,
@@ -250,29 +287,45 @@ export const TELLS: TellRule[] = [
 
   // ---- Tier 3: weight 1, never alone ----
   {
+    tier: 3, name: "rather_than", weight: 1, scope: "all", density_per_1000: 6.67,
+    regex: /\brather than\b/gi,
+    example: "rather than guessing",
+    fix: "Above two per 300 words, state the chosen thing alone.",
+    note: "Demoted from Tier 2: the threshold is never reached by either corpus (human max 6.4, AI 0.03).",
+  },
+  {
+    tier: 3, name: "label_colon_line", weight: 1, scope: "body", density_per_1000: 3,
+    regex: /^\s*(?:[-*•]\s*)?[A-Z][A-Za-z' ]{2,40}:\s/gm,
+    example: "Speed: get reports in minutes",
+    fix: "A sentence with the claim and its carrier.",
+    note: "The plain-text branch of analyze.py's bold_label_colon, demoted: \"Editor's note:\", speaker labels and FAQ labels are ordinary human copy (sales page p90 2.9 per 1,000). Exempt in social formats (threads 8.4).",
+  },
+  {
     tier: 3, name: "phrase_4o_era", weight: 1, scope: "all",
     regex: new RegExp(
-      `\\bgame[- ]chang(?:er|ing)\\b|\\bpicture this\\b|\\bhere${A}s the kicker\\b|\\blet that sink in\\b|\\bno[- ]brainer\\b|\\bspoiler alert\\b|\\bfast[- ]forward\\b|\\blet${A}s dive in\\b|\\bdive in\\b|\\bthink of it (?:as|like)\\b|\\bhere${A}s the thing\\b|\\bthe best part\\?|\\bthe result\\?|\\blet${A}s (?:be honest|face it|be real)\\b|\\bsay (?:goodbye|hello) to\\b|\\bit${A}s time to\\b|\\blook no further\\b|\\bwithout the fluff\\b|\\bno[- ]fluff\\b|\\bno (?:gimmicks|hype)\\b`,
+      `\\bgame[- ]chang(?:er|ing)\\b|\\bpicture this\\b|\\bhere${A}s the kicker\\b|\\blet that sink in\\b|\\bno[- ]brainer\\b|\\bspoiler alert\\b|\\bfast[- ]forward\\b|\\blet${A}s dive in\\b|\\bdive in\\b|\\bthink of it (?:as|like)\\b|\\bhere${A}s the thing\\b|\\bthe best part\\?|\\bthe result\\?|\\blet${A}s (?:be honest|face it|be real)\\b|\\bsay (?:goodbye|hello) to\\b|\\blook no further\\b|\\bwithout the fluff\\b|\\bno[- ]fluff\\b|\\bno (?:gimmicks|hype)\\b`,
       "gi",
     ),
     example: "Here's the kicker: it's a game-changer.",
     fix: "Cut; carry the point with a specific.",
+    note: "At or near zero in both corpora; kept on prior evidence. \"It's time to\" dropped (human 0.04, AI 0.00).",
   },
   {
     tier: 3, name: "marketing_vocab", weight: 1, scope: "all",
     regex: new RegExp(
-      `\\bunlock(?:s|ed|ing)?\\b|\\belevat(?:e|es|ed|ing)\\b|\\bseamless(?:ly)?\\b|\\bstreamlin(?:e|es|ed|ing)\\b|\\beffortless(?:ly)?\\b|\\bcutting[- ]edge\\b|\\bstate[- ]of[- ]the[- ]art\\b|\\bjourney\\b|\\bnext level\\b|\\bsupercharge[sd]?\\b|\\brevolutioniz(?:e|es|ed|ing)\\b|\\brevolutionary\\b|\\btransformative\\b|\\bempower(?:s|ed|ing|ment)?\\b|\\bharness(?:es|ed|ing)?\\b|\\bleverag(?:e|es|ed|ing)\\b|\\bdelv(?:e|es|ed|ing)\\b|\\btapestry\\b|\\btestament to\\b|\\brobust\\b|\\bholistic\\b|\\binnovative\\b|\\bin today${A}s\\b|\\bever[- ]evolving\\b|\\bunparalleled\\b|\\bpeace of mind\\b|\\bstress[- ]free\\b|\\bhassle[- ]free\\b`,
+      `\\bseamless(?:ly)?\\b|\\bstreamlin(?:e|es|ed|ing)\\b|\\bcutting[- ]edge\\b|\\bstate[- ]of[- ]the[- ]art\\b|\\bsupercharge[sd]?\\b|\\bdelv(?:e|es|ed|ing)\\b|\\btapestry\\b|\\btestament to\\b|\\blandscape\\b|\\bever[- ]evolving\\b|\\bunparalleled\\b|\\bin today${A}s\\b`,
       "gi",
     ),
-    example: "unlock a seamless journey to the next level",
+    example: "a seamless, cutting-edge solution for today's landscape",
     fix: "The mechanism, the number or the scene the word stands in for.",
+    note: "\"transform\", \"unlock\", \"elevate\", \"empower\", \"effortless\", \"journey\", \"next level\" are genre markers of human self-development and info-product pages (human 3.65 per 1,000 on sales pages, AI 0.03) and are not scanned.",
   },
   {
     tier: 3, name: "hey_there_greeting", weight: 1, scope: "all",
     regex: /^(?:Hey|Hi) (?:there|friend)\b/gm,
     example: "Hey there,",
     fix: "The greeting from the voice profile, or the reader's name from the ESP.",
-    note: "Measured 674x the human rate; below §7's Tier 1 list, so a tiebreaker.",
+    note: "Human 0.01 per 1,000; AI 0.50.",
   },
   {
     tier: 3, name: "quick_question_opener", weight: 1, scope: "all",
@@ -300,28 +353,42 @@ export const TELLS: TellRule[] = [
   },
 ];
 
-/** Listed for the admin UI; never scanned or penalised (§7 "Not tells"). */
+/** Listed for the admin UI; never scanned or penalised (§7 "Not tells"). Rates from the 899-document human corpus. */
 export const NON_TELLS: { name: string; why: string }[] = [
-  { name: "exclamation_marks", why: "Human DR runs 6.1 per 1,000 words against 0.25 in AI drafts." },
-  { name: "ellipses", why: "Human DR runs 9.7 per 1,000 against 0.5." },
-  { name: "all_caps_words", why: "Human DR uses them in 87% of documents." },
-  { name: "fragments", why: "Fragment rows appear in 71% of human documents and 97% of Halbert issues." },
-  { name: "heres_what_how_why", why: "Halbert uses it in 41% of issues." },
+  { name: "exclamation_marks", why: "Human DR 1.7 per 1,000 words (four-author corpus 6.1) against 0.25 in AI drafts." },
+  { name: "ellipses", why: "Human DR 5.9 per 1,000 (financial e-letters 11.7) against 0.47." },
+  { name: "all_caps_words", why: "Human DR 11.8 per 1,000 in 70% of documents; AI caps density is higher still." },
+  { name: "fragments", why: "29% of human sentences are four words or fewer, against 23% in AI drafts." },
+  { name: "heres_what_how_why", why: "Human 0.21 per 1,000 in 15% of documents." },
   { name: "dear_friend", why: "The classic salutation." },
   { name: "ps", why: "A second headline for the skimmer." },
-  { name: "not_just_x_but_y_at_human_rates", why: "Human DR 0.08 per 1,000; only density above 1 per 1,000 is flagged." },
-  { name: "em_dashes", why: "Human DR 1.57 per 1,000 against 0.70 in AI; the cap is withdrawn." },
+  { name: "not_just_x_but_y_at_human_rates", why: "Human 0.17 per 1,000; only density above 1 per 1,000 is flagged." },
+  { name: "em_dashes", why: `Human email p90 11.9 per 1,000 (AI 0.70): at or below ${EM_DASH_NON_TELL_CEILING_PER_1000} per 1,000 is never counted, and above it carries no weight either.` },
+  { name: "genre_vocabulary", why: "\"transform\", \"unlock\", \"elevate\", \"empower\", \"effortless\": human self-development pages 3.65 per 1,000, AI 0.03." },
   { name: "superlatives_with_proof", why: "A superlative with its carrier is a claim, not a tell." },
+  { name: "readability", why: "AI drafts read one to two grades easier than human copy; the FK grade is reported, never enforced." },
 ];
 
-/** §7 overrides by format. */
-export const FORMAT_OVERRIDES: Partial<Record<FormatId, { emoji_bullets?: number; bold_leadins?: number; keep_watching?: number }>> = {
+/** §7 overrides and calibration exemptions by format. */
+export const FORMAT_OVERRIDES: Partial<Record<FormatId, { emoji_bullets?: number; bold_leadins?: number; keep_watching?: number; exempt?: string[] }>> = {
   meta_ad: { emoji_bullets: 3 },
   optin: { bold_leadins: 5 },
   upsell: { bold_leadins: 5 },
   vsl_long: { keep_watching: 1 },
   vsl_short: { keep_watching: 1 },
+  organic_social: { exempt: ["anaphora_triad", "label_colon_line"] },
+  tiktok_reels: { exempt: ["anaphora_triad", "label_colon_line"] },
 };
+
+/** The density threshold (per 1,000 words) a rule uses for a format, or undefined for a per-hit rule. */
+export function densityThreshold(rule: TellRule, spec: FormatSpec): number | undefined {
+  return rule.density_by_profile?.[DENSITY_PROFILES[spec.id]] ?? rule.density_per_1000;
+}
+
+/** Hits allowed before a density rule flags: floor(threshold × max(words, floor) / 1,000). */
+export function densityAllowance(thresholdPer1000: number, words: number): number {
+  return Math.floor((thresholdPer1000 * Math.max(words, DENSITY_FLOOR_WORDS)) / 1000);
+}
 
 // ---------------------------------------------------------------------------------------------------------------
 // Text units
@@ -368,7 +435,8 @@ function unitsOf(sections: Section[]): Unit[] {
 }
 
 const WORD_RE = /[A-Za-z0-9'’]+/g;
-function countWords(text: string): number {
+/** The word counter the density denominators use (analyze.py's token rule). */
+export function countWords(text: string): number {
   return (text.match(WORD_RE) ?? []).length;
 }
 
@@ -467,6 +535,21 @@ function unansweredOpeners(bodyUnits: Unit[]): string[] {
   return out;
 }
 
+const CHECK_LINE_RE = /^\s*(?:[-*•]\s*)?[✓✔✅☑]/u;
+const EMOJI_LINE_RE = /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})/u;
+
+/** Lines (bullet items or paragraph lines) that open with a check mark, and those that open with any other emoji. */
+function emojiLines(texts: string[]): { checks: string[]; others: string[] } {
+  const checks: string[] = [], others: string[] = [];
+  for (const t of texts) {
+    for (const line of t.split("\n")) {
+      if (CHECK_LINE_RE.test(line)) checks.push(line);
+      else if (EMOJI_LINE_RE.test(line)) others.push(line);
+    }
+  }
+  return { checks, others };
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // Scanning
 // ---------------------------------------------------------------------------------------------------------------
@@ -475,6 +558,7 @@ interface Hit {
   rule: TellRule;
   count: number;
   examples: string[];
+  groups?: Record<string, string[]>;
 }
 
 function snippet(text: string, index: number, length: number): string {
@@ -499,8 +583,8 @@ function scanRegex(rule: TellRule, texts: string[]): Hit {
   return hit;
 }
 
-function pushExamples(hit: Hit, items: string[]) {
-  for (const i of items) if (hit.examples.length < 3) hit.examples.push(i.length > 160 ? i.slice(0, 157) + "…" : i);
+function trimExamples(items: string[]): string[] {
+  return items.slice(0, 3).map((i) => (i.length > 160 ? i.slice(0, 157) + "…" : i));
 }
 
 export interface TellFlagOut {
@@ -512,7 +596,7 @@ export interface TellFlagOut {
   fix: string;
 }
 
-/** Run every rule over the units; returns flags (with density thresholds applied) and the raw per-rule hits. */
+/** Run every rule over the units; returns flags (with allowances and density thresholds applied) and the score. */
 function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[] } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
@@ -522,7 +606,6 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
   const bodyUnits = units.filter((u) => u.kind !== "display");
   const proseText = bodyUnits.map((u) => u.text).join("\n");
   const proseSentences = sentences(proseText);
-  const densDenom = Math.max(words, DENSITY_FLOOR_WORDS);
 
   const hits: Hit[] = [];
   for (const rule of TELLS) {
@@ -531,29 +614,31 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
       case "hedge":
         hit = scanRegex(rule, hedgeTexts);
         break;
+      case "emoji_bullet": {
+        const g = emojiLines(bodyTexts);
+        hit = { rule, count: g.checks.length + g.others.length, examples: trimExamples([...g.others, ...g.checks]), groups: g };
+        break;
+      }
       case "self_posed_question_header": {
         hit = scanRegex(rule, bodyTexts);
         const qHeads = units.filter((u) => (u.type === "crosshead" || u.type === "deck") && /\?\s*$/.test(u.text)).map((u) => u.text);
         hit.count += qHeads.length;
-        pushExamples(hit, qHeads);
+        hit.examples = trimExamples([...hit.examples, ...qHeads]);
         break;
       }
       case "trailing_participle": {
         const found = trailingParticiples(proseText);
-        hit = { rule, count: found.length, examples: [] };
-        pushExamples(hit, found);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
       case "anaphora_triad": {
         const found = anaphoraTriads(proseSentences);
-        hit = { rule, count: found.length, examples: [] };
-        pushExamples(hit, found);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
       case "unanswered_opener": {
         const found = unansweredOpeners(bodyUnits);
-        hit = { rule, count: found.length, examples: [] };
-        pushExamples(hit, found);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
       case "markdown_list_in_paragraph": {
@@ -566,8 +651,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
             inRun = isList;
           }
         }
-        hit = { rule, count: found.length, examples: [] };
-        pushExamples(hit, found);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
       default:
@@ -578,53 +662,48 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
 
   const flags: TellFlagOut[] = [];
   const tier0: TellFlagOut[] = [];
-  let w0 = 0, w1 = 0, w2 = 0, w3 = 0;
+  const weightByTier: Record<Tier, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+  const push = (f: TellFlagOut) => {
+    flags.push(f);
+    weightByTier[f.tier] += f.weight * f.count;
+    if (f.tier === 0) tier0.push(f);
+  };
+
   for (const h of hits) {
     const r = h.rule;
     let count = h.count;
     if (count === 0) continue;
-
-    // §7 overrides and spec switches
+    if (ov.exempt?.includes(r.name)) continue;
     if (r.name === "markdown_heading" && spec.allow_markdown_headings) continue;
-    if (r.name === "emoji_bullet" && spec.allow_emoji_bullets) {
-      const allowed = ov.emoji_bullets ?? 0;
-      if (count > allowed) {
-        const f: TellFlagOut = { tier: 2, tell: "emoji_bullets_over_allowance", weight: TIER_WEIGHT[2], count: count - allowed, examples: h.examples, fix: `Keep at most ${allowed} emoji bullets in this format; the rest become sentences.` };
-        flags.push(f);
-        w2 += TIER_WEIGHT[2] * f.count;
+
+    if (r.name === "emoji_bullet") {
+      const checks = h.groups?.checks ?? [], others = h.groups?.others ?? [];
+      if (spec.allow_emoji_bullets) {
+        const allowed = ov.emoji_bullets ?? 0;
+        if (count > allowed) push({ tier: 2, tell: "emoji_bullets_over_allowance", weight: TIER_WEIGHT[2], count: count - allowed, examples: h.examples, fix: `Keep at most ${allowed} emoji bullets in this format; the rest become sentences.` });
+      } else if (spec.family === "page" || spec.family === "commerce") {
+        if (others.length) push({ tier: 0, tell: r.name, weight: r.weight, count: others.length, examples: trimExamples(others), fix: r.fix });
+        const checkAllowed = Math.max(1, Math.ceil(words / CHECK_BULLET_WORDS_PER_ALLOWED));
+        if (checks.length > checkAllowed) push({ tier: 2, tell: "check_bullets_over_allowance", weight: TIER_WEIGHT[2], count: checks.length - checkAllowed, examples: trimExamples(checks), fix: `One check-mark bullet per ${CHECK_BULLET_WORDS_PER_ALLOWED} words on a web page; the rest become sentences.` });
+      } else {
+        push({ tier: 0, tell: r.name, weight: r.weight, count, examples: h.examples, fix: r.fix });
       }
       continue;
     }
-    if (r.name === "bold_leadin_bullet" && ov.bold_leadins) {
-      count -= ov.bold_leadins;
-      if (count <= 0) continue;
-    }
-    if (r.name === "stay_with_me" && ov.keep_watching) {
-      count -= ov.keep_watching;
-      if (count <= 0) continue;
-    }
 
-    if (r.tier === 2) {
-      const threshold = r.density_per_1000 ?? 0;
-      const allowed = Math.floor((threshold * densDenom) / 1000);
-      const excess = count - allowed;
-      if (excess <= 0) continue;
-      flags.push({ tier: 2, tell: r.name, weight: r.weight, count: excess, examples: h.examples, fix: r.fix });
-      w2 += r.weight * excess;
-      continue;
-    }
+    if (r.name === "bold_leadin_bullet" && ov.bold_leadins) count -= ov.bold_leadins;
+    if (r.name === "stay_with_me" && ov.keep_watching) count -= ov.keep_watching;
+    if (r.free_hits) count -= r.free_hits;
+    if (count <= 0) continue;
 
-    const f: TellFlagOut = { tier: r.tier, tell: r.name, weight: r.weight, count, examples: h.examples, fix: r.fix };
-    flags.push(f);
-    if (r.tier === 0) {
-      tier0.push(f);
-      w0 += r.weight * count;
-    } else if (r.tier === 1) w1 += r.weight * count;
-    else w3 += r.weight * count;
+    const threshold = densityThreshold(r, spec);
+    const excess = threshold === undefined ? count : count - densityAllowance(threshold, words);
+    if (excess <= 0) continue;
+    push({ tier: r.tier, tell: r.name, weight: r.weight, count: excess, examples: h.examples, fix: r.fix });
   }
 
   // Tier 3 never scores alone.
-  const raw = w0 + w1 + w2 + (w1 + w2 > 0 ? w3 : 0);
+  const raw = weightByTier[0] + weightByTier[1] + weightByTier[2] + (weightByTier[1] + weightByTier[2] > 0 ? weightByTier[3] : 0);
   const score = Math.round((raw * 300 / Math.max(words, SCORE_FLOOR_WORDS)) * 100) / 100;
   flags.sort((a, b) => a.tier - b.tier || b.weight * b.count - a.weight * a.count || a.tell.localeCompare(b.tell));
   return { flags, score, tier0 };
@@ -710,11 +789,10 @@ function descriptionBlocks(sections: Section[]) {
   return blocks(sections).filter(({ block, section }) => field(block) === "description" || (inBase(section, "description", "descriptions") && (block.type === "paragraph" || block.type === "deck")));
 }
 function emojiBulletCount(sections: Section[]): number {
-  const re = /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})/u;
   let n = 0;
   for (const { block } of blocks(sections)) {
-    for (const i of block.items ?? []) if (re.test(clean(i))) n += 1;
-    if (!DISPLAY_TYPES.has(block.type)) for (const line of clean(block.text).split("\n")) if (re.test(line)) n += 1;
+    for (const i of block.items ?? []) if (CHECK_LINE_RE.test(clean(i)) || EMOJI_LINE_RE.test(clean(i))) n += 1;
+    if (!DISPLAY_TYPES.has(block.type)) for (const line of clean(block.text).split("\n")) if (CHECK_LINE_RE.test(line) || EMOJI_LINE_RE.test(line)) n += 1;
   }
   return n;
 }
@@ -765,7 +843,7 @@ export const GATE_METRICS: Record<string, MetricDef> = {
   fields: { kind: "item", note: "field blocks", compute: (c) => blocks(c.sections).filter(({ block }) => block.type === "field").length },
   bullet_items: { kind: "item", note: "items across bullets blocks", compute: (c) => blocks(c.sections).filter(({ block }) => block.type === "bullets").reduce((n, { block }) => n + (block.items ?? []).length, 0) },
   benefit_bullets: { kind: "item", note: "bullet items in `bullets` or `benefits` sections", compute: (c) => blocks(c.sections.filter((s) => inBase(s, "bullets", "benefits"))).filter(({ block }) => block.type === "bullets").reduce((n, { block }) => n + (block.items ?? []).length, 0) },
-  emoji_bullets: { kind: "item", text: true, note: "bullet items or lines opening with an emoji", compute: (c) => emojiBulletCount(c.sections) },
+  emoji_bullets: { kind: "item", text: true, note: "bullet items or lines opening with an emoji or check mark", compute: (c) => emojiBulletCount(c.sections) },
   plans: { kind: "aggregate", note: "price blocks in `plans`/`plan` sections", compute: (c) => blocks(c.all.filter((s) => inBase(s, "plans", "plan"))).filter(({ block }) => block.type === "price").length },
   // shares
   close_share: { kind: "item", note: "words in `close` sections over all words", compute: (c) => { const total = wordsIn(blocks(c.sections)); return total ? wordsIn(blocks(c.sections.filter((s) => inBase(s, "close")))) / total : null; } },

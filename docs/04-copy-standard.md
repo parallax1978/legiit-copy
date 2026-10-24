@@ -162,7 +162,7 @@ Reviewer instructions: start with what works, briefly. Quote, name the failure, 
 
 ## 7. AI tell checklist
 
-Score = sum of weights per 300 words. Review flag at 6; hard fail at 10 or any Tier 0 hit. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were measured on Claude drafts and must be recalibrated on the assembled human control corpus.
+Score = sum of weights per 300 words (Tier 0 weight 10, Tier 1 weight 4 per hit, Tier 2 weight 2 per hit above the density allowance, Tier 3 weight 1 above its allowance and only when a Tier 1 or 2 flag exists; texts under 300 words are scored as 300). Review flag at 6; hard fail at 10, on any Tier 0 hit, or on any format hard gate. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were first measured on 107 Claude drafts and then recalibrated on 899 public human direct response documents (`research/tells/human_calibration_report.md`); the values below are the recalibrated ones. Density allowances use at least 500 words, so one hit in an SMS is never a density.
 
 Tier 0, hard reject
 
@@ -172,32 +172,30 @@ Tier 0, hard reject
 | Bracket placeholder | "[Product Name] helps [target audience]" | Fill from the ledger or stop |
 | Unledgered authority, study, number, name or credential | "A Harvard study found 73% of..." | The ledger item, or cut the claim |
 | "AI" in copy for a non-AI product | "our AI-powered approach" | Describe the mechanism |
-| Bold-label-colon bullets, markdown headings or emoji bullets in email, sales page or VSL | "**Speed:** get reports in minutes" | A sentence with the claim and its carrier |
+| Markdown bold-label-colon bullets (`**Label:**`), markdown headings, or emoji bullets in email, video, message, social and audio formats | "**Speed:** get reports in minutes" | A sentence with the claim and its carrier. Plain-text "Label:" lines are human-normal (92% of human sales pages) and only count at Tier 3 above 3 per 1,000 words. Check-mark bullets on pages and commerce formats are allowed at one per 300 words |
 
 Tier 1, weight 4
 
 | Tell | Example | Fix |
 |---|---|---|
-| "designed to / built for / crafted / tailored" | "designed to help busy founders" | Say what it does: "pulls the number when the client opens the report" |
 | "That's why we built" | "That's why we built Reportly." | A reason-why turn: discovery, failed fixes, cause |
-| "cancel anytime / no contracts / no setup fees" | the triad | The denominated guarantee, once |
 | "You're not alone" / "If that sounds familiar" | "If that sounds familiar, you're not alone." | A quoted verbatim from the research |
 | "less than a cup of coffee" | "for less than your daily latte" | A comparable comparison with the full price stated |
 | "In the next few minutes I'll show you exactly" / "Stay with me" | VSL opener | The interrupt tied to the promise |
 | Summary closer | "In short, X gives you A, B and C." | The CTA and what happens after the click |
 | Self-posed question header | "### Why only $49?" | A crosshead that states the answer |
 
-Tier 2, weight 2, by density: rule of three above 3 per 1,000 words (break the third item or add a fourth with a number); trailing participles (", giving you...") above 0.6 per 1,000 (a new sentence with a subject); hedges in body copy ("usually," "often," "may") above 1 per 1,000 (state the claim at the ledger grade); "actually / exactly / every single" above 2 per 1,000 (cut); anaphora triads and "No X. No Y. Just Z." (one plain sentence); "rather than" above 2 per 300 words; generic emotion words as the only emotional content ("frustrated," "overwhelmed," "juggling"; replace with the consequence scene); "Imagine..." or a question opener with no specific on the next line (answer it or cut it); negative parallelism ("It's not X. It's Y.") above 1 per 1,000, allowed when it corrects a belief the reader holds; "Most X don't ... because A. They ... because B." (a claim with a carrier).
+Tier 2, weight 2 per hit above the allowance, per 1,000 words, by format profile (email = single email, sequence, cold email, SMS; social = organic social, TikTok/Reels; optin; page = every page, commerce, video and audio format; ads carry the page values): rule of three above 4 (email, social), 7 (page, ads), 11 (opt-in); trailing participles (", giving you...") above 2.0; hedges in body copy ("usually," "often," "may") above 2.0, testimonial and disclosure blocks excluded (hedges inside claim sentences are the factual review's job); "actually / exactly / every single" above 2.0 (4.0 for opt-in and social); anaphora triads and "No X. No Y. Just Z." above 1.5 (exempt in social); "designed to / built for / crafted / tailored" above 1.0; "cancel anytime / no contracts / no setup fees" beyond its first mention (the offer block states it once); negative parallelism ("It's not X. It's Y.") above 1.0, allowed when it corrects a belief the reader holds; "X. Not Y." clips above 2.0; "not just X but Y" above 1.0; generic emotion words as the only emotional content ("frustrated," "overwhelmed," "juggling") above 1.0 (replace with the consequence scene); "Imagine..." or a question opener with no specific on the next line, "Most X don't ... because A. They ... because B." and "No X. No Y. Just Z." as single lines: any hit.
 
-Tier 3, weight 1, never alone: the 4o-era phrases ("game-changer," "Picture this," "Here's the kicker") and the marketing vocabulary ("unlock," "elevate," "seamless," "streamline," "effortless," "cutting-edge," "journey," "to the next level").
+Tier 3, weight 1, never alone: the 4o-era phrases ("game-changer," "Picture this," "Here's the kicker"), the vocabulary that still separates AI drafts ("seamless," "streamline," "cutting-edge," "state-of-the-art," "supercharge," "delve," "tapestry," "testament to," "landscape," "ever-evolving," "unparalleled," "in today's"), plain-text "Label:" lines above 3 per 1,000, and "rather than" above 6.67 per 1,000. Genre vocabulary human copy uses as much as AI does is no longer scored: "transform," "unlock," "elevate," "empower," "effortless," "journey," "next level," "revolutionary," "harness," "leverage," "robust," "holistic," "innovative," "peace of mind," "stress-free."
 
 Argumentative tells, gate failures: no central argument; wrong awareness level; benefits with "so you can"; no mechanism; proof absent or dumped at the end; invented objections; generic specificity ("over 10 years," "award-winning," "up to 50%"); the obvious angle; prevention framing; a lead with nothing to disbelieve; a headline promise never paid off; a turn with no cause.
 
-Tonal tells: "you may want to consider," "it's worth noting"; both-sides framing; no stance; "You deserve this"; apology at the pitch transition. Structural flag: sentence-length coefficient of variation under 0.70 in 300+ words.
+Tonal tells: "you may want to consider," "it's worth noting"; both-sides framing; no stance; "You deserve this"; apology at the pitch transition. Structural flag: sentence-length coefficient of variation under 0.70 in 300+ words for pages, commerce, video and audio formats, and under 0.50 for email, message and social formats (78% of long human emails sit under 0.70).
 
-Not tells, never penalize: exclamation marks; ellipses; ALL-CAPS words; fragments; "Here's what / how / why"; "Dear Friend"; "P.S."; "not just X but Y" at human rates; em dashes at or below 1.6 per 1,000 words; superlatives with proof.
+Not tells, never penalize: exclamation marks; ellipses; ALL-CAPS words; fragments; "Here's what / how / why"; "Dear Friend"; "P.S."; "not just X but Y" at human rates; em dashes (human email runs to 11.9 per 1,000 words; at or below 12 per 1,000 is never counted, and above it carries no weight either); superlatives with proof.
 
-Overrides: Meta ads allow caps and three emoji bullets; opt-in and upsell blocks allow five plain bold lead-ins with no colon; VSL allows "keep watching" once.
+Overrides: Meta ads allow caps and three emoji bullets; opt-in and upsell blocks allow five plain bold lead-ins with no colon; VSL allows "keep watching" once; Google RSA headlines allow no caps and no exclamation marks. Meta ads have no human control yet (no public ad text could be collected), so they carry the page thresholds until one exists.
 
 ---
 

@@ -16,7 +16,7 @@ export const organic_social: FormatSpec = {
   lead_variants: 0,
   skim_path_block_types: ["hook", "cta"],
   hard_gates: ["organic_social.body_urls==0", "organic_social.cta_count>=1", "page.no_markdown_headings"],
-  cadence_floor_cv: 0.7,
+  cadence_floor_cv: 0.5,
   allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,

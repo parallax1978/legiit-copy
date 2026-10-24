@@ -30,7 +30,7 @@ export const email_sequence: FormatSpec = {
   lead_variants: 0,
   skim_path_block_types: ["subject", "preview", "crosshead", "cta", "ps"],
   hard_gates: ["email.links<=1", "email.subject_chars<=70", "sequence.emails>=3", "sequence.emails<=12"],
-  cadence_floor_cv: 0.7,
+  cadence_floor_cv: 0.5,
   allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,

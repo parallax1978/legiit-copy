@@ -2,7 +2,23 @@ import { assert, assertEquals } from "@std/assert";
 import type { Block, Section } from "../schemas/draft.ts";
 import { MechanicalReport } from "../schemas/review.ts";
 import { FORMATS } from "../formats/index.ts";
-import { analyzeDraft, analyzeText, evaluateGates, fleschKincaidGrade, NON_TELLS, sentenceLengthCV, syllables, TELL_THRESHOLDS, TELLS } from "../tells.ts";
+import type { FormatSpec } from "../formats/spec.ts";
+import {
+  analyzeDraft,
+  analyzeText,
+  countWords,
+  densityAllowance,
+  densityThreshold,
+  DENSITY_PROFILES,
+  EM_DASH_NON_TELL_CEILING_PER_1000,
+  evaluateGates,
+  fleschKincaidGrade,
+  NON_TELLS,
+  sentenceLengthCV,
+  syllables,
+  TELL_THRESHOLDS,
+  TELLS,
+} from "../tells.ts";
 
 const CORPUS = new URL("../../../../../research/tells/ai_corpus/", import.meta.url);
 
@@ -19,6 +35,7 @@ function section(section_id: string, blocks: Block[]): Section {
   return { section_id, title: null, blocks };
 }
 const tells = (r: MechanicalReport, name: string) => r.flags.find((f) => f.tell === name);
+const rule = (name: string) => TELLS.find((t) => t.name === name)!;
 
 // ---------------------------------------------------------------------------------------------------------------
 // Known-bad AI drafts from the research corpus
@@ -35,24 +52,27 @@ Deno.test("an AI-style email from the corpus hard-fails on Tier 0 and scores abo
   assert(r.hard_fail_reasons.some((x) => x.startsWith("tier0:")));
 });
 
-Deno.test("an AI-style VSL opener from the corpus trips the VSL opener promise and the residue block", async () => {
+Deno.test("an AI-style VSL opener from the corpus trips the VSL opener promise, the triad and the residue block", async () => {
   const r = analyzeText(await corpus("haiku_vsl_opener_00.txt"), { format: FORMATS.vsl_long });
   assert(r.hard_fail);
   assert(tells(r, "vsl_opener_promise"));
-  assert(tells(r, "cancel_anytime_triad"));
+  assert(tells(r, "cancel_anytime_triad"), "said more than once");
   assert(tells(r, "bracket_placeholder"));
   assert(tells(r, "assistant_residue"));
 });
 
-Deno.test("every draft in the AI corpus scores at or above the review flag", async () => {
-  let count = 0;
+Deno.test("the AI corpus still mostly flags and hard-fails after the human calibration", async () => {
+  let count = 0, flagged = 0, hard = 0;
   for await (const e of Deno.readDir(CORPUS)) {
     if (!e.name.endsWith(".txt")) continue;
     const r = analyzeText(await corpus(e.name), { format: FORMATS.email_single });
-    assert(r.tell_score_per_300 >= TELL_THRESHOLDS.flag, `${e.name}: ${r.tell_score_per_300}`);
     count++;
+    if (r.tell_score_per_300 >= TELL_THRESHOLDS.flag) flagged++;
+    if (r.hard_fail) hard++;
   }
   assert(count >= 100, `corpus has ${count} docs`);
+  assert(flagged / count >= 0.9, `flag rate ${flagged}/${count}`);
+  assert(hard / count >= 0.85, `hard-fail rate ${hard}/${count}`);
 });
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -86,7 +106,6 @@ Gary
 P.S. The coin-collecting letter is reprinted on page 14 of the enclosed booklet, with my notes in the margin. Read it before you call.`;
 
 Deno.test("human-style copy with caps, fragments, ellipses, exclamation marks, Dear Friend and P.S. is not penalised", () => {
-  // the sample really does carry the non-tells
   assert((HUMAN.match(/!/g) ?? []).length >= 2);
   assert((HUMAN.match(/\.\.\./g) ?? []).length >= 2);
   assert(/\b[A-Z]{4,}\b/.test(HUMAN));
@@ -99,21 +118,29 @@ Deno.test("human-style copy with caps, fragments, ellipses, exclamation marks, D
   assertEquals(r.flags.filter((f) => f.tier === 0).length, 0);
   assertEquals(r.flags.filter((f) => f.tier === 1).length, 0, r.flags.map((f) => f.tell).join(","));
   assertEquals(r.format_gate_failures, []);
-  // no rule in the table targets a §7 non-tell
   const names = TELLS.map((t) => t.name);
   for (const nt of ["exclaim", "ellipsis", "caps_word", "fragment_rows", "heres_what", "dear_friend", "ps", "em_dash"]) assert(!names.includes(nt), nt);
-  assert(NON_TELLS.some((x) => x.name === "em_dashes"));
+  assert(NON_TELLS.some((x) => x.name === "em_dashes" && x.why.includes(`${EM_DASH_NON_TELL_CEILING_PER_1000} per 1,000`)));
+  assertEquals(EM_DASH_NON_TELL_CEILING_PER_1000, 12);
 });
 
-Deno.test("loud punctuation alone produces no flags at all", () => {
-  const loud = "WAIT! Don't go yet!!! Here's why... the price DOUBLES at midnight. No kidding. Really. Call NOW! Or don't... your choice!";
+Deno.test("loud punctuation, em dashes, plain Label: lines and genre vocabulary alone produce no score", () => {
+  const loud = "WAIT! Don't go yet!!! Here's why... the price DOUBLES at midnight — tonight — no kidding. Really. Call NOW! Or don't... your choice!";
   const r = analyzeText(loud, { format: FORMATS.email_single });
   assertEquals(r.flags, []);
   assertEquals(r.tell_score_per_300, 0);
+  const dashSentences = ["The jar — the big one — ships Monday.", "Dana — our driver — leaves at six.", "Forty jars — packed in straw — fill one crate."];
+  const dashes = analyzeText(Array.from({ length: 30 }, (_, i) => dashSentences[i % 3]).join(" "), { format: FORMATS.email_single });
+  assertEquals(dashes.flags, [], "em dashes at 20 per 1,000 are not counted");
+  const genre = analyzeText("Transform your mornings. Unlock the ritual. Elevate the first hour and empower the rest of the day with an effortless journey to the next level.", { format: FORMATS.sales_letter });
+  assertEquals(genre.flags.filter((f) => f.tell === "marketing_vocab"), [], "genre vocabulary is not scanned");
+  const labels = analyzeDraft([section("body", [block("paragraph", "Editor's note: the April batch sold out.\nSpeaker: Dana\nFAQ: does it ship abroad?")])], FORMATS.email_single);
+  assertEquals(labels.flags.filter((f) => f.tier === 0), [], "plain-text Label: lines are not Tier 0");
+  assertEquals(labels.tell_score_per_300, 0, "a Tier 3 label_colon_line never scores alone");
 });
 
 // ---------------------------------------------------------------------------------------------------------------
-// Density thresholds behave per 1,000 words
+// Density thresholds behave per 1,000 words, at the human p90 by format profile
 // ---------------------------------------------------------------------------------------------------------------
 
 const FILLER = [
@@ -145,35 +172,86 @@ function filler(targetWords: number): string {
   return out.join(" ").replace(/ \n /g, "\n\n");
 }
 
+/** Build a text with `hits` copies of `sentence` after ~1,000 words of filler and return the report plus the allowance the detector applied. */
+function densityRun(spec: FormatSpec, tell: string, sentence: string, hits: number) {
+  const text = `${filler(1000)}\n\n${Array.from({ length: hits }, () => sentence).join("\n\n")}`;
+  const r = analyzeText(text, { format: spec });
+  const threshold = densityThreshold(rule(tell), spec)!;
+  const allowed = densityAllowance(threshold, countWords(text));
+  return { r, allowed, threshold };
+}
+
+/** The flag count must equal max(0, hits - allowance) at every hit count around the allowance (the hit sentences add words, so the allowance is read from each run's own text). */
+function assertDensity(spec: FormatSpec, tell: string, sentence: string) {
+  const probe = densityRun(spec, tell, sentence, 1);
+  assert(probe.allowed >= 1, `${tell} on ${spec.id}: allowance ${probe.allowed} should be at least one in 1,000 words`);
+  let unflagged = 0, flagged = 0;
+  for (const hits of [probe.allowed - 1, probe.allowed, probe.allowed + 1, probe.allowed + 2, probe.allowed + 3]) {
+    if (hits < 1) continue;
+    const run = densityRun(spec, tell, sentence, hits);
+    const expected = Math.max(0, hits - run.allowed);
+    const f = tells(run.r, tell);
+    assertEquals(f?.count, expected || undefined, `${tell} on ${spec.id}: ${hits} hits, allowance ${run.allowed} (threshold ${run.threshold} per 1,000)`);
+    if (f) {
+      assertEquals(f.tier, rule(tell).tier);
+      flagged++;
+    } else unflagged++;
+  }
+  assert(unflagged > 0 && flagged > 0, `${tell} on ${spec.id}: expected both sides of the threshold`);
+}
+
 const RULE_OF_THREE = "The kit ships with a scale, a timer, and a notebook.";
 
-Deno.test("rule of three is flagged only above 3 per 1,000 words", () => {
-  const base = filler(1000); // 1,000-1,100 words: the allowance is exactly three
-  const three = analyzeText(`${base}\n\n${RULE_OF_THREE}\n\n${base.slice(0, 0)}${RULE_OF_THREE}\n\n${RULE_OF_THREE}`, { format: FORMATS.sales_letter });
-  assert(three.word_count >= 1000 && three.word_count < 1333, `words ${three.word_count}`);
-  assertEquals(tells(three, "rule_of_three"), undefined, "three per 1,000 is the human rate");
-  const four = analyzeText(`${base}\n\n${RULE_OF_THREE}\n\n${RULE_OF_THREE}\n\n${RULE_OF_THREE}\n\n${RULE_OF_THREE}`, { format: FORMATS.sales_letter });
-  const f = tells(four, "rule_of_three");
-  assert(f, "four per 1,000 is flagged");
-  assertEquals(f.count, 1);
-  assertEquals(f.tier, 2);
-  assertEquals(f.weight, 2);
+Deno.test("thresholds are the human p90 by profile: rule of three 4/4/7/11, intensifiers 2 (4 for opt-in and social), participles 2, hedges 2", () => {
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.email_single), 4);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.cold_email), 4);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.organic_social), 4);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.sales_letter), 7);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.vsl_long), 7);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.optin), 11);
+  assertEquals(densityThreshold(rule("rule_of_three"), FORMATS.meta_ad), 7);
+  assertEquals(densityThreshold(rule("intensifier"), FORMATS.sales_letter), 2);
+  assertEquals(densityThreshold(rule("intensifier"), FORMATS.email_single), 2);
+  assertEquals(densityThreshold(rule("intensifier"), FORMATS.optin), 4);
+  assertEquals(densityThreshold(rule("intensifier"), FORMATS.tiktok_reels), 4);
+  assertEquals(densityThreshold(rule("trailing_participle"), FORMATS.sales_letter), 2);
+  assertEquals(densityThreshold(rule("hedge"), FORMATS.email_single), 2);
+  assertEquals(densityThreshold(rule("designed_to"), FORMATS.sales_letter), 1);
+  assertEquals(densityThreshold(rule("anaphora_triad"), FORMATS.sales_letter), 1.5);
+  assertEquals(densityThreshold(rule("thats_why_we_built"), FORMATS.sales_letter), undefined, "per-hit rule");
+  for (const id of Object.keys(FORMATS)) assert(DENSITY_PROFILES[id as keyof typeof FORMATS], `${id} has a density profile`);
 });
 
-Deno.test("intensifiers are flagged only above 2 per 1,000 words", () => {
-  const base = filler(1000);
-  const two = analyzeText(`${base}\n\nIt is actually here. It is exactly here.`, { format: FORMATS.sales_letter });
-  assertEquals(tells(two, "intensifier"), undefined);
-  const three = analyzeText(`${base}\n\nIt is actually here. It is exactly here. It works every single time.`, { format: FORMATS.sales_letter });
-  assertEquals(tells(three, "intensifier")?.count, 1);
+Deno.test("rule of three is flagged only above the profile threshold, per 1,000 words", () => {
+  assertDensity(FORMATS.sales_letter, "rule_of_three", RULE_OF_THREE);
+  assertDensity(FORMATS.email_single, "rule_of_three", RULE_OF_THREE);
+  assertDensity(FORMATS.optin, "rule_of_three", RULE_OF_THREE);
+  const page = densityRun(FORMATS.sales_letter, "rule_of_three", RULE_OF_THREE, 7);
+  assertEquals(tells(page.r, "rule_of_three"), undefined, "seven per 1,000 is the human sales-page p90");
+  const email = densityRun(FORMATS.email_single, "rule_of_three", RULE_OF_THREE, 7);
+  assertEquals(tells(email.r, "rule_of_three")?.count, 7 - email.allowed, "the same copy as an email is over the email p90");
 });
 
-Deno.test("trailing participles are flagged above 0.6 per 1,000 words", () => {
-  const base = filler(1000);
-  const r = analyzeText(`${base}\n\nThe plan runs itself, giving you the evening back.`, { format: FORMATS.sales_letter });
-  assertEquals(tells(r, "trailing_participle")?.count, 1);
-  const stop = analyzeText(`${base}\n\nWe met at the store, morning after morning.`, { format: FORMATS.sales_letter });
+Deno.test("intensifiers, trailing participles and hedges are density tells at their thresholds", () => {
+  assertDensity(FORMATS.sales_letter, "intensifier", "It is actually here.");
+  assertDensity(FORMATS.optin, "intensifier", "It is exactly here.");
+  assertDensity(FORMATS.sales_letter, "trailing_participle", "The plan runs itself, giving you the evening back.");
+  assertDensity(FORMATS.email_single, "hedge", "It usually takes a week.");
+  const stop = analyzeText(`${filler(1000)}\n\nWe met at the store, morning after morning.`, { format: FORMATS.sales_letter });
   assertEquals(tells(stop, "trailing_participle"), undefined, "stop-list -ing nouns are not participles");
+});
+
+Deno.test("designed to is a Tier 2 density tell; cancel anytime is allowed once; rather than is Tier 3", () => {
+  assertEquals(rule("designed_to").tier, 2);
+  assertDensity(FORMATS.sales_letter, "designed_to", "It was designed to fit the crate.");
+  assertEquals(rule("cancel_anytime_triad").tier, 2);
+  assertEquals(rule("cancel_anytime_triad").free_hits, 1);
+  const once = analyzeDraft([section("offer", [block("paragraph", "Cancel anytime; the guarantee is 60 days [[L:0f1e2d3c4b5a]].")])], FORMATS.sales_letter);
+  assertEquals(tells(once, "cancel_anytime_triad"), undefined);
+  const triad = analyzeDraft([section("offer", [block("paragraph", "Cancel anytime. No contracts. No setup fees.")])], FORMATS.sales_letter);
+  assertEquals(tells(triad, "cancel_anytime_triad")?.count, 2);
+  assertEquals(rule("rather_than").tier, 3);
+  assertEquals(rule("label_colon_line").tier, 3);
 });
 
 Deno.test("short copy uses the density floor so one hit is not a density", () => {
@@ -189,7 +267,17 @@ Deno.test("Tier 3 never scores alone, but counts once a Tier 1 or 2 tell is pres
   const withTier1 = analyzeText(`${base}\n\nIt was a game-changer for the shop. That's why we built the kit.`, { format: FORMATS.sales_letter });
   assert(withTier1.tell_score_per_300 > 0);
   // weights: 4 (tier 1) + 1 (tier 3) over the word count, per 300 words
-  assertEquals(withTier1.tell_score_per_300, Math.round((5 * 300 / Math.max(withTier1.word_count, 300)) * 100) / 100);
+  assertEquals(withTier1.tell_score_per_300, Math.round((5 * 300 / Math.max(countWords(`${base}\n\nIt was a game-changer for the shop. That's why we built the kit.`), 300)) * 100) / 100);
+});
+
+Deno.test("social formats are exempt from anaphora and label-colon lines", () => {
+  const text = "They skip it. They forget it. They regret it.\n\nSpeed: open the jar.\nSmell: close your eyes.\nCall: ring me after.";
+  const social = analyzeDraft([section("main", [block("paragraph", text)])], FORMATS.organic_social);
+  assertEquals(tells(social, "anaphora_triad"), undefined);
+  assertEquals(tells(social, "label_colon_line"), undefined);
+  const email = analyzeDraft([section("body", [block("paragraph", text)])], FORMATS.email_single);
+  assertEquals(tells(email, "anaphora_triad")?.count, 1);
+  assertEquals(tells(email, "label_colon_line")?.count, 2, "three labels, allowance one at the 500-word floor");
 });
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -214,10 +302,14 @@ Deno.test("a crosshead that asks a question is a self-posed question header (Tie
   assert(f && f.tier === 1 && f.count === 1);
 });
 
-Deno.test("bold-label-colon bullets are Tier 0; plain bold lead-ins are Tier 1 with the opt-in allowance", () => {
+Deno.test("bold-label-colon bullets are Tier 0 (markdown only); plain bold lead-ins are Tier 1 with the opt-in allowance", () => {
   const colon = analyzeDraft([section("body", [block("bullets", "", ["**Speed:** get reports in minutes", "**Accuracy:** every number checked"])])], FORMATS.email_single);
   assertEquals(tells(colon, "bold_label_colon")?.tier, 0);
   assert(colon.hard_fail);
+  const plain = analyzeDraft([section("body", [block("bullets", "", ["Speed: get reports in minutes", "Accuracy: every number checked"])])], FORMATS.sales_letter);
+  assertEquals(tells(plain, "bold_label_colon"), undefined, "the plain-text branch is not Tier 0");
+  assertEquals(plain.flags.filter((f) => f.tier === 0), []);
+  assertEquals(plain.hard_fail_reasons.filter((x) => x.startsWith("tier0:")), []);
 
   const leadins = ["**Seven dinners planned.** One relaxed weekend cook.", "**A list sorted by aisle.** Shop once.", "**Prep notes.** Cut weeknight time."];
   const email = analyzeDraft([section("body", [block("bullets", "", leadins)])], FORMATS.email_single);
@@ -226,7 +318,7 @@ Deno.test("bold-label-colon bullets are Tier 0; plain bold lead-ins are Tier 1 w
   assertEquals(tells(optin, "bold_leadin_bullet"), undefined, "opt-in allows five plain bold lead-ins");
 });
 
-Deno.test("emoji bullets are Tier 0 in email and allowed up to three in a Meta ad", () => {
+Deno.test("emoji bullets: Tier 0 in email, three allowed in a Meta ad, one check mark per 300 words on a web page", () => {
   const items = ["✅ Syncs your sales", "✅ Sorts your expenses", "✅ Shows real profit"];
   const email = analyzeDraft([section("body", [block("bullets", "", items)])], FORMATS.email_single);
   assertEquals(tells(email, "emoji_bullet")?.tier, 0);
@@ -236,6 +328,19 @@ Deno.test("emoji bullets are Tier 0 in email and allowed up to three in a Meta a
   const metaOver = analyzeDraft([section("primary_text#1", [block("bullets", "", [...items, "🚀 Ready for tax time"])])], FORMATS.meta_ad);
   assertEquals(tells(metaOver, "emoji_bullets_over_allowance")?.count, 1);
   assert(metaOver.format_gate_failures.some((g) => g.startsWith("meta_ad.emoji_bullets<=3")));
+
+  const pageOne = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday"])])], FORMATS.sales_letter);
+  assertEquals(tells(pageOne, "emoji_bullet"), undefined, "one check mark in under 300 words is human practice");
+  assertEquals(tells(pageOne, "check_bullets_over_allowance"), undefined);
+  const pageThree = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday", "✔ Packed in straw", "✅ Forty jars"])])], FORMATS.sales_letter);
+  assertEquals(tells(pageThree, "emoji_bullet"), undefined);
+  assertEquals(tells(pageThree, "check_bullets_over_allowance")?.count, 2);
+  assertEquals(pageThree.hard_fail_reasons.filter((x) => x.startsWith("tier0:")), [], "excess check marks are Tier 2, not a hard reject");
+  const pageRocket = analyzeDraft([section("benefits", [block("bullets", "", ["✓ Ships Monday", "🚀 Forty jars"])])], FORMATS.sales_letter);
+  assertEquals(tells(pageRocket, "emoji_bullet")?.count, 1, "any other emoji on a page is still Tier 0");
+  assert(pageRocket.hard_fail);
+  const vsl = analyzeDraft([section("plan", [block("bullets", "", ["✓ Ships Monday"])])], FORMATS.vsl_long);
+  assertEquals(tells(vsl, "emoji_bullet")?.tier, 0, "VSL scripts keep the Tier 0 rule");
 });
 
 Deno.test("assistant residue and bracket placeholders are Tier 0; ledger tags and NEEDS SOURCE are not", () => {
@@ -267,7 +372,7 @@ Deno.test("hedges are counted in body copy but not inside testimonials", () => {
   const r = analyzeDraft([section("body", [block("testimonial", "It usually takes me a week, and it may take you longer.")])], FORMATS.email_single);
   assertEquals(tells(r, "hedge"), undefined);
   const body = analyzeDraft([section("body", [block("paragraph", "It usually takes a week. It may take longer. It often does.")])], FORMATS.email_single);
-  assertEquals(tells(body, "hedge")?.count, 3);
+  assertEquals(tells(body, "hedge")?.count, 3 - densityAllowance(2, 15), "three hedges, allowance one at the 500-word floor");
 });
 
 Deno.test("the VSL keep-watching allowance exempts the first use only", () => {
@@ -300,12 +405,27 @@ Deno.test("Flesch-Kincaid grade separates simple from dense prose", () => {
   assertEquals(fleschKincaidGrade(""), null);
 });
 
-Deno.test("cadence flag fires on flat sentence length over 300+ words and not on varied copy", () => {
+Deno.test("cadence flag uses the format floor: 0.50 for email, 0.70 for pages", () => {
   const flat = Array.from({ length: 40 }, (_, i) => `The driver left the crate at the ${i % 2 ? "front" : "back"} door on Monday.`).join(" ");
   const r = analyzeText(flat, { format: FORMATS.email_single });
   assert(r.word_count >= 300);
-  assert(r.cadence_cv !== null && r.cadence_cv < 0.7);
+  assert(r.cadence_cv !== null && r.cadence_cv < 0.5);
   assertEquals(r.cadence_flag, true);
+  // alternating 7- and 13-word sentences: CV about 0.3; under both floors
+  const mid = Array.from({ length: 36 }, (_, i) => (i % 2 ? "The crate reached the back door on Monday." : "Rain delayed the second Thursday delivery by four long hours this week.")).join(" ");
+  const asEmail = analyzeText(mid, { format: FORMATS.email_single });
+  const asPage = analyzeText(mid, { format: FORMATS.sales_letter });
+  assert(asEmail.cadence_cv !== null && asEmail.cadence_cv < 0.5, `cv ${asEmail.cadence_cv}`);
+  assertEquals(asEmail.cadence_flag, true);
+  assertEquals(asPage.cadence_flag, true);
+  // an email at CV 0.6 passes the email floor and fails the page floor
+  const lens = [3, 9, 14, 6, 18, 4, 11, 8, 16, 5];
+  const sixty = Array.from({ length: 40 }, (_, i) => Array.from({ length: lens[i % lens.length] }, (_, k) => (k === 0 ? "Jars" : "shipped")).join(" ") + ".").join(" ");
+  const e = analyzeText(sixty, { format: FORMATS.email_single });
+  const p = analyzeText(sixty, { format: FORMATS.sales_letter });
+  assert(e.cadence_cv !== null && e.cadence_cv > 0.5 && e.cadence_cv < 0.7, `cv ${e.cadence_cv}`);
+  assertEquals(e.cadence_flag, false);
+  assertEquals(p.cadence_flag, true);
   const varied = analyzeText(HUMAN, { format: FORMATS.email_single });
   assertEquals(varied.cadence_flag, false);
   assertEquals(sentenceLengthCV("One. Two words."), null, "under three sentences");
