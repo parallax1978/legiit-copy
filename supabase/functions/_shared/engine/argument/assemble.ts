@@ -1,0 +1,178 @@
+/**
+ * Gates every candidate, merges the computed and judged scores, ranks with the tie-breaks, picks three finalists,
+ * the winner and the two losers kept, and writes the thesis in the exact form of Section 1, rule 1.
+ * Pure: the step feeds it the model outputs; tests feed it fixtures.
+ */
+import { z } from "zod";
+import { ArgumentOutput } from "../schemas/argument.ts";
+import type { StepEffects } from "../steps/types.ts";
+import type { CandidateT } from "./candidates.ts";
+import { desireGate, type DesireGateResult, type LedgerClaimLike, PROOF_GATE, proofGate, type ProofGateResult } from "./gates.ts";
+import { type ClusterStats, findCluster } from "./magnitude.ts";
+import {
+  buildScores,
+  clampScore,
+  composeThesis,
+  type Criterion,
+  describeTieBreak,
+  JUDGED_CRITERIA,
+  type JudgedCriterion,
+  pickFinalists,
+  rankCandidates,
+  type Rankable,
+  type ScoreTable,
+  weightedTotal,
+} from "./weighting.ts";
+
+/** Output schema of the scoring call: C4-C14 per survivor, with the rationale. */
+export const JudgedScores = z.object(
+  Object.fromEntries(JUDGED_CRITERIA.map((c) => [c, z.number().min(0).max(3)])) as Record<JudgedCriterion, z.ZodNumber>,
+);
+export const ScoringOutput = z.object({
+  scored: z.array(z.object({ id: z.string(), scores: JudgedScores, rationale: z.string() })),
+});
+export type ScoringOutput = z.infer<typeof ScoringOutput>;
+
+export interface JudgedEntry {
+  scores: Partial<Record<Criterion, number>>;
+  rationale: string;
+}
+
+export function indexJudged(out: ScoringOutput): Record<string, JudgedEntry> {
+  const map: Record<string, JudgedEntry> = {};
+  for (const s of out.scored) map[s.id.trim()] = { scores: s.scores, rationale: s.rationale };
+  return map;
+}
+
+export interface GatedCandidate {
+  candidate: CandidateT;
+  desire: DesireGateResult;
+  proof: ProofGateResult;
+}
+
+/** Both gates, from the dossier's cluster table and the ledger. */
+export function gateCandidates(candidates: CandidateT[], table: ClusterStats[], claims: LedgerClaimLike[]): GatedCandidate[] {
+  return candidates.map((candidate) => ({
+    candidate,
+    desire: desireGate(findCluster(table, candidate.cluster)),
+    proof: proofGate(candidate.proof_ledger_refs, claims),
+  }));
+}
+
+/** A survivor goes to the scoring call: desire pass or provisional, proof pass. */
+export function isSurvivor(g: GatedCandidate): boolean {
+  return g.desire.status !== "fail" && g.proof.status === "pass";
+}
+
+type Angle = NonNullable<StepEffects["angles"]>[number];
+type GatesT = z.infer<typeof ArgumentOutput>["candidates"][number]["gates"];
+
+interface Row extends Rankable {
+  candidate: CandidateT;
+  gates: GatesT;
+  rationale: string;
+  eligible: boolean;
+}
+
+export interface AssembledArgument {
+  output: ArgumentOutput;
+  angles: Angle[];
+  survivorIds: string[];
+  /** True when no candidate passed both gates; winner_id then names the best-ranked candidate for reference only. */
+  noSurvivors: boolean;
+}
+
+export function assembleArgument(input: {
+  gated: GatedCandidate[];
+  judged: Record<string, JudgedEntry>;
+  /** brief.audience.who: the [reader] slot of the thesis. */
+  reader: string;
+}): AssembledArgument {
+  if (!input.gated.length) throw new Error("argument assembly needs at least one candidate");
+
+  const rows: Row[] = input.gated.map((g) => {
+    const j = input.judged[g.candidate.id];
+    const survivor = isSurvivor(g);
+    let c9: number = g.proof.c9;
+    let proofPass = g.proof.status === "pass";
+    let proofReason = g.proof.reason;
+    if (survivor && j && typeof j.scores.C9 === "number") {
+      const judgedC9 = clampScore(j.scores.C9);
+      c9 = judgedC9;
+      if (judgedC9 < PROOF_GATE.minC9) {
+        proofPass = false;
+        proofReason += `; scorer judged coverage C9 ${judgedC9}: the fact does not cover the promise, proof gate fail`;
+      }
+    }
+    const scores: ScoreTable = buildScores({ c1: g.desire.c1, c2: g.desire.c2, c3: g.desire.c3, c9 }, survivor ? j?.scores : null);
+    const judgedNote = j ? j.rationale : survivor ? "not returned by the scorer" : "not scored on C4-C14: gated out before scoring";
+    return {
+      id: g.candidate.id,
+      candidate: g.candidate,
+      desire: g.desire.status,
+      gates: { desire: g.desire.status, desire_magnitude: g.desire.magnitude, proof: proofPass ? "pass" : "fail", c9 },
+      scores,
+      weighted_total: weightedTotal(scores),
+      rationale: [g.desire.reason, proofReason, judgedNote].join(" | "),
+      eligible: survivor && proofPass && !!j,
+    };
+  });
+
+  const ranked = rankCandidates(rows.filter((r) => r.eligible));
+  const rest = rows
+    .filter((r) => !r.eligible)
+    .sort((a, b) => b.gates.desire_magnitude + b.gates.c9 - (a.gates.desire_magnitude + a.gates.c9) || a.id.localeCompare(b.id));
+  const ordered = [...ranked, ...rest];
+
+  const fin = pickFinalists(ranked);
+  const noSurvivors = fin.winnerId === null;
+  const winnerId = fin.winnerId ?? ordered[0].id;
+  const winner = ordered.find((r) => r.id === winnerId)!;
+  const thesis = composeThesis({
+    mechanism: winner.candidate.mechanism,
+    promise: winner.candidate.promise,
+    reader: input.reader,
+    carrier: winner.candidate.proof_asset,
+  });
+
+  const notes: string[] = [];
+  const tie = describeTieBreak(ranked);
+  if (tie) notes.push(tie);
+  if (noSurvivors) {
+    notes.push(
+      `NO CANDIDATE PASSED BOTH GATES (desire >= ${4}/9 with k >= 5; a verifiable ledger fact covering the promise). winner_id names the best-ranked candidate for reference only; nothing is selected. Add proof rows to the ledger or verbatims to the research, then try another angle.`,
+    );
+  }
+
+  const output = ArgumentOutput.parse({
+    candidates: ordered.map((r) => ({
+      ...r.candidate,
+      gates: r.gates,
+      scores: r.scores,
+      weighted_total: r.weighted_total,
+      rationale: r.rationale,
+    })),
+    finalist_ids: fin.finalistIds,
+    winner_id: winnerId,
+    thesis,
+    losers_kept_ids: fin.loserIds,
+    tie_break_note: notes.length ? notes.join(" ") : null,
+  });
+
+  const angles: Angle[] = ordered.map((r, i) => {
+    const isWinner = !noSurvivors && r.id === winnerId;
+    return {
+      candidate: r.candidate,
+      gates: r.gates,
+      scores: r.scores,
+      total: r.weighted_total,
+      isFinalist: fin.finalistIds.includes(r.id),
+      isWinner,
+      keptAsLoser: fin.loserIds.includes(r.id),
+      rank: i + 1,
+      ...(isWinner ? { thesis } : {}),
+    };
+  });
+
+  return { output, angles, survivorIds: input.gated.filter(isSurvivor).map((g) => g.candidate.id), noSurvivors };
+}

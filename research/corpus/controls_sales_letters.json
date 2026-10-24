@@ -1,0 +1,1672 @@
+[
+  {
+    "id": "controls_sales_letters-01",
+    "title": "Wall Street Journal \"Two Young Men\" letter",
+    "author_or_company": "Martin Conroy for The Wall Street Journal (Dow Jones)",
+    "format": "sales_letter",
+    "market": "Business and financial news subscription; ambitious managers and executives",
+    "funnel_position": "cold acquisition direct mail, front end",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/wallstreet-letter-conroy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Dear Reader: On a beautiful late spring afternoon, twenty-five years ago, two young men graduated from the same college. They were very much alike, these two young men.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "story",
+      "argument_sentence": "This sells a Journal subscription to ambitious businessmen on the promise that applied business knowledge is what separates the company president from the department manager, because the Journal is the daily source of that knowledge.",
+      "hook": "Two identical graduates meet at their 25th reunion; one is a manager, the other is president of the same company.",
+      "mechanism": "Applied knowledge: not intelligence, talent or desire but what each man knows and how he uses it; the Journal supplies that knowledge every business day.",
+      "big_idea": "The difference between success and mediocrity is knowledge put to use, and it can be bought for the price of a newspaper.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor",
+        "deadline_with_mechanism"
+      ],
+      "close": "Returns to the two men and the single difference between them, restates applied knowledge, then the low-priced introductory offer followed by the yearly offer; P.S. notes the subscription may be tax deductible.",
+      "voice_notes": "Plain, unhurried narrator; short declarative sentences; no exclamation marks; the parable carries the emotion.",
+      "length_words_est": 800
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co annotation: ran from 1975 to 2003 with only minor edits and 'sold $2 billion worth of Wall St. Journal subscriptions'. Copyblogger states 'an estimated $2 billion in revenue'; other secondary sources (e.g. Doug D'Anna) put it at about $1 billion. Treat the dollar figure as an estimate; the 28-year run is consistently reported.",
+      "source_url": "https://swiped.co/file/wallstreet-letter-conroy/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A story lead that never names the product until the turn can hold a control for decades when the parable maps one-to-one onto the promise.",
+      "The mechanism is stated as a single abstraction (applied knowledge) and then made concrete by the product's deliverables; no statistics were needed.",
+      "Offer order: low-priced trial first, bigger annual offer second, tax note in the P.S.; the close restates the lead rather than summarizing benefits.",
+      "Lineage matters: the parable descends from Bruce Barton's Alexander Hamilton Institute ads (swiped.co notes this), so argument structures can be reused across decades with a new product."
+    ],
+    "notes": "Full text widely reposted (copyblogger.com/the-greatest-sales-letter-of-all-time/ reproduces the opening and comments quote the P.S.). The Agora Financial swipe of this letter (swiped.co/file/wallstreet-agora/) keeps the sentence structure and expands the deliverables section; no results are published for the swipe."
+  },
+  {
+    "id": "controls_sales_letters-02",
+    "title": "Newsweek \"Dear Reader\" subscription letter",
+    "author_or_company": "Ed McLean for Newsweek",
+    "format": "sales_letter",
+    "market": "Newsweekly magazine subscription; educated, higher-income adults",
+    "funnel_position": "cold acquisition direct mail",
+    "traffic": "cold",
+    "source_url": "https://www.chiefmarketer.com/copywriter-ed-mclean-dies/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Dear Reader, Quite frankly, your education and income set you apart from the general population...",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells Newsweek to educated, higher-income readers on the promise that the magazine is written for people like them, because the letter openly admits how it found them and talks to 'you' throughout.",
+      "hook": "A frank statement that the reader's education and income set them apart, plus the admission that the name came from a mailing list.",
+      "mechanism": "Identification: the reader is the kind of person Newsweek is edited for; the magazine's editorial scope is the deliverable.",
+      "big_idea": "A letter that respects the reader's intelligence and admits how it arrived can out-pull decades of cleverer letters.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor"
+      ],
+      "close": "Direct ask for the subscription; details not reproduced in fetched sources.",
+      "voice_notes": "Second person throughout; AWAI counts the word 'you' 58 times; conversational, frank, no hype.",
+      "length_words_est": 700
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "Chief Marketer obituary: written in 1959, 'remained unbeaten for 15 years', beat 'dozens of letters that tested against it', reportedly reached more than 150 million people. AWAI: control for 15 years, mailed to over 150 million people, brought in more new subscriptions than any other letter in that period.",
+      "source_url": "https://www.awai.com/2022/03/single-decision-could-speed-up-your-earning-power/"
+    },
+    "losing_variants": [
+      {
+        "description": "Dozens of challenger letters tested against the control over 15 years (not individually documented).",
+        "result": "All lost to the 1959 control."
+      }
+    ],
+    "lessons": [
+      "Candor about the mailing list (a risk in 1959) built trust rather than losing it; disclosure can be a proof element.",
+      "Identification leads work on product-aware readers when the identification is specific (education, income) rather than flattering in the abstract.",
+      "Relentless second person is a measurable voice parameter (you-count), not a tone adjective."
+    ],
+    "notes": "AWAI lists the letter in its Hall of Fame. Full text not fetched; only the opening lines are quoted in the obituary."
+  },
+  {
+    "id": "controls_sales_letters-03",
+    "title": "International Living launch letter (\"You look out your window, past your gardener\")",
+    "author_or_company": "Bill Bonner, International Living (Agora)",
+    "format": "sales_letter",
+    "market": "Overseas living, retirement and travel newsletter; US readers dreaming of a cheaper, better life abroad",
+    "funnel_position": "cold acquisition (direct mail; later web version with button)",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/wp-content/uploads/2023/10/International%20Living%20Letter.pdf",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "You look out your window, past your gardener, who is busily pruning the lemon, cherry, and fig trees...amidst the splendor of gardenias, hibiscus, and hollyhocks. The sky is clear blue. The sea is a deeper blue, sparkling with sunlight.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "1",
+      "lead_type": "story",
+      "argument_sentence": "This sells an International Living subscription to Americans who have never considered living abroad on the promise of a paradise lifestyle for half the cost of staying home, because specific overseas prices prove the dream is affordable.",
+      "hook": "A second-person scene: gardener, maid bringing breakfast in bed, 'you think you have died and gone to heaven', then 'this paradise is real. And affordable.'",
+      "mechanism": "Cost arbitrage: the same money buys far more abroad; the magazine's 500 correspondents find the places and prices.",
+      "big_idea": "Paradise exists and costs half what your current life costs.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "bonus",
+        "price_anchor",
+        "guarantee_denominated",
+        "installments"
+      ],
+      "close": "Special introductory offer ($69 struck to $49 for 12 issues with the free report; 2 years $138 struck to $89 with a second bonus report), 100% satisfaction guarantee with refund on remaining issues and reports kept, signed by Bonner as Founding Publisher; P.S. restates the guarantee and the 'life available only to the very wealthy' promise.",
+      "voice_notes": "Sensory present-tense scene, then plain 'Dear Reader' letter voice; long runs of ellipsis-joined fascination bullets grouped under Travel, Taxes, Retirement.",
+      "length_words_est": 3200
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "AWAI: Bonner 'wrote the 25-year control that launched International Living (#5 in AWAI's Hall of Fame collection)'. swiped.co labels the PDF 'The Famous Letter That Launched International Living'. No revenue figures published.",
+      "source_url": "https://www.awai.com/2010/03/agora-founder-bill-bonner-to-speak-at-bootcamp/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A vision scene in second person (future-pacing the promise) is a story lead that works on an unaware market; the product is not named until after the dream is made affordable.",
+      "Precision proves affordability: concrete prices ($245 rent, $27 utilities, $60,000 house) do the work no adjective could.",
+      "Fascination bullets grouped by desire (travel, taxes, retirement) form the skim path; each bullet is a specific, incomplete promise.",
+      "Struck-through price anchors and a bonus tied to the lead's promise (How to Retire in Paradise on $30 a Day) keep the offer congruent with the big idea."
+    ],
+    "notes": "The PDF posted by swiped.co is a later web-era version (dollar prices, email 'postcards', 'clicking on the button'); the lead paragraphs are the famous 1979 opening. ~3,225 words by pdftotext."
+  },
+  {
+    "id": "controls_sales_letters-04",
+    "title": "Halbert Coat-of-Arms / family name letter",
+    "author_or_company": "Gary Halbert (Halbert's Inc., Bath, Ohio), signed as Nancy Halbert",
+    "format": "sales_letter",
+    "market": "Vanity/heritage mail order: a family-name history report with coat of arms, to surname-selected phone-book lists",
+    "funnel_position": "front end, low-ticket, with plaque upsell on the back end",
+    "traffic": "cold",
+    "source_url": "https://www.linkedin.com/pulse/advertising-101-gary-halberts-family-crest-letter-richard-bray",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Did you know that your family name was recorded with a coat-of-arms in ancient heraldic archives more than seven centuries ago?",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "1",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a $2 family-name report to people who share a rare surname on the promise that their own name has a recorded coat of arms, because a personal letter from a researcher who 'did this for friends' makes the claim feel discovered rather than sold.",
+      "hook": "A personally addressed one-page letter asking whether you knew your family name was recorded with a coat of arms seven centuries ago.",
+      "mechanism": "Surname research in heraldic archives, framed as work already done for friends named MacDonald who were so delighted that extra copies were made.",
+      "big_idea": "Your name has a history worth framing, and it costs $2 to see it.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor",
+        "deadline_with_mechanism"
+      ],
+      "close": "Supply of the report is 'pretty slim', send $2 (plus postage) now; later mailings upsell a wall plaque.",
+      "voice_notes": "Personal, handwritten-letter conceit; one page (about 360 words per secondary sources); first-class white envelope to land in the 'A-pile'.",
+      "length_words_est": 360
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "No fetched source gives a documented figure. LinkedIn/Bray: 'massively successful', Halbert 'made tons of money'. thegaryhalbertletter.com calls it 'one of the most successful direct marketing pieces in history'. Secondary blogs circulate a '$600 million' total and a '$300,000 per day' (inflation-adjusted) figure; neither cites a primary record. Postal Service action against Halbert's Inc. marketing in 1995 is reported by genealogy sites.",
+      "source_url": "https://www.thegaryhalbertletter.com/MarkJoyner/hp2.htm"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Hyper-personalization by surname plus a plain personal envelope converts an unaware market with almost no proof because the price ($2) is below the proof threshold.",
+      "An offer lead can be disguised as a personal disclosure: the first sentence is the promise, the product and price arrive within a page.",
+      "Scarcity stated as a fact about supply, not a countdown.",
+      "Compliance note: the 'researched for friends' pretext and surname-arms premise drew later regulatory action; the ledger would flag an unverifiable narrator."
+    ],
+    "notes": "Salutation is reported as 'Dear Mr. MacDonald' in secondary sources (search snippets); only the first sentence was verified on the fetched LinkedIn page. Year 1971 per secondary sources. Original PDF offered on thegaryhalbertletter.com (page fetched; PDF not)."
+  },
+  {
+    "id": "controls_sales_letters-05",
+    "title": "The Lazy Man's Way to Riches",
+    "author_or_company": "Joe Karbo",
+    "format": "advertorial",
+    "market": "Business opportunity / self-help book sold by mail, $10",
+    "funnel_position": "one-step direct sale from newspaper space ads",
+    "traffic": "cold",
+    "source_url": "https://theessence.substack.com/p/the-secrets-behind-the-incredible",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "The Lazy Man's Way to Riches. I used to work hard. The 18-hour days. The 7-day weeks. But I didn't start making big money until I did less—a lot less.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "5",
+      "lead_type": "story",
+      "argument_sentence": "This sells a $10 book to people who want money without grinding on the promise that Karbo got rich by working less, because he backs his lifestyle claims with a sworn accountant's statement and refuses to cash your check for 31 days.",
+      "hook": "First-person confession: he used to work 18-hour days and only got rich when he did less.",
+      "mechanism": "A 'lazy' system of mindset plus mail-order methods (not specified in the ad); credibility substitutes for mechanism detail.",
+      "big_idea": "Riches come from working less, and the man saying so will prove it under oath and let you read the book before he takes your money.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "price_anchor",
+        "trial"
+      ],
+      "close": "Send $10; 'I won't even cash your check or money order for 31 days'; if you don't agree it is worth 100 times what you paid, send it back and the uncashed check is returned.",
+      "voice_notes": "Blunt, boastful first person with specific lifestyle details (homes, cars, boat); short paragraphs; self-deprecating 'lazy' frame.",
+      "length_words_est": 1200
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "Ran from 1973 (updated version 1979) in newspapers across North America; book sold 'over 2.7 million copies' (The Essence) / 'over three million copies' (Butler-Bowdon) / 'nearly 3 million' (Walrus via search); never sold in bookstores. Price $10 (Los Angeles magazine). Figures are Karbo's and his biographers'.",
+      "source_url": "https://lamag.com/ask-chris/who-was-that-get-rich-quick-guy-who-used-to-advertise-in-l-a/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "In a stage-5 bizopp market, candor and an extraordinary guarantee (uncashed check) beat bigger promises.",
+      "Third-party attestation (accountant's sworn statement) is a proof device for lifestyle claims that would otherwise be unledgerable.",
+      "The 1979 revision added testimonials: proof grows as the control ages.",
+      "Our standard would require every lifestyle number to carry a ledger ID; the sworn statement is the model for how such claims get a carrier."
+    ],
+    "notes": "Full ad text circulates in swipe files (advertisingcopyswipes.com link on Warrior Forum) but was not fetched; excerpt is the headline plus the opening quoted by The Essence."
+  },
+  {
+    "id": "controls_sales_letters-06",
+    "title": "What everybody ought to know...About This Stock And Bond Business",
+    "author_or_company": "Louis Engel for Merrill Lynch, Pierce, Fenner & Beane",
+    "format": "advertorial",
+    "market": "Retail investing education; Americans who do not understand the stock market",
+    "funnel_position": "lead generation (free booklet reprint) for a brokerage",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/about-this-stock-bond-louis-engel",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "What everybody ought to know...About This Stock And Bond Business",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "1",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a free educational booklet (and a brokerage relationship) to people intimidated by Wall Street on the promise that the stock and bond business can be explained plainly, because the ad itself delivers 6,540 words of that explanation before asking for anything.",
+      "hook": "A full newspaper page of plain-language questions and answers about stocks and bonds with no sales pitch.",
+      "mechanism": "Education as demonstration: the ad is the product sample; the booklet reprint is the lead capture.",
+      "big_idea": "A brokerage that teaches you the business earns the right to handle your money.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Free booklet reprint offered at the very end of the page.",
+      "voice_notes": "Explanatory, patient, question-led subheads; the longest single-page ad on record (6,540 words per swiped.co; 'close to 7,000' per A Wealth of Common Sense).",
+      "length_words_est": 6540
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "First ran New York Times, Oct 19 1948; swiped.co says it ran 1948-1965 and drew 'over 10,000 responses' for the booklet; A Wealth of Common Sense reports Merrill said it received 'more than 3 million responses' over its life. Figures conflict; the multi-year national run is consistent across sources.",
+      "source_url": "https://awealthofcommonsense.com/2018/08/the-first-modern-investing-advertisement/"
+    },
+    "losing_variants": [
+      {
+        "description": "A later 5-column variation used a different set of questions (swiped.co).",
+        "result": "Not reported."
+      }
+    ],
+    "lessons": [
+      "Long copy that educates an unaware market can run for 17 years when the education is the demonstration.",
+      "Put the offer last when the reader's problem is ignorance and the ad is the cure; the ask is tiny (a free reprint).",
+      "Question-form subheads make a 6,500-word page skimmable."
+    ],
+    "notes": "Body copy not transcribed on fetched pages; only the headline is verbatim."
+  },
+  {
+    "id": "controls_sales_letters-07",
+    "title": "At 60 miles an hour the loudest noise in the new Rolls-Royce comes from the electric clock",
+    "author_or_company": "David Ogilvy (Ogilvy, Benson & Mather) for Rolls-Royce",
+    "format": "other",
+    "market": "Luxury automobiles, US buyers",
+    "funnel_position": "brand/dealer print advertising",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "At 60 miles an hour the loudest noise in the new Rolls-Royce comes from the electric clock",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a Rolls-Royce to affluent Americans who know the name but not the reasons on the promise that it is the best car in the world, because thirteen specific engineering facts, lifted from a British motor magazine's test, prove it.",
+      "hook": "A quoted test fact: at 60 mph the loudest noise is the electric clock.",
+      "mechanism": "Engineering specifics (the car's testing and construction process) presented as numbered facts.",
+      "big_idea": "Quality you can hear (or not hear).",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor"
+      ],
+      "close": "Price stated plainly with a dealer invitation (per the companion '$13,550' ad in the campaign).",
+      "voice_notes": "Dry, factual, numbered points, three-column long copy beside a large photo; no adjectives of praise.",
+      "length_words_est": 700
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "swiped.co: sales rose 50 percent in 1958 over 1957; campaign ran 1958-1962 in The New Yorker and major-city newspapers; budget $50,000; Ogilvy wrote 26 headlines and six agency writers picked this one. Journal of Antiques and Encyclopedia.com repeat the 50% figure (Encyclopedia.com gives a $25,000 cost).",
+      "source_url": "https://swiped.co/file/rolls-royce-ad-by-david-ogilvy/"
+    },
+    "losing_variants": [
+      {
+        "description": "25 alternative headlines written by Ogilvy and judged by six writers (not split-tested).",
+        "result": "Rejected in judgment, not in the market."
+      }
+    ],
+    "lessons": [
+      "A proclamation lead built on a verifiable fact from a named third party is a proof element in the headline.",
+      "Numbered specifics beat superlatives for product-aware luxury buyers; precision matches the evidence.",
+      "Headline selection by panel is not a test; record it as judgment, not a result."
+    ],
+    "notes": "Body copy not transcribed on the fetched page."
+  },
+  {
+    "id": "controls_sales_letters-08",
+    "title": "Vision Break-through (BluBlocker)",
+    "author_or_company": "Joseph Sugarman, JS&A",
+    "format": "advertorial",
+    "market": "Consumer sunglasses sold by mail/catalog",
+    "funnel_position": "one-step direct sale",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/vision-break-through-blublocker-ad-by-joe-sugarman/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Vision Break-through. When I put on the pair of glasses what I saw I could not believe. Nor will you.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "1",
+      "lead_type": "story",
+      "argument_sentence": "This sells BluBlocker sunglasses to people who think all sunglasses are alike on the promise that the world looks sharper and clearer through them, because the writer narrates his own first look and explains why blocking blue light does it.",
+      "hook": "First-person demonstration: 'what I saw I could not believe. Nor will you.'",
+      "mechanism": "Blue-light blocking makes objects appear sharper; conventional sunglasses let harmful blue light through.",
+      "big_idea": "A pair of sunglasses that changes how you see, not just how you look.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "price_anchor"
+      ],
+      "close": "30-day return if the wearer does not notice a clear, immediate difference in vision.",
+      "voice_notes": "Sugarman's 'slippery slide' editorial style: short first sentence, personal narrative, comparison to expensive eyewear (frame, hinges), curiosity subheads.",
+      "length_words_est": 900
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "swiped.co: 'one of the BluBlocker ads that helped Joe Sugarman sell 20 million pairs'; ran 1987. The 20-million figure covers the whole BluBlocker business (print, catalog and infomercial) and comes from Sugarman and obituaries, not audited records.",
+      "source_url": "https://swiped.co/file/vision-break-through-blublocker-ad-by-joe-sugarman/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Demonstration leads can be narrated: a first-person 'what I saw' substitutes for a visual demo in print.",
+      "Mechanism (blue light) is introduced after the experience, not before; the reader feels, then learns why.",
+      "Guarantee wording is denominated in the promised experience ('a clear, immediate difference'), not a generic refund."
+    ],
+    "notes": "Price not stated on the fetched page."
+  },
+  {
+    "id": "controls_sales_letters-09",
+    "title": "Pepsodent: A new era in teeth protection (film campaign, 1920)",
+    "author_or_company": "Claude C. Hopkins, Lord & Thomas, for The Pepsodent Company",
+    "format": "advertorial",
+    "market": "Consumer dentifrice; general magazine readers (Picture-Play Magazine, 1920)",
+    "funnel_position": "free 10-day sample coupon driving retail trial",
+    "traffic": "cold",
+    "source_url": "https://lantern.mediahist.org/catalog/pictureplaymagaz12unse_0287",
+    "rights_status": "public_domain",
+    "excerpt": "A new era in teeth protection. These new discoveries mark a new era in teeth cleaning. Tooth beauty comes through removing the cloudy film coat.",
+    "full_text": "Advertising Section \n81 \nA new era in teeth protection \nThese new discoveries mark a new era in teeth cleaning. Tooth beauty comes . through removing the cloudy him coat. But that also means vastly more. It means safer, cleaner teeth. And it doubtless will mean, in the years to come, a vast reduction in tooth troubles. \nDentists everywhere are urging people to adopt this new protection. \nWhy Teeth Glisten \nMillions of Them Now \nAll Statements Approved by High Dental Authorities \nYou see glistening teeth in every circle now. For millions of teeth are being cleaned in a new way. They are not only whiter, but cleaner and safer. And leading dentists everywhere are urging this method's adoption. \nA ten-day test, which costs 3-011 nothing, will show what it means to you. \nTo end the film \nThe purpose is to end the film — the cause of most tooth troubles. \nFilm is that viscous coat which you feel with your tongue. It is ever-present, everforming. It clings to teeth, enters crevices and stays. \nIt is that film-coat which discolors, not the teeth. Film is the basis of tartar. It holds food substance which ferments and forms acid. It holds the acid in contact with the teeth to cause decay. \nMillions of germs breed in it The}', with tartar, are the chief cause of pyorrhea. \nThe ordinary tooth paste does not dissolve film. So brushing has left much of it intact. Millions of wellbrushed teeth, on this account, dis\ncolor and decay. Few people escape tooth troubles, and it is largely because of that film. \nNow a combatant \nDental science, knowing these facts, has long sought a film combatant. It has now been found. Convincing clinical and laboratory tests have proved it beyond question. \nThe method is embodied in a dentifrice called Pepsodent. And this tooth paste in all ways meets modern requirements. Millions of people have already tried it, and the results you see on every hand show what it means to teeth. \nThe vital facts \nPepsodent is based on pepsin, the digestant of albumen. The film is albuminous matter. The object of Pepsodent is to dissolve it, then to day by day combat it. \nBut pepsin must be activated, and the usual agent is an acid harmful to the teeth. So this method long seemed barred. Now science has found a harmless activating method, so active pepsin can be every clay applied. \nPepsodent accomplishes two other great results. But its all-important quality is this action on the film. \nMark the results in ten days \nOne cannot question the Pepsodent effects. They are too conspicuous. \nSend the coupon for a 10-Day Tube. Note how clean the teeth feel after using. Mark the absence of the viscous film. See how the teeth whiten as the film-coat disappears. \nCompare the results with results you get now. Then read the reasons for them. After such a test, neither you nor yours will be content with old methods of teeth cleaning. Cut out the coupon now. \n■^■^ — I— PAT. OFF. I REG. U.S. m I ■» f ■ Jh.HBMMiUJ.llM JWMijaMBMKteiai^mB \nThe New-Day Dentifrice \nA scientific film combatant, now advised for daily use by leading dentists everywhere. In three great ways it meets modern requirements. Druggists supply the large tubes. \nj 10-DAY TUBE FREE 1 \nI THE PEPSODENT COMPANY, \n;j Dept. 373, 1104 S. Wabash Ave., Chicago, III. \nj Mail 10-Day Tube of Pepsodent to \nI I \ni s \nI I \n1 1 \nf ONLY ONE TUBE TO A FAMILY \\",
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "1",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells Pepsodent to people who do not think about their teeth on the promise of whiter, safer teeth, because a film they can feel with their tongue causes discoloration and decay and only a pepsin-based paste dissolves it.",
+      "hook": "A proclamation of a new era, then 'Why Teeth Glisten: Millions of Them Now'.",
+      "mechanism": "Two-part: film (albuminous, ever-forming, causes tartar, acid and decay) is the enemy; pepsin, newly made safe to activate, dissolves it.",
+      "big_idea": "The film on your teeth, not your teeth, is what looks dingy and causes trouble; you can end it in ten days free.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "'Mark the results in ten days': send the coupon for a free 10-Day Tube, compare with current results, 'Cut out the coupon now'; one tube to a family.",
+      "voice_notes": "Hopkins' reason-why style: short paragraphs, 'All Statements Approved by High Dental Authorities', every claim followed by a because; no adjectives of praise.",
+      "length_words_est": 650
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Duhigg (Power of Habit, Slate excerpt): demand surged about three weeks after the first ads; within a decade Pepsodent was among the top-selling toothpastes worldwide and daily brushing went from rare to a ritual for more than half the US population; Hopkins wrote he 'made for myself a million dollars on Pepsodent'. The film theme ran unchanged in substance from at least 1920 (this ad) to 1927 (record 10).",
+      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Name an enemy the reader can verify with their own body (feel the film with your tongue) and the mechanism proves itself.",
+      "Authority as a standing line ('All Statements Approved by High Dental Authorities') lets every claim carry a carrier without footnotes.",
+      "A free trial framed as a test with instructions ('Mark the results in ten days') converts an unaware market without price talk."
+    ],
+    "notes": "Full text is Lantern OCR of a 1920 US magazine page (public domain); minor OCR errors left as scanned. Hopkins' authorship of the Pepsodent campaign is documented (Wikipedia, Duhigg); individual ad attribution is to his agency."
+  },
+  {
+    "id": "controls_sales_letters-10",
+    "title": "Pepsodent: Run your tongue across your teeth (Film on Teeth and Your Smile, 1927)",
+    "author_or_company": "Lord & Thomas (Claude C. Hopkins campaign) for The Pepsodent Company",
+    "format": "advertorial",
+    "market": "Consumer dentifrice; women readers of Motion Picture Magazine, 1927",
+    "funnel_position": "free 10-day sample coupon driving retail trial",
+    "traffic": "cold",
+    "source_url": "https://lantern.mediahist.org/catalog/motionpicturemag33brew_0097",
+    "rights_status": "public_domain",
+    "excerpt": "Run your tongue across your teeth. You will feel film; a slippery sort of coating. That film is largely charged by dental authorities with many tooth and gum disorders.",
+    "full_text": "ILLUSTRATED \nBy \nWALTER BIGGS \n^Jcff \ngue teeth. \nTj\\ UN your tong \n|9c across vour tee \n[WV You wiU feel \nfilm ; a slippery sort of coating. That film is largely charged by dental authorities with many tooth and gum disorders. \nIt is said to foster decay. To make otherwise clear teeth look dull and lustreless. To invite gum disorders, including pyorrhea. \nOrdinary brushing has failed to combat it. That is why, largely on dental advice, thinking people are widely adopting a new way in tooth and gum care, a way embodied in the special film-removing dentifrice called Pepsodent. \nNoiv an Effective Film Combatant \nFor years dental science sought ways to fight film. Clear teeth and healthy gums come only when film is constantly combated — removed every day from the teeth. \nFilm was found to cling to teeth ; to get into crevices and stay; to hold in contact with teeth food substances which fermented and fostered the acids of decay. \nFilm was found to be the basis of tartar. Germs by the millions breed in it. And they, with tartar, are the chief cause of pyorrhea and most gum disorders. \nThus there was a universal call for an effective film-removing method. Ordinary brushing was found ineffective. Now two effective combatants have been found, approved by high dental authority and embodied in the filmremoving tooth paste called Pepsodent. \nCurdles and Removes Film — Firms the Gums \nPepsodent acts first to curdle the film. Then it thoroughly removes \nFilm on Teeth and Your Smile \nModern dental science largely advises that the film on teeth — to which many tooth and gum disorders, and most dull \"off-color\" teeth, are attributed — be combated daily in this way \nThe art <>f smiling charmingly is th< art of i in in,/ propt \nteeth. That u <u»hy Pepsodent, urged by dental authorities for lis unique therapeutic and prophylactu properties, is also universally /■/./ perts, these .i<i\\<. neat the top of the list of modern beauty aids. \n^ \nthe film in gentle safety to enamel. \nAt the same time, it acts to firm the gums — Pepsodent provides, tor this purpose, the most recent dental findings in gum protection science kno\\\\> today. Pepsodent also multiplies the alkalinity of the saliva. And thus aids in neutralizing mouth acids as they form. \nIt multiplies the starch digestant of the saliva. And thus combats starch deposits which might otherwise ferment and form acids. No other method known to present-day science embodies protective agents like tho-,e in Pepsodent. \nPlease Accept Pepsodent Test \nSend the coupon for a 10-day tube. Brush teeth this way for 10 days. Note how thoroughly film is removed. The teeth gradually lighten as film coatThen for 10 nights massage the gums with Pepsodent, the quality dentifrice, using your finger tips; the gums then should start to firm and harden. \nAt the end of that time, we believe you will agree, that next to regular dental care, Pepsodent provides the utmost science has discovered for better tooth and gum protection. \nFREE — Mail coupon for 10-day tube to The Pepsodtm Company, Dept. 995, 1104 S. Wabr.sh Ave.. Chicago, 111., U. S. A. Only one tube to a family. \nName . \nAddress \nCanadian Office and Laboratories: 191 George St.. Toronto, Canada. London Office: 42 Southward Bridge Rd., London, S. E. 1. The Pepsodent Co. (Australia). Ltd., 137 Clarence St.. Sydney. N. S. W. 2209",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells Pepsodent to women who want a charming smile on the promise of film-free, lighter teeth and firmer gums, because the film they can feel right now is what dulls teeth and only a film-removing dentifrice curdles and removes it.",
+      "hook": "An instruction the reader obeys instantly: run your tongue across your teeth, feel the film.",
+      "mechanism": "Film curdled then removed 'in gentle safety to enamel'; gum firming; multiplied alkalinity and starch digestant of saliva.",
+      "big_idea": "The art of smiling charmingly is the art of film-free teeth.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "headline"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "'Please Accept Pepsodent Test': 10-day tube free, brush 10 days, massage gums 10 nights, 'we believe you will agree'; one tube to a family.",
+      "voice_notes": "Imperative opening, dental-authority attribution on every claim, beauty angle (illustrated by Walter Biggs) layered over the health mechanism.",
+      "length_words_est": 600
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "Same campaign premise as the 1920 ad seven years on; Duhigg quotes the 'Just run your tongue across your teeth' line as the campaign's signature; Pepsodent among the top-selling toothpastes worldwide within a decade of the campaign (Slate excerpt).",
+      "source_url": "https://www.slate.com/articles/arts/culturebox/2012/02/an_excerpt_from_charles_duhigg_s_the_power_of_habit_.html"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "The strongest problem lead is a self-administered demonstration: the reader generates the evidence.",
+      "Seven years into a control, the mechanism was expanded (gums, saliva) while the enemy stayed the same; add proof, do not change the idea.",
+      "The same product can carry a health argument and a beauty argument in one piece when both sit on one mechanism."
+    ],
+    "notes": "Full text is Lantern OCR (public domain, 1927); the headline is partly garbled in the scan and reconstructed in the excerpt from the legible body line and Duhigg's quotation."
+  },
+  {
+    "id": "controls_sales_letters-11",
+    "title": "They Laughed When I Sat Down At The Piano But When I Started To Play!",
+    "author_or_company": "John Caples, Ruthrauff & Ryan, for the U.S. School of Music",
+    "format": "advertorial",
+    "market": "Home-study music lessons by mail",
+    "funnel_position": "lead generation (free booklet and demonstration lesson), then course sale",
+    "traffic": "cold",
+    "source_url": "https://marchingagainstphilip.wordpress.com/2010/04/26/they-all-laughed-when-i-sat-down-at-the-piano-but-when-i-started-to-play/",
+    "rights_status": "public_domain",
+    "excerpt": "They Laughed When I Sat Down At The Piano But When I Started To Play! Arthur had just played \"The Rosary\". The room rang with applause. I decided that this would be a dramatic moment for me to make my debut.",
+    "full_text": "They All Laughed When I Sat Down At The Piano … But When I Started To Play!~\n\n[Caption]\n\n“Can he really play?” a girl whispered. “Heavens no!” Arthur   exclaimed. “He never played a note in his life.”\n[Body Copy]\n\nArthur had just played “The Rosary”. The room rang with applause. I decided that this would be a dramatic moment for me to make my debut. To the amazement of all my friend, I strode confidently over to the piano and sat down.\n\n“Jack is up to his old tricks,” somebody chuckled. The crowd laughed. They were certain I couldn’t play a single note.\n\n“Can he really play?” I heard a girl whisper to Arthur.\n\n“Heavens, no!” Arthur exclaimed. “He never played a note in all his life… But just you watch him. This is going to be good.”\n\nI decided to make the most of the situation. With mock dignity I drew out a silk handkerchief and lightly dusted off the piano keys. Then I rose and gave the revolving piano stool a quarter of a turn, just as I had seen an imitator of Paderwski do in a vaudeville sketch.\n\n“What do you think of his execution?” called a voice from the rear.\n\n“We’re in favor of it!” came back the answer, and the crowd rocked with laughter.\n\n[Subhead]\n\nThen I Started To Play\n\nInstantly, a tense silence fell on the guests. The laughter died on their lips as if by magic. I played through the first few bars of Beethoven’s immortal Moonlight Sonata. I heard gasps of amazement. My friends sat breathless – spellbound!\n\nI played on and as I played I forgot the people around me. I forgot the hour, the place, the breathless listeners. The little world I lived in seemed to fade – seemed to grow dim – unreal. Only the music was real. Only the music and visions it brought me. Visions as beautiful and as changing as the wind blown clouds and drifting moonlight that long ago inspired the master composer. It seemed as if the master musician was speaking to me – speaking through the medium of music —  not in words but chords. Not in sentences but in exquisite melodies!\n\nA Complete Triumph!\n\nAs the last notes of the Moonlight Sonata died away, the room resounded with a sudden roar of applause. I found myself surrounded by excited faces. How my friends carried on! Men shook my hand –wildly congratulated me – pounded me on the back in their enthusiasm! Everybody was exclaiming with delight – plying me with rapid questions… “Jack! Why didn’t you tell us  you could play like that?” … “Where did you learn?” – “How long have you studied?” – “Who was your teacher?”\n\n“I have never ever seen my teacher,” I replied. “And just a short while ago I couldn’t play a note.”\n\n“Quit your kidding,” laughed Arthur, himself an accomplished pianist. “You’ve been studying for years I can tell.”\n\n“I have been studying only for a short while,” I insisted. “I decided to keep it a secret so that I can surprise all you folks.”\n\nThen I told them the whole story.\n\n“Have you ever heard of the U.S. School of Music?” I asked.\n\nA few of my friends nodded. “That’s a correspondence school isn’t it?” they exclaimed.\n\n“Exactly,” I replied. “They have a new simplified method that can teach you to play any instrument my mail in just a few months. “\n\nHow I Learned to Play Without a Teacher\n\nAnd then I explained for years how I longed to play the piano.\n\n“A few months ago,” I continued, “I saw an interesting ad for the U.S. School of Music – a new method of learning to play which only costs a few cents a day! The ad told how a woman had mastered the piano in her spare time at home – and without a teacher! Best of all, the wonderful new method she used, required no laborious scales – no heartless exercises – no tiresome practicing. It sounded so convincing that I filled out the coupon requesting the Free Demonstration Lesson.\n\n“The free book arrived promptly and I started in that very night to study the Demonstration Lesson. I was amazed to see how easy it was to play this new way. Then I sent for the course.\n\n“When the course arrived I found it was just as the ad said – as easy as ABC.  And, as the lessons continued they got easier and easier. Before I knew it I was playing all the pieces I liked best. Nothing stopped me. I could play ballads or classical numbers or jazz, all with equal ease! And  I never did have any special talent for music!”\n\nPlay Any Instrument\n\nYou too, can now teach yourself to be an accomplished musician – right at home – in half the usual time. You can’t go wrong with this simple new method which has already shown 350,000 people how to play their favourite instruments. Forget the old fashioned idea that you need special “talent”. Just read the list of instruments in the panel, decide which one you want to play, and the U.S. school will do the rest. And bear in mind no matter which instrument you choose, the cost in each case will be the same – just a few cents a day. No matter whether you are a mere beginner or already a good performer, you will be interested in learning this new and wonderful method.\n\nSend for Our Free Booklet and Demonstration Lesson\n\nThousands of successful students never dreamed they possessed musical ability until it was revealed to them by a remarkable “Musical Ability Test” which we send entirely without cost with our interesting free booklet.\n\nIf you are earnest about wanting to play your favourite instrument – if you really want to gain happiness and increase your popularity – send at once for the free booklet and Demonstration Lesson. No cost – no obligation. Right now we are making a Special Offer for a limited number of students. Sign and send the convenient coupon now – before it’s too late to gain the special benefits of this offer. Instruments supplied when needed, cash or credit. U.S. School of Music, 1031 Brunswick Bldg, New York City",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "story",
+      "argument_sentence": "This sells a correspondence music course to adults who always wanted to play on the promise of astonishing their friends, because a first-person story shows a man with no 'talent' doing exactly that after a few months of lessons costing a few cents a day.",
+      "hook": "Mockery at the piano stool, then the Moonlight Sonata silences the room.",
+      "mechanism": "A 'new simplified method' with no scales, exercises or tedious practice, playing real tunes from the start; 350,000 people taught.",
+      "big_idea": "Recognition: the quiet man who stuns the room.",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "lead"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "deadline_with_mechanism"
+      ],
+      "close": "Send for the free booklet and Demonstration Lesson plus a free 'Musical Ability Test'; 'Special Offer for a limited number of students'; coupon asks which instrument and whether you own one.",
+      "voice_notes": "Dialogue-driven scene, present-tense drama, then the school's voice takes over for the offer; subheads carry the story turns.",
+      "length_words_est": 1300
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Story Power Marketing: the copy 'sold mountains of home-study courses' and became one of the most copied ads ever written; Campaign (via search) reports 'a record number of coupons' in Physical Culture. Written 1925; variants ran through at least 1927 (see record 12). No dollar figures.",
+      "source_url": "https://storypowermarketing.com/the-story-behind-one-of-the-greatest-ads-ever/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A story lead works when the story is the promise enacted; the product is named only after the triumph.",
+      "The narrator is fictional: the format is teachable, but our standard requires a real, ledgered narrator; study the structure, never the invention.",
+      "Lead generation close: a free lesson plus an 'ability test' lowers the threshold for a problem-aware but doubtful reader."
+    ],
+    "notes": "1925/1926 US advertisement, public domain; the transcription on the fetched blog is used as full_text with its minor typos. swiped.co hosts a 1927 scan (swiped.co/file/they-laughed-when-i-sat-down-at-the-piano-by-john-caples/)."
+  },
+  {
+    "id": "controls_sales_letters-12",
+    "title": "They Thought I Was Dying to be Funny Until I Started to Play (U.S. School of Music, 1927)",
+    "author_or_company": "U.S. School of Music (Ruthrauff & Ryan era)",
+    "format": "advertorial",
+    "market": "Home-study music lessons by mail (Screenland magazine, 1927)",
+    "funnel_position": "lead generation (free booklet and demonstration lesson)",
+    "traffic": "cold",
+    "source_url": "https://lantern.mediahist.org/catalog/screenland15unse_0271",
+    "rights_status": "public_domain",
+    "excerpt": "They Thought I Was Dying to be Funny Until I Started to Play. Then I Gave Them the Surprise of Their Lives. THE crowd sat spellbound, fascinated by the rich full notes of Harry's violin.",
+    "full_text": "SCREENLAND \n81 \nThey Thought I Was Dying \nto be Funny \nUntil I Started to Play Then IGaVe Them the Surprise of Their lites \nTHE crowd sat spellbound — fascinated by the rich full notes of Harry's violin. Yes, it was beautiful — for Harry was a brilliant performer. Yet I could not help chuckling to myself when I thought of the surprise I had in store for them. I waited until the last ripple of applause had stopped. Then with mock dignity I arose. \n\"With your kind permission,\"' I announced, \"I shall now charm you with a piano recital.\" \nEveryone snickered, \"Does he really play I\" one girl asked. \"Yes,\" Phil laughed, 'he plays the Victrola — beautifully !\" Someone behind me whispered : \"Jim must have his little joke.\" \"How about playing Rachmaninoff's 'Prelude in C Minor,' Jim!\" another suggested. The room was in an uproar. They were sure I couldn't play a note. \n\"With studied clumsiness, I fell over the piano stool and dropped the lid on my hand. Then with all the gravity of a master pianist, I proceeded to pick out \"Chop Sticks\" with one finger! The crowd roared with laughter. This was the dramatic moment for my surprise. Dropping the mask of the clown, I struck the first sweet chords of Wagner's lovely \"The Evening Star\" from \"Tannhauser.\" \nThe laughter died on their \nPick Your \nInstrument \nPiano \n'Cello \nOrgan \nHarmony and \nViolin \nComposition \nDrums and \nSight Singing \nTraps \nUkulele \nGuitar \nHawaiian \nMandolin \nSteel Guitar \nHarp \nClarinet \nCornet \nFlute \nPiccolo \nSaxophone \nTrombone \nVoice and \nSpeech Culture \nAutomatic \nFinger Control \nPiano \nAccordion \nBanjo (5-String, Plectrum \nor \nBanjo) \nlips. The magic of my music cast a spell over everyone. As I played on with complete confidence I forgot the room — the people — everything. I was alone — lost in the sheer beauty of the immortal master's tender melodies. \nThe Thrill of My Life \nWhen the last haunting strain of the mellow notes had faded away, there was a dead silence. Had I failed 1 A roar of applause answered my question. Then I felt the thrill that comes with real success 1 \nA perfect bedlam of questions and congratulations followed from my amazed and dumbfounded friends — \"How long have you been playing?\" — \"Who was your teacher?\" — \"Where did you learn ?\" \n\"I know it is hard to believe,\" I replied happily, \"but I learned at home — and without a teacher!\" \nHow I Learned \nThey were too completely surprised to say anything so I told them the whole story. \n\"I have always wanted to play the piano. \nBut I never had a chance to take lessons when I was a youngster and as time went on I reluctantly said goodbye to my ambition to play. Then I saw an interesting ad one day. It told about a new, easy way of learning music — right at home — without a teacher. It seemed too good to be true. But I did want to play and it certainly was worth investigating as long as it didn't cost me a cent. So I sent for the Free Demonstration Lesson and Booklet. \n\"When they arrived. I was amazed to see how easy playing the piano really was — easier than I dared hope. I knew right away that I could master it. So I decided that I would send for the course and practice secretly. Then I could surprise you all.\" \nJust a Few Minutes a Day \n\"The course was as fascinating as a new game. I enjoyed every minute of it. I was playing real tunes from the start by note. Reading music was as easy as A-B-C! No weary scales, no monotonous exercises, no tiresome hours of practicing. And each lesson was easier than the last. Although I never had any \"special talent\" for music I was playing my favorites almost before I knew it. Soon I could play jazz, ballads, classical music — all with equal ease. Well, did I surprise you?\" \nYou, Too, Can Quickly Learn \nTou. too, can learn to play your favorite instrument by this remarkable easy \"at home\" method that has helped almost half a million people all over the world to increased pleasure and financial gain. And there's nothing marvelous about it. It's just a common sense practical method — so simple you don't have to know the slightest thing about music. You find your progress amazingly rapid because every step is clear and easy to understand. Just pick out the instrument you want to play. The U. S. School of Music does the rest. And its cost averages just a few cents a day! \nFree Book and Demonstration Lesson \nOur wonderful illustrated free book and our free demonstration lesson explain an about this remarkable method. They prove just how anyone can learn to play his favorite instrument in almost no time and for just a fraction of what old slow methods cost. \nIf you really want to learn to play — if new friends, good times, social popularity and increased income appeal to you — take this opportunity to make your dreams come true. Sign the coupon and send it before it's too late. Instruments supplied when needed, cash or credit. U. S. School of Music, 3227 Brunswick Bldg.. New York. \nU. S. School of Music, \n3227 Brunswick Bldg.. New York City. \nPlease send me your free book, \"Music \"Lessons in Tour Own Home,\" with introduction by Dr. Frank Crane. Demonstration Lesson and particulars of your Special Offer. I am interested in the following course: \nHave you above instrument? \nName \nAddress — \nCity State..",
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "story",
+      "argument_sentence": "This sells the U.S. School of Music course to adults who gave up on music on the promise of astonishing friends who think you cannot play, because a first-person story shows the surprise and then explains the easy home method that 'almost half a million people' have used.",
+      "hook": "The clown at the piano picks out 'Chop Sticks' with one finger, then strikes the first chords of Wagner.",
+      "mechanism": "At-home method, no scales or exercises, playing real tunes by note from the start, a few cents a day.",
+      "big_idea": "The surprise of their lives (recognition), same as record 11 with the comic setup pushed further.",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "lead"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "deadline_with_mechanism"
+      ],
+      "close": "Free book and demonstration lesson; 'send it before it's too late'; coupon with instrument list and 'Have you above instrument?'",
+      "voice_notes": "Same template as the 1925 ad with a new scene; the social-proof count rose from 350,000 to 'almost half a million'.",
+      "length_words_est": 1000
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "A 1927 sibling of the 1925 control, showing the story template still running two years on with the proof count updated; no response figures in the fetched source.",
+      "source_url": "https://lantern.mediahist.org/catalog/screenland15unse_0271"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Controls get re-skinned: new scene, same argument, same offer, updated numbers.",
+      "Precision tracks evidence: the student count was revised upward rather than rounded to 'millions'.",
+      "Keep this and record 11 as a matched pair for teaching 'variation on a control'."
+    ],
+    "notes": "Lantern OCR (public domain). The instrument list is interleaved in the OCR; left as scanned."
+  },
+  {
+    "id": "controls_sales_letters-13",
+    "title": "Do You Make These Mistakes in English?",
+    "author_or_company": "Maxwell Sackheim (Ruthrauff & Ryan) for Sherwin Cody School of English; later managed by Victor Schwab",
+    "format": "advertorial",
+    "market": "Home-study English course for adults embarrassed by their grammar",
+    "funnel_position": "lead generation (free booklet) for a correspondence course",
+    "traffic": "cold",
+    "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody",
+    "rights_status": "public_domain",
+    "excerpt": "Do You Make These Mistakes in English? Every time they talk or write, many people show themselves lacking in the essential points of English.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells Sherwin Cody's course to adults who fear their English betrays them on the promise of speaking and writing correctly in 15 minutes a day, because a 'scientifically tested' self-correcting invention fixes the specific mistakes the ad names.",
+      "hook": "A question that makes the reader check themselves against a list of common errors.",
+      "mechanism": "The 100% Self-Correcting Course: a patented method that finds and corrects your own mistakes, 15 minutes a day.",
+      "big_idea": "Your mistakes are showing, and a short daily habit removes them.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "lead"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Free booklet by coupon (lead-generation close).",
+      "voice_notes": "Direct question headline, list of errors the reader can self-check, Cody's name as authority; ran in pulps, slicks, comics and newspapers.",
+      "length_words_est": 900
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "Wikipedia: the campaign ran for more than 40 years; over 150,000 students bought the course from 1918. Victor Schwab compared this headline against 'How to Speak and Write Masterly English' over a ten-year period; the 'mistakes' headline drew responses at nearly three times the rate.",
+      "source_url": "https://en.wikipedia.org/wiki/Sherwin_Cody"
+    },
+    "losing_variants": [
+      {
+        "description": "Headline 'How to Speak and Write Masterly English' (promise-of-mastery framing) run against the control over ten years.",
+        "result": "Drew roughly one-third the response of 'Do You Make These Mistakes in English?' (Schwab, as reported by Wikipedia)."
+      }
+    ],
+    "lessons": [
+      "Naming the reader's specific mistakes (problem lead with self-diagnosis) outpulled a mastery promise 3:1 over a decade: problem-aware markets respond to the problem in their own terms.",
+      "A long-running control's mechanism was a named invention ('100% Self-Correcting'), not a tone.",
+      "This is one of the few pre-war controls with a documented loser; use the pair in the rubric."
+    ],
+    "notes": "The original 1919 ad is public domain; no full text fetched (full_text null). Excerpt uses the headline and Wikipedia's quoted lead fragment. Battistella (OUP 2008) is the authoritative history."
+  },
+  {
+    "id": "controls_sales_letters-14",
+    "title": "To Men Who Want To Quit Work Some Day",
+    "author_or_company": "John Caples for Phoenix Mutual Life Insurance",
+    "format": "advertorial",
+    "market": "Retirement income plans; working men",
+    "funnel_position": "lead generation for an insurance retirement plan",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/quit-work-ad-john-caples/",
+    "rights_status": "public_domain",
+    "excerpt": "To Men Who Want To Quit Work Some Day",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a Phoenix Mutual retirement income plan to working men on the promise that they can quit work 'some day' with a guaranteed monthly income, because a specific plan puts a number and a date on the dream.",
+      "hook": "A call-out headline ('To Men Who...') softened by 'Some Day', beside a photo of a man fishing.",
+      "mechanism": "A retirement income plan paying a stated monthly sum from a stated age (copy reused from an earlier winning ad placed mid-body).",
+      "big_idea": "Not working, pictured.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "headline"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Coupon for the free retirement plan booklet (per Caples' account of the campaign; not transcribed on the fetched page).",
+      "voice_notes": "Caples' plain style; headline borrowed the 'men who' construction from Bruce Barton.",
+      "length_words_est": 500
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "swiped.co: ran 1929; 'the first ad was the most successful ad he created for them'. An earlier 'Retirement Income Plan' ad had pulled best but declined from running so often; this ad reused its elements. No figures.",
+      "source_url": "https://swiped.co/file/quit-work-ad-john-caples/"
+    },
+    "losing_variants": [
+      {
+        "description": "The earlier 'Retirement Income Plan' ad, the previous control, worn out by frequency.",
+        "result": "Declining response (reported by Caples via swiped.co); replaced by this ad."
+      }
+    ],
+    "lessons": [
+      "Call-out plus qualifier ('Some Day') widens the audience without weakening the promise.",
+      "Controls wear out from frequency, not from being wrong; the replacement kept the proof paragraph and changed the lead.",
+      "An image that embodies the promise (fishing) does the work of a paragraph."
+    ],
+    "notes": "1929 US ad, public domain; body copy not transcribed on fetched page."
+  },
+  {
+    "id": "controls_sales_letters-15",
+    "title": "Men Who Know It All Are Not Invited To Read This Page",
+    "author_or_company": "Bruce Barton (BDO/BBDO) for Alexander Hamilton Institute",
+    "format": "advertorial",
+    "market": "Business education by correspondence; ambitious men in routine jobs",
+    "funnel_position": "lead generation for the Institute's course ('Forging Ahead in Business' booklet)",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/know-it-all-ad-bruce-barton/",
+    "rights_status": "public_domain",
+    "excerpt": "Men Who Know It All Are Not Invited To Read This Page",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "2",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells the Alexander Hamilton Institute course to men stuck in mediocre jobs on the promise of forging ahead in business, because the ad disqualifies the complacent and allies itself with the dissatisfied reader who knows he still has something to learn.",
+      "hook": "An exclusion: know-it-alls are not invited.",
+      "mechanism": "Organized business training by mail, the same knowledge the men at the top have (basis of the later WSJ 'two young men' parable per swiped.co).",
+      "big_idea": "The willingness to learn is what separates men who move up from men who stay.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "headline"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Free booklet 'Forging Ahead in Business' by coupon.",
+      "voice_notes": "Barton's sermon-like cadence, empathy with the reader's dissatisfaction, flattering by exclusion.",
+      "length_words_est": 600
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co: 'very successful'; the Institute campaign ran 1923-1934 (over a decade); these ads were the basis for Martin Conroy's WSJ letter, 'often called the most profitable sales letter ever'. No figures.",
+      "source_url": "https://swiped.co/file/know-it-all-ad-bruce-barton/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A disqualifier headline is a proclamation lead that qualifies the reader by self-image.",
+      "Correspondence-school argument structures survived for 80 years across products: this ad, then the WSJ letter.",
+      "Lead-gen with a titled booklet gives the reader a reason to act before the course is sold."
+    ],
+    "notes": "1923 US ad, public domain; body copy not transcribed on fetched page."
+  },
+  {
+    "id": "controls_sales_letters-16",
+    "title": "To People Who Want to Write But Can't Get Started",
+    "author_or_company": "Newspaper Institute of America (predecessor of Famous Writers School)",
+    "format": "advertorial",
+    "market": "Home-study writing course; aspiring writers",
+    "funnel_position": "lead generation for a correspondence course",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/getstarted-writing-ad/",
+    "rights_status": "unknown",
+    "excerpt": "To People Who Want to Write But Can't Get Started",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells the NIA writing course to people who want to write but never begin on the promise that the Institute's method gets them started and paid, because rotating testimonials show people exactly like the reader who did.",
+      "hook": "A call-out naming the exact stuck state: wanting to write but not starting.",
+      "mechanism": "Newspaper-style training by mail that 'gets you started' (details not transcribed).",
+      "big_idea": "The block is the problem, not the talent.",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Free writing aptitude test / booklet by coupon (standard for the category; not transcribed).",
+      "voice_notes": "Qualification framing ('selective'), varied testimonial casting across age and gender in each insertion.",
+      "length_words_est": 700
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co: the Institute's best-performing ad, ran 1936-1953 and in variations for '2-3 decades'; no response figures.",
+      "source_url": "https://swiped.co/file/getstarted-writing-ad/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Name the stuck state, not the dream, for a problem-aware market.",
+      "Rotate proof while keeping the headline: testimonials matched to segments extend a control's life.",
+      "Qualification language ('selective') raises perceived value of a free offer."
+    ],
+    "notes": "1936 US ad; copyright status depends on renewal, so marked unknown. Body copy not transcribed on fetched page."
+  },
+  {
+    "id": "controls_sales_letters-17",
+    "title": "Tarbell System magic course: the \"Pledge to Secrecy\" ads",
+    "author_or_company": "Tarbell System Inc. (Harlan Tarbell)",
+    "format": "advertorial",
+    "market": "Magic instruction by mail; hobbyists and would-be performers",
+    "funnel_position": "lead generation / direct sale of a correspondence course",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/magic-secrets-advertisement/",
+    "rights_status": "public_domain",
+    "excerpt": "Magic \"Pledge To Secrecy\" ad (Tarbell System): buyers must sign a pledge never to reveal the secrets they learn. (Headline not transcribed on the fetched page.)",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "2",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a magic course to hobbyists on the promise of real professional secrets, because the buyer must sign a pledge of secrecy, which makes the secrets feel guarded and valuable.",
+      "hook": "You must pledge secrecy before you can learn.",
+      "mechanism": "Exclusivity as the mechanism of value: a contract not to share.",
+      "big_idea": "Secrets worth protecting are worth buying.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "bonus"
+      ],
+      "close": "Not transcribed.",
+      "voice_notes": "Secondary appeals of impressing friends and earning money from a hobby.",
+      "length_words_est": 500
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co: ran 1926-1931, 'ran for 5+ years'; no response figures.",
+      "source_url": "https://swiped.co/file/magic-secrets-advertisement/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A secret lead can be made literal (a pledge) and the device is the proof of value.",
+      "Exclusivity mechanics transfer: swiped.co links the device to a 2006 letter that sold $1.4 million.",
+      "Hobby markets buy identity (performer) as much as skill."
+    ],
+    "notes": "1926-1930 insertions are public domain; the 1931 insertion is not yet. No full text fetched."
+  },
+  {
+    "id": "controls_sales_letters-18",
+    "title": "Dow Theory Forecasts $1 trial subscription ads",
+    "author_or_company": "Dow Theory Forecasts",
+    "format": "other",
+    "market": "Stock-advice newsletter; retail investors",
+    "funnel_position": "front-end $1 trial",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/dollar-stock-advice-ads/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "$1 Stock Advice Ads from Dow Theory Forecasts (headline variants tested trial length, e.g. 4 or 8 weeks for $1; the amount of advice, e.g. 650 stocks; and a specific end date). Verbatim headline not transcribed on the fetched page.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a trial of a stock-advice newsletter to investors who already buy advice on the promise of weeks of recommendations for $1, because the price removes risk and a money-back guarantee removes the rest.",
+      "hook": "$1 for 4 or 8 weeks of stock recommendations.",
+      "mechanism": "Dow Theory analysis delivered weekly; features and volume of advice listed.",
+      "big_idea": "Try the advice for a dollar.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor",
+        "guarantee_denominated",
+        "deadline_with_mechanism",
+        "bonus"
+      ],
+      "close": "Coupon with $1; money-back guarantee; extra inclusions.",
+      "voice_notes": "Offer-first space ads with a repeated formula; headline is the offer.",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co: ran frequently 1967-1974 with a similar formula; of three headline approaches (trial duration, amount of advice, end-date urgency) the duration-based '4/8 weeks' headline ran most often, which swiped.co reads as the best performer. No response figures.",
+      "source_url": "https://swiped.co/file/dollar-stock-advice-ads/"
+    },
+    "losing_variants": [
+      {
+        "description": "Headline approaches based on the amount of advice (e.g. '650 stocks') and on a specific end date.",
+        "result": "Ran less often than the trial-duration headline (frequency, not a reported test)."
+      }
+    ],
+    "lessons": [
+      "For a solution-aware market the offer lead is correct: product, price and deal in line one.",
+      "Frequency of insertion is weak evidence of a winner; record it as such.",
+      "Dollar trials pair with denominated guarantees, not with 'risk-free' adjectives."
+    ],
+    "notes": "Dow Theory Forecasts still publishes; ads shown only as images on the source page."
+  },
+  {
+    "id": "controls_sales_letters-19",
+    "title": "Motley Fool \"The Death of ...\" promotions",
+    "author_or_company": "The Motley Fool",
+    "format": "landing_page",
+    "market": "Stock newsletter subscriptions; retail investors on display and native traffic",
+    "funnel_position": "cold acquisition landing pages / long-form promos",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/motleyfool-deathof-strategy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "\"Death Of\" copy strategy (swiped.co label): headlines follow the pattern 'The Death of [industry, company or practice]' with a supporting sentence; verbatim headline not transcribed on the source page.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a Motley Fool newsletter to investors anxious about missing the next big shift on the promise of the stock that profits from an industry's death, because citations from major publications make the death credible and the pick is withheld until you subscribe.",
+      "hook": "A bold declaration that something familiar is ending.",
+      "mechanism": "A disruptive company or trend ending the old way; the specific pick is the gated secret.",
+      "big_idea": "Something you rely on is dying; here is who profits.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "deadline_with_mechanism",
+        "bonus",
+        "guarantee_denominated"
+      ],
+      "close": "Act quickly to capture the pick before the opportunity passes; action link to the full offer.",
+      "voice_notes": "Newsy, declarative, heavy on named-publication citations; the pick is teased, never revealed.",
+      "length_words_est": 2500
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co tags the strategy 'Control' and notes Motley Fool 'has been using this type of promotion for many years now', with ads spanning 2011-2015. No conversion data.",
+      "source_url": "https://swiped.co/file/motleyfool-deathof-strategy/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A proclamation lead for a stage-4 market: the mechanism (disruption) is the news, the product is the key to it.",
+      "Authority citations placed in the lead make a bold claim admissible; our ledger would require each citation to be real and linked.",
+      "Withholding the pick is the open loop that carries a long page."
+    ],
+    "notes": "Companion swipes: Motley Fool 'List-Based' headlines (swiped.co/file/motleyfool-number-headlines/, also tagged Control) for opt-in pages."
+  },
+  {
+    "id": "controls_sales_letters-20",
+    "title": "How modern Chinese Medicine helps Burn Disease Out of Your Body",
+    "author_or_company": "Eugene Schwartz (self-published promotion for the author's book)",
+    "format": "sales_letter",
+    "market": "Health self-help book by mail; older readers with chronic conditions",
+    "funnel_position": "one-step direct sale (direct mail and print)",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/burn-disease-ad-by-eugene-schwartz",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "How modern Chinese Medicine helps Burn Disease Out of Your Body ... Laying Flat on Your Back, Using Nothing More Than the Palm of Your Hand",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a book of massage techniques to people with heart disease, obesity and other chronic ailments on the promise of burning disease out of the body, because an ancient-medicine mechanism (palm massage lying flat) is simple enough to believe and try.",
+      "hook": "Burn disease out of your body lying on your back with the palm of your hand.",
+      "mechanism": "Chinese medicine massage performed lying flat using only the palm.",
+      "big_idea": "A disease cure you perform on yourself, for free, after one book.",
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "headline"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
+      "close": "Send for the book (details not transcribed).",
+      "voice_notes": "Schwartz: 'as crude as can be'; the headline is the author's words; Schwartz wrote seven paragraphs.",
+      "length_words_est": 1500
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "swiped.co annotation: written 1979, ran 1981 onward 'for about two decades in direct mail and print'; Schwartz said mailings in one January exceeded all mailings in the ad's first eight years; the author was paid 'well over a million dollars' in royalties (Schwartz interview quoted on the page).",
+      "source_url": "https://swiped.co/burn-disease-ad-by-eugene-schwartz"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A stage-4 health market bought a mechanism-in-the-headline promise; the mechanism, not the result, was the news.",
+      "A control can keep scaling for years after launch (one month exceeding eight years) when the list universe is large.",
+      "Compliance: 'burn disease out of your body' is a claim our factual review would rewrite as line, rule, rewritten line; study the structure, not the claim."
+    ],
+    "notes": "Body copy not transcribed; Schwartz's own account of the piece is on the source page."
+  },
+  {
+    "id": "controls_sales_letters-21",
+    "title": "Now! Read 300 Business Magazines in 30 Minutes! (Boardroom Reports)",
+    "author_or_company": "Eugene Schwartz for Boardroom Reports",
+    "format": "sales_letter",
+    "market": "Business newsletter subscription; executives and managers",
+    "funnel_position": "cold acquisition direct mail, free-issue trial",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/boardroom-reports-eugene-schwartz/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Now! Read 300 Business Magazines in 30 Minutes!",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells Boardroom Reports to busy executives drowning in reading on the promise of absorbing 300 business magazines in 30 minutes, because the newsletter's editors digest them into one issue.",
+      "hook": "300 magazines, 30 minutes.",
+      "mechanism": "Editorial digest of hundreds of publications into a short newsletter.",
+      "big_idea": "Compression of information as the product.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "price_anchor",
+        "bonus"
+      ],
+      "close": "Free first issue; then 39% off, $29.95 for 23 more issues; free personal business guide.",
+      "voice_notes": "Schwartz's numerical promise headline; four-page letter.",
+      "length_words_est": 1600
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "swiped.co: 'very successful' four-page letter, ran 1988; Boardroom has sold hundreds of millions of newsletters and books since 1972. No conversion data for this letter.",
+      "source_url": "https://swiped.co/file/boardroom-reports-eugene-schwartz/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Quantified promise headlines (300 in 30) state the mechanism's output, which is the Schwartz pattern for problem-aware markets.",
+      "Free-first-issue trial then a discounted term is the classic newsletter offer structure.",
+      "Body copy not available: use for headline/offer study only."
+    ],
+    "notes": "Ten swiped.co annotations exist on the page but were not readable in the fetch."
+  },
+  {
+    "id": "controls_sales_letters-22",
+    "title": "Boardroom \"The Book of Secrets\" fascination package",
+    "author_or_company": "Mel Martin for Boardroom Inc. (Martin Edelston; Brian Kurtz account)",
+    "format": "sales_letter",
+    "market": "Consumer how-to/inside-information book sold by direct mail",
+    "funnel_position": "cold acquisition direct mail, one-step book sale",
+    "traffic": "cold",
+    "source_url": "https://realbriankurtz.substack.com/p/the-original-bullet-man",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "How to refund airlines' non-refundable ticket. How to make your car very, very hard to steal. Vitamins never to buy in a health food store. How to know when a slot machine is ready to pay off.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "3",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a book of inside information to general consumers who did not know they wanted it on the promise of specific secrets they cannot stand not to know, because every fascination names a real benefit the book delivers and the publisher vouches for the experts behind it.",
+      "hook": "Four envelope fascinations chosen for maximum curiosity (airline refunds, car theft, vitamins, slot machines).",
+      "mechanism": "The 'bloodhound' frame: the publisher hunts down experts and insiders so you don't have to; fascinations are the evidence of what was found.",
+      "big_idea": "What insiders know and never tell you, collected in one book.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "bonus"
+      ],
+      "close": "Order the book (Boardroom's standard money-back guarantee; details not in source).",
+      "voice_notes": "Fascinations as envelope teasers, subheads and body; 'What never to eat on an airplane', 'Bills it's okay to pay late' are the signature lines.",
+      "length_words_est": 2500
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "Brian Kurtz: Boardroom mailed more than 20 million names for the book, one drop of 9 million (the largest single mailing Boardroom ever did for one book); the book sold over 500,000 copies, roughly $20 million in sales. Mel Martin was Boardroom's behind-the-scenes copywriter from the late 1970s to 1994.",
+      "source_url": "https://realbriankurtz.substack.com/p/the-original-bullet-man"
+    },
+    "losing_variants": [
+      {
+        "description": "Original package for the same content titled 'Book of Checklists'.",
+        "result": "Flopped (Kurtz)."
+      },
+      {
+        "description": "Retitled package 'The Great Book of Inside Knowledge'.",
+        "result": "Performed worse than the Checklists version (Kurtz); Martin's fascination rewrite then became a major winner."
+      }
+    ],
+    "lessons": [
+      "Two documented losers show that a title/platform change, not a tweak, turned a flop into a $20M control.",
+      "Fascinations are specific, incomplete promises; each one is a claim that must be true inside the book (ledger-able).",
+      "Envelope teasers are selected, not written: pick the four highest-curiosity bullets from the body.",
+      "The publisher-as-guardian frame ('bloodhound') is a proof device for a book with no single author."
+    ],
+    "notes": "Companion: Mel Martin's 'For sports fans who know everything' ad (conversion-rate-experts.com) shows the same bullet technique without results."
+  },
+  {
+    "id": "controls_sales_letters-23",
+    "title": "Sex: A Man's Guide (Rodale) direct mail package",
+    "author_or_company": "John Carlton for Rodale Press",
+    "format": "sales_letter",
+    "market": "Men's health/sex how-to book by direct mail",
+    "funnel_position": "cold acquisition direct mail, one-step book sale",
+    "traffic": "cold",
+    "source_url": "https://www.awai.com/2003/05/john-carlton-reveals-his-secrets/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Hot New Book Reveals ... The Astonishing Sex Secrets Of The Most Satisfied, Most Knowledgeable And Most Respected Lovers In The World.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a Rodale sex guide to men who want to be better lovers on the promise of the secrets of the world's most satisfied and respected lovers, because seven specific bullets promise outcomes the book is organized to deliver.",
+      "hook": "A 'hot new book reveals' headline naming the most satisfied, knowledgeable and respected lovers in the world.",
+      "mechanism": "Collected expertise of accomplished lovers, packaged as specific techniques (bullets: 'over-the-top orgasm every time', 'make love all night long').",
+      "big_idea": "Just sell the book: the secrets are the argument.",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "trial"
+      ],
+      "close": "Rodale's standard free-examination/money-back offer (details not in source).",
+      "voice_notes": "Carlton: no 'rigmarole', Halbert's 'Just sell the damn book!'; seven bullets carry the piece; bold, direct, specific.",
+      "length_words_est": 1800
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "AWAI editor's note: the package beat the original control and 'mailed for 5 years to 30 million names'. No revenue figures.",
+      "source_url": "https://www.awai.com/2003/05/john-carlton-reveals-his-secrets/"
+    },
+    "losing_variants": [
+      {
+        "description": "The original Rodale control for the book (not described).",
+        "result": "Beaten by Carlton's package."
+      }
+    ],
+    "lessons": [
+      "In a saturated (stage 4) how-to market a secret lead with hyper-specific bullets beat the incumbent and held for five years.",
+      "Bullets are the proof block when the product is information: each bullet must map to a chapter.",
+      "Directness over narrative: Carlton explicitly skipped a story lead for a product-aware-enough buyer."
+    ],
+    "notes": "Only the headline and paraphrased bullets are in the fetched source."
+  },
+  {
+    "id": "controls_sales_letters-24",
+    "title": "Amazing Secret Discovered By One-Legged Golfer (Triple Coil Swing)",
+    "author_or_company": "John Carlton for Milt Wallace",
+    "format": "sales_letter",
+    "market": "Golf instruction video; amateur golfers",
+    "funnel_position": "one-step direct sale (space ad / direct mail)",
+    "traffic": "cold",
+    "source_url": "https://verygoodcopy.com/very-good-copy-blogs-5/copywriting-hooks-and-angles",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Amazing Secret Discovered By One-Legged Golfer Adds 50 Yards To Your Drives, Eliminates Hooks And Slices... [continues: and can cut up to 10 strokes from your game almost overnight]",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "5",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a swing-technique video to amateur golfers who have tried everything on the promise of 50 more yards and 10 fewer strokes, because a one-legged golfer who hits long straight drives proves that balance and coil, not strength, make the swing.",
+      "hook": "A one-legged man rips one of the longest, straightest drives the pro has ever seen.",
+      "mechanism": "The Triple Coil Swing: forced to balance on one leg, the golfer 'supercharges' the coil; the technique recreates that for two-legged players.",
+      "big_idea": "If a one-legged man can do it, so can you.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "headline"
+        },
+        {
+          "type": "mechanism",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated"
+      ],
+      "close": "Order the video (details not in fetched source).",
+      "voice_notes": "Carlton's 'Amazing Secret' construction, long specific headline (28 words), conversational interview-derived story.",
+      "length_words_est": 2000
+    },
+    "results": {
+      "type": "none",
+      "detail": "Widely cited as a classic; no response, revenue or run-length figures appear in the fetched sources. The hook came from an offhand story Milt Wallace told Carlton in an interview.",
+      "source_url": "https://verygoodcopy.com/very-good-copy-blogs-5/copywriting-hooks-and-angles"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Stage-5 markets need a new mechanism with an unlikely messenger; the believability comes from the handicap, not the claim.",
+      "Hooks come from the interview, not the brief: ask the expert for the strangest thing they ever saw.",
+      "Our standard would require '50 yards' and '10 strokes' to carry ledger IDs; the headline is a model of specificity, not of proof discipline."
+    ],
+    "notes": "Headline quoted verbatim on the fetched page through 'Hooks And Slices'; the remainder is paraphrased there."
+  },
+  {
+    "id": "controls_sales_letters-25",
+    "title": "The Truth About Six-Pack Abs sales site",
+    "author_or_company": "Mike Geary (TruthAboutAbs.com)",
+    "format": "landing_page",
+    "market": "Fitness info product (fat loss/abs); men and women via ClickBank affiliates and paid media",
+    "funnel_position": "front-end sales page with opt-in and video presentation",
+    "traffic": "cold",
+    "source_url": "https://www.truthaboutabs.com/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "5 Tips to Lose Stomach Fat, Get Flat Six Pack Abs, Ab Workouts, Abdominal Exercises. Just enter your first name and email below and the Free report will be instantly emailed to you.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a fat-loss program to people searching for ab exercises on the promise of a flat stomach, because it sells what they want (abs) while delivering what they need (nutrition, training, mindset) and proves it with measured customer letters.",
+      "hook": "5 tips / 5 facts you must understand about losing stomach fat.",
+      "mechanism": "Nutrition and full-body training rather than ab exercises; delivered as a 'truth' that contradicts the category.",
+      "big_idea": "Abs are made in the kitchen, not by crunches (the 'truth' frame).",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor",
+        "guarantee_denominated",
+        "bonus"
+      ],
+      "close": "Video presentation click-through by gender; order button; money-back guarantee referenced in testimonials; exit pop-up offering purchase to video abandoners.",
+      "voice_notes": "Keyword-dense headline, numbered 'facts', long-form customer letters with names, locations, weights and waist sizes; cartoon-style sales video.",
+      "length_words_est": 3000
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "Tim Ferriss interview (2011): more than 500,000 copies sold since 2005; annual revenue grew to $3.6M, $6M, then about $11M net of ClickBank fees (gross estimated $20-25M); about half of sales via affiliates, half via Geary's media buys; price tested from $29.95 to $97 with $47 as the 'sweet spot'. Self-reported by the owner.",
+      "source_url": "https://tim.blog/2011/11/02/the-truth-about-abs-mike-geary/"
+    },
+    "losing_variants": [
+      {
+        "description": "Price points $29.95, $39.95, $67, $77, $79 and $97 tested against $47.",
+        "result": "$47 maximized front-end revenue and customer count (Geary's account; no lift figures)."
+      }
+    ],
+    "lessons": [
+      "Sell what they want, deliver what they need: the promise is the searched-for outcome, the mechanism contradicts the category.",
+      "Testimonials with measurements (weight, waist) are specific results, not adjectives.",
+      "A documented price test is rare; keep as an offer-design example."
+    ],
+    "notes": "The fetched page is the current lead-gen/content version of the site; the 2005-2011 long-form sales page differed. Revenue figures are the owner's."
+  },
+  {
+    "id": "controls_sales_letters-26",
+    "title": "The End of America (Stansberry video presentation)",
+    "author_or_company": "Stansberry & Associates Investment Research (Porter Stansberry presenting)",
+    "format": "vsl_long",
+    "market": "Financial newsletter; US retail investors reached by TV spots, email and online video",
+    "funnel_position": "cold acquisition VSL leading to a newsletter subscription",
+    "traffic": "cold",
+    "source_url": "https://briandeer.com/?p=14028",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "The following presentation is controversial and may be offensive to some audiences. Viewer discretion is advised. (On-screen caption opening Stansberry's 'End of America' video, fall 2010)",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a Stansberry newsletter to ordinary investors who feel something is wrong with the economy on the promise of protecting their money through a coming collapse, because government money-printing, rising commodity prices and interest rates are presented as the mechanism of the end of America.",
+      "hook": "A content warning, then the claim that America as we know it is finished.",
+      "mechanism": "Quantitative easing and debt drive inflation, commodity spikes, interest-rate and mortgage shocks and a sharp market drop; specific steps protect the viewer.",
+      "big_idea": "The end of America is a financial event you can prepare for.",
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "guarantee_denominated",
+        "bonus"
+      ],
+      "close": "Sales pitch for the newsletter at the end ('I knew it was a sales pitch when I got to the end', subscriber quoted by Deer); reports as bonuses.",
+      "voice_notes": "77-minute presentation (Wikipedia), rambling and dire per critics; warning caption as the pattern interrupt.",
+      "length_words_est": 9000
+    },
+    "results": {
+      "type": "none",
+      "detail": "No response or revenue data released by the company (per critical coverage). Wikipedia: 77-minute promotional video, 2011, predicted the imminent collapse of the United States; Motley Fool called it 'a mixture of valid points and hyperbole'. Brian Deer: released fall 2010 with an email campaign, also ran as a TV commercial; readers wrote in both to complain and to report subscribing. Secondary pages claim 'forty million' views, unverified.",
+      "source_url": "https://en.wikipedia.org/wiki/Porter_Stansberry"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Proclamation leads for unaware markets can be a warning rather than a promise; the caption itself is the hook.",
+      "Long VSLs in finance sell the mechanism (why the crisis) for most of the runtime and the product briefly at the end.",
+      "Compliance: Snopes and others judged the collapse claim false; a claim this size exceeds any proof and would fail the claim <= proof gate."
+    ],
+    "notes": "No transcript fetched; structure from critical descriptions. Writer not publicly credited in fetched sources."
+  },
+  {
+    "id": "controls_sales_letters-27",
+    "title": "The 3 Most Dangerous Retirement Lies Brokers Are Telling Americans Today",
+    "author_or_company": "Agora Financial (editor Chris Mayer)",
+    "format": "sales_letter",
+    "market": "Financial newsletter; US retirees and pre-retirees",
+    "funnel_position": "online long-form promotion to a newsletter subscription",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/dangerouslies-agorafinancial/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "The 3 Most Dangerous Retirement Lies Brokers Are Telling Americans Today",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "secret",
+      "argument_sentence": "This sells Chris Mayer's newsletter to retirement savers who distrust Wall Street on the promise of the real truths brokers hide, because each 'lie' is standard industry advice that the letter debunks with facts before the editor's credentials close the sale.",
+      "hook": "Three lies your broker tells you.",
+      "mechanism": "Expose the accepted advice, show why it is a myth, reveal the 'real truth' and the alternative strategy.",
+      "big_idea": "The people paid to advise you are the problem.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "close"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "bonus",
+        "guarantee_denominated"
+      ],
+      "close": "Editor's qualifications, results and credibility near the bottom, then the subscription offer.",
+      "voice_notes": "Agora exposé formula; numbered lies as structure; bolder claims paired with sources.",
+      "length_words_est": 4000
+    },
+    "results": {
+      "type": "none",
+      "detail": "Publicly posted 2011 promotion; swiped.co gives no control or test data. Agora publishers typically keep only winning promos live, but that is inference, not evidence.",
+      "source_url": "https://swiped.co/file/dangerouslies-agorafinancial/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "The lie/truth structure is a secret lead for a stage-4 market: the mechanism is the debunking.",
+      "Credibility placed late (after the reader cares) matches the standard's 'no bio before the reader cares'.",
+      "Each 'real truth' is a claim that needs a carrier; the formula fails without ledgered facts."
+    ],
+    "notes": "Companion Agora Financial letters on swiped.co without results: 'Apollo Energy' (2015, photo-mystery lead), 'Fourth Revolution' (2015, synthetic biology), Donald Trump letter."
+  },
+  {
+    "id": "controls_sales_letters-28",
+    "title": "Daily Reckoning \"Big Drop\" free book landing page",
+    "author_or_company": "Agora Financial / Daily Reckoning (Addison Wiggin presenting)",
+    "format": "landing_page",
+    "market": "Financial newsletter; existing Agora email readers",
+    "funnel_position": "free-book-plus-shipping offer with attached newsletter trial",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/bigdrop-lander-agora/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "\"Big Drop\" free book landing page (Daily Reckoning, 2016): a free copy of the book for shipping, with a newsletter trial attached; pitched in the third person by Addison Wiggin. Headline not transcribed on the source page.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a free-plus-shipping book and a newsletter trial to Agora's own readers on the promise of the author's crash-protection research, because a trusted editor (Wiggin) vouches that he applied the book's information himself.",
+      "hook": "Free book, just pay shipping, from a name the reader already knows.",
+      "mechanism": "The book's thesis (a coming market drop) and the newsletter that tracks it.",
+      "big_idea": "A trusted voice hands you another trusted voice's book for free.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "bonus",
+        "trial",
+        "price_anchor"
+      ],
+      "close": "Claim the free book; trial subscription terms on the order form.",
+      "voice_notes": "Third-person endorsement voice because the email came from a different Agora brand than the book.",
+      "length_words_est": 1200
+    },
+    "results": {
+      "type": "none",
+      "detail": "Publicly posted 2016 lander; swiped.co reports no results. Included as a format example (free+shipping to trial) from an Agora-family brand.",
+      "source_url": "https://swiped.co/file/bigdrop-lander-agora/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Offer lead is correct for owned-list, product-aware traffic: the deal in line one.",
+      "Cross-brand endorsement supplies the proof when the author is unknown to the list.",
+      "Free-plus-shipping books front a continuity trial; the order form carries the real terms."
+    ],
+    "notes": "Companion lander: Agora Financial 'Case for Gold' free book (swiped.co/file/caseforgold-lander-agora/)."
+  },
+  {
+    "id": "controls_sales_letters-29",
+    "title": "Ohio man has 21-Year tested formula to create multimillion dollar businesses from scratch",
+    "author_or_company": "Ben Suarez (SCI / Suarez Corporation Industries)",
+    "format": "advertorial",
+    "market": "Business-opportunity information; aspiring entrepreneurs",
+    "funnel_position": "two-step lead generation (coupon for no-obligation information)",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/tested-formula-ad-ben-suarez/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Ohio man has 21-Year tested formula to create multimillion dollar businesses from scratch",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "5",
+      "lead_type": "story",
+      "argument_sentence": "This sells a business-building system to would-be entrepreneurs on the promise of a 21-year tested formula, because the author's own rags-to-riches story and track record stand in for customer proof.",
+      "hook": "An Ohio man's formula, tested for 21 years.",
+      "mechanism": "Suarez's business-building systems (not detailed in the ad).",
+      "big_idea": "A tested formula from a man who used it.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial"
+      ],
+      "close": "Coupon for no-obligation information; twice states the information cannot be found elsewhere.",
+      "voice_notes": "Newspaper-editorial look, first-person hardship story, no guarantee or risk-free language.",
+      "length_words_est": 800
+    },
+    "results": {
+      "type": "none",
+      "detail": "Ran 1993 (swiped.co); no results reported. The '21-year tested' claim is the ad's own; swiped.co notes proof rests on the author's story rather than named cases.",
+      "source_url": "https://swiped.co/file/tested-formula-ad-ben-suarez/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Two-step bizopp: a story lead and a free-information coupon avoid making the big claim at the point of sale.",
+      "Testimonial-free proof (author's own record) is the weak point; the standard would require ledgered specifics.",
+      "Scarcity by uniqueness ('cannot be found elsewhere') repeated twice as the close."
+    ],
+    "notes": "Body copy not transcribed on the source page."
+  },
+  {
+    "id": "controls_sales_letters-30",
+    "title": "The $12,000 Secret of An Ohio Housewife",
+    "author_or_company": "Green Tree Press",
+    "format": "advertorial",
+    "market": "Business-opportunity how-to book (running booklet ads); homemakers and retirees",
+    "funnel_position": "one-step direct sale by space ad",
+    "traffic": "cold",
+    "source_url": "https://swiped.co/file/ohio-housewife-ad-greentree/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "The $12,000 Secret of An Ohio Housewife",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a how-to book on running booklet ads to ordinary people who want extra income on the promise that a housewife earned $12,000 with one secret, because specific dollar results with bank files as proof make the opportunity concrete.",
+      "hook": "A housewife's $12,000 secret.",
+      "mechanism": "Placing small booklet ads in newspapers and magazines (withheld in the first ad, explained in the second).",
+      "big_idea": "Ordinary people, documented dollars.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "guarantee_denominated",
+        "deadline_with_mechanism"
+      ],
+      "close": "Refund process stated in exact days; the buyer's check may be backdated 45 days (a delayed-payment guarantee in the Karbo tradition).",
+      "voice_notes": "Dollar-figure headline, success stories of a 71-year-old woman and others, references to bank files.",
+      "length_words_est": 1000
+    },
+    "results": {
+      "type": "none",
+      "detail": "Ran 1981 (swiped.co); no results or run length reported; swiped.co calls Green Tree a 'legendary advertiser'.",
+      "source_url": "https://swiped.co/file/ohio-housewife-ad-greentree/"
+    },
+    "losing_variants": [
+      {
+        "description": "Two versions: one withholds the mechanism, the second explains it with examples.",
+        "result": "Not reported."
+      }
+    ],
+    "lessons": [
+      "Dollar-specific headlines with named ordinary protagonists are the bizopp secret lead; the proof is the specificity plus a verifiable source (bank files).",
+      "A guarantee with exact timing in days and a backdated check is a denominated guarantee, not an adjective.",
+      "Keep both versions as a mechanism-withheld vs mechanism-explained pair for testing."
+    ],
+    "notes": "Body copy not transcribed on the source page."
+  }
+]

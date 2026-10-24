@@ -1,0 +1,30 @@
+import type { FormatSpec } from "../spec.ts";
+
+export const advertorial: FormatSpec = {
+  id: "advertorial",
+  name: "Advertorial and native landing page",
+  family: "page",
+  description: "Editorial voice with an FTC label above the headline. Scene or surprising fact with no pitch for 150-300 words, the usual fixes widened, mechanism, proof, the turn in the same voice, offer and links in the last third. 800-1,800 words cold; 400-700 retargeting. Listicle variant: the number matches the items and the reasons escalate problem, mechanism, proof, offer.",
+  length_band_words: [400, 1800],
+  sections: [
+    { id: "label", name: "FTC label", job: "\"Ad\", \"Advertisement\" or \"Paid Advertisement\" above the headline, on both pages", band_words: [1, 3], must: ["exactly \"Ad\", \"Advertisement\" or \"Paid Advertisement\"", "above the headline"], must_not: ["\"Promoted\"", "\"Sponsored\" alone", "no label"], block_types: ["label", "disclosure"] },
+    { id: "headline", name: "Editorial headline", job: "A headline a magazine would run: the surprising fact or the scene, no pitch", band_words: [6, 25], must: ["editorial, not promotional", "ledger ID on any number or name"], must_not: ["\"stuns\", \"reveals\", \"you won't believe\"", "brand name", "clickbait question"], block_types: ["headline", "deck"] },
+    { id: "byline", name: "Byline and date", job: "A real narrator from the ledger and the date", band_words: [3, 15], must: ["narrator exists in the ledger", "date"], must_not: ["invented narrator", "a fake publication name"], block_types: ["caption", "label"] },
+    { id: "lead", name: "Scene or surprising fact", job: "150-300 words with no pitch: a scene the reader recognizes or a fact that contradicts what they believe", band_words: [150, 300], must: ["no pitch", "one claim a skeptic would doubt", "speaker identified by word 150"], must_not: ["brand before word 250", "mechanism explained", "\"Imagine\" opener with no specific"], block_types: ["paragraph"] },
+    { id: "usual_fixes", name: "The usual fixes widened", job: "What the reader has tried and why each fails, in the reader's words from the research", band_words: [100, 350], must: ["prior solutions from the research", "the reader's verbatims"], must_not: ["objections the research never raised", "melodrama"], block_types: ["paragraph", "crosshead"] },
+    { id: "listicle_items", name: "Listicle items (variant)", job: "Numbered reasons escalating problem, mechanism, proof, offer; the number in the headline matches the items", band_words: [200, 900], must: ["item count matches the headline's number", "escalation: problem, mechanism, proof, offer"], must_not: ["a padded item", "bold-label-colon items"], optional: true, block_types: ["numbered", "crosshead", "paragraph"] },
+    { id: "mechanism", name: "Mechanism", job: "Why this works where the usual fixes fail, in one step, with its intuitive and empirical proof", band_words: [100, 300], must: ["mechanism in one step", "two layers of proof"], must_not: ["multi-step mechanism", "\"That's why we built\" with no cause"], block_types: ["paragraph", "crosshead"] },
+    { id: "proof", name: "Proof", job: "Documented results and names from the ledger, typical result adjacent", band_words: [80, 300], must: ["ledger IDs", "typical result adjacent to any result"], must_not: ["synthetic before/after", "generic testimonials"], block_types: ["paragraph", "testimonial", "crosshead"] },
+    { id: "turn", name: "The turn in the same voice", job: "From story to product as a reason-why, without a change of voice", band_words: [60, 200], must: ["turn states cause", "same narrator voice"], must_not: ["a switch to promotional voice", "apology"], block_types: ["paragraph"] },
+    { id: "offer_links", name: "Offer and links in the last third", job: "What it is, the price with a ledger ID, the guarantee, and the link repeated", band_words: [100, 400], must: ["link repeated at least twice", "price with a ledger ID", "denominated guarantee"], must_not: ["a stack", "a claim the sales page does not make"], block_types: ["paragraph", "cta", "button", "price", "guarantee", "crosshead"] },
+  ],
+  draft_order: ["label", "offer_links", "turn", "proof", "mechanism", "usual_fixes", "listicle_items", "lead", "byline", "headline"],
+  lead_variants: 3,
+  skim_path_block_types: ["label", "headline", "deck", "crosshead", "cta", "button", "price", "guarantee"],
+  hard_gates: ["advertorial.ftc_label", "advertorial.cta_count>=2", "page.no_markdown_headings"],
+  cadence_floor_cv: 0.7,
+  allow_emoji_bullets: false,
+  allow_markdown_headings: false,
+  allow_caps: true,
+  standard_section: "Advertorial and native landing page",
+};

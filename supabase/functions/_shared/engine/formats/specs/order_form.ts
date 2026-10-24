@@ -1,0 +1,31 @@
+import type { FormatSpec } from "../spec.ts";
+
+export const order_form: FormatSpec = {
+  id: "order_form",
+  name: "Order form and checkout",
+  family: "commerce",
+  description: "The offer block rendered as a page. Nothing appears here that the close did not state; under 120 words outside the recap; eight fields or fewer.",
+  length_band_words: [80, 400],
+  sections: [
+    { id: "acceptance", name: "Acceptance statement", job: "First person, restates the decision in the close's words", band_words: [6, 30], must: ["first person", "matches the close"], must_not: ["a new claim", "\"Submit\""], block_types: ["headline", "paragraph"] },
+    { id: "recap", name: "Recap in the close's words", job: "What they get, in the order and words of the close", band_words: [30, 200], must: ["identical items and values to the close", "same words as the close"], must_not: ["any bonus, price, tier or claim the close did not state"], block_types: ["recap", "bullets"] },
+    { id: "price_block", name: "Price, total and every added cost", job: "Price, total and every added cost stated as numbers", band_words: [5, 40], must: ["total stated", "every added cost (tax, shipping) stated or ruled out", "ledger ID on the price"], must_not: ["a price the close did not state", "hidden continuity"], block_types: ["price"] },
+    { id: "options", name: "Options, highest price first", job: "Payment or tier options ordered highest price first", band_words: [5, 40], must: ["highest price first", "each option in the close"], must_not: ["a tier the close did not state"], optional: true, block_types: ["bullets", "price", "label"] },
+    { id: "delivery", name: "What arrives and when", job: "The first-week experience as a fact", band_words: [8, 40], must: ["what arrives", "when"], must_not: ["vague \"instant access\" when it is not instant"], block_types: ["paragraph"] },
+    { id: "guarantee", name: "Guarantee beside the button", job: "The guarantee verbatim from the close, beside the button", band_words: [10, 60], must: ["verbatim from the close"], must_not: ["a reworded guarantee", "qualifiers absent from the close"], block_types: ["guarantee"] },
+    { id: "deadline", name: "Deadline as a fact", job: "The deadline and its mechanism, or nothing", band_words: [5, 30], must: ["mechanism stated"], must_not: ["evergreen timer", "dateless urgency"], optional: true, block_types: ["paragraph"] },
+    { id: "trust", name: "Trust block in the payment area", job: "Secure payment, support contact, refund route, in one line each", band_words: [6, 40], must: ["support contact"], must_not: ["badges with no referent"], block_types: ["paragraph", "caption", "disclosure"] },
+    { id: "testimonial", name: "One buying-experience testimonial", job: "One documented testimonial about buying or the first week, with name, place and time", band_words: [15, 60], must: ["documented testimonial", "about the buying experience or first week"], must_not: ["generic testimonial", "results testimonial without the typical result"], block_types: ["testimonial"] },
+    { id: "fields", name: "Fields", job: "Eight or fewer; only what fulfilment needs", band_words: [2, 24], must: ["eight fields or fewer"], must_not: ["visible coupon field", "phone unless fulfilment needs it"], block_types: ["field"] },
+    { id: "button", name: "Button", job: "The action and what happens after the click", band_words: [2, 12], must: ["literal action"], must_not: ["\"Submit\"", "\"Buy\" alone"], block_types: ["button"] },
+  ],
+  draft_order: ["price_block", "options", "guarantee", "deadline", "button", "fields", "recap", "delivery", "trust", "testimonial", "acceptance"],
+  lead_variants: 0,
+  skim_path_block_types: ["headline", "recap", "price", "guarantee", "button"],
+  hard_gates: ["order_form.fields<=8", "order_form.no_submit_button", "order_form.no_coupon_field", "order_form.words_outside_recap<=120", "page.no_markdown_headings"],
+  cadence_floor_cv: 0.7,
+  allow_emoji_bullets: false,
+  allow_markdown_headings: false,
+  allow_caps: true,
+  standard_section: "Order form and checkout",
+};

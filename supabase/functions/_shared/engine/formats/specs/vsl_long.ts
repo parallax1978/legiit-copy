@@ -1,0 +1,33 @@
+import type { FormatSpec } from "../spec.ts";
+
+export const vsl_long: FormatSpec = {
+  id: "vsl_long",
+  name: "Long video sales letter",
+  family: "video",
+  description: "Warm or retargeted traffic. Interrupt, promise with mechanism, demonstration, discovery story, the plan, personas, stack, price, guarantee, urgency. No minute allocations; the first 500 words are what gets tested.",
+  length_band_words: [3000, 7000],
+  sections: [
+    { id: "interrupt", name: "Interrupt", job: "Stop the specific viewer with a concrete scene, number or contradiction tied to the promise", band_words: [30, 120], must: ["tied to the promise", "a concrete specific"], must_not: ["\"In the next few minutes I'll show you exactly\"", "logo intro", "biography first"], block_types: ["beat", "slide", "hook"] },
+    { id: "promise", name: "Promise with mechanism", job: "The result and the named mechanism that produces it, in one breath", band_words: [40, 150], must: ["result stated", "mechanism named", "ledger ID on any number"], must_not: ["\"our proven system\"", "multi-step mechanism"], block_types: ["beat", "slide"] },
+    { id: "credibility_bribe", name: "Credibility and bribe", job: "Who is talking, why believe them, and what the viewer gets for staying", band_words: [40, 150], must: ["ledger-backed credential", "a bribe for staying"], must_not: ["a 300-word biography", "\"Stay with me\""], block_types: ["beat", "slide", "paragraph"] },
+    { id: "demonstration", name: "Dated demonstration", job: "Show the mechanism working on a dated, documented case", band_words: [150, 500], must: ["dated", "documented with a ledger ID", "typical result adjacent"], must_not: ["synthetic before/after", "undated results"], block_types: ["beat", "slide", "testimonial", "paragraph"] },
+    { id: "catalyst", name: "Catalyst", job: "Why this matters now: the event or discovery that changed what is possible", band_words: [60, 200], must: ["a dated event or discovery"], must_not: ["melodrama", "invented urgency"], block_types: ["beat", "paragraph"] },
+    { id: "discovery_story", name: "Short discovery story", job: "How the mechanism was found, in the narrator's voice, ending at the turn", band_words: [200, 600], must: ["narrator from the ledger", "failed fixes before the discovery", "turn states cause"], must_not: ["biography", "\"That's why we built\" with no cause", "an invented narrator"], block_types: ["beat", "paragraph"] },
+    { id: "plan", name: "The plan with logic per step", job: "The steps the viewer will take, each with the reason it works", band_words: [300, 900], must: ["reason per step", "every claim's carrier within two sentences"], must_not: ["feature tour", "\"so you can\" triads", "bold-label-colon bullets"], block_types: ["beat", "slide", "paragraph", "bullets"] },
+    { id: "objections", name: "Objections as personas", job: "Each objection from the research answered through a named, documented person who had it", band_words: [300, 800], must: ["objections from the research map", "documented personas with ledger IDs"], must_not: ["invented objections", "a tidy FAQ", "generic testimonials"], block_types: ["beat", "testimonial", "paragraph"] },
+    { id: "transition_stack", name: "Transition and stack", job: "The turn to the offer as a reason-why; the stack, with the button dropping at the price", band_words: [300, 800], must: ["turn states cause", "offer identical to the order form", "bonus values only with a ledger basis"], must_not: ["apology at the transition", "fabricated stack values"], block_types: ["beat", "slide", "recap", "bullets", "paragraph"] },
+    { id: "price", name: "Price and reframe", job: "State the price once, after value, with its reframe and the button", band_words: [60, 200], must: ["price once", "reframe comparable", "button drops at the price"], must_not: ["price before value", "\"less than a cup of coffee\"", "apology"], block_types: ["beat", "price", "button"] },
+    { id: "guarantee", name: "Guarantee", job: "Denominated, as a sentence the buyer can repeat", band_words: [40, 150], must: ["denominated", "terms adjacent"], must_not: ["qualifiers that gut it"], block_types: ["beat", "guarantee"] },
+    { id: "urgency", name: "Urgency", job: "The deadline with its mechanism, or nothing", band_words: [30, 150], must: ["mechanism stated"], must_not: ["dateless urgency", "invented scarcity"], optional: true, block_types: ["beat", "paragraph"] },
+    { id: "close", name: "Close with CTA repeated", job: "What they get by acting, what they lose by waiting, what to do; CTA repeated", band_words: [300, 900], must: ["CTA at least three times across the script", "what happens after the click"], must_not: ["summary paragraph", "new claims with no ledger ID"], block_types: ["beat", "slide", "cta", "button", "paragraph"] },
+  ],
+  draft_order: ["transition_stack", "price", "guarantee", "urgency", "close", "plan", "objections", "demonstration", "discovery_story", "catalyst", "credibility_bribe", "promise", "interrupt"],
+  lead_variants: 3,
+  skim_path_block_types: ["slide", "crosshead", "recap", "price", "guarantee", "cta", "button"],
+  hard_gates: ["vsl.cta_count>=3", "vsl.price_position_share>=0.5", "page.no_markdown_headings"],
+  cadence_floor_cv: 0.7,
+  allow_emoji_bullets: false,
+  allow_markdown_headings: false,
+  allow_caps: true,
+  standard_section: "Long VSL, warm or retargeted",
+};

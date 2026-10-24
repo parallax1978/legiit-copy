@@ -1,0 +1,2529 @@
+[
+  {
+    "id": "controls_emails-01",
+    "title": "The 9-Word Email (reactivation of dormant leads)",
+    "author_or_company": "Dean Jackson",
+    "format": "email_single",
+    "market": "Any business with dormant inquiries; examples given for real estate, yacht brokerage, apparel, plumbing, B2B",
+    "funnel_position": "win-back / lead reactivation (sequence role: win-back)",
+    "traffic": "owned_list",
+    "source_url": "https://deanjackson.com/blog/9-word-email-variations/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Jason | Body: Are you still looking for a house in Georgetown? (Template: 'Are you still looking for [the thing they inquired about]?'; variation: 'Would you like to get started on your book this month?')",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells a reply (not a purchase) to a lapsed inquirer on the promise that the sender still remembers their original request, because a one-line personal question is answered where a brochure is ignored.",
+      "hook": "First-name-only subject line; the body is a single question that restates the prospect's own original request.",
+      "mechanism": "Removes every marketing signal (no HTML, no pitch, no links) so the email reads as a personal note and the only possible action is to reply.",
+      "big_idea": "Re-engagement is a question, not a campaign.",
+      "proof_elements": [],
+      "offer_devices": [
+        "no offer; reply-only CTA",
+        "first-name subject line",
+        "plain text, no links"
+      ],
+      "close": "The question itself is the close; no sign-off pitch.",
+      "voice_notes": "Nine words, second person, conversational; the author warns it fails as cold outreach and must lead with help, not a pitch.",
+      "length_words_est": 9
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Author-stated anecdotes, quoted as written: real estate client 'got dozens of replies and tons of engagement' and 'sold several other properties over the next couple of months'; motorcycle-jeans maker 'sold over $9,000 in less than a week'; yacht broker 'uncovered a buyer for a $100 million custom yacht'; postcard company 'went from 5% click-through to over 30%'; author says 'it's not uncommon to send emails that get 60%+ response rates'. No sample sizes or independent verification.",
+      "source_url": "https://deanjackson.com/blog/9-word-email-variations/"
+    },
+    "losing_variants": [
+      {
+        "description": "Author's description of the client's prior HTML marketing emails to the same list",
+        "result": "'3% to 5% click-through rate' per the author, versus 'over 30%' for the nine-word email (self-reported)."
+      }
+    ],
+    "lessons": [
+      "Win-back email 1 of 3 in the standard (nine words, no links) has a documented originator and wording pattern: restate the prospect's original request as a yes/no question.",
+      "Reply is a valid CTA; a win-back that asks for nothing but an answer outperforms one that asks for a click (self-reported).",
+      "The device fails on cold lists; it depends on a prior inquiry the reader remembers."
+    ],
+    "notes": "Primary source is the author's own blog; figures are vendor anecdotes. Variation 'Would you like to get started?' is for offers with a time element."
+  },
+  {
+    "id": "controls_emails-02",
+    "title": "Copyhackers weekly newsletter: seven subject-line split tests (Jan-Feb 2013)",
+    "author_or_company": "Joanna Wiebe / Copyhackers",
+    "format": "email_single",
+    "market": "Startup founders and marketers learning conversion copywriting",
+    "funnel_position": "daily/weekly content email to owned list (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://copyhackers.com/2013/03/email-subject-lines/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Winning subject: 'heart your home page [Copyhackers]' | Losing subject: 'how to show your home page some love [Copyhackers]'",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "promise",
+      "argument_sentence": "This sells an open to a subscriber on the promise of a specific, quirky payoff, because a compressed, odd phrasing with the brand tag beat the plain how-to phrasing of the same content.",
+      "hook": "Short, slightly odd verb phrase ('heart your home page') with brand name in brackets.",
+      "mechanism": "Subject line is the only variable; body identical.",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "brand tag in brackets"
+      ],
+      "close": "unknown",
+      "voice_notes": "Lowercase, playful, question-led subject lines; brand tag appended.",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Seven tests reported as winner's margin over loser in open rate: 7%, 4.6%, 4.4%, 4.2%, 2%, 1.5%, 0.9%. Follow-up brand-tag test: 'startup Qs about landing pages + emails [Copyhackers]' 36.4% open vs the same line without the tag 32% open. No sample sizes stated; the author treats these as directional.",
+      "source_url": "https://copyhackers.com/2013/03/email-subject-lines/"
+    },
+    "losing_variants": [
+      {
+        "description": "'how to show your home page some love [Copyhackers]'",
+        "result": "lost by 7% open rate to 'heart your home page [Copyhackers]'"
+      },
+      {
+        "description": "'which home page kills it? a comparative analysis [Copyhackers]'",
+        "result": "lost by 4.6% to 'possibly the most overlooked home page opportunity in the universe...?'"
+      },
+      {
+        "description": "'no, size doesn't matter [CopyHackers.com]'",
+        "result": "lost by 4.4% to 'when it comes to email, does size matter? [CopyHackers.com]'"
+      },
+      {
+        "description": "'increasing paid conversions by 61% on a product catalog'",
+        "result": "lost by 4.2% to 'increasing paid conversions by 61% on a typical startup site'"
+      },
+      {
+        "description": "'does the tone of your copy really matter? [CopyHackers.com]'",
+        "result": "lost by 2% to 'how the right tone turned around this small biz [CopyHackers.com]'"
+      },
+      {
+        "description": "'how to write 1 page for 2 audiences [Copyhackers]'",
+        "result": "lost by 1.5% to 'can you write 1 page that speaks to 2 audiences? [Copyhackers]'"
+      },
+      {
+        "description": "'dare to disagree? [Copyhackers]'",
+        "result": "lost by 0.9% to 'weigh in on 5 headlines... [Copyhackers]'"
+      },
+      {
+        "description": "'startup Qs about landing pages + emails' (no brand tag)",
+        "result": "32% open vs 36.4% with '[Copyhackers]' appended"
+      }
+    ],
+    "lessons": [
+      "Subject lines that name the reader's situation ('typical startup site') beat the same promise aimed at a segment the reader is not in ('product catalog').",
+      "A question that leaves the answer open ('does size matter?') beat the line that gives the answer away ('no, size doesn't matter').",
+      "Appending the sender's brand to the subject raised opens on a warm list; a usable test for the subject-written-last step."
+    ],
+    "notes": "Results are margins, not absolute rates, except the brand-tag follow-up. Newsletter body not evaluated."
+  },
+  {
+    "id": "controls_emails-03",
+    "title": "Parallel Welcome Sequence (welcome email 'The Dark Room' and linker pages)",
+    "author_or_company": "Daniel Throssell / Persuasive Page",
+    "format": "email_sequence",
+    "market": "Copywriters and marketers who want to learn email copy",
+    "funnel_position": "welcome sequence after opt-in (sequence role: welcome)",
+    "traffic": "owned_list",
+    "source_url": "https://persuasivepage.com/parallel-welcome-sequence/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Headline claim: the sequence 'Gets Up To 200% Engagement From Your New Subscribers'. Homepage: 'My welcome email is just the start of a ridiculous email adventure involving time-travel, giant lions, robot AI invasions...'",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells continued reading (and later products) to a new copywriting subscriber on the promise of an entertaining serial, because every email's only CTA is a 'time-travel remote' link that delivers the next email instantly and routes the keenest readers to parallel web pages that carry bonuses and offers.",
+      "hook": "A welcome email written as a disturbing/funny scene ('The Dark Room') rather than a deliverable and intro.",
+      "mechanism": "Three rules: every email carries a link that fires the next email immediately (otherwise 24h interval); that link is the sole CTA woven into the story; each link lands on a 'linker webpage' forming a parallel series seen only by engaged readers, used for bonus content and sales.",
+      "big_idea": "A welcome sequence the reader can binge, so the most engaged readers consume twice the content of a linear series.",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "open loop per email",
+        "instant-next-email link as CTA",
+        "parallel bonus pages",
+        "no deadline"
+      ],
+      "close": "Each email ends on the remote link; the author recommends at least ten emails.",
+      "voice_notes": "First person, self-mocking Australian persona ('Australia's best copywriter'), serialized fiction mixed with copy tips; long emails read in one sitting.",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Author states 'up to 200% readership' defined as relative content consumed versus an email-only series, 'not 200% OPEN RATES'; one subscriber's session described as 'NINETY-TWO MINUTES'; open-rate comparison shown only as an unlabelled graph image; deliverability claim from 'my own (unscientific) tests'. No revenue stated. Testimonials attributed to initials only.",
+      "source_url": "https://persuasivepage.com/parallel-welcome-sequence/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A welcome sequence can make 'open the next one' the CTA of every email; the standard's rule that every non-final email ends with a reason to open the next has a working extreme here.",
+      "Segment by behaviour inside the copy: the readers who click the loop get the offers, the rest get the plain sequence.",
+      "Story-led welcome email for a sophistication-4 market (copywriters who have seen every 'here's your freebie' email)."
+    ],
+    "notes": "Email text is gated behind opt-in; annotation is from the author's public description page and homepage. Named in docs/03 Section 12."
+  },
+  {
+    "id": "controls_emails-04",
+    "title": "The Power Trio: Big Reveal, Free Taste, Last Chance launch emails",
+    "author_or_company": "Ramit Sethi / I Will Teach You To Be Rich",
+    "format": "email_sequence",
+    "market": "Personal finance, career and online-business course buyers",
+    "funnel_position": "launch: open cart, mid-cart sample, cart close (sequence roles: open cart, mid-cart, cart close)",
+    "traffic": "owned_list",
+    "source_url": "https://www.iwillteachyoutoberich.com/behind-the-sales-email/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Headline: '3 sales emails worth $379,643'. The Big Reveal introduces the product; the Free Taste (a Judge Judy story plus a free sample lesson) gets readers to try it; the Last Chance is 'a brief courtesy reminder so readers don't miss out'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells a course to a warmed list on the promise that they can see the product work before buying, because the three emails move from the idea (reveal) to a demonstration (free sample) to a deadline (last chance) without pressure language.",
+      "hook": "Big Reveal opens with a discussion of what separates successful people, not with the product.",
+      "mechanism": "Sequence of three roles sent in every launch; the sample lesson is the proof and the deadline is a courtesy reminder.",
+      "big_idea": "Let the product sell itself with a free taste; the last-chance email is short and polite.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "headline"
+        }
+      ],
+      "offer_devices": [
+        "free sample of the course",
+        "deadline (cart close)",
+        "brief last-chance reminder"
+      ],
+      "close": "Last Chance email: a short reminder of the closing time with one link.",
+      "voice_notes": "Conversational storytelling (pop-culture anecdotes) bridging to a plain offer.",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Vendor-stated figures on the sales page: Big Reveal '$82,358' (Success Triggers launch); Free Taste '$28,721' (How to Talk to Anybody); Last Chance '$165,803 in a few hours' (Zero to Launch funnel); the trio '$379,643' in the example launch; Mental Mastery launch '$617,944 in about a week, with over 60% of revenue from the Power Trio'; 'over $5,000,000' through an evergreen funnel. No list sizes given.",
+      "source_url": "https://www.iwillteachyoutoberich.com/behind-the-sales-email/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Launch email roles the standard can name: reveal, sample, last chance; the sample email is the proof block of the sequence.",
+      "The last-chance email earned the largest share of stated revenue while being the shortest; cart-close copy is 30-80 words with one link.",
+      "Related: GrowthLab's gated '5-day email funnel that generated $400,000 from a single launch' (https://growthlab.com/400k/) for the same company; emails not public."
+    ],
+    "notes": "Emails shown only as images on a sales page for a paid course; annotation is from the page copy. All numbers are the vendor's."
+  },
+  {
+    "id": "controls_emails-05",
+    "title": "Product Launch Formula open-cart email sequence (5-7 days) as described by Systeme.io",
+    "author_or_company": "Jeff Walker (described by Systeme.io blog)",
+    "format": "email_sequence",
+    "market": "Online course and info-product launches",
+    "funnel_position": "launch: prelaunch content, open cart, mid-cart, cart close (sequence roles: launch prelaunch, open cart, cart close)",
+    "traffic": "owned_list",
+    "source_url": "https://systeme.io/blog/jeff-walker-millions",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Article description (no email text is public): Day 1 two emails, 'cart open' then a 'tsunami' email about strong sales that must stay 'truthful and not lie about your numbers'; Days 2-4 one to two emails a day; Day 5 three emails: closing soon, launch story, final call.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a course to a list that has consumed three prelaunch content pieces on the promise that the opportunity is open for a defined window, because a dated open and a dated close, with proof and objection emails in between, concentrate buying on day one and the last day.",
+      "hook": "Day-1 'cart is open' announcement, then a same-day momentum email.",
+      "mechanism": "Three prelaunch pieces (opportunity, transformation, ownership) preceded by a 'shot across the bow' survey email; open cart 5-7 days with case study, FAQ, tour, new-bonus and scarcity emails; three emails on close day.",
+      "big_idea": "A launch is a sequence with a defined start and end, not a single sales email.",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "deadline_with_mechanism (defined cart close)",
+        "bonus added mid-cart",
+        "FAQ/objection email",
+        "case-study email",
+        "day-4 scarcity warning"
+      ],
+      "close": "Day 5: 'closing soon' in the morning, a launch story, then a final call.",
+      "voice_notes": "unknown (no email text public)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "Systeme.io states 'most sales happen on day one and peak on the last day' with no figures; Walker's own emails and numbers are not public. Article's figures ('$1 Billion in sales' helped students gain) are biography, not email results.",
+      "source_url": "https://systeme.io/blog/jeff-walker-millions"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Sequence skeleton matches the standard's Launch 10-12 (three prelaunch; open-cart; mid-cart objection, customer story, FAQ; three close-day).",
+      "'Tsunami' email: social proof of orders is allowed only when the numbers are true; a ledger row is required for any order count.",
+      "Prelaunch survey email ('what is your top question about X?') surfaces objections for the FAQ and bonus emails."
+    ],
+    "notes": "Secondary source. No Jeff Walker email text was found publicly posted; the book Launch would be the primary source. Record kept for sequence architecture only."
+  },
+  {
+    "id": "controls_emails-06",
+    "title": "Follow-up sequence for free book offer (resend with new subject lines)",
+    "author_or_company": "Frank Kern (swiped.co)",
+    "format": "email_sequence",
+    "market": "Consultants and marketers (free consulting book, pay shipping)",
+    "funnel_position": "post-opt-in follow-up for non-openers to a free-plus-shipping front end (sequence role: follow-up / abandoned offer)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/followup-sequence-frank-kern/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator summary: the same 'send me your address' email resent over six days with only the subject line changed (third email modified); four CTA links with different labels; a P.S. almost as long as the email. Curator: 'It's used consistently by top marketers because it works.'",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a free book (pay shipping) to a subscriber who ignored the first email on the promise that a gift is waiting, because asking for a mailing address in the subject line makes the offer concrete and lowers resistance ('since the item is free... you can be more direct').",
+      "hook": "Subject line asks for the recipient's mailing address.",
+      "mechanism": "Resend to non-openers with changed subject lines over six days.",
+      "big_idea": "A free physical gift justifies direct, repeated asks.",
+      "proof_elements": [],
+      "offer_devices": [
+        "free_plus_shipping",
+        "repeated resend to non-openers",
+        "gift framing",
+        "multiple CTA links with different labels",
+        "long P.S."
+      ],
+      "close": "Repeated address request; long P.S. covering several points.",
+      "voice_notes": "Playful, direct, smiley faces (curator's description).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Resend-to-non-openers with a new subject is a sequence device the standard can name for open-cart follow-ups.",
+      "A free physical item lets the copy ask directly in the subject line; claim size matches offer size."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-07",
+    "title": "Follow-up email sequence ('you still haven't...')",
+    "author_or_company": "Dan Kennedy (swiped.co)",
+    "format": "email_sequence",
+    "market": "Info-marketing / GKIC members",
+    "funnel_position": "follow-up to non-responders (sequence role: follow-up)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/followup-dankennedy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator annotation: email 2 builds on email 1 by referring to the recipient 'still' not taking action; the heavy focus on inaction 'could either annoy the reader or create urgency'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells action to a reader who ignored the first message on the promise that their inaction is costing them, because naming the inaction directly ('you still haven't') creates urgency without a new offer.",
+      "hook": "Direct reference to the reader's inaction.",
+      "mechanism": "Escalating directness across the sequence.",
+      "big_idea": "Call the inaction by name.",
+      "proof_elements": [],
+      "offer_devices": [
+        "inaction callout",
+        "escalation across emails"
+      ],
+      "close": "unknown",
+      "voice_notes": "Blunt, direct (curator).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Follow-up emails may address the non-action directly; the standard should cap this at one email per sequence to avoid the annoyance the curator flags."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-08",
+    "title": "'Did you miss this?' follow-up emails",
+    "author_or_company": "Ryan Deiss / DigitalMarketer (swiped.co)",
+    "format": "email_sequence",
+    "market": "Digital marketers buying limited-time trainings and enrollments",
+    "funnel_position": "mid-cart and cart-close follow-ups (sequence roles: open cart, cart close)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/missthis-email-deiss/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator summary: each email opens with a quick explanation of why Ryan is following up, then what the reader missed; offers are 'limited-time discounts or enrollments'; the strongest element is mentioning other people benefiting from the offer and appreciating the reminders.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a limited-time enrollment to a subscriber who skipped earlier emails on the promise that they can still get in, because the follow-up is framed as a courtesy that others have thanked him for.",
+      "hook": "'Did you miss this?' plus a one-line reason for following up.",
+      "mechanism": "Time-limited offer justifies the reminder; social proof of others' gratitude reframes the reminder as service.",
+      "big_idea": "A reminder is a favour when a deadline is real.",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "deadline_with_mechanism",
+        "limited enrollment",
+        "reminder framed as courtesy"
+      ],
+      "close": "Link to the limited-time offer.",
+      "voice_notes": "Conversational, brief (curator).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Open with the reason for the follow-up in one line; the standard's cart-close emails can use 'others asked for this reminder' only with a ledger row."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-09",
+    "title": "$1 trial email pitch (reused 2014 and 2015 with swapped content)",
+    "author_or_company": "Ryan Deiss / DigitalMarketer (swiped.co)",
+    "format": "email_single",
+    "market": "Digital marketers",
+    "funnel_position": "trial offer to list (sequence role: daily promo / trial pitch)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/email-trial-deiss/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator: 'The emails below were sent by distinguished marketer Ryan Deiss in both 2014 & 2015' and are 'essentially' identical with recent information swapped in; opens with curiosity about 'free gifts', teases one piece of information from a $25k mastermind, then the $1 trial CTA.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "secret",
+      "argument_sentence": "This sells a $1 membership trial to marketers on the promise of insider information from a $25,000 mastermind, because one teased, specific piece of content is presented as a fraction of what the member area holds.",
+      "hook": "Curiosity about 'free gifts'.",
+      "mechanism": "Tease one specific insight; name the expensive source; make the trial the only way to get the rest.",
+      "big_idea": "Price-anchor the trial against the $25k room it came from.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial ($1)",
+        "price_anchor ($25k mastermind)",
+        "content tease"
+      ],
+      "close": "Single CTA to the $1 trial.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "Curator notes the same email was reused in 2014 and 2015 with updated content, which the curator treats as evidence it was a proven performer; no figures.",
+      "source_url": "https://swiped.co/file/email-trial-deiss/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Re-mailing a proven email with swapped specifics is a longevity signal the control corpus can use.",
+      "Anchor a cheap trial against a named, priced source of the content."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-10",
+    "title": "Takeaway selling email ('this probably isn't for you')",
+    "author_or_company": "Dan Kennedy / GKIC (swiped.co)",
+    "format": "email_single",
+    "market": "Entrepreneurs and info-marketers",
+    "funnel_position": "follow-up promo to list (sequence role: mid-cart objection / disqualification)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/takeawayselling-dankennedy/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator paraphrase of the subject: 'this probably isn't for you if you're like all the others who follow typical advice, getting mediocre results at best.' The email makes the reader wonder why the offer would not be for them, then ties buying to belonging to the group that 'gets it'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a GKIC offer to a sceptical marketer on the promise that it is only for people who reject typical advice, because excluding the reader provokes the wish to qualify and ties the purchase to identity.",
+      "hook": "Disqualification in the subject line.",
+      "mechanism": "Takeaway selling plus identity: most people do it wrong; the buyer joins the few who do not.",
+      "big_idea": "Sell by exclusion.",
+      "proof_elements": [],
+      "offer_devices": [
+        "disqualification",
+        "scarcity-takeaway",
+        "identity/belonging"
+      ],
+      "close": "unknown",
+      "voice_notes": "Contrarian, blunt (curator).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Sequence email 'who this is not for' has a classic form: name the typical-advice follower as the person it is not for.",
+      "Disqualification works best on sophistication-4 lists that have heard every promise."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-11",
+    "title": "'Take This Test' emails",
+    "author_or_company": "Eben Pagan, John Reese and Ryan Deiss (swiped.co compilation)",
+    "format": "email_single",
+    "market": "Info-marketing audiences",
+    "funnel_position": "engagement/segmentation email leading to an offer (sequence role: prelaunch engagement)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/takethistest-pagan-deiss-reese/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator: 'There's a reason why top marketers use this testing tactic to reel people in.' The emails tap curiosity about whether you are making mistakes, the ego of doing well on tests, mention that many people get the test wrong, and describe what passing would mean.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "unknown",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells a click to a problem-aware subscriber on the promise of finding out whether they are making a mistake, because a test flatters competence while hinting most people fail.",
+      "hook": "'Take this test' / 'Do you make these mistakes' framing.",
+      "mechanism": "Quiz as curiosity device; the result page carries the offer.",
+      "big_idea": "Diagnose before you prescribe.",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "quiz/test",
+        "most-people-fail framing"
+      ],
+      "close": "Link to the test.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A test email is a legitimate prelaunch engagement device; it echoes the 'Do You Make These Mistakes in English?' headline mechanism."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-12",
+    "title": "'Email Is Dead' webinar invitation",
+    "author_or_company": "Andy Jenkins and Mike Filsaime / WebinarJam (swiped.co)",
+    "format": "email_single",
+    "market": "Online marketers considering webinar software",
+    "funnel_position": "webinar registration email (sequence role: launch prelaunch / webinar invite)",
+    "traffic": "owned_list",
+    "source_url": "https://swiped.co/file/deathof-webinarjam/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Curator: 'This email & webinar sign-up from Andy Jenkins & Mike Filsaime is an example of using the \"Is Dead\" hook.' The email presents the problem ('Email Is Dead') to build desire for a fix, introduces the solution as relief, and asks the reader to sign up to learn how.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a webinar registration to marketers on the promise that the channel they rely on is failing and a replacement exists, because a death proclamation forces a reaction and the webinar is positioned as the way out.",
+      "hook": "'Email is dead' proclamation.",
+      "mechanism": "Problem-agitate-solve compressed into one email; the webinar is the solution's delivery vehicle.",
+      "big_idea": "Declare the old way dead; sell the new way as relief.",
+      "proof_elements": [],
+      "offer_devices": [
+        "free webinar",
+        "proclamation hook"
+      ],
+      "close": "Sign-up CTA.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Proclamation lead for a problem-aware list; the standard should require the proclamation to be defensible (a ledger fact), not a slogan."
+    ],
+    "notes": "swiped.co shows the emails as images with curator (Mike Schauer) annotations; the email body could not be read as text, so excerpt and structure fields come from the curator's description. Rights: the swipe file reproduces copyrighted emails; only annotations are used here."
+  },
+  {
+    "id": "controls_emails-13",
+    "title": "OMG - stop procrastinating (Fast Company article share)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters who buy copywriting courses",
+    "funnel_position": "daily/weekly list email driving a press placement, with share-swipe copy (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/qdu8h7hrrv4z",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: OMG - stop procrastinating | Hey [FIRST NAME GOES HERE]! In college, I had a housemate we all wanted to kill. Not literally, but not not literally, either. I had fantasies.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells a click to (and shares of) her first Fast Company article to warm subscribers on the promise of procrastination tips from a 'born procrastinator', because a revenge-fantasy story about a non-procrastinating housemate makes the reader self-identify before the link appears.",
+      "hook": "'In college, I had a housemate we all wanted to kill.'",
+      "mechanism": "Story of the psychopathically punctual housemate, turn ('People who don't procrastinate carry a genetic mutation that also makes them psychopaths. If you're one of those people, you won't need... my FIRST PIECE IN FAST COMPANY!'), candour about her own history (crying at Nick at Nite, ghosting her list), then copy-paste share swipes for Facebook, LinkedIn, Twitter and Instagram.",
+      "big_idea": "I'm not faking the funk: a lifelong procrastinator's tips.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "press placement as proof",
+        "pre-written share swipes with merge blanks",
+        "P.S. open loop ('a couple more procrastination tips... in another email, soon')"
+      ],
+      "close": "'Dig it? Share it and make me look super cool. I'll love you so hard.' followed by swipe copy; P.S. promises more tips in a later email.",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 870
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Handpicked-emails page: '#2 ... (split test with winning subj: kill my housemate)' and received the 'Email of the Week' honour from Chris Orzechowski (The Email Copywriter, 29 Jan 2020). Collection-level claim: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [
+      {
+        "description": "Subject line 'OMG - stop procrastinating' (the archived version)",
+        "result": "Lost the split test to 'kill my housemate' per the author; margin not stated."
+      }
+    ],
+    "lessons": [
+      "The story-specific subject ('kill my housemate') beat the topical imperative ('stop procrastinating'): write the subject from the body's most concrete line.",
+      "Candour as proof: admitting past failure ('I was ghosting my list on the regular') earns the right to give tips.",
+      "Share-swipe copy with fill-in blanks is a device for press-placement emails; one link repeated, no second offer."
+    ],
+    "notes": "Full text read from the ConvertKit archive (ckarchive.com). Body about 870 words before the standard footer. Image in email is a screenshot of the article."
+  },
+  {
+    "id": "controls_emails-14",
+    "title": "Uh, bye! (Not you, [FIRST NAME])",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "list email about unsubscribes, linking to a blog post on 'value' (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/v8u3hrhng8rm",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Uh, bye! (Not you, [FIRST NAME GOES HERE]) | Hey [FIRST NAME GOES HERE]! The last email I wrote got more unsubscribes than usual. Not a whole lot more, just 10 people more.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells list loyalty and a click to her 'V Word' post to subscribers on the promise that entertaining stories are value, because she reports her own unsubscribe numbers candidly and argues an un-put-downable story is the highest value.",
+      "hook": "'The last email I wrote got more unsubscribes than usual.'",
+      "mechanism": "Candid metrics (21 unsubscribes per email on average, list grown from ~4k to just under 10k), a binge-watching anecdote ('Dead To Me') as the definition of value, a coaching-client question about acceptable unsub rates, then the stance 'I'm not for everyone and don't want to be.'",
+      "big_idea": "Value is a story you can't put down, not a lesson.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "disqualification ('BYEEEE! Again, not you')",
+        "one content link",
+        "P.S. open loop about husband's restaurant project"
+      ],
+      "close": "'I'm so happy to have you here! Please stay as long as you want.' then back to 'Killing Eve'; P.S. sets up a running theme.",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 612
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Report your own list numbers plainly; specifics (21 unsubs, 4k to 10k) carry the argument.",
+      "An email with no offer still sells the relationship by polarizing: 'I'm not for everyone and don't want to be.'"
+    ],
+    "notes": "Full text read from ckarchive. Mentions her group coaching program Shrimp Club without a link."
+  },
+  {
+    "id": "controls_emails-15",
+    "title": "Sell me, please (Hamptons house hunt)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "list email, lesson on selling, with P.S. links to prior stories (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/xmuph6hwq2xe",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Sell me, please | Hey [FIRST NAME GOES HERE], My husband, Steven, and I decided to look for a summer house out here on Long Island (where we've been renting since May)... ...and I think we already found one!",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells the permission to sell to copy-shy entrepreneurs on the promise that buyers want to be convinced, because a scene with two realtors steering her back to the house she already wants shows that 'people don't like to be sold' is false when the want exists.",
+      "hook": "House found on the first day; 'It's on a funny-sounding street I'll call Doodlebug Lane.'",
+      "mechanism": "Realtor dialogue (price anchoring, '$150k' vs 'at least 300k', walk-to-village comparisons), turn: 'So, how do I feel when the broker pushes me back toward Doodlebug? I feel good! I want to be convinced... I want to be SOLD.' Then the rule: people dislike being sold what they do not want, falsely, or by someone who wouldn't recommend it; otherwise 'Sell me, please!'",
+      "big_idea": "People who already kinda want it want to be sold.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "no offer; command close 'So? Go sell it.'",
+        "P.S. links to earlier story and vintage post"
+      ],
+      "close": "'I do, anyway. Sell me, please! So? Go sell it. xoLaura' with two P.S. links.",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 830
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A belief-shift email: dramatize the belief ('people don't like to be sold to') in a scene, then state the corrected rule in three lines.",
+      "Price anchoring shown inside dialogue is more persuasive than stated; usable as a teaching example for the mid-cart objection email."
+    ],
+    "notes": "Full text read from ckarchive."
+  },
+  {
+    "id": "controls_emails-16",
+    "title": "\"Worst I ever had\" (brother-in-law sends back the fish)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "list email with no link, lesson on critics (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/0vuwh9hd480d",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: \"Worst I ever had\" | My husband's brother-in-law, Dan, always sends back his food. Let me first say, I hit the in-law jackpot.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells resilience to subscribers who fear criticism of their writing on the promise that complainers are a type, not a verdict, because a restaurant scene with a serial food-returner maps directly onto the reader who calls an email 'lame'.",
+      "hook": "'My husband's brother-in-law, Dan, always sends back his food.'",
+      "mechanism": "Scripted dinner dialogue, escalating examples (risotto, short ribs, duck, fish), the chef who 'has had plenty of Dans', then the transfer: 'When someone writes back to an email and tells me it's lame... I know they're a Dan.'",
+      "big_idea": "There's always going to be a Dan who's just looking to send it back.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "no link, no offer",
+        "P.S. punchline ('FUCK THE DUCK')"
+      ],
+      "close": "'When someone doesn't like something you did... remember that... All that said, remember: I love Dan. xoLaura ps FUCK THE DUCK.'",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 604
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Handpicked page: 'World's worst fish (split tested with winning subj: \"worst I ever had\")'; the archived email carries the winning subject. Collection-level engagement claim only.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [
+      {
+        "description": "Subject line 'World's worst fish'",
+        "result": "Lost the split test to '\"Worst I ever had\"' per the author; margin not stated."
+      }
+    ],
+    "lessons": [
+      "A quoted line of dialogue in quotation marks beat a descriptive subject; quote-as-subject is a testable pattern.",
+      "Zero-link story emails exist in a selling list and are tolerated because the sequence as a whole sells."
+    ],
+    "notes": "Full text read from ckarchive. No body links other than footer."
+  },
+  {
+    "id": "controls_emails-17",
+    "title": "Why are we RUNNING? (Madrid layover)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "return-from-vacation list email; P.S. sells one-on-one spots (sequence role: daily with soft offer)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/92uzhnh3n7nz",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Why are we RUNNING? | \"Run!\" I yelled to my husband. \"Laura,\" he yelled back, looking at his watch while running beside me. \"We're fine!\"",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells one-on-one copy sessions to warm subscribers on the promise that summer calendar spots are nearly gone, because an airport story about running only because others ran re-opens the relationship after a two-week absence and the P.S. carries the dated offer.",
+      "hook": "In-scene dialogue, running through Madrid airport behind a couple on the same connection.",
+      "mechanism": "Suspense (pictured missed flight, the loud 'a-hole' in blue shades), anticlimax (boarding not finished), a fake moral ('Stop running and chasing things in your business just because someone else is'), the admission 'I don't really have a moral', a numbered list of seven travel notes, photos, then P.S.: 'Only a few days with available spots left before September... book here.'",
+      "big_idea": "I'm a lemming who runs because other people are running (and I'm back).",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "deadline (spots before September)",
+        "scarcity ('only a few days with available spots')",
+        "offer in P.S. only",
+        "social links"
+      ],
+      "close": "'So, that's all. xoLaura' then P.S. with the booking link and P.P.S. punchline about luggage.",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 879
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Handpicked page notes #6 received the 'Copy Chief' tribute (Kevin Rogers). Collection-level engagement claim only.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "The offer can live entirely in the P.S. when the email's job is re-entry after absence; the deadline is a calendar fact, not a timer.",
+      "Admitting 'I don't really have a moral' is a tell-free way to avoid the forced lesson ending the AI taxonomy flags."
+    ],
+    "notes": "Full text read from ckarchive. Two photos in the email."
+  },
+  {
+    "id": "controls_emails-18",
+    "title": "Can you say \"ballsack\" at a funeral?",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "personal news email (father's death), no offer (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/75u7h8hp575g",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Can you say \"ballsack\" at a funeral? | Hey [FIRST NAME GOES HERE], I don't want to get too heavy on you, so I'll jump in at \"ballsack.\" I was in the middle of my dad's eulogy, talking about a wackadoo who used to call his business number.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells nothing but the relationship to subscribers on the promise of an honest, funny account of her father's funeral, because the 'supposed to' refrain turns a eulogy story into the brand's permission-to-break-rules idea.",
+      "hook": "Jump straight to the word at the eulogy; children in the front row.",
+      "mechanism": "Eulogy anecdote (the itchy-ballsack voicemail), sister's escalation, the rabbi, then the thesis 'Screw supposed to' with a list of things her father was not supposed to do, closing 'You're probably not supposed to write to your whole list about your dad's funeral. Well, I'm my father's daughter.'",
+      "big_idea": "Supposed to isn't a function of what you can do, but of what people normally do.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "no offer",
+        "links to blog category, Daily Show clip, NYT obituary, Facebook eulogy"
+      ],
+      "close": "'For the record, the rabbi got up at the end and said, \"In my 40 years of officiating funerals, I have never had such a good time.\" Are funerals supposed to be a good time? Who cares. xoLaura ps - I'm OK. Thank you.'",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 648
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Voice profile capture: profanity, refrain ('supposed to'), real names, exact quotes; the opposite of the hedged AI register.",
+      "A rabbi's quoted remark is the only authority in the email and it is a real, attributable line; model for 'unledgered authority' avoidance."
+    ],
+    "notes": "Full text read from ckarchive. Included for voice capture, not offer structure."
+  },
+  {
+    "id": "controls_emails-19",
+    "title": "This is for the lazy ones (blog teaser)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "short teaser email driving a blog post (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/e5uph7h0766z",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: This is for the lazy ones | Hey [FIRST NAME GOES HERE]! Oh, I laugh. Laugh, laugh, laugh. Why? I've helped a lot of coaches with their copy.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells a blog click to subscribers on the promise of a rant they will recognise, because the email stops mid-joke ('Um...have we met?') and sends the reader to the post to finish it.",
+      "hook": "'Oh, I laugh. Laugh, laugh, laugh. Why?'",
+      "mechanism": "List of coach types, the barter offers rendered as bullets ('Take more breaks', 'Release feelings of unworthiness around money'), cliffhanger cut to '[CLICK HERE TO READ THE REST]', the link repeated with a nudge ('Too lazy to go to the blog? You should anyway... And really, you can click a link.').",
+      "big_idea": "Lazy is a tribe.",
+      "proof_elements": [],
+      "offer_devices": [
+        "cliffhanger cut",
+        "same link twice",
+        "comment request"
+      ],
+      "close": "'Here it is again. If you've got it in you, leave a comment. See you over there! xoLaura'",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 186
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Teaser-to-blog shape: 150-200 words, one link repeated, cut at the funniest unresolved line.",
+      "Bullets here are jokes with a payoff, not 'bold label: benefit' bullets."
+    ],
+    "notes": "Full text read from ckarchive."
+  },
+  {
+    "id": "controls_emails-20",
+    "title": "This writing trick is *literally* bananas (Jon Stewart specificity lesson, products back on sale)",
+    "author_or_company": "Laura Belgray / Talking Shrimp",
+    "format": "email_single",
+    "market": "Entrepreneurs, coaches and copywriters",
+    "funnel_position": "teaching email bridging to two products relisted (sequence role: daily with direct offer)",
+    "traffic": "owned_list",
+    "source_url": "https://ckarchive.com/b/gkunh5hew6rm",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: This writing trick is *literally* bananas | Hey - you see this video yet? If you haven't, do! Jon Stewart appeared before (a mostly empty) Congress to appeal for funding for 9/11 First Responders.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells 60-Minute Makeovers and the About Page/Mini-Bio Builder to subscribers on the promise that tiny word-level tweaks make copy more powerful and profitable, because a close read of two Jon Stewart lines ('Al Qaeda didn't shout Death to Tribeca') demonstrates specificity and last-word placement before the products are named.",
+      "hook": "Current-event video with permission to procrastinate.",
+      "mechanism": "Two quoted passages, before/after rewrites showing what he could have said, the rule (specific concrete details; end on the strongest word), a banana example that demonstrates the rule, then the bridge: 'if you get jazzed by tiny tweaks... I've got great news: 60-Minute Makeovers is back on the market!'",
+      "big_idea": "Specificity and the last word are where the punch lives.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "teach-then-sell bridge",
+        "'back on the market' availability",
+        "two product links",
+        "P.S. link to father story"
+      ],
+      "close": "'You can grab them right off the digital shelves now. They'll help make you and your brand top banana. xoLaura'",
+      "voice_notes": "First person, profane, comic timing via one-line paragraphs, pop-culture references, parentheticals, first-name merge field in greeting, sign-off 'xoLaura', P.S. and P.P.S.; standard footer explains why the reader is receiving the email and invites 'Bye Felicia' unsubscribes.",
+      "length_words_est": 860
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Talking Shrimp's handpicked-emails page states of the collection: 'All got great engagement (clicks, replies, and, where applicable, purchases).' No per-email figures.",
+      "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Teach the exact micro-skill the product delivers, with a live demonstration in the email, then name the product in one line; no feature list.",
+      "'Back on the market' is an honest availability reason to buy now without a fake deadline."
+    ],
+    "notes": "Full text read from ckarchive. Products: 60-Minute Makeovers, About Page and Professional Mini-Bio Builder."
+  },
+  {
+    "id": "controls_emails-21",
+    "title": "Why I don't do video courses",
+    "author_or_company": "Ben Settle",
+    "format": "email_single",
+    "market": "Email marketers, copywriters and info-publishers",
+    "funnel_position": "daily email to list; sells the paid newsletter issue on course creation (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://bensettle.com/blog/why-i-dont-do-video-courses/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Why I don't do video courses | The short answer is because I like money. But here are some of the specific reasons that may or may not apply to your business:",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "5",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells the September Email Players issue (his course-creation 'Framework') to list readers on the promise that audio-only courses make more money with less work, because thirteen blunt reasons from his own business replace any general theory.",
+      "hook": "'The short answer is because I like money.'",
+      "mechanism": "Thirteen bulleted reasons (comfort, energy, customer quality, consumption habits, production speed), each a personal preference stated as a business rule; bridge 'On a related note' to the Framework issue.",
+      "big_idea": "Build the business around your own preferences (attributed to Dan Kennedy).",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "single CTA link",
+        "contrarian stance",
+        "no deadline"
+      ],
+      "close": "Link to the paid newsletter; closes on the Kennedy principle rather than a P.S.",
+      "voice_notes": "Irreverent, blunt, coined slang ('goo-roos', 'reply guys'), reader-question openers quoted verbatim, one-line paragraphs, name-drops of Kennedy/Nightingale/Jobs, one CTA link to the paid newsletter, no P.S.; disqualification and withheld information are routine.",
+      "length_words_est": 600
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Daily-email bullets can be opinions with reasons, not benefits; every bullet is first person and specific.",
+      "Bridge to the offer is one phrase ('On a related note'); the email never restates the subject in line one."
+    ],
+    "notes": "Republished daily email on bensettle.com; body read in full via the blog post. Offer: Email Players print newsletter ($97/month per site sidebar) via BenSettle.com/alt, or the free list/app."
+  },
+  {
+    "id": "controls_emails-22",
+    "title": "How to spank the high falutin' goo-roos with your pricing",
+    "author_or_company": "Ben Settle",
+    "format": "email_single",
+    "market": "Email marketers and info-publishers",
+    "funnel_position": "daily email answering a reader question; sells the free list/app (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://bensettle.com/blog/how-to-spank-the-high-falutin-goo-roos-with-your-pricing/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "How to spank the high falutin' goo-roos with your pricing | Came a question about pricing: \"Hello Ben, Just have a question. You often charge even prices like $2000 for Low Stress Options...\"",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "5",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells his pricing stance (and the list/app) to marketers on the promise that round-number prices differentiate and signal quality, because he quotes a reader's question, gives two numbered reasons, admits his own $97 price was a mistake, and ends on an Earl Nightingale quote.",
+      "hook": "Reader question quoted verbatim about $2,000 vs $1,997 pricing.",
+      "mechanism": "Two numbered points (differentiation from the 7s-and-9s crowd; round numbers signal quality), critique of marketers copying Ted Nicholas's odd pricing without testing, self-admission about $97, bridge 'Since we're rapping about pricing'.",
+      "big_idea": "Do the opposite of the IM crowd and price like a premium brand.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "order_form"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor ($2,500 Low Stress Options vs $97/month)",
+        "future price-increase mention",
+        "free lead magnet CTA"
+      ],
+      "close": "Invitation to join the list for the free app; sidebar stacks ~30 named testimonials.",
+      "voice_notes": "Irreverent, blunt, coined slang ('goo-roos', 'reply guys'), reader-question openers quoted verbatim, one-line paragraphs, name-drops of Kennedy/Nightingale/Jobs, one CTA link to the paid newsletter, no P.S.; disqualification and withheld information are routine.",
+      "length_words_est": 650
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Reader-question opener is a lead type the standard's single-email spec can allow for daily emails: quote, answer, bridge.",
+      "Admitting a past pricing mistake is candour proof that makes the pricing claim credible."
+    ],
+    "notes": "Republished daily email on bensettle.com; body read in full via the blog post. Offer: Email Players print newsletter ($97/month per site sidebar) via BenSettle.com/alt, or the free list/app."
+  },
+  {
+    "id": "controls_emails-23",
+    "title": "How to commit wholesale inbox genocide",
+    "author_or_company": "Ben Settle",
+    "format": "email_single",
+    "market": "Email marketers and busy entrepreneurs",
+    "funnel_position": "short daily email; CTA to free app/list (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://bensettle.com/blog/how-to-commit-wholesale-inbox-genocide/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "How to commit wholesale inbox genocide | The question of the hour: \"What is your 3-5 step process for reaching inbox zero?\" You know, Stefania once had 30,000 (something like that) emails in her inbox.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "5",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells his free app and list to readers who drown in email on the promise of a brutal ten-step inbox-zero process, because the answer (select all, delete) is a joke with a real rule inside and is delivered 'at your own risk'.",
+      "hook": "Reader question plus the 30,000-email anecdote.",
+      "mechanism": "Ten deadpan numbered steps; caveat that only disciplined readers should follow; bridge 'Not sure where else I can take this topic.'",
+      "big_idea": "Inbox zero is a decision, not a system.",
+      "proof_elements": [],
+      "offer_devices": [
+        "free app CTA",
+        "reverse-psychology caveat"
+      ],
+      "close": "CTA to sign up for the free mobile app; no P.S.",
+      "voice_notes": "Irreverent, blunt, coined slang ('goo-roos', 'reply guys'), reader-question openers quoted verbatim, one-line paragraphs, name-drops of Kennedy/Nightingale/Jobs, one CTA link to the paid newsletter, no P.S.; disqualification and withheld information are routine.",
+      "length_words_est": 350
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A 350-word daily email with a numbered list that is actually a joke keeps the 'one idea, one link' rule.",
+      "Example of the provocative-subject register the tell detector must not penalize (caps, slang, hyperbole at human rates)."
+    ],
+    "notes": "Republished daily email on bensettle.com; body read in full via the blog post. Offer: Email Players print newsletter ($97/month per site sidebar) via BenSettle.com/alt, or the free list/app."
+  },
+  {
+    "id": "controls_emails-24",
+    "title": "my prediction about the fate of the internet marketing world",
+    "author_or_company": "Ben Settle",
+    "format": "email_single",
+    "market": "Online marketers worried about the IM space",
+    "funnel_position": "daily email answering a subscriber; sells paid newsletter (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://bensettle.com/blog/my-prediction-about-the-fate-of-the-internet-marketing-world/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "my prediction about the fate of the internet marketing world | Since I spent so much time ripping on the IM space yesterday.. Here's a related & timely question I got from an Email Players subscriber:",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "5",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells the paid newsletter to marketers anxious about a downturn on the promise that fundamentals outlast trends, because he compares the current credit-and-AI hype to 1998-2000 and tells how he entered after the 2000 crash and benefited from the rebound.",
+      "hook": "Callback to yesterday's email plus a subscriber question.",
+      "mechanism": "Diagnosis (unsustainable climate, easy credit, AI hype), historical analogy (dot-com crash), personal history as proof, contrast of 'old guard' vs 'trend chasers', withheld detail ('Will not explain.').",
+      "big_idea": "Trend-chasers die in the crash; fundamentals survive.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "withheld information as open loop",
+        "identity contrast",
+        "single CTA"
+      ],
+      "close": "'Will not explain.' then the link to the paid newsletter.",
+      "voice_notes": "Irreverent, blunt, coined slang ('goo-roos', 'reply guys'), reader-question openers quoted verbatim, one-line paragraphs, name-drops of Kennedy/Nightingale/Jobs, one CTA link to the paid newsletter, no P.S.; disqualification and withheld information are routine.",
+      "length_words_est": 530
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Sequence continuity: open by referring to yesterday's email; the daily format treats the list as a serial.",
+      "Withholding ('Will not explain') is a legitimate open loop for a paid-newsletter pitch."
+    ],
+    "notes": "Republished daily email on bensettle.com; body read in full via the blog post. Offer: Email Players print newsletter ($97/month per site sidebar) via BenSettle.com/alt, or the free list/app."
+  },
+  {
+    "id": "controls_emails-25",
+    "title": "The Archie Bunker effect used by communist writers to make bank",
+    "author_or_company": "Ben Settle",
+    "format": "email_single",
+    "market": "Copywriters and email marketers",
+    "funnel_position": "daily teaching email; soft CTA to paid newsletter (sequence role: daily)",
+    "traffic": "owned_list",
+    "source_url": "https://bensettle.com/blog/the-archie-bunker-effect-used-by-communist-writers-to-make-bank/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "The Archie Bunker effect used by communist writers to make bank | Many years ago, I watched some interviews with the writers of the smash hit TV show from the 70's: Specifically, they were talking about the main character Archie Bunker.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "5",
+      "lead_type": "story",
+      "argument_sentence": "This sells the paid newsletter to copywriters on the promise of a character-writing principle 'very few writers' can teach, because the All in the Family anecdote (writers hated Archie, audiences loved him) is mapped onto his own novels and client copy.",
+      "hook": "Writers who despised their own most-loved character.",
+      "mechanism": "TV-writing anecdote, personal memory (humming the theme to his son), definition of the named effect (a character so fleshed out it writes itself), application to copy and his novels, exclusivity claim.",
+      "big_idea": "A fully drawn character writes itself and sells itself.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "named proprietary concept",
+        "exclusivity claim",
+        "soft CTA"
+      ],
+      "close": "'More about the paid Email Players newsletter' link; no P.S.",
+      "voice_notes": "Irreverent, blunt, coined slang ('goo-roos', 'reply guys'), reader-question openers quoted verbatim, one-line paragraphs, name-drops of Kennedy/Nightingale/Jobs, one CTA link to the paid newsletter, no P.S.; disqualification and withheld information are routine.",
+      "length_words_est": 850
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Naming a concept ('The Archie Bunker Effect') is a mechanism device for daily emails; the standard should require the name to be explained in two parts.",
+      "Teaching emails sell by implication; the product is mentioned once at the end."
+    ],
+    "notes": "Republished daily email on bensettle.com; body read in full via the blog post. Offer: Email Players print newsletter ($97/month per site sidebar) via BenSettle.com/alt, or the free list/app."
+  },
+  {
+    "id": "controls_emails-26",
+    "title": "A tale of two copywriters",
+    "author_or_company": "Kim Krause Schwalm",
+    "format": "email_single",
+    "market": "Freelance copywriters seeking clients",
+    "funnel_position": "daily email selling her book with a P.S. price-rise tactic (sequence role: daily with direct offer)",
+    "traffic": "owned_list",
+    "source_url": "https://kimschwalm.com/post/a-tale-of-two-copywriters/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "A tale of two copywriters | Those of you who are familiar with the famous \"A Tale of Two Young Men\" letter written decades ago to sell a record-breaking number of Wall Street Journal subscriptions will recognize today's subject line.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells the book Client Badassery Secrets to freelance copywriters on the promise that client-getting is a learnable set of relationship tactics, because a parable modelled on the WSJ letter contrasts two similar freelancers, survey verbatims supply proof, and three numbered tactics preview the book.",
+      "hook": "Borrowed, famous headline structure announced in line one.",
+      "mechanism": "Two-copywriter parable; her own history (nearly 90% of early clients from former co-worker referrals; a second chance from a top client that led to a 'huge winner' control); survey responses from a well-connected copywriter vs struggling peers; three tactics; bridge to the book; P.S. 'beat the coming price rise' and a reactivation tactic.",
+      "big_idea": "Success is studying what successful copywriters do.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "bonus (Client Badassery Tool Kit: screening questionnaire, sales-call script, manifesto)",
+        "price rise deadline (2024)",
+        "value framing ('a fraction of the value')",
+        "three links to the same Amazon page"
+      ],
+      "close": "Book CTA, then P.S. with the price-rise tactic and a second CTA.",
+      "voice_notes": "Conversational first person, direct 'you', parenthetical asides, em dashes and ellipses, emphatic caps, arrow bullets, named authorities (Schwartz, Makepeace), signature 'Yours for smarter marketing', persona 'Dr. Kim'.",
+      "length_words_est": 1600
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Explicit homage to a control headline is a lead device for a sophistication-4 copywriter audience that recognises the reference.",
+      "Three links to one destination; no competing offer. The P.S. carries the reason to act now (price rise)."
+    ],
+    "notes": "Republished email on kimschwalm.com. Figures ('nearly 90%') are the author's self-description, not test results."
+  },
+  {
+    "id": "controls_emails-27",
+    "title": "Cooking up a great offer (Tovala mailer critique)",
+    "author_or_company": "Kim Krause Schwalm",
+    "format": "email_single",
+    "market": "Copywriters and marketers",
+    "funnel_position": "daily critique email; P.S. sells Black Friday bundles (sequence role: daily, holiday promo)",
+    "traffic": "owned_list",
+    "source_url": "https://kimschwalm.com/post/cooking-up-a-great-offer/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Cooking up a great offer | Food is one of the essential needs of human life. But so many of us struggle with the eternal question that haunts us day after day: \"What's for dinner?\"",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells her copywriting bundle to copywriters on the promise that they can judge offers like an A-lister, because a panel-by-panel critique of a Tovala Black Friday mailer applies Schwartz's sophistication stages and 'new mechanism' to a real piece.",
+      "hook": "Universal dinner problem and a crowded meal-kit market.",
+      "mechanism": "Personal experience with meal services; Schwartz's stages; front panel, back panel, inside panels, website and offer panel critiqued in turn ('Not reassuring.'); suggested rewrites with '$200' savings and 'as little as $49' entry; bridge invites readers to send promos; P.S. stacks three bundles through Black Friday.",
+      "big_idea": "Crowded markets need a new mechanism, not a louder discount.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "Black Friday deadline",
+        "promo code",
+        "bundle",
+        "dollar-savings framing"
+      ],
+      "close": "Invitation to send promos for critique, pitch for the bundle, P.S. 'Bundle-palooza' week.",
+      "voice_notes": "Conversational first person, direct 'you', parenthetical asides, em dashes and ellipses, emphatic caps, arrow bullets, named authorities (Schwartz, Makepeace), signature 'Yours for smarter marketing', persona 'Dr. Kim'.",
+      "length_words_est": 1400
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A critique email is a proof-of-expertise format: show the judgment in public, then sell the training.",
+      "Holiday offers: deadline is the calendar event (Black Friday), not an invented timer."
+    ],
+    "notes": "Republished email dated 22 Nov 2023 on kimschwalm.com. Figures quoted are from the mailer, not results."
+  },
+  {
+    "id": "controls_emails-28",
+    "title": "Make them feel (Super Bowl ads)",
+    "author_or_company": "Kim Krause Schwalm",
+    "format": "email_single",
+    "market": "Copywriters",
+    "funnel_position": "daily teaching email; P.S. teases a holiday bundle (sequence role: daily, pre-launch tease)",
+    "traffic": "owned_list",
+    "source_url": "https://kimschwalm.com/post/make-them-feel/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Make them feel | Last night's Super Bowl ads reminded me of one of the most crucial rules of effective direct response copy. The ads that I paid attention to, the ones that resonated, the ones that I remembered...",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This pre-sells the Research Beast program to copywriters on the promise that emotion opens the door and belief closes the sale, because memorable Super Bowl ads are sorted by the feeling they produced and the bridge says belief requires research.",
+      "hook": "Super Bowl ads as a test of one DR rule.",
+      "mechanism": "Viewing anecdote (distracted puppy), categories of feeling (laughter, anger, nostalgia, hope), the worst ad named, bridge: emotion opens, belief closes, research builds belief; P.S. 'Keep an eye out this weekend' for the bundle.",
+      "big_idea": "Make them FEEL, then make them BELIEVE.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "pre-launch tease in P.S.",
+        "lead magnet checklist",
+        "benefit stack ('all of that and more')"
+      ],
+      "close": "Soft close; P.S. teases the weekend bundle deal.",
+      "voice_notes": "Conversational first person, direct 'you', parenthetical asides, em dashes and ellipses, emphatic caps, arrow bullets, named authorities (Schwartz, Makepeace), signature 'Yours for smarter marketing', persona 'Dr. Kim'.",
+      "length_words_est": 1350
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Prelaunch tease email: teach the principle the product delivers, name the product in the P.S. only, and date the announcement.",
+      "Emotion-then-belief ordering mirrors the standard's decision hierarchy (desire before proof)."
+    ],
+    "notes": "Republished email dated 10 Feb 2025."
+  },
+  {
+    "id": "controls_emails-29",
+    "title": "Harvest Ministries: ask amount in an email appeal ($35 vs $50 vs 'generous gift')",
+    "author_or_company": "Harvest Ministries (NextAfter experiment #4139)",
+    "format": "email_single",
+    "market": "Nonprofit donors (Christian ministry)",
+    "funnel_position": "email appeal to house file (sequence role: daily/appeal)",
+    "traffic": "owned_list",
+    "source_url": "https://www.nextafter.com/?p=12774",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Experiment: How ask amount affects donor conversion in an email fundraising appeal. Control asked for $35; T1 asked for $50; T2 asked for a 'generous gift' with no amount.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a donation to existing supporters on the promise that their gift matters, because letting the donor choose the size ('generous gift') converted more donors than either named amount.",
+      "hook": "unknown (image)",
+      "mechanism": "Ask amount is the only variable.",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "ask amount",
+        "open-ended ask"
+      ],
+      "close": "Donation CTA.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Donor conversion: C $35 ask 0.10%; T1 $50 ask 0.05% (-52.3%, 99.9% confidence); T2 'Generous Gift' ask 0.14% (+43.1%, 97.4% confidence). Sample 203,864 (12,823 required); stated valid, 05/15/2016-05/24/2016. Page also states T2 'generated a higher average gift than the control' (no figure).",
+      "source_url": "https://www.nextafter.com/?p=12774"
+    },
+    "losing_variants": [
+      {
+        "description": "T1: $50 ask",
+        "result": "-52.3% donor conversion vs $35 control"
+      },
+      {
+        "description": "C: $35 ask",
+        "result": "beaten by open 'generous gift' ask by 43.1%"
+      }
+    ],
+    "lessons": [
+      "Raising a named price in the ask halved conversion; an open ask beat both. Precision must match the evidence of what the reader will pay.",
+      "A losing variant with a documented number for the rubric's loser set."
+    ],
+    "notes": "NextAfter experiment page; emails are shown as images, so excerpt is the experiment statement rather than email text. Results table quoted as stated."
+  },
+  {
+    "id": "controls_emails-30",
+    "title": "Illinois Policy Institute: soft 'learn more' CTA vs direct donation ask",
+    "author_or_company": "Illinois Policy Institute (NextAfter experiment #6186)",
+    "format": "email_single",
+    "market": "Nonprofit policy-institute donors",
+    "funnel_position": "email appeal to house file (sequence role: appeal)",
+    "traffic": "owned_list",
+    "source_url": "https://www.nextafter.com/?p=13419",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Experiment: How direct donation asks in an email impact performance. Control used a 'learn more' soft call-to-action; treatment asked directly for a donation.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a donation to a policy institute's list on the promise that the gift funds the work, because asking directly sent fewer but better-qualified visitors to the donation page.",
+      "hook": "unknown (image)",
+      "mechanism": "CTA type is the only variable.",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "direct ask"
+      ],
+      "close": "Direct donation ask.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Conversion rate: C soft CTA 0.06%; T1 direct asks 0.20% (+246.1%, 99.2% confidence). Sample 19,137 (4,683 required), 02/16/2017-02/21/2017, stated valid. Flux: -10.7% average gift, +209.0% revenue, and a statistically significant 67% decrease in visitors to the donation page.",
+      "source_url": "https://www.nextafter.com/?p=13419"
+    },
+    "losing_variants": [
+      {
+        "description": "C: 'learn more' soft call-to-action",
+        "result": "0.06% conversion vs 0.20%; more clicks, far fewer gifts"
+      }
+    ],
+    "lessons": [
+      "Clicks and revenue diverge: the soft CTA produced more traffic and less money. Judge emails on the money metric, not opens or clicks.",
+      "Direct offer lead for a most-aware list is the standard's rule; here it is documented with revenue."
+    ],
+    "notes": "NextAfter experiment page; emails are shown as images, so excerpt is the experiment statement rather than email text. Results table quoted as stated."
+  },
+  {
+    "id": "controls_emails-31",
+    "title": "Harvest Ministries: adding a personal testimony to an email appeal",
+    "author_or_company": "Harvest Ministries (NextAfter experiment #6827)",
+    "format": "email_single",
+    "market": "Nonprofit donors (evangelism event campaign)",
+    "funnel_position": "high-urgency campaign appeal (sequence role: launch/campaign)",
+    "traffic": "owned_list",
+    "source_url": "https://www.nextafter.com/?p=13749",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Experiment: How adding a personal testimony strengthens the value proposition and impacts clicks. Treatment added a personal testimony from someone who attended a prior Harvest event.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a campaign gift to supporters on the promise that the event changes lives, because one attendee's testimony placed in the appeal raised clicks by adding credibility to the ask.",
+      "hook": "unknown (image)",
+      "mechanism": "Testimony added; otherwise identical.",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "testimonial"
+      ],
+      "close": "Donation CTA.",
+      "voice_notes": "unknown",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Click rate: C without testimony 1.7%; T1 with testimony 2.0% (+22.2%, 100.0% confidence). Sample 65,184 (10,330 required), 06/01/2017-06/20/2017, stated valid. Flux: +22.2% traffic, 0% change in conversion rate and average gift.",
+      "source_url": "https://www.nextafter.com/?p=13749"
+    },
+    "losing_variants": [
+      {
+        "description": "C: appeal without testimony",
+        "result": "1.7% click rate vs 2.0%"
+      }
+    ],
+    "lessons": [
+      "Proof within reach of the claim: a real testimony beside the ask lifted response; the standard forbids generating one, so the ledger must hold it.",
+      "A testimony lifted clicks but not conversion; proof type should match the step it is meant to move."
+    ],
+    "notes": "NextAfter experiment page; emails are shown as images, so excerpt is the experiment statement rather than email text. Results table quoted as stated. A separate Harvest test the same month is reported elsewhere as +27.6% clicks; not confirmed on a fetched page, so not recorded as a result."
+  },
+  {
+    "id": "controls_emails-32",
+    "title": "Jews for Jesus: direct-mail-style eAppeal vs conversational personal email",
+    "author_or_company": "Jews for Jesus (NextAfter experiment #3423)",
+    "format": "email_single",
+    "market": "Nonprofit ministry donors",
+    "funnel_position": "monthly email appeal (sequence role: daily/monthly appeal)",
+    "traffic": "owned_list",
+    "source_url": "https://www.nextafter.com/?p=12535",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Experiment: How personal email copy affects clickthrough rate. Control was the usual direct-mail letter converted to an eAppeal; treatment kept the value proposition but rewrote in a conversational tone, removed branding and added personalization.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "story",
+      "argument_sentence": "This sells a gift to a ministry's list on the same value proposition, because copy that reads as a personal note from a person, not a branded template, more than doubled clicks.",
+      "hook": "unknown (image)",
+      "mechanism": "Tone, branding removal and personalization; value proposition held constant.",
+      "big_idea": "People give to people.",
+      "proof_elements": [],
+      "offer_devices": [
+        "plain personal email, no branding",
+        "personalization"
+      ],
+      "close": "Pasted link.",
+      "voice_notes": "Conversational, first person (treatment).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Click rate: C 0.21%; T1 0.44% (+109.2%, 100.0% confidence). Sample 119,721 (4,750 required), 03/08/2016-03/14/2016, stated valid. Flux: +109.2% traffic, 0% change in conversion rate and average gift.",
+      "source_url": "https://www.nextafter.com/?p=12535"
+    },
+    "losing_variants": [
+      {
+        "description": "C: direct-mail letter repurposed as branded eAppeal",
+        "result": "0.21% click rate vs 0.44%"
+      }
+    ],
+    "lessons": [
+      "Format transfer fails: a direct-mail control pasted into email lost to a rewrite in email's native register.",
+      "Removing brand chrome and writing as one person is a documented email lever; relevant to the 'one reader' rule."
+    ],
+    "notes": "NextAfter experiment page; emails are shown as images, so excerpt is the experiment statement rather than email text. Results table quoted as stated."
+  },
+  {
+    "id": "controls_emails-33",
+    "title": "Americans for Prosperity: marketing email vs personal-tone invitation (Torchbearer recurring gift)",
+    "author_or_company": "Americans for Prosperity (NextAfter experiment #4117)",
+    "format": "email_single",
+    "market": "Advocacy donors (monthly recurring membership)",
+    "funnel_position": "recurring-gift upgrade email to house file (sequence role: post-purchase upgrade / next offer)",
+    "traffic": "owned_list",
+    "source_url": "https://www.nextafter.com/?p=12763",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Experiment: How personal tone and copy affects clickthrough rate for an email fundraising appeal. Control: logo, large green 'donate' button top and bottom, results-centred copy. Treatment: no logo or buttons, personal greeting, results written as a person would, membership framed as an invitation, ",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a recurring Torchbearer membership to existing donors on the promise of joining an inner circle, because an invitation written as a personal note with an inline link nearly doubled clicks over the branded marketing version.",
+      "hook": "Personal greeting with context for the message.",
+      "mechanism": "Invitation framing plus removal of marketing elements.",
+      "big_idea": "People give to people, not organizations or marketing machines.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "invitation framing",
+        "inline pasted link",
+        "reply offer",
+        "no buttons"
+      ],
+      "close": "Pasted link and an offer to answer questions by reply.",
+      "voice_notes": "Personal, plain (treatment).",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "split_test",
+      "detail": "Click rate: C marketing email 0.31%; T1 personal tone 0.60% (+91.3%, 99.0% confidence). Sample 14,619 (4,248 required), 05/15/2016-05/20/2016, stated valid. Page reports a directional but not statistically valid increase in Torchbearer conversions.",
+      "source_url": "https://www.nextafter.com/?p=12763"
+    },
+    "losing_variants": [
+      {
+        "description": "C: branded marketing email with two large donate buttons",
+        "result": "0.31% click rate vs 0.60%"
+      }
+    ],
+    "lessons": [
+      "Upgrade/next-offer emails to buyers perform as invitations, not promotions.",
+      "'Reply with questions' is a usable close for owned-list emails; the standard's one-link rule is compatible with an inline pasted link."
+    ],
+    "notes": "NextAfter experiment page; emails are shown as images, so excerpt is the experiment statement rather than email text. Results table quoted as stated."
+  },
+  {
+    "id": "controls_emails-34",
+    "title": "Brain.fm welcome email ('Welcome to Brain.fm Robert!')",
+    "author_or_company": "Brain.fm (teardown by Chris Orzechowski / The Email Copywriter, Email of the Week #53)",
+    "format": "email_single",
+    "market": "Focus/sleep music app trial users",
+    "funnel_position": "welcome email 1 of a trial onboarding series (sequence role: welcome)",
+    "traffic": "owned_list",
+    "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-53-brain-fm",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Welcome to Brain.fm Robert! | Opening: High achievers... Entrepreneurs... Fortune 500 professionals... Superhero parents... And bio-hackers!?!?",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells trial engagement (toward a paid membership) to new sign-ups on the promise of entering flow in about five minutes, because an identity list plus '100k+' users, a patented-functional-music mechanism and future pacing make the first listen feel inevitable.",
+      "hook": "Identity roll-call of who already uses it.",
+      "mechanism": "Expectation-setting for three days of tips; USP: patented, science-backed functional music; future pacing ('After about five minutes of listening to the music, you'll begin to feel the flow.'); surface vs deeper benefits; genuine sign-off with a commitment to answer replies.",
+      "big_idea": "Join the high achievers who use engineered music to get into flow.",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "trial",
+        "three-day tips series announced",
+        "single mid-email button",
+        "visible unsubscribe"
+      ],
+      "close": "Commitment to reply to emails; unsubscribe link visible.",
+      "voice_notes": "Warm, plain, second person; identity list as opener.",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No figures; curator's verdict: 'a damn good welcome email. Smooth like butter.' and that 'any e-commerce brand owner can model' it.",
+      "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-53-brain-fm"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Welcome email 1: deliver, set expectations for the next emails, state the mechanism once, future-pace the first result.",
+      "Identity roll-call lead for a product-aware trialist; no problem education."
+    ],
+    "notes": "Email shown as screenshots within Chris Orzechowski's 'Email of the Week' teardown on theemailcopywriter.com; body text taken from the teardown's transcription and commentary."
+  },
+  {
+    "id": "controls_emails-35",
+    "title": "Zappos customer-service reply with $15 'sorry' coupon (superhero-themed)",
+    "author_or_company": "Zappos (teardown by Chris Orzechowski, Email of the Week #55)",
+    "format": "email_single",
+    "market": "Online shoe buyers",
+    "funnel_position": "post-purchase service email with a coupon for the next order (sequence role: post purchase)",
+    "traffic": "owned_list",
+    "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-55-zappos",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "A reply to a defective-shoes complaint: boilerplate opener, empathy and ownership, a playful superhero section (KAPOW, WOOSH, BLAMMO), step-by-step return instructions, a $15 coupon with a second apology, the bad news that identical replacements are unavailable, a callback close.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a future purchase to an unhappy customer on the promise that the brand owns the problem, because clear return steps, a dollar-denominated coupon and playful formatting turn a complaint into a delight moment.",
+      "hook": "Empathy and ownership in the first lines after a plain opener.",
+      "mechanism": "Clear instructions where it matters; humour where it does not; coupon as a gift, not a discount.",
+      "big_idea": "Service interactions are selling moments.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "$15 coupon (dollar amount)",
+        "three apologies",
+        "callback humour"
+      ],
+      "close": "Callback to the superhero persona.",
+      "voice_notes": "One-to-one, playful, comic-book sound effects.",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Post-purchase sequence: dollar-off reads as 'free money' where percent-off reads as a discount (curator's view).",
+      "Bad news (no replacement) delivered plainly with an apology keeps trust; no hedging."
+    ],
+    "notes": "Email shown as screenshots within Chris Orzechowski's 'Email of the Week' teardown on theemailcopywriter.com; body text taken from the teardown's transcription and commentary."
+  },
+  {
+    "id": "controls_emails-36",
+    "title": "Surfshark 'We updated our terms of service' (retention email that reads)",
+    "author_or_company": "Surfshark (teardown by Chris Orzechowski, Email of the Week #54)",
+    "format": "email_single",
+    "market": "VPN subscribers",
+    "funnel_position": "retention / policy notice to customers (sequence role: post purchase)",
+    "traffic": "owned_list",
+    "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-54-surfshark",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: We updated our terms of service | About 175 words: acknowledges the reader's reaction to legal emails, gives a customer-focused reason for sending, shows the changes in the email, explains why, frames company and reader as allies against bad actors.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells continued trust to subscribers on the promise of transparency, because a routine terms update is written in the reader's internal voice, shows the change inline and explains an unfavourable change honestly.",
+      "hook": "Calls out the moment ('not another T&Cs email').",
+      "mechanism": "Show the change, explain the reason, align with the reader.",
+      "big_idea": "Dead-time emails build the relationship.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "none (no offer)"
+      ],
+      "close": "Allies framing; no CTA.",
+      "voice_notes": "Clean, conversational, humorous.",
+      "length_words_est": 175
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Transactional and legal emails are part of the owned-list sequence and should be written in the voice profile.",
+      "Candour about an unfavourable change is proof; the standard's 'no hedges' rule applies to bad news too."
+    ],
+    "notes": "Email shown as screenshots within Chris Orzechowski's 'Email of the Week' teardown on theemailcopywriter.com; body text taken from the teardown's transcription and commentary."
+  },
+  {
+    "id": "controls_emails-37",
+    "title": "Prose 'Forgot something?' (abandoned consultation, 60% incentive)",
+    "author_or_company": "Prose",
+    "format": "email_single",
+    "market": "Custom haircare DTC",
+    "funnel_position": "abandoned cart / abandoned consultation email (sequence role: abandoned cart)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/forgot-something-prose",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Forgot something? | RGE description: Prose nudges users to complete their custom haircare consultation with a friendly 'Forgot something?' approach and 60% discount incentive.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells completion of a custom haircare quiz to a visitor who stopped midway on the promise of a 60% incentive, because the subject treats the abandonment as a forgotten errand rather than a sales chase.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "discount (60% stated by RGE)",
+        "single CTA back to the flow"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Abandoned-flow subject lines that name the forgotten action ('Forgot something?') are the archive's most common pattern.",
+      "Discount in email 1 contradicts the standard's 'no discount first'; record as a variant to test, not a rule."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-02-20."
+  },
+  {
+    "id": "controls_emails-38",
+    "title": "Loop Earplugs 'Your cart's calling...'",
+    "author_or_company": "Loop Earplugs",
+    "format": "email_single",
+    "market": "Hearing-protection / lifestyle earplugs DTC",
+    "funnel_position": "abandoned cart email (sequence role: abandoned cart)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/cart-calling",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Your cart's calling... | RGE description: Loop Earplugs sends a playful abandoned cart email with a high-quality hero image and a clear CTA to bring users back to checkout. The 'Make it yours' section encourages customization, adding a personal touch to the recovery process.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a return to checkout on the promise that the product can be made personal, because the email pairs the cart reminder with a customization section instead of a discount.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "no discount",
+        "customization cross-link",
+        "single CTA"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Abandoned cart email 1 without a discount, using a product-specific hook (customization) as the reason to return."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published unknown."
+  },
+  {
+    "id": "controls_emails-39",
+    "title": "Gantri 'Your light's still here. Take another look.'",
+    "author_or_company": "Gantri",
+    "format": "email_single",
+    "market": "Designer 3D-printed lighting DTC",
+    "funnel_position": "abandoned cart email (sequence role: abandoned cart)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/gantri-abandoned-cart-lamp",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Your light's still here. Take another look. | RGE description: This email reminds the recipient of an abandoned shopping cart, featuring a beautifully designed lamp from Gantri. The design emphasizes minimalism and luxury with high-quality images and clear messaging.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a return to the cart on the promise that the item is still available, because a single product image and a calm 'still here' line hold the item open without pressure.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "no discount",
+        "product still available framing"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Premium brands recover carts with the product, not a coupon; copy stays under a dozen words."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published unknown."
+  },
+  {
+    "id": "controls_emails-40",
+    "title": "Coldfreak 'You were this close to ice cream with macros.'",
+    "author_or_company": "Coldfreak",
+    "format": "email_single",
+    "market": "Protein ice cream DTC",
+    "funnel_position": "abandoned cart email with discount (sequence role: abandoned cart)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/you-were-this-close-to-ice-cream-with-macros",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: You were this close to ice cream with macros. | RGE description: This email reminds the recipient of their abandoned shopping cart and offers a discount to entice them back. It includes detailed information about the product, emphasizing its protein content and low-carb nature.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a return to the cart to a macro-tracking buyer on the promise of dessert that fits the diet, because the subject restates the product's one benefit and the body repeats the protein and low-carb specifics with a discount.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "discount",
+        "product specifics (protein, low-carb)"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Subject line that restates the product's single benefit in the buyer's vocabulary ('ice cream with macros')."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-07-07."
+  },
+  {
+    "id": "controls_emails-41",
+    "title": "Alo Yoga 'The Airlift 7/8 Decadent Bodysuit in your cart sold out'",
+    "author_or_company": "Alo Yoga",
+    "format": "email_single",
+    "market": "Premium activewear DTC",
+    "funnel_position": "abandoned cart follow-up when the item sells out (sequence role: abandoned cart, stock-out variant)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/the-airlift-78-decadent-bodysuit-in-your-cart-sold-out",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: [Test] The Airlift 7/8 Decadent Bodysuit in your cart sold out | RGE description: Alo Yoga turns a stock-out into a 'missed connection' to keep the cart alive. The 'more cuties where that came from' line is the kind of playful, on-brand copy that makes a transactional email feel like a bran",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a substitute purchase to a shopper whose cart item sold out on the promise that similar items remain, because the stock-out is a true scarcity fact and the email redirects rather than apologises.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "true scarcity (sold out)",
+        "redirect to alternatives"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Scarcity stated as a fact that already happened; the standard's 'invented almost gone' prohibition is satisfied by a stock event."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2025-12-04."
+  },
+  {
+    "id": "controls_emails-42",
+    "title": "Alo Yoga 'ALMOST GONE: Supernatural Sweater Cardigan'",
+    "author_or_company": "Alo Yoga",
+    "format": "email_single",
+    "market": "Premium activewear DTC",
+    "funnel_position": "low-stock alert to browsers/cart holders (sequence role: abandoned cart / browse abandonment)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/almost-gone-supernatural-sweater-cardigan",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: [Test] ALMOST GONE: Supernatural Sweater Cardigan | RGE description: Alo's 'Going, Going, Almost Gone' low stock alert is a clever way to drive urgency without being aggressive. The minimalist design and playful copy make it a great example of how to communicate scarcity in a high-end brand",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a specific item to a shopper who viewed it on the promise that stock is nearly gone, because a named product and a low-stock trigger carry the urgency without a discount.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "low-stock urgency",
+        "named product in subject",
+        "no discount"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Low-stock alerts need an inventory trigger behind them; the copy names the product and nothing else."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2025-11-20."
+  },
+  {
+    "id": "controls_emails-43",
+    "title": "Fable 'Free Shipping, Just For You' (abandoned cart with social proof)",
+    "author_or_company": "Fable",
+    "format": "email_single",
+    "market": "Tableware / home goods DTC",
+    "funnel_position": "abandoned cart email 2-3 with incentive (sequence role: abandoned cart)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/free-shipping-just-for-you",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Free Shipping, Just For You 🕊 | RGE description: Fable sends a clean, on-brand abandoned cart email that layers a free shipping code with a product reminder and social proof. The muted earth tones and serif type make the recovery feel like a premium invitation, not a sales pitch.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells checkout completion on the promise of free shipping, because the code removes the last cost objection and reviews beside the product supply the proof.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "free shipping code",
+        "social proof",
+        "product reminder"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Free shipping as the incentive (not percent-off) keeps the price intact; pair with proof at the decision point."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2025-12-04."
+  },
+  {
+    "id": "controls_emails-44",
+    "title": "Etsy 'We miss you, Smiles' (win-back)",
+    "author_or_company": "Etsy",
+    "format": "email_single",
+    "market": "Marketplace for handmade goods",
+    "funnel_position": "win-back to lapsed shoppers (sequence role: win-back)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/etsy-missing-winback",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: We miss you, Smiles 🧡 | RGE description: Etsy sends a warm winback email to lapsed shoppers, inviting them back with a playful illustrated hero and curated category tiles. The personal subject line and gentle copy make the re-engagement feel like a friendly nudge, not a sales pitch.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a return visit to a lapsed shopper on the promise of things they will like, because the first-name subject and curated categories replace a discount with relevance.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "first-name subject",
+        "curated categories",
+        "no discount"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Win-back without an incentive: personalization plus 'what you missed' content, matching the standard's win-back email 2."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-08-28."
+  },
+  {
+    "id": "controls_emails-45",
+    "title": "Timeshifter 'Remember arriving without jet lag?' (trial win-back, 20% off)",
+    "author_or_company": "Timeshifter",
+    "format": "email_single",
+    "market": "Jet-lag app subscription",
+    "funnel_position": "win-back of expired trial users (sequence role: win-back)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/timeshifter-trial-winback-discount",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Remember arriving without jet lag? | RGE description: Timeshifter nudges former trial users back with a 20% discount on a year of unlimited jet-lag plans, backed by social proof and a gift-card upsell. The conversational copy and clean layout make the offer feel personal, but the repeated C",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "promise",
+      "argument_sentence": "This sells an annual plan to a lapsed trialist on the promise of the result they already felt, because the subject recalls the trial experience and a 20% discount plus social proof closes.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "social_proof_count",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "discount (20%)",
+        "social proof",
+        "gift-card upsell",
+        "repeated CTA"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Win-back lead that recalls the experienced result ('Remember arriving without jet lag?') is a promise lead aimed at a product-aware reader."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-09-22."
+  },
+  {
+    "id": "controls_emails-46",
+    "title": "Teachable 'Quick question, what held you back?' (objection-routing win-back)",
+    "author_or_company": "Teachable",
+    "format": "email_single",
+    "market": "Online course platform (SaaS)",
+    "funnel_position": "win-back of incomplete sign-ups (sequence role: win-back / stay-or-go)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/quick-questionwhat-held-you-back",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Quick question—what held you back? | RGE description: Teachable's winback email asks incomplete sign-ups to pick their blocker—cost, timing, or just exploring—via three plain text links. The objection-based routing is a clean, copy-led way to segment without a form.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "problem_solution",
+      "argument_sentence": "This sells a reply-by-click to someone who abandoned sign-up on the promise of a relevant follow-up, because three plain-text links name the three likely objections and segment the list for the next email.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "objection-routing links",
+        "plain text",
+        "no discount"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Win-back email 3 (stay-or-go) can be a one-question segmentation email; the three answers are the objections the next emails address."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2025-11-14."
+  },
+  {
+    "id": "controls_emails-47",
+    "title": "Zoom 'Are you ghosting us? Reactivate today'",
+    "author_or_company": "Zoom",
+    "format": "email_single",
+    "market": "Video-conferencing SaaS",
+    "funnel_position": "win-back of lapsed paid users (sequence role: win-back)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/are-you-ghosting-us-reactivate-today",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Are you ghosting us? Reactivate today | RGE description: Zoom's winback email uses a playful 'ghosting' subject line to re-engage lapsed Pro users, highlighting new AI features. The clean design and clear CTA make it a great example of a lifecycle email.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "promise",
+      "argument_sentence": "This sells reactivation to a lapsed Pro user on the promise of new capabilities since they left, because 'what you missed' (new AI features) gives a reason to return beyond the relationship.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "what's-new framing",
+        "clear reactivate CTA"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Win-back email 2 pattern: list what changed since they left; a new mechanism is a reason to re-open."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2024-07-05."
+  },
+  {
+    "id": "controls_emails-48",
+    "title": "Bed Bath & Beyond Canada 'You're home!' (welcome, 15% off)",
+    "author_or_company": "Bed Bath & Beyond",
+    "format": "email_single",
+    "market": "Home goods retail",
+    "funnel_position": "welcome email 1 with discount (sequence role: welcome)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/bed-bath-and-beyond-welcome-15-off",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: You’re home! 🏠 | RGE description: This email looks sleek and clean, just like the new Bed Bath & Beyond Canada. I love how easy it is to find the welcome discount, and the copy feels welcoming and a little playful. The core categories and messaging feel distilled and clear, not overwhelming",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a first order to a new subscriber on the promise of a welcome discount, because the code is immediately visible and the category list keeps the next step to a few choices.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "discount (15%)",
+        "category tiles",
+        "clear code placement"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Welcome email 1 for retail: deliver the promised discount above the fold; keep categories to a handful."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-10-23."
+  },
+  {
+    "id": "controls_emails-49",
+    "title": "Joy Supply 'You have good taste.' (welcome with First Bite discount)",
+    "author_or_company": "Joy Supply",
+    "format": "email_single",
+    "market": "Snack / cookie DTC",
+    "funnel_position": "welcome email 1 with first-order incentive (sequence role: welcome)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/joy-supply-first-bite-discount",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: You have good taste. 🍪 | RGE description: Joy Supply introduces their new crispy oat cookies with a special 'First Bite' discount. This warm welcome email highlights the unique quality of their cookies and encourages recipients to try them out.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a first order to a new subscriber on the promise of a first-bite discount, because the subject compliments the reader and the body names what makes the cookie different before the code.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "first-order discount named 'First Bite'",
+        "product differentiator"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Naming the welcome discount after the product experience ('First Bite') ties the incentive to the mechanism."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-07-20."
+  },
+  {
+    "id": "controls_emails-50",
+    "title": "Fiorucci 'Still deciding?' (first-purchase nudge, 10% off)",
+    "author_or_company": "Fiorucci",
+    "format": "email_single",
+    "market": "Fashion DTC",
+    "funnel_position": "welcome sequence follow-up for non-buyers (sequence role: welcome, direct offer email)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/still-deciding",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Still deciding? | RGE description: Fiorucci uses a surreal hero image and a 'Still deciding?' prompt to nudge new subscribers toward their first purchase with a 10% discount. The email pairs a playful, 'angelic' brand voice with a clean, high-contrast layout that makes the offer impossible ",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a first purchase to a subscriber who has not bought on the promise of 10% off, because the two-word question names the reader's state and the offer is the whole body.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "discount (10%)",
+        "two-word question subject"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Welcome sequence final email: name the hesitation in two words and make the offer; no re-education."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2024-09-18."
+  },
+  {
+    "id": "controls_emails-51",
+    "title": "Dr. Squatch 'Your order has been delivered!' (playful transactional)",
+    "author_or_company": "Dr. Squatch",
+    "format": "email_single",
+    "market": "Men's natural soap DTC",
+    "funnel_position": "post-purchase delivery notification (sequence role: post purchase)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/your-dr-squatch-order-65005000-has-been-delivered",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Your Dr. Squatch order #17541334 has been delivered! | RGE description: Dr. Squatch's delivery notification email keeps it playful with a 'Knock, knock. It's us.' headline and a clean, on-brand design. The one move worth stealing is the consistent use of a fun, approachable tone in a transa",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells brand affinity (and the next order) to a buyer at delivery on the promise that the box is at the door, because the headline 'Knock, knock. It's us.' makes a system email sound like the brand voice.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "transactional email in brand voice",
+        "headline joke"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Post-purchase email 1 (fast win): the delivery notice itself is written in the voice profile."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2023-12-29."
+  },
+  {
+    "id": "controls_emails-52",
+    "title": "Huckberry order confirmation ('Get Stoked')",
+    "author_or_company": "Huckberry",
+    "format": "email_single",
+    "market": "Men's lifestyle retail",
+    "funnel_position": "post-purchase order confirmation with next-offer tease (sequence role: post purchase)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/your-huckberry-order-r0650066065-details-inside",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Your Huckberry Order R041057403 - Details Inside | RGE description: Huckberry's order confirmation email is a masterclass in post-purchase engagement, celebrating the first order with a 'Get Stoked' hero and introducing new products. The rugged aesthetic and bold typography make it a stando",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells the next purchase to a first-time buyer at confirmation on the promise that the first order was a good decision, because the celebration ('Get Stoked') precedes a new-products section.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "celebration of the decision",
+        "new-products cross-sell"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Order confirmation carries the post-purchase sequence's 'confirm the decision, then bridge' structure, matching the standard's upsell rule of a one-line confirmation first."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2022-11-23."
+  },
+  {
+    "id": "controls_emails-53",
+    "title": "Sundays 'Checking in' (veterinarian-led onboarding)",
+    "author_or_company": "Sundays",
+    "format": "email_single",
+    "market": "Dog food subscription DTC",
+    "funnel_position": "post-purchase check-in / how-to-get-the-result (sequence role: post purchase)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/checking-in",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Checking in | RGE description: Sundays sends a warm, veterinarian-led onboarding email to help new customers transition their dogs to their food. The email's use of a personal voice and specific resources is a smart way to build trust and reduce churn.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells retention to a new subscriber on the promise of a smooth transition for the dog, because a named veterinarian writes the check-in and links the specific transition resources.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        }
+      ],
+      "offer_devices": [
+        "authority sender (veterinarian)",
+        "specific how-to resources"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Post-purchase email 2-3 ('how to get the result', 'check-in') with an authority narrator who exists; the standard requires the narrator to be real."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2023-12-12."
+  },
+  {
+    "id": "controls_emails-54",
+    "title": "Blendtec 'Kickstart Your Blendtec Journey with 3 Recipes'",
+    "author_or_company": "Blendtec",
+    "format": "email_single",
+    "market": "Kitchen appliance DTC",
+    "funnel_position": "post-purchase first-use email (sequence role: post purchase, fast win)",
+    "traffic": "owned_list",
+    "source_url": "https://reallygoodemails.com/emails/kickstart-your-blendtec-journey-with-3-recipes",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Subject: Kickstart Your Blendtec Journey with 3 Recipes | RGE description: You've had time to unbox — now it's time to blend.",
+    "full_text": null,
+    "structure": {
+      "awareness": "most_aware",
+      "sophistication": "unknown",
+      "lead_type": "offer",
+      "argument_sentence": "This sells first use to a new blender owner on the promise of three recipes, because the opening line names the moment ('You've had time to unbox') and gives one small task.",
+      "hook": "unknown",
+      "mechanism": "unknown",
+      "big_idea": "unknown",
+      "proof_elements": [],
+      "offer_devices": [
+        "three recipes as fast win",
+        "timed to unboxing"
+      ],
+      "close": "unknown",
+      "voice_notes": "unknown (image-only body)",
+      "length_words_est": 0
+    },
+    "results": {
+      "type": "none",
+      "detail": "No result stated on the source page.",
+      "source_url": null
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Post-purchase 'fast win' email: name the moment, give three concrete uses, nothing else."
+    ],
+    "notes": "Really Good Emails archive entry; the email body is an image, so structure fields beyond subject, brand and RGE's description are unknown. Date is RGE's datePublished. Published 2026-06-25."
+  }
+]
