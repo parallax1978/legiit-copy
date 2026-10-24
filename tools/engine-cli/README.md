@@ -6,8 +6,14 @@ the database by `_shared/engine/context.ts`. Nothing here is a mock: every model
 every step attempt to `generation_steps`, every draft version to `drafts`.
 
 ```
-deno task -c supabase/functions engine <command> [options]
+# from the repo root
+deno run -c supabase/functions/deno.json --allow-read --allow-write --allow-env --allow-net tools/engine-cli/main.ts <command> [options]
 ```
+
+`deno run` discovers `deno.json` from the entrypoint's directory, and this entrypoint lives under `tools/`, so the
+config (and its import map) must be named with `-c`. The `engine` task in `supabase/functions/deno.json` runs the
+same file and needs the same flag to work: `"engine": "deno run -c deno.json --allow-read --allow-write --allow-env --allow-net ../../tools/engine-cli/main.ts"`.
+Once that lands, `deno task -c supabase/functions/deno.json engine <command>` is the short form.
 
 ## Commands
 

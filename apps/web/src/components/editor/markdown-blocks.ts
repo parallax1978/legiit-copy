@@ -1,3 +1,4 @@
+import { sectionBaseId, sectionItemIndex } from "@engine/formats/index.ts";
 import type { Block, DraftOutput, Section } from "@engine/schemas/mod.ts";
 import { LEDGER_TAG } from "@engine/schemas/common.ts";
 import { renderMarkdown, renderSection, stripLedger } from "@engine/render.ts";
@@ -57,6 +58,20 @@ export interface DraftItem {
  * sections per item sharing a prefix ("email_1.subject", "email_1.body"). Group accordingly.
  */
 export function groupItems(draft: Pick<DraftOutput, "sections">): DraftItem[] {
+  // Engine convention for multi-item formats: a spec section repeated per item carries the id suffix "#n"
+  // ("subject#3", "primary_text#2"); unsuffixed ids are item 0. Older drafts may use meta.item or a prefix.
+  const usesHashItems = draft.sections.some((s) => /#\d+$/.test(s.section_id));
+  if (usesHashItems) {
+    const indexOf = (s: Section) => sectionItemIndex(s.section_id);
+    const indexes = Array.from(new Set(draft.sections.map(indexOf))).sort((a, b) => a - b);
+    return indexes.map((idx) => {
+      const sections = draft.sections.filter((s) => indexOf(s) === idx);
+      const role = sections.flatMap((s) => s.blocks).find((b) => b.meta?.role || b.meta?.item)?.meta;
+      const title = sections.find((s) => s.title)?.title ?? null;
+      const label = role?.role ? humanizeItem(role.role, title) : title ?? `Item ${idx + 1}`;
+      return { key: `item-${idx}`, label, sections };
+    });
+  }
   const keyOf = (s: Section) => (s.blocks.find((b) => b.meta?.item)?.meta?.item ?? s.section_id.split(/[./:]/)[0]).trim();
   const keys = Array.from(new Set(draft.sections.map(keyOf)));
   const grouped = keys.length < draft.sections.length;
@@ -66,7 +81,7 @@ export function groupItems(draft: Pick<DraftOutput, "sections">): DraftItem[] {
       return { key, label: humanizeItem(key, sections[0]?.title ?? null), sections };
     });
   }
-  return draft.sections.map((s) => ({ key: s.section_id, label: humanizeItem(s.section_id, s.title), sections: [s] }));
+  return draft.sections.map((s) => ({ key: s.section_id, label: humanizeItem(sectionBaseId(s.section_id), s.title), sections: [s] }));
 }
 
 function humanizeItem(key: string, title: string | null): string {
