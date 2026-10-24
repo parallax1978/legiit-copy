@@ -84,7 +84,7 @@ serve(async (req) => {
 
   const usable = (claims ?? []).filter((c) => c.user_decision !== "drop");
   const ledger = usable.length
-    ? usable.map((c) => `- [[L:${c.id}]] (${c.claim_type}${c.evidence_grade ? `, grade ${c.evidence_grade}` : ""}${c.status === "flagged" ? ", flagged" : ""}) ${c.claim_text}${c.precision ? ` — precision: ${c.precision}` : ""}`).join("\n")
+    ? usable.map((c) => `- [[L:${c.id}]] (${c.claim_type}${c.evidence_grade ? `, grade ${c.evidence_grade}` : ""}${c.status === "flagged" && c.user_decision !== "keep" ? ", flagged" : ""}) ${c.claim_text}${c.precision ? ` — precision: ${c.precision}` : ""}`).join("\n")
     : "(empty: nothing may be asserted beyond what the selection already says)";
 
   const contextBlock = located ? renderBlock(located.block) : excerptAround(draft.markdown, body.selected_text);

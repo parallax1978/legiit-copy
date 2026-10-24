@@ -6,7 +6,7 @@
 import type { StepFn } from "./types.ts";
 import { FactualOutput } from "../schemas/review.ts";
 import { factualPrompt } from "../prompts/factual.v1.ts";
-import { factualFlags, postProcessFactual } from "../draft/review.ts";
+import { droppedReferenceFlags, factualFlags, postProcessFactual } from "../draft/review.ts";
 import { callStep, latestDraftOutput } from "../draft/step_util.ts";
 
 export const factualStep: StepFn = async (ctx) => {
@@ -20,9 +20,11 @@ export const factualStep: StepFn = async (ctx) => {
     pp = postProcessFactual(res.output, ctx.claims);
   }
 
+  // any sentence citing a ledger row the user dropped is a fabrication-level flag, whether or not the reviewer caught it
+  const droppedRefs = droppedReferenceFlags(draft.sections, ctx.claims, pp.output.flags);
   const needs = [...pp.output.needs_source];
   for (const n of draft.needs_source) if (!needs.some((x) => x.trim().toLowerCase() === n.trim().toLowerCase())) needs.push(n);
-  const out = FactualOutput.parse({ ...pp.output, needs_source: needs });
+  const out = FactualOutput.parse({ ...pp.output, flags: [...pp.output.flags, ...droppedRefs], needs_source: needs });
 
   const fabrications = out.flags.filter((f) => f.fabrication).length;
   const high = out.flags.filter((f) => f.severity === "high").length;

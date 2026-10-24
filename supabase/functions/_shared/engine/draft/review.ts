@@ -5,8 +5,8 @@
 import type { Section } from "../schemas/draft.ts";
 import type { EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput, ColdRead } from "../schemas/review.ts";
 import type { StepEffects } from "../steps/types.ts";
-import { LEDGER_TAG } from "../schemas/common.ts";
-import { blockText, blocksQuoted, normalizeQuote, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
+import { ClaimType, LEDGER_TAG } from "../schemas/common.ts";
+import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
 
 type Flag = NonNullable<StepEffects["flags"]>[number];
 
@@ -66,15 +66,17 @@ export interface FactualPostProcess {
 
 /**
  * Enforce the reviewer's discipline in code:
- * - a flag the user already decided to keep is not re-raised;
+ * - a flag on a row the user decided to keep is not re-raised (matched by claim_id, or by the ids the quote cites);
  * - a flag with no rewrite is rejected (fabrication excepted: the rewrite may be "cut");
  * - a rewrite that adds "may" / "results vary" / a generic disclaimer is a violation;
- * - fabrication is true only for an item the ledger does not hold: a quote that cites an existing ledger row,
- *   or a flag mapped to an existing claim, is the user's claim, not an invention;
+ * - a quote citing a row the user dropped is a fabrication (the row is unusable), whatever the model said;
+ * - otherwise fabrication is true only for an item the ledger does not hold: a quote that cites an existing usable
+ *   ledger row, or a flag mapped to one, is the user's claim, not an invention;
  * - fabrication is fatal; claim_id must point at an existing row or is nulled.
  */
 export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[]): FactualPostProcess {
   const known = new Map(claims.map((c) => [c.id, c]));
+  const droppedIds = droppedClaimIds(claims);
   const dropped: FactualPostProcess["dropped"] = [];
   const violations: string[] = [];
   const flags: FactualOutput["flags"] = [];
@@ -82,10 +84,17 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
     const f = { ...raw };
     if (f.claim_id && !known.has(f.claim_id)) f.claim_id = null;
     const cited = Array.from(f.quote.matchAll(LEDGER_TAG)).map((m) => m[1]).filter((id) => known.has(id));
-    if (f.fabrication && (cited.length > 0 || f.claim_id)) f.fabrication = false;
+    const citedDropped = cited.filter((id) => droppedIds.has(id));
+    const citedUsable = cited.filter((id) => !droppedIds.has(id));
+    if (citedDropped.length || (f.claim_id && droppedIds.has(f.claim_id))) {
+      f.fabrication = true;
+      f.claim_id = f.claim_id ?? citedDropped[0];
+      f.rule = /dropped/i.test(f.rule) ? f.rule : `${f.rule}; ledger row dropped by the user (offer_claims.user_decision = drop): unusable`;
+    } else if (f.fabrication && (citedUsable.length > 0 || f.claim_id)) f.fabrication = false;
     if (f.fabrication) f.severity = "fatal";
     const decided = f.claim_id ? known.get(f.claim_id)?.user_decision : null;
-    if (!f.fabrication && decided === "keep") {
+    const keptByCitation = !f.claim_id && citedUsable.length > 0 && citedUsable.every((id) => known.get(id)?.user_decision === "keep");
+    if (!f.fabrication && (decided === "keep" || keptByCitation)) {
       dropped.push({ quote: f.quote, why: "user decided to keep this claim" });
       continue;
     }
@@ -102,6 +111,47 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
     flags.push(f);
   }
   return { output: { ...out, flags }, dropped, violations };
+}
+
+/**
+ * Fabrication-level flags for every sentence that cites a ledger row the user dropped. Added in code after the
+ * model's review so the rule holds even when the reviewer missed it; sentences an existing fabrication flag already
+ * quotes are skipped.
+ */
+export function droppedReferenceFlags(sections: Section[], claims: { id: string; claim_type: string; user_decision: string | null }[], existing: FactualOutput["flags"] = []): FactualOutput["flags"] {
+  const droppedIds = droppedClaimIds(claims);
+  if (droppedIds.size === 0) return [];
+  const typeOf = new Map(claims.map((c) => [c.id, c.claim_type]));
+  const covered: string[] = existing.filter((f) => f.fabrication).map((f) => normalizeQuote(f.quote)).filter(Boolean);
+  const isCovered = (nq: string) => covered.some((c) => nq.includes(c) || c.includes(nq));
+  const flags: FactualOutput["flags"] = [];
+  for (const s of sections) {
+    for (const b of s.blocks) {
+      for (const text of [b.text, ...(b.items ?? [])]) {
+        for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+          const ids = Array.from(sentence.matchAll(LEDGER_TAG)).map((m) => m[1]).filter((id) => droppedIds.has(id));
+          if (ids.length === 0) continue;
+          const q = sentence.trim();
+          const nq = normalizeQuote(q);
+          if (!nq || isCovered(nq)) continue;
+          covered.push(nq);
+          const ct = ClaimType.safeParse(typeOf.get(ids[0]));
+          flags.push({
+            quote: q,
+            rule: "ledger row dropped by the user (offer_claims.user_decision = drop): unusable; §8.3 test 10 fabrication guard",
+            issue: `cites ledger row ${ids.join(", ")} which the user dropped; the claim has no usable support and must be cut`,
+            suggested_rewrite: null,
+            severity: "fatal",
+            claim_type: ct.success ? ct.data : "other",
+            claim_id: ids[0],
+            test: 10,
+            fabrication: true,
+          });
+        }
+      }
+    }
+  }
+  return flags;
 }
 
 export function factualFlags(out: FactualOutput): Flag[] {

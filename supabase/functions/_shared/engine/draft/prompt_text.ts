@@ -20,7 +20,14 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
   const rows = claims.filter((c) => opts.includeDropped || c.user_decision !== "drop");
   if (rows.length === 0) return "CLAIMS LEDGER: empty. Every number, name, study, price, guarantee and deadline the copy needs must be written with [[NEEDS SOURCE]].";
   const lines = rows.map((c) => {
-    const parts = [`[[L:${c.id}]] (${c.claim_type}${c.role ? `, role ${c.role}` : ""}, grade ${c.evidence_grade ?? "none"}, ${c.status}${c.user_decision ? `, user decided: ${c.user_decision}` : ""})`];
+    const decision = c.user_decision === "drop"
+      ? ", DROPPED by the user: unusable, never cite"
+      : c.user_decision === "keep"
+      ? ", user decided: keep (flag risk accepted; do not re-flag)"
+      : c.user_decision === "rewrite"
+      ? ", user decided: rewrite (this claim text is the accepted wording; use it as written)"
+      : "";
+    const parts = [`[[L:${c.id}]] (${c.claim_type}${c.role ? `, role ${c.role}` : ""}, grade ${c.evidence_grade ?? "none"}, ${c.status}${decision})`];
     parts.push(`  claim: ${c.claim_text}`);
     if (c.precision) parts.push(`  precision: ${c.precision}`);
     const ev = (c.evidence ?? {}) as Record<string, unknown>;
@@ -63,7 +70,7 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
 
 /** The approved offer: the single source of truth for price, guarantee, deadline, bonuses and the button. */
 export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrief | null, claims: ClaimRow[]): string {
-  const terms = claims.filter((c) => c.role === "offer_term" || ["price_discount", "guarantee", "scarcity_urgency", "continuity_trial", "free"].includes(c.claim_type));
+  const terms = claims.filter((c) => c.user_decision !== "drop" && (c.role === "offer_term" || ["price_discount", "guarantee", "scarcity_urgency", "continuity_trial", "free"].includes(c.claim_type)));
   const termLines = terms.length ? `offer-term ledger rows (cite these):\n${terms.map((c) => `  [[L:${c.id}]] ${c.claim_text}`).join("\n")}` : "offer-term ledger rows: none; any price, guarantee or deadline figure without a row is written with [[NEEDS SOURCE]]";
   if (!variant) {
     return [

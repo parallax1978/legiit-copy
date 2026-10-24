@@ -15,6 +15,13 @@ import { Dossier } from "./engine/schemas/research.ts";
 
 // ---------- HTTP plumbing ----------
 
+declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
+
+/** Keeps a promise alive after the response is sent (Supabase edge runtime); a no-op elsewhere, where the promise simply runs on. */
+export function background(p: Promise<unknown>): void {
+  if (typeof EdgeRuntime !== "undefined" && EdgeRuntime?.waitUntil) EdgeRuntime.waitUntil(p);
+}
+
 /** Deno.serve with OPTIONS preflight and HttpError → JSON handled for every route. */
 export function serve(handler: (req: Request) => Promise<Response>): void {
   Deno.serve(async (req) => {
@@ -282,29 +289,42 @@ export interface IntakeRunResult {
 /**
  * Runs STEPS.intake for an offer and persists its output: offers.brief and summary columns, the system
  * claims (replacing earlier system claims the user has not ruled on), offer_config, open questions, status.
+ * The offer never stays in status 'extracting': on failure it goes to 'needs_review' with the error recorded in
+ * brief.unknowns when a brief was produced, else back to 'draft'.
  */
 export async function runIntake(db: Db, offerId: string): Promise<IntakeRunResult> {
   await db.from("offers").update({ status: "extracting" }).eq("id", offerId);
-  let loaded: OfferContext;
+  let output: IntakeOutput | null = null;
   try {
-    loaded = await loadOfferContext(db, offerId, "intake");
-  } catch (e) {
-    await db.from("offers").update({ status: "draft" }).eq("id", offerId);
-    throw e;
-  }
-  const { ctx, offer, generationId } = loaded;
-
-  let output: IntakeOutput;
-  try {
+    const { ctx, offer, generationId } = await loadOfferContext(db, offerId, "intake");
     const result = await STEPS.intake(ctx);
     const parsed = IntakeOutput.safeParse(result.output);
-    if (!parsed.success) throw new Error(`intake output failed validation: ${parsed.error.issues.slice(0, 3).map((i) => i.message).join("; ")}`);
+    if (!parsed.success) throw new Error(`intake output failed validation: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
     output = parsed.data;
+    return await persistIntake(db, offer, generationId, output);
   } catch (e) {
-    await db.from("offers").update({ status: "draft" }).eq("id", offerId);
+    await leaveExtracting(db, offerId, output, e);
     throw e;
   }
+}
 
+/** Moves an offer off 'extracting' after a failure. Exported so callers that fail before runIntake can do the same. */
+export async function leaveExtracting(db: Db, offerId: string, output: IntakeOutput | null, e: unknown): Promise<void> {
+  try {
+    const msg = errorMessage(e).slice(0, 500);
+    if (output) {
+      const brief = { ...output.brief, unknowns: [...output.brief.unknowns, `Extraction error: ${msg}`] };
+      await db.from("offers").update({ status: "needs_review", brief: brief as unknown as JsonValue }).eq("id", offerId);
+    } else {
+      await db.from("offers").update({ status: "draft" }).eq("id", offerId);
+    }
+  } catch (err) {
+    console.error(`offer ${offerId}: could not leave 'extracting'`, err);
+  }
+}
+
+async function persistIntake(db: Db, offer: OfferRow, generationId: string, output: IntakeOutput): Promise<IntakeRunResult> {
+  const offerId = offer.id;
   const b = output.brief;
   // Brief and summary columns
   const { error: offerErr } = await db.from("offers").update({
@@ -316,7 +336,7 @@ export async function runIntake(db: Db, offerId: string): Promise<IntakeRunResul
   }).eq("id", offerId);
   if (offerErr) throw new Error(`offers update failed: ${offerErr.message}`);
 
-  // Ledger: replace system rows the user has not decided on; keep user rows and decided rows
+  // Ledger: replace system rows the user has not decided on; keep user rows and decided rows (keep/rewrite/drop)
   const { error: delErr } = await db.from("offer_claims").delete().eq("offer_id", offerId).eq("created_by", "system").is("user_decision", null);
   if (delErr) throw new Error(`offer_claims cleanup failed: ${delErr.message}`);
   const inserted = await insertClaims(db, offer, output.claims);
@@ -350,7 +370,8 @@ export async function runIntake(db: Db, offerId: string): Promise<IntakeRunResul
 
   const blocking = output.questions.some((q) => q.blocking);
   const status = blocking ? "needs_review" : "ready";
-  await db.from("offers").update({ status }).eq("id", offerId);
+  const { error: stErr } = await db.from("offers").update({ status }).eq("id", offerId);
+  if (stErr) throw new Error(`offers status update failed: ${stErr.message}`);
 
   const totals = await sumLlmCalls(db, { generationId });
   await recordUsageSafe(db, { workspaceId: offer.workspace_id, kind: "ingest", tokens: totals.input_tokens + totals.output_tokens, cost: totals.cost_usd });

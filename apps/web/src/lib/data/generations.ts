@@ -1,4 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
+import { GENERATION_STATUSES, type GenerationStatus } from "@/lib/constants";
+export { GENERATION_STATUSES };
+export type { GenerationStatus };
 import type { Database, Json } from "@/lib/supabase/database.types";
 
 type Tables = Database["public"]["Tables"];
@@ -11,8 +14,6 @@ export type FeedbackRow = Tables["draft_feedback"]["Row"];
 export type PredictionRow = Tables["generation_predictions"]["Row"];
 export type VoiceProfileRow = Tables["voice_profiles"]["Row"];
 
-export type GenerationStatus = "queued" | "running" | "needs_input" | "completed" | "failed" | "cancelled";
-export const GENERATION_STATUSES: GenerationStatus[] = ["queued", "running", "needs_input", "completed", "failed", "cancelled"];
 
 /** generations.options as the web app writes it. */
 export interface GenerationOptions {

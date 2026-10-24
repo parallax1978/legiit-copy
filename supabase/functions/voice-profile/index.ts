@@ -2,8 +2,10 @@
  * voice-profile: measures a client's writing samples into parameters (code) and extracts the idiom bank,
  * dead words, humor, edge tolerance, greeting/sign-off, three verbatim exemplar paragraphs and the story
  * inventory (one model call, verified against the samples). Writes the voice_profiles row.
- *   POST { voice_profile_id }
- *   → { voice_profile_id, parameters, idiom_bank, dead_words, exemplar_paragraphs, story_inventory, readability_band, greeting, cost_usd }
+ *   POST { voice_profile_id }                       (samples stored as [{title: string|null, text: string}])
+ *   → the voice_profiles row: parameters (object), idiom_bank / dead_words (string[]), exemplar_paragraphs
+ *     ([{label: "lead"|"proof"|"close", text, sample_index}]), story_inventory (object[]), readability_band, greeting
+ *     + { cost_usd, verification }
  * Follows docs/04-copy-standard.md §10: parameters, never adjectives; caps, fragments, exclamation marks
  * and ellipses are measured, never penalized.
  */
@@ -69,7 +71,8 @@ serve(async (req) => {
   const { data: profile } = await db.from("voice_profiles").select("*").eq("id", voice_profile_id).single();
   if (!profile) throw new HttpError(404, "voice profile not found");
 
-  const samples = sampleTexts(profile.samples);
+  const sampleRows = sampleTexts(profile.samples);
+  const samples = sampleRows.map((s) => s.text);
   if (samples.length === 0) throw new HttpError(422, "the profile has no samples with text");
   const corpus = samples.join("\n\n");
   if (words(corpus).length < 150) throw new HttpError(422, "samples are too short to measure (need at least 150 words)");
@@ -87,7 +90,7 @@ serve(async (req) => {
     audience ? `AUDIENCE (sets the default readability band; the samples override it): ${audience}` : "",
     `MEASURED PARAMETERS (for your reference; do not restate them):\n${JSON.stringify(measured)}`,
     `\nSAMPLES (${samples.length}):`,
-    ...samples.map((s, i) => `\n<sample index="${i}">\n${s.slice(0, 20_000)}\n</sample>`),
+    ...sampleRows.map((s, i) => `\n<sample index="${i}"${s.title ? ` title="${s.title.replace(/"/g, "'")}"` : ""}>\n${s.text.slice(0, 20_000)}\n</sample>`),
   ].filter(Boolean).join("\n");
 
   const pv = (await loadPromptVersions(db))["voice_profile"]; // an active prompt_versions row for this step replaces the inline prompt
@@ -104,12 +107,14 @@ serve(async (req) => {
 
   // 3. verify verbatim material against the samples; fall back to code-chosen paragraphs
   const normCorpus = norm(corpus);
-  const exemplars = m.exemplar_paragraphs.filter((e) => e.text.trim().length > 20 && normCorpus.includes(norm(e.text)));
+  const exemplars: { label: "lead" | "proof" | "close"; text: string; sample_index: number }[] = m.exemplar_paragraphs
+    .filter((e) => e.text.trim().length > 20 && normCorpus.includes(norm(e.text)))
+    .map((e) => ({ label: e.role, text: e.text, sample_index: e.sample_index }));
   const verbatimExemplars = exemplars.length;
-  for (const role of ["lead", "proof", "close"] as const) {
-    if (!exemplars.some((e) => e.role === role)) {
-      const pick = fallbackExemplar(samples, role);
-      if (pick) exemplars.push({ role, text: pick.text, sample_index: pick.sample_index });
+  for (const label of ["lead", "proof", "close"] as const) {
+    if (!exemplars.some((e) => e.label === label)) {
+      const pick = fallbackExemplar(samples, label);
+      if (pick) exemplars.push({ label, text: pick.text, sample_index: pick.sample_index });
     }
   }
   const stories = m.story_inventory.filter((s) => s.quote.trim().length > 10 && normCorpus.includes(norm(s.quote)));
@@ -160,18 +165,19 @@ serve(async (req) => {
 
 // ---------- samples ----------
 
-function sampleTexts(raw: unknown): string[] {
+/** samples are stored as [{title, text}]; bare strings are accepted too. */
+function sampleTexts(raw: unknown): { title: string | null; text: string }[] {
   if (!Array.isArray(raw)) return [];
-  const out: string[] = [];
+  const out: { title: string | null; text: string }[] = [];
   for (const s of raw) {
-    if (typeof s === "string") out.push(s.trim());
+    if (typeof s === "string" && s.trim()) out.push({ title: null, text: s.trim() });
     else if (s && typeof s === "object") {
       const r = s as Record<string, unknown>;
       const t = [r.text, r.content, r.body, r.sample].find((v) => typeof v === "string" && v.trim());
-      if (typeof t === "string") out.push(t.trim());
+      if (typeof t === "string") out.push({ title: typeof r.title === "string" && r.title.trim() ? r.title.trim() : null, text: t.trim() });
     }
   }
-  return out.filter(Boolean);
+  return out;
 }
 
 // ---------- measurement ----------

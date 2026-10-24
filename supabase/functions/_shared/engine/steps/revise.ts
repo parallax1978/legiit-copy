@@ -6,7 +6,7 @@
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
 import { revisePrompt, type ReviseArgs } from "../prompts/revise.v1.ts";
-import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs } from "../draft/ledger.ts";
+import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
 import { leadSectionId } from "../draft/plan.ts";
@@ -33,7 +33,7 @@ export const reviseStep: StepFn = async (ctx) => {
 
   const cycle = ctx.revisionCycles + 1;
   const quotes = revisionQuotes({ editorial, factual: factualPending, mechanical, coldRead });
-  const known = knownClaimIds(ctx.claims);
+  const known = knownClaimIds(usableClaims(ctx.claims)); // a dropped row may not be cited by the revision either
   await ctx.progress(`Revision ${cycle}: ${editorial?.one_thing ? "the one thing, " : ""}${factualPending.length} factual rewrite(s), ${tier01.length} Tier 0/1 tell(s), ${doNotTouch.length} DO NOT TOUCH line(s)`);
 
   const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, retryNote: null };
@@ -48,14 +48,14 @@ export const reviseStep: StepFn = async (ctx) => {
   if (!r.rec.doNotTouch.ok || r.unknown.length) {
     const note = [
       ...r.rec.doNotTouch.violated.map((q) => `This DO NOT TOUCH line changed or disappeared; return it exactly: "${q}"`),
-      ...(r.unknown.length ? [`These ledger ids do not exist: ${r.unknown.join(", ")}. Use only ids shown in the ledger.`] : []),
+      ...(r.unknown.length ? [`These ledger ids do not exist or were dropped by the user: ${r.unknown.join(", ")}. Use only ids shown in the ledger; cut the claim otherwise.`] : []),
     ].join("\n");
     r = await run(note);
   }
   if (!r.rec.doNotTouch.ok) {
     throw new Error(`revise step violated DO NOT TOUCH: ${r.rec.doNotTouch.violated.map((q) => `"${q}"`).join("; ")}`);
   }
-  if (r.unknown.length) throw new Error(`revision cites ledger ids that do not exist: ${r.unknown.join(", ")}`);
+  if (r.unknown.length) throw new Error(`revision cites ledger ids that do not exist or were dropped by the user: ${r.unknown.join(", ")}`);
 
   const { res, rec } = r;
   const changedSet = new Set([...rec.changed, ...rec.added, ...rec.removed]);

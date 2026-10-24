@@ -5,7 +5,7 @@ import { sales_letter } from "../formats/specs/sales_letter.ts";
 import { email_single } from "../formats/specs/email_single.ts";
 import { describePlan, GROUP_OVERFLOW, GROUP_SOFT_LIMIT_WORDS, groupUnits, itemCount, planDraft, sectionUnit } from "../draft/plan.ts";
 import { DIRECT_LEADS, INDIRECT_LEADS, LEAD_IDS, leadTypesForAwareness, runnerUpLead } from "../draft/leads.ts";
-import { collectLedgerRefs, interrogate, needsSourceLines, normalizeQuote, quoteAppears, readerText, targetAwareness, unknownLedgerRefs } from "../draft/ledger.ts";
+import { collectLedgerRefs, droppedClaimIds, droppedLedgerRefs, interrogate, needsSourceLines, normalizeQuote, quoteAppears, readerText, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { applyLeadPick, assembleDraft, orderSections, provisionalLeadSection, parseStoredDraft, toDraftEffect } from "../draft/assemble.ts";
 import { parseOptions } from "../draft/options.ts";
 import { matchSections, normalizeLeads, validateLeads, validateSections } from "../steps/draft.ts";
@@ -153,6 +153,25 @@ Deno.test("pre-draft interrogation pauses without an argument, without proof on 
     assertEquals(ok.proofRefs, [A]);
     assertEquals(ok.thesis, "from the step output");
   }
+});
+
+Deno.test("dropped ledger rows never reach the writer: excluded from usable claims, unknown when cited, no proof when they carried the argument", () => {
+  const claims = [
+    { id: A, user_decision: "drop" as const },
+    { id: B, user_decision: "keep" as const },
+    { id: GHOST.replace(/9/g, "7"), user_decision: null },
+  ];
+  assertEquals(usableClaims(claims).map((c) => c.id), [B, GHOST.replace(/9/g, "7")]);
+  assertEquals(droppedClaimIds(claims), new Set([A]));
+  const sections = [sec("body", [blk("body-1", `212 audits [[L:${A}]] and sixty days [[L:${B}]]`)])];
+  assertEquals(droppedLedgerRefs(sections, droppedClaimIds(claims)), [A]);
+  assertEquals(unknownLedgerRefs(sections, new Set(usableClaims(claims).map((c) => c.id))), [A], "a dropped row is treated like an id the ledger never had");
+  const usable = new Set(usableClaims(claims).map((c) => c.id));
+  const paused = interrogate({ winner: { candidate: candidate([A]), thesis: "t" }, awareness: "problem_aware", segment: null, usableClaimIds: usable });
+  assert(!paused.ok && /dropped/.test(paused.reason));
+  const ok = interrogate({ winner: { candidate: candidate([A, B]), thesis: "t" }, awareness: "problem_aware", segment: null, usableClaimIds: usable });
+  assert(ok.ok);
+  if (ok.ok) assertEquals(ok.proofRefs, [B]);
 });
 
 Deno.test("target awareness: option override, then the traffic segment, then the first diagnosed segment", () => {

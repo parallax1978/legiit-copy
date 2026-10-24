@@ -1,8 +1,10 @@
 /**
  * export: renders a draft version to DOCX, HTML, Markdown or plain text, stores it in the private `exports`
  * bucket at <workspace_id>/<generation_id>/<version>.<ext> and returns a 10-minute signed URL.
- *   POST { draft_id, kind: "docx" | "html" | "md" | "txt" }
- *   → { url, path, filename, kind, content_type, expires_in: 600, draft_id, generation_id, version }
+ *   POST { draft_id, kind: "docx" | "html" | "md" | "txt", section_ids?: string[] }
+ *   → { url, path, filename, kind, content_type, expires_in: 600, draft_id, generation_id, version, section_ids }
+ * With section_ids only those sections are rendered (one email of a sequence, one ad of a set) and the file is
+ * stored under its own name so it never overwrites the full export.
  * Ledger tags are stripped; any workspace member may export.
  */
 import { z } from "zod";
@@ -12,7 +14,7 @@ import { parseBody, recordUsageSafe, serve } from "shared/http.ts";
 import { Block, Section } from "engine/schemas/draft.ts";
 import { renderMarkdown, stripLedger } from "engine/render.ts";
 
-const Body = z.object({ draft_id: z.uuid(), kind: z.enum(["docx", "html", "md", "txt"]) });
+const Body = z.object({ draft_id: z.uuid(), kind: z.enum(["docx", "html", "md", "txt"]), section_ids: z.array(z.string().min(1)).min(1).max(50).optional() });
 
 const LooseBlock = Block.extend({ items: Block.shape.items.optional(), meta: Block.shape.meta.optional() });
 const LooseSection = Section.extend({ blocks: z.array(LooseBlock) });
@@ -29,7 +31,7 @@ const EXPIRES_IN = 600;
 
 serve(async (req) => {
   const { client } = await requireUser(req);
-  const { draft_id, kind } = await parseBody(req, Body);
+  const { draft_id, kind, section_ids } = await parseBody(req, Body);
 
   const { data: visible, error } = await client.from("drafts").select("id, workspace_id, generation_id").eq("id", draft_id).maybeSingle();
   if (error) throw new HttpError(500, error.message);
@@ -43,8 +45,17 @@ serve(async (req) => {
   if (!draft || !gen) throw new HttpError(404, "draft or generation missing");
   const { data: offer } = await db.from("offers").select("name").eq("id", gen.offer_id).maybeSingle();
 
-  const sections = parseSections(draft.blocks) ?? [{ section_id: "all", title: null, blocks: [{ id: "md", type: "paragraph" as const, text: draft.markdown, items: null, meta: null }] }];
-  const title = `${offer?.name ?? "Copy"} — ${gen.format}${draft.label ? ` — ${draft.label}` : ""}`;
+  const parsed = parseSections(draft.blocks);
+  let sections = parsed ?? [{ section_id: "all", title: null, blocks: [{ id: "md", type: "paragraph" as const, text: draft.markdown, items: null, meta: null }] }];
+  let suffix = "";
+  if (section_ids) {
+    if (!parsed) throw new HttpError(422, "this draft has no sections to select from");
+    const wanted = new Set(section_ids);
+    sections = parsed.filter((s) => wanted.has(s.section_id));
+    if (!sections.length) throw new HttpError(422, `none of section_ids exist in this draft (have: ${parsed.map((s) => s.section_id).join(", ")})`);
+    suffix = `-${slug(sections.map((s) => s.section_id).join("-")).slice(0, 40)}`;
+  }
+  const title = `${offer?.name ?? "Copy"} — ${gen.format}${draft.label ? ` — ${draft.label}` : ""}${sections.length === 1 && sections[0].title ? ` — ${sections[0].title}` : ""}`;
 
   let body: Blob;
   switch (kind) {
@@ -62,8 +73,8 @@ serve(async (req) => {
       break;
   }
 
-  const path = `${gen.workspace_id}/${gen.id}/${draft.version}.${kind}`;
-  const filename = `${slug(offer?.name ?? "copy")}-${gen.format}-v${draft.version}.${kind}`;
+  const path = `${gen.workspace_id}/${gen.id}/${draft.version}${suffix}.${kind}`;
+  const filename = `${slug(offer?.name ?? "copy")}-${gen.format}-v${draft.version}${suffix}.${kind}`;
   const { error: upErr } = await db.storage.from("exports").upload(path, body, { contentType: CONTENT_TYPES[kind], upsert: true });
   if (upErr) throw new HttpError(500, `upload failed: ${upErr.message}`);
   const { data: signed, error: signErr } = await db.storage.from("exports").createSignedUrl(path, EXPIRES_IN, { download: filename });
@@ -71,7 +82,7 @@ serve(async (req) => {
 
   await recordUsageSafe(db, { workspaceId: gen.workspace_id, generationId: gen.id, kind: "export", tokens: 0, cost: 0 });
 
-  return json({ url: signed.signedUrl, path, filename, kind, content_type: CONTENT_TYPES[kind], expires_in: EXPIRES_IN, draft_id, generation_id: gen.id, version: draft.version });
+  return json({ url: signed.signedUrl, path, filename, kind, content_type: CONTENT_TYPES[kind], expires_in: EXPIRES_IN, draft_id, generation_id: gen.id, version: draft.version, section_ids: sections.map((s) => s.section_id) });
 });
 
 // ---------- blocks ----------

@@ -3,7 +3,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import { GENERATION_STATUSES } from "@/lib/data/generations";
+import { GENERATION_STATUSES } from "@/lib/constants";
 import { statusLabel } from "./status-badge";
 
 const ALL = "__all";

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createPromptVersion } from "@/lib/actions/admin";
-import { EFFORTS } from "@/lib/data/admin";
+import { EFFORTS } from "@/lib/constants";
 import { Field, FormMessage, NativeSelect, OptionList, SubmitButton } from "./form-bits";
 
 export function PromptVersionForm({

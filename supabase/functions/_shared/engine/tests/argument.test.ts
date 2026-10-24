@@ -18,6 +18,7 @@ import {
   buildScores,
   composeThesis,
   describeTieBreak,
+  type JudgedCriterion,
   pickFinalists,
   type Rankable,
   rankCandidates,
@@ -228,7 +229,7 @@ Deno.test("proof gate: the best carrier among the refs decides; unknown refs are
 
 /* ---------------------------------------------------------------- weighting, ranking, tie-breaks, thesis */
 
-const allThrees = Object.fromEntries(["C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14"].map((c) => [c, 3]));
+const allThrees = Object.fromEntries(["C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14"].map((c) => [c, 3])) as Record<JudgedCriterion, number>;
 
 Deno.test("weighting: full scores reach 57; computed dimensions override judged ones; unjudged are 0", () => {
   const full = buildScores({ c1: 3, c2: 3, c3: 3, c9: 3 }, allThrees);
@@ -398,8 +399,8 @@ Deno.test("assembly: gates, merged scores, finalists, winner, losers, thesis and
   assertEquals(asm.survivorIds, ["A01", "A03", "A05", "A06"]);
   const out = asm.output;
   assertEquals(out.winner_id, "A01");
-  assertEquals(out.finalist_ids, ["A01", "A06", "A03"]);
-  assertEquals(out.losers_kept_ids, ["A06", "A03"]);
+  assertEquals(out.finalist_ids, ["A01", "A03", "A06"]);
+  assertEquals(out.losers_kept_ids, ["A03", "A06"]);
   assertEquals(
     out.thesis,
     "This draft exists to prove that one 60-second habit is a different and superior way to get a routine that holds for a reader, and the proof is the guarantee [[L:guar]].",
@@ -409,8 +410,10 @@ Deno.test("assembly: gates, merged scores, finalists, winner, losers, thesis and
   assertEquals([byId.A01.scores.C1, byId.A01.scores.C2, byId.A01.scores.C3, byId.A01.scores.C9], [3, 3, 1, 3]);
   assertEquals(byId.A01.weighted_total, 53);
   assertEquals(byId.A01.gates, { desire: "pass", desire_magnitude: 7, proof: "pass", c9: 3 });
-  // A06 ranks above A03: both pass; A06 total: energy (2,2,1)=10, C9 2 ->4, C12 1 ->2, C4 1, others 3*7=21 => 38; A03: simplify (3,3,0)=12, C9 2->4, C12 3->6, C14 1, others 3*7=21 => 44? then A03 should rank above A06
-  assert(byId.A03.weighted_total > byId.A06.weighted_total || out.finalist_ids[1] === "A06");
+  // A03: simplify (3,3,0) -> 12, C9 2 -> 4, C12 3 -> 6, C14 1, the other eight judged at 3 -> 24: 47
+  assertEquals(byId.A03.weighted_total, 47);
+  // A06: energy (2,2,1) -> 10, C9 2 -> 4, C12 1 -> 2, C4 1, the other eight at 3 -> 24: 41
+  assertEquals(byId.A06.weighted_total, 41);
   // A05: demoted on coverage: proof gate fails after scoring, not a finalist, keeps the judged scores
   assertEquals(byId.A05.gates.proof, "fail");
   assertEquals(byId.A05.gates.c9, 1);

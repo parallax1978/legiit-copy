@@ -4,6 +4,8 @@
  */
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { AWARENESS_LEVELS, EFFORTS, EXAMPLE_STATUSES, FULL_TEXT_RIGHTS, LEAD_TYPES, RIGHTS_STATUSES, SECTION_TYPES, SELLING_SITUATIONS, SOPHISTICATION_LEVELS, allowsFullText } from "@/lib/constants";
+export { AWARENESS_LEVELS, EFFORTS, EXAMPLE_STATUSES, FULL_TEXT_RIGHTS, LEAD_TYPES, RIGHTS_STATUSES, SECTION_TYPES, SELLING_SITUATIONS, SOPHISTICATION_LEVELS, allowsFullText };
 import type { Database, Json } from "@/lib/supabase/database.types";
 
 type Tables = Database["public"]["Tables"];
@@ -24,22 +26,10 @@ export type LlmCostByStepRow = Database["public"]["Views"]["llm_cost_by_step"]["
 
 export type ActionResult<T = undefined> = { ok: true; message?: string; data?: T } | { ok: false; error: string };
 
-export const EXAMPLE_STATUSES = ["draft", "curated", "retired"] as const;
-export const RIGHTS_STATUSES = ["public_domain", "publicly_posted_copyrighted", "licensed", "unknown"] as const;
-export const FULL_TEXT_RIGHTS = ["public_domain", "licensed"] as const;
-export const SECTION_TYPES = ["headline", "lead", "mechanism", "bullets", "proof", "offer", "close", "order_form", "ps", "other"] as const;
-export const SELLING_SITUATIONS = ["launch", "evergreen", "cart_close", "reactivation", "cold", "retargeting"] as const;
-export const AWARENESS_LEVELS = ["most_aware", "product_aware", "solution_aware", "problem_aware", "unaware", "unknown"] as const;
-export const SOPHISTICATION_LEVELS = ["1", "2", "3", "4", "5", "unknown"] as const;
-export const LEAD_TYPES = ["offer", "promise", "problem_solution", "secret", "proclamation", "story"] as const;
-export const EFFORTS = ["low", "medium", "high", "xhigh", "max"] as const;
 export const STUCK_AFTER_MS = 30 * 60 * 1000;
 export const SETTING_KEYS = ["functions_url", "eval_workspace_id", "pipeline_shared_secret"] as const;
 export type SettingKey = (typeof SETTING_KEYS)[number];
 
-export function allowsFullText(rights: string | null | undefined) {
-  return (FULL_TEXT_RIGHTS as readonly string[]).includes(rights ?? "");
-}
 
 // ---------------------------------------------------------------------------------------------
 // Overview

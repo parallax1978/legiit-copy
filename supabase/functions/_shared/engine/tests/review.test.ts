@@ -3,7 +3,7 @@ import { assert, assertEquals, assertThrows } from "@std/assert";
 import type { Block, Section } from "../schemas/draft.ts";
 import type { EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
 import { verifyDoNotTouch } from "../draft/ledger.ts";
-import { diffBlocks, editorialFlags, factualFlags, introducesDecorativeHedge, pendingFactualFlags, postProcessFactual, reconcileRevision, revisionQuotes, userAttention, validateEditorial } from "../draft/review.ts";
+import { diffBlocks, droppedReferenceFlags, editorialFlags, factualFlags, introducesDecorativeHedge, pendingFactualFlags, postProcessFactual, reconcileRevision, revisionQuotes, userAttention, validateEditorial } from "../draft/review.ts";
 
 const A = "11111111-1111-1111-1111-111111111111";
 const B = "22222222-2222-2222-2222-222222222222";
@@ -93,28 +93,55 @@ Deno.test("postProcessFactual enforces the reviewer's discipline", () => {
       flag({ claim_id: null, quote: "most of them took a week", suggested_rewrite: "most of them may have taken a week" }), // hedge → violation
       flag({ claim_id: null, quote: "the data arrives late", suggested_rewrite: null }), // no rewrite → dropped
       flag({ claim_id: null, quote: "A Harvard study found 73% improved", fabrication: true, severity: "medium", suggested_rewrite: null, test: 10 }), // fabrication stays, fatal
-      flag({ claim_id: "not-a-claim", quote: `212 audits [[L:${A}]]`, fabrication: true, suggested_rewrite: "212 audits" }), // cites the ledger → not a fabrication; unknown claim id nulled; A keep? claim_id nulled so not matched to keep → kept as plain flag
+      flag({ claim_id: "not-a-claim", quote: `212 audits [[L:${A}]]`, fabrication: true, suggested_rewrite: "212 audits" }), // cites a kept ledger row → not a fabrication, and not re-flagged: unknown claim id nulled, cited A is "keep"
+      flag({ claim_id: null, quote: `212 audits [[L:${A}]] in ${B.slice(0, 4)}`, fabrication: true, suggested_rewrite: "212 audits" }), // same, by citation alone
     ],
     consistency_check: { ok: true, mismatches: [] },
     needs_source: [],
   };
   const pp = postProcessFactual(out, claims);
-  assertEquals(pp.output.flags.length, 3);
+  assertEquals(pp.output.flags.length, 2);
   assertEquals(pp.output.flags[0].claim_id, B);
   assertEquals(pp.output.flags[1].fabrication, true);
   assertEquals(pp.output.flags[1].severity, "fatal");
-  assertEquals(pp.output.flags[2].fabrication, false, "a quote citing an existing ledger row is the user's claim");
-  assertEquals(pp.output.flags[2].claim_id, null);
-  assertEquals(pp.dropped.map((d) => d.why), ["user decided to keep this claim", "rewrite added a decorative hedge", "a flag with no rewrite is rejected"]);
+  assertEquals(pp.dropped.map((d) => d.why), ["user decided to keep this claim", "rewrite added a decorative hedge", "a flag with no rewrite is rejected", "user decided to keep this claim", "user decided to keep this claim"]);
   assertEquals(pp.violations.length, 2);
 
   const fx = factualFlags(pp.output);
-  assertEquals(fx.map((f) => f.kind), ["test_2:statistic", "fabrication", "test_2:statistic"]);
+  assertEquals(fx.map((f) => f.kind), ["test_2:statistic", "fabrication"]);
   assertEquals(fx[0].claimId, B);
   assertEquals(fx[1].severity, "fatal");
 
-  assertEquals(pendingFactualFlags(out, claims).length, 5, "revise ignores only flags on claims the user kept");
+  assertEquals(pendingFactualFlags(out, claims).length, 6, "revise ignores only flags on claims the user kept");
   assertEquals(pendingFactualFlags(null, claims), []);
+});
+
+Deno.test("dropped ledger rows: citing one is a fabrication-level flag, caught by the model or added in code", () => {
+  const claims = [{ id: A, claim_type: "statistic", user_decision: "drop" }, { id: B, claim_type: "guarantee", user_decision: null }];
+  // the model flagged the line as a mere overstatement, citing the dropped row → upgraded to fabrication
+  const pp = postProcessFactual({ flags: [flag({ claim_id: null, quote: `I ran 212 audits [[L:${A}]] last year`, severity: "medium", suggested_rewrite: "I ran many audits" })], consistency_check: { ok: true, mismatches: [] }, needs_source: [] }, claims);
+  assertEquals(pp.output.flags.length, 1);
+  assertEquals(pp.output.flags[0].fabrication, true);
+  assertEquals(pp.output.flags[0].severity, "fatal");
+  assertEquals(pp.output.flags[0].claim_id, A);
+  assert(/dropped/.test(pp.output.flags[0].rule));
+  // a model flag keyed to the dropped row by claim_id is upgraded the same way
+  const byId = postProcessFactual({ flags: [flag({ claim_id: A, quote: "212 audits last year", suggested_rewrite: "x" })], consistency_check: { ok: true, mismatches: [] }, needs_source: [] }, claims);
+  assertEquals(byId.output.flags[0].fabrication, true);
+
+  // code-side sweep: the sentence citing A in body-1 is already covered by the model's fragment quote → nothing added
+  assertEquals(droppedReferenceFlags(before, claims, pp.output.flags), []);
+  // without the model's flag the sweep adds one fatal flag for that sentence and nothing for the usable row B
+  const added = droppedReferenceFlags(before, claims, []);
+  assertEquals(added.length, 1);
+  assertEquals(added[0].quote, `I ran 212 audits [[L:${A}]] last year and most of them took a week.`);
+  assertEquals(added[0].claim_id, A);
+  assertEquals(added[0].claim_type, "statistic");
+  assertEquals(added[0].test, 10);
+  assert(added[0].fabrication && added[0].severity === "fatal" && added[0].suggested_rewrite === null);
+  assertEquals(droppedReferenceFlags(before, [{ id: B, claim_type: "guarantee", user_decision: "keep" }], []), []);
+  // the revise step still receives it (fabrications are never filtered by a keep decision)
+  assertEquals(pendingFactualFlags({ flags: added, consistency_check: { ok: true, mismatches: [] }, needs_source: [] }, claims).length, 1);
 });
 
 // ---------------------------------------------------------------- revision

@@ -10,16 +10,14 @@
  */
 import { z } from "zod";
 import { type Db, serviceClient } from "shared/supabase.ts";
-import { errorMessage, recordUsageSafe, sumLlmCalls } from "shared/http.ts";
+import { background, errorMessage, recordUsageSafe, sumLlmCalls } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { nextSteps, type PipelineState } from "engine/pipeline.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
 import { RefusalError } from "engine/llm.ts";
-import { applyEffects, buildContext } from "engine/context.ts";
-
-declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
+import { type AppliedEffects, applyEffects, buildContext } from "engine/context.ts";
 
 /** pgmq visibility timeout used by app.dispatch_pipeline; a running row older than this is presumed dead. */
 const VISIBILITY_MS = 450_000;
@@ -87,7 +85,7 @@ addEventListener("beforeunload", () => {
         .eq("status", "running");
       if (error) console.error("interrupt mark failed", error.message);
     })().catch((e) => console.error("interrupt mark threw", e));
-    if (typeof EdgeRuntime !== "undefined" && EdgeRuntime?.waitUntil) EdgeRuntime.waitUntil(p);
+    background(p);
   }
   running.clear();
 });
@@ -120,11 +118,6 @@ Deno.serve(async (req) => {
     headers: { "Content-Type": "application/json" },
   });
 });
-
-function background(p: Promise<unknown>) {
-  if (typeof EdgeRuntime !== "undefined" && EdgeRuntime?.waitUntil) EdgeRuntime.waitUntil(p);
-  // outside the Supabase runtime (local deno) the promise simply keeps running
-}
 
 function constantTimeEqual(a: string, b: string): boolean {
   const ea = new TextEncoder().encode(a);
@@ -212,10 +205,11 @@ async function runMessage(body: Body): Promise<void> {
   // 4. the step
   let ctx: StepContext;
   let result: StepResult;
+  let applied: AppliedEffects = {};
   try {
     ctx = await buildContext(db, generationId, attempt, progress);
     result = await STEPS[step](ctx);
-    await applyEffects(db, ctx, step, result);
+    applied = await applyEffects(db, ctx, step, result);
   } catch (e) {
     running.delete(stepRow.id);
     await failAttempt(db, { tag, gen, step, attempt, msgId, readCt, failedBefore, stepRowId: stepRow.id, startedMs }, e);
@@ -263,7 +257,13 @@ async function runMessage(body: Body): Promise<void> {
     console.error(`${tag} generation totals failed`, e);
     return null;
   });
-  const genPatch = genTotals ? { cost_usd: genTotals.cost_usd, input_tokens: genTotals.input_tokens, output_tokens: genTotals.output_tokens } : {};
+  const genPatch: Database["public"]["Tables"]["generations"]["Update"] = genTotals
+    ? { cost_usd: genTotals.cost_usd, input_tokens: genTotals.input_tokens, output_tokens: genTotals.output_tokens }
+    : {};
+  // The offer step proposes an offer_variants row; the UI finds it through generations.variant_id while the job waits.
+  const variantId = await resolveVariantId(db, gen, step, applied);
+  if (variantId) genPatch.variant_id = variantId;
+  if (applied.researchId) genPatch.research_id = applied.researchId;
 
   if (result.pause) {
     await db.from("generations").update({ ...genPatch, status: "needs_input", current_step: step, progress_message: result.pause.reason.slice(0, 500) }).eq("id", generationId);
@@ -413,6 +413,14 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
 }
 
 // ---------- helpers ----------
+/** The variant the offer step just proposed: from applyEffects, else the newest proposed row for the offer. */
+async function resolveVariantId(db: Db, gen: GenerationRow, step: StepName, applied: AppliedEffects): Promise<string | null> {
+  if (applied.variantId) return applied.variantId;
+  if (step !== "offer") return null;
+  const { data } = await db.from("offer_variants").select("id").eq("offer_id", gen.offer_id).eq("status", "proposed").order("created_at", { ascending: false }).limit(1).maybeSingle();
+  return data?.id ?? null;
+}
+
 async function loadHistory(db: Db, generationId: string): Promise<StepRowLite[]> {
   const { data, error } = await db
     .from("generation_steps")

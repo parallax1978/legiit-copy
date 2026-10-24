@@ -12,10 +12,10 @@ import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
 import { draftPrompt, type DraftArgs } from "../prompts/draft.v1.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
 import { parseOptions } from "../draft/options.ts";
-import { interrogate, knownClaimIds, targetAwareness, unknownLedgerRefs } from "../draft/ledger.ts";
+import { interrogate, knownClaimIds, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { LEAD_IDS, leadTypesForAwareness } from "../draft/leads.ts";
 import { assembleDraft, orderSections, provisionalLeadSection, toDraftEffect, type LeadVariantT } from "../draft/assemble.ts";
-import { callStep, describeArgument, stepOutput, thesisOf } from "../draft/step_util.ts";
+import { callStep, describeArgument, stepOutput } from "../draft/step_util.ts";
 
 /** Several sections in one call (small sections grouped). */
 export const SectionGroupDraft = z.object({ sections: z.array(Section), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
@@ -48,7 +48,7 @@ export function matchSections(returned: Section[], call: DraftCall): Section[] |
 export function validateSections(sections: Section[], call: DraftCall, known: Set<string>): string[] {
   const problems: string[] = [];
   const unknown = unknownLedgerRefs(sections, known);
-  if (unknown.length) problems.push(`these ledger ids do not exist in the ledger: ${unknown.join(", ")}. Cite only ids shown in the CLAIMS LEDGER, or write [[NEEDS SOURCE]].`);
+  if (unknown.length) problems.push(`these ledger ids do not exist in the ledger or were dropped by the user: ${unknown.join(", ")}. Cite only ids shown in the CLAIMS LEDGER, or write [[NEEDS SOURCE]].`);
   for (const [i, s] of sections.entries()) {
     const u = call.units[i];
     if (s.blocks.length === 0 && !(u.spec?.optional)) problems.push(`section "${u.id}" came back empty; it is required.`);
@@ -77,7 +77,7 @@ export function validateLeads(leads: LeadVariantT[], types: LeadType[], known: S
   if (seen.size !== leads.length) problems.push(`the leads must be of different types; assigned: ${types.join(", ")}.`);
   for (const l of leads) if (l.blocks.length === 0) problems.push(`lead ${l.id} has no blocks.`);
   const unknown = unknownLedgerRefs(leads.map((l) => ({ section_id: l.id, title: null, blocks: l.blocks })), known);
-  if (unknown.length) problems.push(`these ledger ids do not exist in the ledger: ${unknown.join(", ")}. Cite only ids shown in the CLAIMS LEDGER, or write [[NEEDS SOURCE]].`);
+  if (unknown.length) problems.push(`these ledger ids do not exist in the ledger or were dropped by the user: ${unknown.join(", ")}. Cite only ids shown in the CLAIMS LEDGER, or write [[NEEDS SOURCE]].`);
   return problems;
 }
 
@@ -86,6 +86,8 @@ export const draftStep: StepFn = async (ctx) => {
   const options = parseOptions(ctx.generation.options);
   const target = targetAwareness(ctx.dossier, options);
   const argOut = stepOutput(ctx, "argument", ArgumentOutput);
+  // rows the user dropped never reach the writer; a citation of one is rejected like an invented id
+  const known = knownClaimIds(usableClaims(ctx.claims));
 
   // (1) pre-draft interrogation, in code
   const q = interrogate({
@@ -93,6 +95,7 @@ export const draftStep: StepFn = async (ctx) => {
     thesisFallback: argOut?.thesis ?? null,
     awareness: target.awareness,
     segment: target.segment,
+    usableClaimIds: known,
   });
   if (!q.ok) {
     await ctx.progress(`Drafting blocked: ${q.reason}`);
@@ -110,7 +113,6 @@ export const draftStep: StepFn = async (ctx) => {
     console.warn("retrieval skipped:", e instanceof Error ? e.message : e);
   }
 
-  const known = knownClaimIds(ctx.claims);
   const leadTypes = plan.leadSectionId ? leadTypesForAwareness(target.awareness, options.skeptical) : null;
   const argumentText = describeArgument(ctx.winningAngle, ctx.angles);
   const sophistication = ctx.dossier?.sophistication.stage ?? "unknown";

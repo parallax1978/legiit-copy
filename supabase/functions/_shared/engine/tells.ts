@@ -17,9 +17,9 @@ import type { Block, Section } from "./schemas/draft.ts";
 import type { MechanicalReport } from "./schemas/review.ts";
 import type { FormatSpec } from "./formats/spec.ts";
 import type { FormatId } from "./schemas/common.ts";
-import { NEEDS_SOURCE_TAG } from "./schemas/common.ts";
+import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "./schemas/common.ts";
 import { sectionBaseId, sectionItemIndex } from "./formats/index.ts";
-import { draftWordCount, stripLedger } from "./render.ts";
+import { draftWordCount } from "./render.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rule table
@@ -66,10 +66,10 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 0, name: "bracket_placeholder", weight: 10, scope: "all",
-    regex: /(?<!\[)\[(?!\[)(?:[A-Z][^[\]\n]{0,40}|\$?(?:X[X,.\d]*|_{2,}[^\]\n]{0,20})|\d+(?:[-–/]\d+)*|\.\.\.|(?:[Ii]nsert|[Yy]our|[Pp]roduct|[Bb]rand|[Ll]ink|[Nn]ame|[Dd]ate|[Pp]rice|[Nn]umber|[Cc]ompany|[Ff]irst[ _]?[Nn]ame)\b[^\]\n]{0,30})\](?!\()/g,
+    regex: /(?<!\[)\[(?!\[)(?:[A-Za-z][^[\]\n]{0,40}|\$?(?:X[X,.\d]*|_{2,}[^\]\n]{0,20})|\d+(?:[-–/]\d+)*|\.\.\.)\](?!\()/g,
     example: "[Product Name] helps [target audience]",
     fix: "Fill from the ledger or stop and ask. Never ship a bracket.",
-    note: "Ledger tags [[L:id]] and [[NEEDS SOURCE]] are excluded; so are markdown links.",
+    note: "Any bracketed word, XXX, blanks or bare numbers. Ledger tags [[L:id]], [[NEEDS SOURCE]] and markdown links are excluded; timestamps like [0:12] are not matched.",
   },
   {
     tier: 0, name: "bold_label_colon", weight: 10, scope: "body",
@@ -171,9 +171,10 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 2, name: "trailing_participle", weight: 2, scope: "structural", density_per_1000: 0.6,
-    regex: /,\s+([a-z]{5,}ing)\b[^.?!\n]{0,80}[.?!]/g,
+    regex: /,\s+([a-z]{2,}ing)\b[^.?!\n]{0,80}[.?!]/g,
     example: ", giving you more time with your family.",
     fix: "A new sentence with a subject.",
+    note: "analyze.py required eight letters and so missed \", giving you\"; the port accepts five and keeps a stop list of -ing nouns and prepositions (during, including, morning...).",
   },
   {
     tier: 2, name: "hedge", weight: 2, scope: "body", density_per_1000: 1,
@@ -338,8 +339,16 @@ interface Unit {
 const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
 const PROSE_TYPES = new Set<Block["type"]>(["paragraph", "beat", "hook", "slide", "caption", "cta", "ps", "greeting", "signoff", "recap", "price", "guarantee", "testimonial", "disclosure"]);
 
+/** Strip ledger tags and the NEEDS SOURCE marker, keeping line structure (render.ts's stripLedger collapses newlines). */
 function clean(text: string): string {
-  return stripLedger(text ?? "").split(NEEDS_SOURCE_TAG).join(" ").replace(/\r\n?/g, "\n").replace(/[ \t]{2,}/g, " ").trim();
+  return (text ?? "")
+    .replace(LEDGER_TAG, "")
+    .split(NEEDS_SOURCE_TAG).join(" ")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[ \t]+/g, " ")
+    .replace(/ ?\n ?/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function unitsOf(sections: Section[]): Unit[] {
@@ -379,7 +388,7 @@ export function syllables(word: string): number {
   if (!w) return 0;
   if (w.length <= 3) return 1;
   w = w.replace(/(?:(?<![sc]h)[^laeiouyxsz]es|[^laeiouytd]ed|[^laeiouy]e)$/, "").replace(/^y/, "");
-  const groups = w.match(/[aeiouy]{1,2}/g);
+  const groups = w.match(/[aeiouy]+/g);
   return Math.max(1, groups ? groups.length : 1);
 }
 
@@ -405,11 +414,13 @@ export function sentenceLengthCV(text: string): number | null {
 // Structural counters (ported from analyze.py `constructions`)
 // ---------------------------------------------------------------------------------------------------------------
 
-const STOP_ING = new Set("thing during morning evening something nothing anything everything bring king ring sing wing spring string ceiling feeling building meeting wedding marketing advertising writing shopping training".split(" "));
+const STOP_ING = new Set(
+  "thing during morning evening something nothing anything everything bring king ring sing wing spring string ceiling feeling building meeting wedding marketing advertising writing shopping training including according regarding following pending notwithstanding being".split(" "),
+);
 
 function trailingParticiples(text: string): string[] {
   const out: string[] = [];
-  for (const m of text.matchAll(/,\s+([a-z]{5,}ing)\b[^.?!\n]{0,80}[.?!]/g)) if (!STOP_ING.has(m[1])) out.push(m[0]);
+  for (const m of text.matchAll(/,\s+([a-z]{2,}ing)\b[^.?!\n]{0,80}[.?!]/g)) if (!STOP_ING.has(m[1])) out.push(m[0]);
   return out;
 }
 

@@ -21,6 +21,23 @@ export function knownClaimIds(claims: { id: string }[]): Set<string> {
   return new Set(claims.map((c) => c.id));
 }
 
+/**
+ * The user's decision on a flagged ledger row (offer_claims.user_decision):
+ * - "drop": the row is unusable. It never reaches a drafting prompt and any [[L:id]] that cites it is a fabrication-level flag.
+ * - "keep": the user accepted the flag's risk; the factual review may not re-flag the row.
+ * - "rewrite": claim_text already holds the accepted wording; it is used as written.
+ */
+export function usableClaims<T extends { user_decision: string | null }>(claims: T[]): T[] {
+  return claims.filter((c) => c.user_decision !== "drop");
+}
+export function droppedClaimIds(claims: { id: string; user_decision: string | null }[]): Set<string> {
+  return new Set(claims.filter((c) => c.user_decision === "drop").map((c) => c.id));
+}
+/** Ledger ids cited in the copy that the user dropped: unusable rows, a fabrication-level defect. */
+export function droppedLedgerRefs(sections: Section[], dropped: Set<string>): string[] {
+  return collectLedgerRefs(sections).filter((id) => dropped.has(id));
+}
+
 /** Unique ledger ids cited in the sections, in order of first appearance. */
 export function collectLedgerRefs(sections: Section[]): string[] {
   const out: string[] = [];
@@ -130,6 +147,8 @@ export interface InterrogationInput {
   thesisFallback?: string | null;
   awareness: Awareness;
   segment: string | null;
+  /** ids of ledger rows the copy may cite (dropped rows excluded); when given, proof refs outside it do not count */
+  usableClaimIds?: Set<string>;
 }
 export type Interrogation = { ok: true; proofRefs: string[]; thesis: string } | { ok: false; reason: string };
 
@@ -140,9 +159,13 @@ export type Interrogation = { ok: true; proofRefs: string[]; thesis: string } | 
 export function interrogate(input: InterrogationInput): Interrogation {
   if (!input.winner) return { ok: false, reason: "No winning argument. Run the argument step (or pick an angle) before drafting." };
   const cand = Candidate.safeParse(input.winner.candidate);
-  const proofRefs = cand.success ? cand.data.proof_ledger_refs : [];
-  if (proofRefs.length === 0) {
+  const allRefs = cand.success ? cand.data.proof_ledger_refs : [];
+  const proofRefs = input.usableClaimIds ? allRefs.filter((r) => input.usableClaimIds!.has(r)) : allRefs;
+  if (allRefs.length === 0) {
     return { ok: false, reason: "The winning argument carries no proof ledger rows (proof_ledger_refs is empty). Add the carrier to the ledger or choose an angle whose claim the ledger covers; the copy would otherwise draft around a missing carrier." };
+  }
+  if (proofRefs.length === 0) {
+    return { ok: false, reason: `The winning argument's proof rows (${allRefs.join(", ")}) were dropped by the user, so the claim has no usable carrier. Restore a row, add another carrier, or choose a different angle.` };
   }
   const thesis = input.winner.thesis ?? input.thesisFallback ?? null;
   if (!thesis) return { ok: false, reason: "The winning argument has no thesis sentence. The argument step must write it before any prose." };

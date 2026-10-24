@@ -6,7 +6,7 @@ import { DraftOutput, type Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { draftWordCount, extractSkimPath, renderMarkdown } from "../render.ts";
 import type { StepEffects } from "../steps/types.ts";
-import { collectLedgerRefs, needsSourceLines } from "./ledger.ts";
+import { collectLedgerRefs, needsSourceLines, readerText } from "./ledger.ts";
 
 export type LeadVariantT = NonNullable<DraftOutput["leads"]>[number];
 
@@ -47,7 +47,8 @@ export function assembleDraft(input: AssembleInput): DraftOutput {
     sections,
     leads: input.leads && input.leads.length ? input.leads : null,
     chosen_lead_id: input.chosenLeadId,
-    skim_path: extractSkimPath({ sections }, input.spec.skim_path_block_types),
+    // extractSkimPath strips ledger tags; readerText also drops NEEDS SOURCE markers and the space left before punctuation
+    skim_path: extractSkimPath({ sections }, input.spec.skim_path_block_types).map(readerText).filter(Boolean),
     ledger_refs_used: collectLedgerRefs(sections),
     needs_source: needs,
     word_count: draftWordCount({ sections }),
