@@ -1,0 +1,19 @@
+{
+  "name": "legiit-copy",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "scripts": {
+    "dev": "pnpm -F web dev",
+    "build": "pnpm -F web build",
+    "lint": "pnpm -F web lint",
+    "typecheck": "pnpm -F web typecheck",
+    "test": "pnpm -F web test",
+    "engine:check": "deno check --config supabase/functions/deno.json supabase/functions/**/*.ts",
+    "engine:test": "deno test --config supabase/functions/deno.json --allow-read --allow-env supabase/functions",
+    "db:types": "supabase gen types typescript --local > apps/web/src/lib/supabase/database.types.ts"
+  },
+  "devDependencies": {
+    "zod": "^4.1.0",
+    "typescript": "^5"
+  }
+}

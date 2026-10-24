@@ -1,0 +1,172 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Legiit brand tokens, taken from legiitkeywords.com and legiitleads.com */
+:root {
+  --brand: #8a12dc;
+  --brand-strong: #6e0db1;
+  --brand-soft: #e9d5ff;
+  --brand-faint: #f3e8ff;
+  --brand-blue: #1863dc;
+  --ink: #0f172a;
+  --ink-muted: #64748b;
+  --ink-soft: #94a3b8;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --surface: #ffffff;
+  --surface-alt: #f7f7fb;
+  --surface-sunken: #f1f1f6;
+  --plum: #12081f;
+  --good: #15803d;
+  --good-soft: #dcfce7;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --bad: #b91c1c;
+  --bad-soft: #fee2e2;
+
+  /* shadcn semantic tokens mapped onto the brand */
+  --background: var(--surface);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface-alt);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--brand-faint);
+  --accent-foreground: var(--brand-strong);
+  --destructive: var(--bad);
+  --destructive-foreground: #ffffff;
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--brand);
+  --radius: 0.75rem;
+  --sidebar: var(--surface-alt);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--brand-faint);
+  --sidebar-accent-foreground: var(--brand-strong);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--brand);
+}
+
+.dark {
+  --background: var(--plum);
+  --foreground: #f5f3ff;
+  --card: #1a0f2e;
+  --card-foreground: #f5f3ff;
+  --popover: #1a0f2e;
+  --popover-foreground: #f5f3ff;
+  --primary: #a855f7;
+  --primary-foreground: #ffffff;
+  --secondary: #241538;
+  --secondary-foreground: #f5f3ff;
+  --muted: #241538;
+  --muted-foreground: #b4a7c9;
+  --accent: #2d1a47;
+  --accent-foreground: #e9d5ff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #2f2145;
+  --input: #3b2a55;
+  --ring: #a855f7;
+  --sidebar: #160b27;
+  --sidebar-foreground: #f5f3ff;
+  --sidebar-primary: #a855f7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2d1a47;
+  --sidebar-accent-foreground: #e9d5ff;
+  --sidebar-border: #2f2145;
+  --sidebar-ring: #a855f7;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-faint: var(--brand-faint);
+  --color-brand-blue: var(--brand-blue);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-card: 0.75rem;
+
+  --shadow-glow: 0 8px 24px -8px rgb(138 18 220 / 0.6);
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 1px 3px rgb(15 23 42 / 0.06);
+  --shadow-lift: 0 8px 30px rgb(15 23 42 / 0.12), 0 2px 6px rgb(15 23 42 / 0.06);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground font-sans antialiased; font-size: 14px; line-height: 1.5; }
+}
+
+.brand-gradient { background-image: linear-gradient(135deg, #8a12dc, #1863dc); }
+.brand-text-gradient { background-image: linear-gradient(90deg, #a855f7, #d946ef 55%, #ec4899); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.shadow-glow { box-shadow: var(--shadow-glow); }
+
+/* copy editor */
+.copy-prose { font-size: 15px; line-height: 1.65; }
+.copy-prose h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin: 1.25rem 0 0.75rem; letter-spacing: -0.01em; }
+.copy-prose h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; margin: 1.25rem 0 0.5rem; }
+.copy-prose h3 { font-size: 1.05rem; font-weight: 700; margin: 1rem 0 0.5rem; }
+.copy-prose p { margin: 0 0 0.85rem; }
+.copy-prose ul { list-style: disc; padding-left: 1.4rem; margin-bottom: 0.85rem; }
+.copy-prose blockquote { border-left: 3px solid var(--brand-soft); padding-left: 0.9rem; color: var(--ink-muted); margin: 0.75rem 0; }
+.copy-prose .ledger-ref { font-size: 0.7rem; color: var(--brand-strong); background: var(--brand-faint); border-radius: 4px; padding: 0 4px; vertical-align: super; }
+.ProseMirror:focus { outline: none; }
+.ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--ink-soft); float: left; pointer-events: none; height: 0; }

@@ -1,6 +1,6 @@
 # Execution plan
 
-One developer with Claude Code. The teaching material, controls and calibration data are sourced by the build, not supplied by the user. Weeks are planning estimates. Each phase has a gate; quality of the engine, not the calendar, decides when Phase 2 starts.
+Build everything at once: phases below are work packages built in parallel, not release stages, and there is no beta. Gates stay as quality checks the engine must pass before launch. The teaching material, controls and calibration data are sourced by the build, not supplied by the user.
 
 ## Phase 0: Foundations (week 1)
 
@@ -9,7 +9,7 @@ Goal: a deployable skeleton with auth, tenancy, CI, and the logging that every l
 - [ ] 0.1 Scaffold `apps/web` (Next.js 15, TS, Tailwind, shadcn/ui), `supabase/` (CLI init), `tools/engine-cli`, root `package.json` workspaces, `.env.example`
 - [ ] 0.2 Supabase project: enable `pgvector`, `pgmq`, `pg_cron`, `pg_net`; link CLI; secrets set for `ANTHROPIC_API_KEY`
 - [ ] 0.3 Migration 001: `workspaces`, `workspace_members`, `profiles`, `app_admins`, RLS helpers, auto-create workspace on signup
-- [ ] 0.4 Auth: magic link + Google, `@supabase/ssr` middleware, protected `/app` routes, sign-out
+- [ ] 0.4 Auth: magic link only, `@supabase/ssr` middleware, protected `/app` routes, sign-out
 - [ ] 0.5 Migration 002: `llm_calls`, `prompt_versions`, `usage_events`
 - [ ] 0.6 `_shared/engine/llm.ts`: Anthropic wrapper (model, effort, structured output, logging to `llm_calls`, cost from a price table, retries, refusal fallback)
 - [ ] 0.7 GitHub Actions: lint, typecheck, Vitest, Deno test, `supabase db lint`; deploy edge functions and migrations on `main`; Vercel preview per PR
@@ -88,7 +88,7 @@ For each format: spec, 8–10 examples, 3–5 eval briefs, prompt tuning, gate a
 - [ ] 4.7 "Campaign" (funnel) object: one argument carried across ad, opt-in, email, page, order form and upsell, with the cross-asset consistency check and a reviewer pass that reads only the first screen of each asset
 - [ ] 4.8 Formats still without a spec: downsell, application and call-booking page, quiz funnel, webinar invitation emails, cancellation flow, UGC video script, X thread, replay page
 
-## Phase 5: Hardening and private beta (weeks 10–12)
+## Phase 5: Hardening and launch
 
 - [ ] 5.1 Usage metering and soft limits per workspace (no billing): counters, warnings, admin override
 - [ ] 5.2 Rate limiting on generation creation; abuse controls on uploads and URL fetch (size, SSRF allowlist)
@@ -97,7 +97,7 @@ For each format: spec, 8–10 examples, 3–5 eval briefs, prompt tuning, gate a
 - [ ] 5.5 Legal pages, privacy policy, data deletion (workspace export and delete)
 - [ ] 5.6 Security review pass (RLS tests per table, secrets audit, dependency audit)
 - [ ] 5.7 Backups verified; point-in-time recovery enabled
-- [ ] 5.8 PostHog events for the funnel; beta cohort of 10–20 users; weekly eval round with their briefs (anonymized, with consent)
+- [ ] 5.8 PostHog events for the funnel; weekly eval round on new eval briefs
 - [ ] 5.9 First three one-variable A/B tests against real controls (engine lead, email and ad), sample sizes computed in advance; results and 30-day refunds logged against the reviewer's predictions
 
 Gate: beta users reuse output with limited rewriting (self-reported and measured by edit distance between system draft and exported version).
@@ -118,10 +118,10 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 
 | Decision | Default if not decided |
 |---|---|
-| Product name and domain | Work under the repo name until chosen |
+| Product name and domain | Decided: Legiit Copy; branding shared with Legiit Leads and Legiit Keywords |
 | First market for the beta (e.g. course creators, agencies, ecommerce, info products) | Info products and online courses |
-| Sign-in methods | Magic link + Google |
+| Sign-in methods | Decided: magic link only |
 | Storage policy for copyrighted examples | Full text only for public-domain or licensed items; otherwise structural annotations, brief excerpts and the URL; study only, never reproduce; counsel review before beta |
-| Prohibited claims policy | Income guarantees, medical cures, and fabricated testimonials are always prohibited |
+| Claims policy | Decided: nothing prohibited; risky claims flagged for the user's decision with rule and rewrite; engine fabrications are the only hard stop |
 | Who judges evals | A judge model calibrated on documented split-test pairs; human spot-checks optional |
 | Default model set | Opus 5.5 for every step; Sonnet 5.5 trial on research synthesis, extraction, and factual review after Phase 1 |

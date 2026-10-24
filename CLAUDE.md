@@ -3,7 +3,7 @@
 Project conventions for Claude Code sessions working in this repo. Read `docs/` before changing architecture.
 
 ## What this is
-A SaaS that writes direct response sales copy (sales pages, emails, webinars, VSLs, ads, social) from a saved offer. The product's edge is editorial judgment: pick the argument first, write within a claims ledger, review persuasion and facts separately, and prove quality with blind evals. Monetization is out of scope for now.
+Legiit Copy: a SaaS that writes direct response sales copy (sales pages, emails, webinars, VSLs, ads, social) from a saved offer. The product's edge is editorial judgment: pick the argument first, write within a claims ledger, review persuasion and facts separately, and prove quality with blind evals. Monetization is out of scope for now.
 
 Docs:
 - `docs/00-requirements.md` scope, functional and non-functional requirements, what the user supplies
@@ -36,7 +36,7 @@ Next.js 15 (App Router, TS, Tailwind, shadcn/ui) on Vercel. Supabase for Postgre
 ## Copy standard (non-negotiable; details in docs/04-copy-standard.md)
 - Decide in this order and never repair a higher failure lower down: market, awareness, sophistication, desire, mechanism, big idea, lead, structure, proof, offer, close. The offer is designed before the brief; the argument is chosen before any prose.
 - Every number, study, name, credential, quote, price and deadline carries a ledger ID. Never generate a testimonial, a narrator, a study or a statistic. Precision matches the evidence.
-- Claim never bigger than proof; proof within two sentences of its claim; no hedges on supported claims; compliance is handled by the factual review as `line → rule → rewritten line`, never by adding "may" or "results vary".
+- Claim never bigger than proof; proof within two sentences of its claim; no hedges on supported claims; compliance is handled by the factual review as `line → rule → rewritten line` flags the user decides on; the engine never prohibits, removes or softens a claim, and never adds "may" or "results vary". Engine fabrications (invented numbers, studies, names, testimonials) are the only hard stop.
 - Draft in the standard's order (offer block and order form, bullets and proof, body, three leads, headline last). The cold read runs on a different model than the drafter.
 - The editorial reviewer runs gates in order and stops at the first failure, predicts beat/lose/unsure against a control, and never averages a score.
 - The tell detector never penalizes caps, fragments, exclamation marks, ellipses or em dashes at human rates; bold-label-colon bullets, placeholders, assistant residue and unledgered authorities are hard rejects.

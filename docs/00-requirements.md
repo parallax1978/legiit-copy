@@ -1,5 +1,7 @@
 # Requirements
 
+Product name: **Legiit Copy**, a Legiit product alongside Legiit Leads and Legiit Keywords, sharing their visual identity (Inter, the purple-to-blue brand gradient, light surfaces, pill buttons).
+
 What has to exist for this product to work, and what the user has to supply. Monetization is deliberately out of scope for now; everything else a normal SaaS needs is in.
 
 ## 1. What we are building
@@ -30,7 +32,7 @@ Each format is defined by a **format spec**: structure, length band, required su
 ## 3. Functional requirements
 
 ### Accounts and workspaces
-- Email magic link and Google sign-in (Supabase Auth)
+- Email magic link sign-in only (Supabase Auth); no passwords, no OAuth providers
 - Workspaces with members and roles (owner, editor, viewer); every record belongs to a workspace
 - Profile settings, workspace settings, member invites
 - Admin role (internal) for the teaching library, evals, prompts, costs, failed jobs
@@ -38,7 +40,7 @@ Each format is defined by a **format spec**: structure, length band, required su
 ### Offers
 - Create an offer from a URL, uploaded documents (PDF, DOCX, TXT, MD), or a typed description
 - Automatic extraction into a structured brief: product, deliverables, price, terms, guarantee, audience, proof, positioning
-- Claims ledger: each claim with type, evidence source, and status (verified / unverified / prohibited); user can edit, add, allow, or forbid claims
+- Claims ledger: each claim with type, evidence grade, source, and status (verified / unverified / flagged). Nothing is prohibited by the system: a claim the factual review considers risky is flagged to the user with the rule and a suggested rewrite, and the user decides whether to keep it, rewrite it, or drop it. The engine never silently removes or softens a claim
 - Research dossier generated once per offer and refreshable: customer language (verbatim quotes), desires, frustrations, objections, competing options, awareness and sophistication level, proof inventory
 - Voice profile: paste samples; the app derives a style guide the writer follows
 - Missing-info questions: the app asks only for consequential facts it cannot find (unpublished offer terms, numbers it needs)
@@ -82,7 +84,7 @@ Each format is defined by a **format spec**: structure, length band, required su
 | Cost control | Every model call logged with step, prompt version, model, tokens, cost, duration. Revision loop capped. Per-workspace usage counters from day one. |
 | Latency | Target: email under 2 minutes, sales page under 6 minutes end to end. Steps run in parallel where independent. |
 | Traceability | Each generation records prompt versions and models used so quality changes can be attributed. |
-| Compliance posture | The writer is not throttled by compliance prompts. The claims ledger and factual review carry that responsibility and flag specific lines. |
+| Compliance posture | The writer is never throttled by compliance prompts and the system never prohibits a claim. The factual review flags specific lines with the rule and a suggested rewrite; the user decides. The only hard stops are the engine's own fabrications (an invented statistic, study, name or testimonial), which are not the user's claims. |
 | Observability | Sentry for app and edge errors; a `llm_calls` table as the source of truth for spend; PostHog (or similar) for product analytics. |
 | Testing | Unit tests for format specs, schemas, cost accounting; integration test for the pipeline against a recorded brief; Playwright smoke test for the core flow; eval harness as the quality test. |
 
@@ -94,7 +96,6 @@ Each format is defined by a **format spec**: structure, length band, required su
 | Anthropic API key with sufficient spend limit | Engine | 0 |
 | Vercel project | Hosting the Next.js app | 0 |
 | Domain and DNS | App URL, auth redirect, email sending | 0 |
-| Google Cloud OAuth client | Google sign-in | 0 |
 | Resend account (or other SMTP) | Magic links, invites, notifications | 2 |
 | Sentry project | Error tracking | 2 |
 | PostHog project (optional) | Product analytics | 5 |
@@ -105,7 +106,7 @@ Each format is defined by a **format spec**: structure, length band, required su
 - **Product name, domain, and first target market** (which kind of seller the beta is for; the first teaching set and eval briefs are chosen to match)
 - **Nothing from the teaching material.** The build sources the teaching library, the control corpus, the critique pairs and the eval briefs itself from public and licensable material (`02-plan.md` Phase 1, item 1.0). The user's own promotions are never required and are never the template.
 - **No required judging.** The eval judge is calibrated on documented split-test pairs with known winners, so it is held to real results rather than to anyone's taste. The user can look at blind comparisons when they feel like it; nothing in the plan blocks on it.
-- **Claims policy**: what claim types are always prohibited in generated copy (e.g. income guarantees, medical cures) regardless of what an offer's documents say
+- **Claims policy**: decided. Nothing is prohibited; risky claims are flagged for the user's decision with the rule and a rewrite.
 - **Decisions** listed in `02-plan.md` § Open decisions
 
 ## 7. Estimated run cost (to be measured in Phase 1)

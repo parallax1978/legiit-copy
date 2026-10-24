@@ -1,6 +1,6 @@
-# legiit-copy
+# Legiit Copy
 
-A SaaS that writes effective direct response sales copy from a saved offer: sales pages, emails and sequences, webinars, VSLs, ads, and social posts.
+A Legiit product that writes effective direct response sales copy from a saved offer: sales pages, emails and sequences, webinars, VSLs, ads, and social posts.
 
 The product is built around the idea that AI writes the language of selling without the judgment behind it. The engine fixes that by choosing the sales argument before writing, writing within a per-offer claims ledger, reviewing persuasion and facts as separate steps, and measuring itself with blind evaluations against a plain prompt.
 

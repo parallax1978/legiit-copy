@@ -15,3 +15,7 @@ supabase/.branches/
 .idea/
 .vscode/
 *.tsbuildinfo
+supabase/.env
+apps/web/.env*.local
+playwright-report/
+test-results/

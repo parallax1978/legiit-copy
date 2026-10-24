@@ -1,0 +1,33 @@
+import type { FormatSpec } from "../spec.ts";
+
+export const sales_letter: FormatSpec = {
+  id: "sales_letter",
+  name: "Long-form sales letter",
+  family: "page",
+  description: "The full argument for a considered purchase. Skim path must sell alone.",
+  length_band_words: [3000, 8000],
+  sections: [
+    { id: "headline", name: "Headline and deck", job: "Stop the specific reader and compel the second sentence; graduated so no belief is violated", band_words: [10, 60], must: ["hook plus promise", "deck builds on the headline", "ledger ID on any number, name or study"], must_not: ["\"Unlock\", \"Discover the secret\", \"Ultimate Guide\"", "colon label headline", "question the reader answers instantly"], block_types: ["preheadline", "headline", "deck"] },
+    { id: "lead", name: "Lead", job: "Pay off the headline, win commitment to read, end on an open loop", band_words: [300, 600], must: ["speaker identified by word 150", "one claim a skeptic would doubt", "lead type matches the awareness field", "product named only where awareness allows"], must_not: ["mechanism explained", "bio before the reader cares", "restating the headline"], block_types: ["paragraph", "crosshead"] },
+    { id: "credibility", name: "Credibility lines", job: "Who is talking and why believe them, in a few lines where the lead needs it", band_words: [30, 120], must: ["ledger-backed credentials"], must_not: ["a 300-word biography"], optional: true, block_types: ["paragraph"] },
+    { id: "problem_mechanism", name: "Problem mechanism", job: "Why the usual fixes fail, in the reader's words", band_words: [300, 600], must: ["prior solutions from the research", "the reader's verbatims"], must_not: ["melodrama", "objections the research never raised"], block_types: ["crosshead", "paragraph", "bullets"] },
+    { id: "solution_mechanism", name: "Solution mechanism and turn", job: "Two sentences of mechanism, its intuitive and empirical proof, then the turn as a reason-why sentence", band_words: [200, 500], must: ["mechanism in one step", "two layers of proof", "turn states cause"], must_not: ["\"That's why we built\" with no cause", "multi-step mechanism"], block_types: ["crosshead", "paragraph"] },
+    { id: "build_up", name: "Product build-up and reveal", job: "Benefits argued as claim, reason, proof, picture; put the claims in action", band_words: [500, 1500], must: ["every claim's carrier within two sentences", "bullets that withhold the closing noun"], must_not: ["feature list", "proof wall", "\"so you can\" triads"], block_types: ["crosshead", "paragraph", "bullets", "testimonial"] },
+    { id: "proof", name: "Proof block", job: "Reinforcement of proof already placed, never first appearance", band_words: [200, 600], must: ["documented testimonials with name, place, number, time, one imperfection", "typical result adjacent to any result"], must_not: ["generic testimonials", "\"trusted by thousands\""], block_types: ["crosshead", "testimonial", "paragraph"] },
+    { id: "offer", name: "Offer and stack", job: "Name the thing, show the core worth the price alone, then the value frame and bonuses that answer named worries", band_words: [300, 800], must: ["offer identical to the order form", "bonus values only with a ledger basis"], must_not: ["fabricated stack values", "two things sold at once"], block_types: ["crosshead", "paragraph", "bullets", "recap"] },
+    { id: "price", name: "Price and reframe", job: "State the price once, after value, without apology, with its reframe", band_words: [60, 200], must: ["price once", "reframe comparable", "full price disclosed"], must_not: ["apology", "\"investment in yourself\"", "per-day frame without the full price"], block_types: ["paragraph", "price"] },
+    { id: "guarantee", name: "Guarantee", job: "Denominated, as a sentence the buyer can repeat", band_words: [40, 150], must: ["denominated", "terms adjacent"], must_not: ["bolt-on \"30-day money-back, no questions asked\"", "qualifiers that gut it"], block_types: ["crosshead", "guarantee"] },
+    { id: "urgency", name: "Reason to act now", job: "The deadline with its mechanism, or nothing", band_words: [40, 150], must: ["mechanism stated"], must_not: ["dateless urgency", "evergreen timer by default"], optional: true, block_types: ["paragraph"] },
+    { id: "close", name: "Close", job: "Lead the reader by the hand: what they get by acting, what they lose by waiting, what to do; CTA at least three times", band_words: [400, 1200], must: ["CTA three times", "what happens after the click", "objections after the first CTA each with proof"], must_not: ["summary paragraph", "\"In conclusion\""], block_types: ["crosshead", "paragraph", "cta", "button", "bullets"] },
+    { id: "ps", name: "P.S.", job: "A second headline for the skimmer", band_words: [30, 150], must: ["carries what the skimmer most needs"], must_not: ["a new claim with no ledger ID"], block_types: ["ps"] },
+  ],
+  draft_order: ["offer", "price", "guarantee", "urgency", "close", "ps", "build_up", "proof", "problem_mechanism", "solution_mechanism", "credibility", "lead", "headline"],
+  lead_variants: 3,
+  skim_path_block_types: ["preheadline", "headline", "deck", "crosshead", "cta", "button", "ps", "recap", "price", "guarantee"],
+  hard_gates: ["page.cta_count>=3", "page.close_share>=0.15", "page.speaker_by_word<=150", "page.no_markdown_headings"],
+  cadence_floor_cv: 0.7,
+  allow_emoji_bullets: false,
+  allow_markdown_headings: false,
+  allow_caps: true,
+  standard_section: "Long-form sales letter",
+};
