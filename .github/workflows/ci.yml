@@ -1,0 +1,76 @@
+name: CI
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -F web lint
+      - run: pnpm -F web typecheck
+      - run: pnpm -F web test
+      - name: Build
+        run: pnpm -F web build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+  engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - name: Type-check engine and functions
+        working-directory: supabase/functions
+        run: deno check _shared/engine/steps/index.ts _shared/engine/formats/index.ts _shared/engine/llm.ts $(ls -d */ | grep -v _shared | sed 's#/$#/index.ts#')
+      - name: Engine tests
+        working-directory: supabase/functions
+        run: deno test --allow-read --allow-env _shared/engine/tests
+
+  migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply stubs and migrations
+        env: { PGPASSWORD: postgres }
+        run: |
+          psql -h localhost -U postgres -c "create database legiit_copy" postgres
+          psql -h localhost -U postgres -d legiit_copy -v ON_ERROR_STOP=1 -f supabase/tests/local_stubs.sql
+          for f in supabase/migrations/*.sql; do psql -h localhost -U postgres -d legiit_copy -v ON_ERROR_STOP=1 -f "$f"; done
+          test "$(psql -h localhost -U postgres -d legiit_copy -tAc "select count(*) from pg_tables where schemaname='public' and not rowsecurity")" = "0"
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [web, engine, migrations]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      - name: Push migrations and deploy functions
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          supabase link --project-ref "$SUPABASE_PROJECT_ID"
+          supabase db push
+          supabase functions deploy --no-verify-jwt run-step
+          for f in $(ls -d supabase/functions/*/ | xargs -n1 basename | grep -v -e _shared -e run-step); do supabase functions deploy "$f"; done

@@ -42,15 +42,18 @@ Next.js 15 (App Router, TS, Tailwind, shadcn/ui) on Vercel. Supabase for Postgre
 - The tell detector never penalizes caps, fragments, exclamation marks, ellipses or em dashes at human rates; bold-label-colon bullets, placeholders, assistant residue and unledgered authorities are hard rejects.
 - Prompts carry parameters and exemplar paragraphs, never tone adjectives. Output only copy in the requested structure.
 
-## Commands (to be kept current as the scaffold lands)
+## Commands
 ```
-pnpm install                      # workspaces
-pnpm -F web dev                   # Next.js
-supabase start && supabase db reset
-supabase functions serve
-deno task -c supabase/functions engine run --brief <file> --format <format>
-pnpm test && deno test supabase/tests
+pnpm install                                   # workspaces (root has zod/typescript for engine imports)
+pnpm -F web dev | build | lint | typecheck | test
+cd supabase/functions && deno check _shared/engine/steps/index.ts   # DENO_TLS_CA_STORE=system in this container
+cd supabase/functions && deno test --allow-read --allow-env _shared/engine/tests
+deno task -c supabase/functions engine run --brief <file> --format <id>   # real project; needs env
+supabase db push && supabase functions deploy --no-verify-jwt run-step     # see docs/05-deploy.md
+deno run --allow-read --allow-env --allow-net supabase/seed/seed.ts --admin you@example.com
+python3 tools/gen-standard.py                  # regenerate prompts/standard.ts after editing docs/04
 ```
+Validate migrations locally without Docker: create a database, apply supabase/tests/local_stubs.sql, then every supabase/migrations/*.sql in order (CI does the same).
 
 ## Git
 Work on the designated feature branch, small commits with descriptive messages, no PR unless asked.
