@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { ArrowRight, Loader2 } from "lucide-react";
@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input";
 import { createOffer, submitOfferSources } from "@/lib/actions/offers";
 import { linesToArray } from "./normalize";
 import { Field } from "./fields";
-import { SourceInputs, emptySourceDraft, sourceDraftCount, uploadPendingFiles, type SourceDraft, type PendingFile } from "./source-inputs";
+import { SourceInputs, emptySourceDraft, sourceDraftCount, uploadPendingFiles, type SourceDraft, type PendingFile, type UploadedFile } from "./source-inputs";
 
 export function NewOfferForm() {
   const [name, setName] = useState("");
   const [draft, setDraft] = useState<SourceDraft>(emptySourceDraft());
   const [phase, setPhase] = useState<"idle" | "creating" | "uploading" | "starting">("idle");
-  const [createdOfferId, setCreatedOfferId] = useState<string | null>(null);
+  const [created, setCreated] = useState<{ offerId: string; workspaceId: string } | null>(null);
+  const uploadedRef = useRef<Map<string, UploadedFile>>(new Map());
   const [pending, startTransition] = useTransition();
   const busy = pending || phase !== "idle";
   const count = sourceDraftCount(draft);
@@ -42,38 +43,32 @@ export function NewOfferForm() {
     }
     startTransition(async () => {
       setPhase("creating");
-      let offerId = createdOfferId;
-      let workspaceId: string | null = null;
-      if (!offerId) {
-        const created = await createOffer({ name, firstUrl: urls[0], firstFile: draft.files[0]?.file.name, description: draft.text });
-        if (!created.ok) {
-          toast.error(created.error);
+      let ids = created;
+      if (!ids) {
+        const r = await createOffer({ name, firstUrl: urls[0], firstFile: draft.files[0]?.file.name, description: draft.text });
+        if (!r.ok) {
+          toast.error(r.error);
           setPhase("idle");
           return;
         }
-        offerId = created.data.offerId;
-        workspaceId = created.data.workspaceId;
-        setCreatedOfferId(offerId);
+        ids = r.data;
+        setCreated(ids);
       }
-      let uploaded: Awaited<ReturnType<typeof uploadPendingFiles>>["uploaded"] = [];
+      // Files already uploaded on an earlier attempt are kept; only new or failed ones go up.
       const toUpload = draft.files.filter((f) => f.state === "ready" || f.state === "error");
       if (toUpload.length > 0) {
-        if (!workspaceId) {
-          toast.error("Reload the page and try again.");
-          setPhase("idle");
-          return;
-        }
         setPhase("uploading");
-        const res = await uploadPendingFiles(workspaceId, offerId, toUpload, patchFile);
-        uploaded = res.uploaded;
+        const res = await uploadPendingFiles(ids.workspaceId, ids.offerId, toUpload, patchFile);
+        for (const u of res.uploaded) uploadedRef.current.set(u.id, { name: u.name, storage_path: u.storage_path, mime_type: u.mime_type });
         if (res.failed.length > 0) {
           toast.error(`${res.failed.length} file${res.failed.length > 1 ? "s" : ""} could not be uploaded. Remove or retry, then continue.`);
           setPhase("idle");
           return;
         }
       }
+      const uploaded = draft.files.map((f) => uploadedRef.current.get(f.id)).filter((u): u is UploadedFile => !!u);
       setPhase("starting");
-      const result = await submitOfferSources({ offerId, urls, text: draft.text, files: uploaded });
+      const result = await submitOfferSources({ offerId: ids.offerId, urls, text: draft.text, files: uploaded });
       // On success the action redirects and never returns.
       if (result && !result.ok) {
         toast.error(result.error);
@@ -98,10 +93,10 @@ export function NewOfferForm() {
       </div>
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-xs text-ink-muted">
-          {createdOfferId && phase === "idle" ? (
+          {created && phase === "idle" ? (
             <>
               The offer was created but has no sources yet.{" "}
-              <Link className="underline" href={`/app/offers/${createdOfferId}`}>
+              <Link className="underline" href={`/app/offers/${created.offerId}`}>
                 Open it anyway
               </Link>
               .

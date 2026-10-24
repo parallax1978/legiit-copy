@@ -144,6 +144,7 @@ export function htmlToText(html: string): string {
   h = h.replace(/<\/(p|div|h[1-6]|tr|blockquote|section|article|header|ul|ol|table|pre|figure|figcaption|dd|dt)\s*>/gi, "\n\n");
   h = h.replace(/<(h[1-6]|p|div|tr|blockquote|section|article|pre)\b[^>]*>/gi, "\n");
   h = h.replace(/<\/(td|th)\s*>/gi, "\t");
+  h = h.replace(/<\/?(?:a|abbr|b|bdi|bdo|cite|code|data|del|dfn|em|font|i|ins|kbd|label|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)\b[^>]*>/gi, ""); // inline: no space
   h = h.replace(/<[^>]+>/g, " ");
   h = decodeEntities(h);
   return normalizeWhitespace(h);
@@ -307,7 +308,7 @@ function isIpLiteral(host: string): boolean {
   return /^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.includes(":");
 }
 
-function isPrivateIp(ip: string): boolean {
+export function isPrivateIp(ip: string): boolean {
   if (ip.includes(":")) {
     const hextets = parseIpv6(ip);
     if (!hextets) return true; // unparsable: refuse
@@ -344,7 +345,7 @@ function isPrivateV4([a, b, c]: number[]): boolean {
   return false;
 }
 
-function parseIpv6(s: string): number[] | null {
+export function parseIpv6(s: string): number[] | null {
   let str = s.split("%")[0];
   // trailing dotted IPv4 (::ffff:1.2.3.4)
   const v4 = /:(\d{1,3}(?:\.\d{1,3}){3})$/.exec(str);

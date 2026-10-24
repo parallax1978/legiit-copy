@@ -129,7 +129,7 @@ export async function continueGeneration(generationId: string): Promise<ActionRe
 }
 
 /** Skip offer construction for a generation waiting on approval and draft from the offer as written. */
-export async function useOfferAsWritten(generationId: string): Promise<ActionResult> {
+export async function draftWithOfferAsWritten(generationId: string): Promise<ActionResult> {
   const ctx = await editorContext();
   if (ctx.error) return { ok: false, error: ctx.error };
   const { data: g } = await ctx.supabase.from("generations").select("options").eq("id", generationId).maybeSingle();

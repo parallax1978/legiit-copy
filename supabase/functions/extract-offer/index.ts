@@ -14,11 +14,14 @@ serve(async (req) => {
   const { client } = await requireUser(req);
   const { offer_id } = await parseBody(req, Body);
 
-  const { data: offer, error } = await client.from("offers").select("id, workspace_id, status").eq("id", offer_id).maybeSingle();
+  const { data: offer, error } = await client.from("offers").select("id, workspace_id, status, updated_at").eq("id", offer_id).maybeSingle();
   if (error) throw new HttpError(500, error.message);
   if (!offer) throw new HttpError(404, "offer not found");
   await assertEditor(client, offer.workspace_id);
-  if (offer.status === "extracting") throw new HttpError(409, "extraction is already running for this offer");
+  // a run that died without resetting the status may be retried after 8 minutes (the function wall clock is under 7)
+  if (offer.status === "extracting" && Date.now() - Date.parse(offer.updated_at) < 8 * 60_000) {
+    throw new HttpError(409, "extraction is already running for this offer");
+  }
 
   const db = serviceClient();
   const { count } = await db.from("offer_sources").select("id", { count: "exact", head: true }).eq("offer_id", offer_id).eq("extraction_status", "done");

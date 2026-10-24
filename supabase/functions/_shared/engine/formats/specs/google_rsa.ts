@@ -18,7 +18,7 @@ export const google_rsa: FormatSpec = {
   draft_order: ["descriptions", "headlines"],
   lead_variants: 0,
   skim_path_block_types: ["headline"],
-  hard_gates: ["google_rsa.headline_chars<=30", "google_rsa.description_chars<=90", "google_rsa.headline_count==15", "google_rsa.description_count==4", "google_rsa.no_duplicate_headlines"],
+  hard_gates: ["google_rsa.headline_chars<=30", "google_rsa.description_chars<=90", "google_rsa.headline_count==15", "google_rsa.description_count==4", "google_rsa.no_duplicate_headlines", "google_rsa.no_all_caps_headlines", "google_rsa.no_exclamation_headlines"],
   cadence_floor_cv: 0.7,
   allow_emoji_bullets: false,
   allow_markdown_headings: false,

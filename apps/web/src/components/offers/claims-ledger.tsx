@@ -41,7 +41,7 @@ export function ClaimsLedger({ offerId, claims, editable }: { offerId: string; c
       if (status === "all") return true;
       if (status === "decided") return !!c.user_decision;
       if (status === "flagged") return c.status === "flagged" && !c.user_decision;
-      return c.status === status && !(c.status === "flagged" && c.user_decision);
+      return c.status === status;
     });
     // Undecided flags first, then by creation.
     return filtered.sort((a, b) => Number(!!b.flag && !b.user_decision) - Number(!!a.flag && !a.user_decision));

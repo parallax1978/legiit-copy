@@ -24,6 +24,7 @@ export function ImportJsonDialog({ title, description, action, triggerLabel = "I
   const [pending, setPending] = React.useState(false);
   const [result, setResult] = React.useState<ActionResult<unknown> | null>(null);
   const router = useRouter();
+  const importErrors = result?.ok ? summaryErrors(result.data) : [];
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -72,9 +73,9 @@ export function ImportJsonDialog({ title, description, action, triggerLabel = "I
           {result && (
             <div className={result.ok ? "rounded-md border border-good/30 bg-good-soft p-3 text-sm text-good" : "rounded-md border border-bad/30 bg-bad-soft p-3 text-sm text-bad"}>
               {result.ok ? result.message : result.error}
-              {result.ok && result.data && typeof result.data === "object" && "errors" in result.data && Array.isArray((result.data as { errors: unknown[] }).errors) && (result.data as { errors: string[] }).errors.length > 0 && (
+              {importErrors.length > 0 && (
                 <ul className="mt-2 list-disc pl-5 text-xs text-warn">
-                  {(result.data as { errors: string[] }).errors.slice(0, 10).map((e, i) => (
+                  {importErrors.slice(0, 10).map((e, i) => (
                     <li key={i}>{e}</li>
                   ))}
                 </ul>
@@ -93,4 +94,10 @@ export function ImportJsonDialog({ title, description, action, triggerLabel = "I
       </DialogContent>
     </Dialog>
   );
+}
+
+function summaryErrors(data: unknown): string[] {
+  if (!data || typeof data !== "object" || !("errors" in data)) return [];
+  const errors = (data as { errors: unknown }).errors;
+  return Array.isArray(errors) ? errors.map(String) : [];
 }

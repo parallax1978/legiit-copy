@@ -186,7 +186,7 @@ export async function retryGeneration(generationId: string): Promise<ActionResul
 
 /** embed {table, id?}: with an id embeds one row; without, the function embeds every row missing an embedding. */
 export async function embedRows(table: "examples" | "critiques" | "controls" | "example_sections", id?: string): Promise<ActionResult> {
-  const res = await invokeFunction(table && id ? "embed" : "embed", id ? { table, id } : { table });
+  const res = await invokeFunction("embed", id ? { table, id } : { table });
   if (!res.ok) return res;
   revalidatePath(`/admin/${table === "critiques" ? "critiques" : table === "controls" ? "controls" : "library"}`, "layout");
   return { ok: true, message: id ? "Embedded" : `Embedding queued for every ${table} row without one` };

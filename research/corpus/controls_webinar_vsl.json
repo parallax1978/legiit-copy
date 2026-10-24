@@ -1,0 +1,984 @@
+[
+  {
+    "id": "controls_webinar_vsl-01",
+    "title": "Funnel Hacks webinar (the original 'Perfect Webinar' control for ClickFunnels)",
+    "author_or_company": "Russell Brunson / ClickFunnels",
+    "format": "webinar",
+    "market": "Online entrepreneurs, info-marketers and small business owners who want sales funnels without a tech team",
+    "funnel_position": "front-end high-ticket ($997) sold from a free live webinar; feeds ClickFunnels SaaS",
+    "traffic": "cold",
+    "source_url": "https://podcasts.happyscribe.com/happy-scribe-s-favorites/how-to-create-the-perfect-webinar-step-by-step-russel-brunson-ceo-of-clicksfunnels-1673cf18-0bb1-494c-b5fc-380819f24324",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Funnel Hacks webinar as taught in Brunson's 'How to create the perfect webinar step by step' training. Registration promise paraphrased by the source: in the next 60 minutes you will learn the exact funnel strategy; a free funnel for those who stay to the end.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "3",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a $997 six-week funnel masterclass plus a year of ClickFunnels to online entrepreneurs on the promise that they can copy ('hack') a proven competitor funnel and have it live fast, because the three things they believe block them (hard to build, slow, no traffic) are each shown false with a modeled example.",
+      "hook": "Bold outcome stated in minute one as a 'ruler' (a funnel earning a stated amount per day), plus a free gift held to the end to prevent drop-off; live 5-10 minutes early with looping welcome energy.",
+      "mechanism": "Funnel hacking: model a working funnel instead of inventing one; ClickFunnels removes the build step; one new belief ('I can build funnels quickly') is the 'one thing' every secret serves.",
+      "big_idea": "You do not need to be a tech or copy expert; you need a proven funnel to model and a tool that builds it in a day.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "offer"
+        },
+        {
+          "type": "guarantee",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "stack_with_running_total",
+        "price_anchor",
+        "if_all_statements_x3",
+        "two_choice_close",
+        "installments (PayPal credit, 6 months no payments/no interest, US only)",
+        "deadline_with_mechanism (30-minute countdown video; replay 'goes away tonight at midnight'; last email 6 hours before cart close)",
+        "trial_closes (7-9 per presentation)",
+        "permission_ask_before_pitch"
+      ],
+      "close": "Transition with a permission ask; stack each component with its value and restate the cumulative total after every item (stated total 'eleven thousand five hundred fifty two dollars'); three 'if all this did was X, would it be worth it?' questions; price revealed as $997 (~9% of stated value); PayPal financing; two-choice close (do nothing or take the offer); 30-minute countdown with preloaded Q&A slides and repeated closes between questions; about three-quarters of sales land in the final 28 minutes of the clock.",
+      "voice_notes": "Conversational, high energy, repetitive yes-building questions; teaching is deliberately incomplete (inspire belief, do not teach to completeness); value restated even when it feels awkward.",
+      "length_words_est": 12000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "As stated by Brunson in the training: ~15% close rate on the live webinar 'consistently' (vs 5-6% for his earlier webinars); ~50% when delivered from stage; revenue per registrant rose from ~$9 to 'over sixteen dollars' after adding trial closes; the template 'made over ten million dollars' in roughly ten months; one webinar 'just shy of' $10 million (auto-transcript garbled); run live '40 or 50 times'; Facebook registrant cost $3-5; good show rate 20-40%. Transcript auto-generated; figures quoted as transcribed.",
+      "source_url": "https://podcasts.happyscribe.com/happy-scribe-s-favorites/how-to-create-the-perfect-webinar-step-by-step-russel-brunson-ceo-of-clicksfunnels-1673cf18-0bb1-494c-b5fc-380819f24324"
+    },
+    "losing_variants": [
+      {
+        "description": "Same webinar with the stack removed",
+        "result": "Brunson: pulled it once and 'didn't make a single sale'; a student (Rob) got 2 sales without the stack and 17 with it on the same webinar"
+      },
+      {
+        "description": "10- and 15-minute countdown clocks instead of 30",
+        "result": "Sales stopped the moment each clock hit zero; moved to a 30-minute clock"
+      },
+      {
+        "description": "Glossing over value / skipping the restack before the price",
+        "result": "Lower conversion (stated qualitatively)"
+      },
+      {
+        "description": "Early seminar version: $997 pitch to a room of ~100-150 without the framework",
+        "result": "No buyers"
+      },
+      {
+        "description": "Original ClickFunnels product launch (non-webinar)",
+        "result": "'Completely bombed' (stated qualitatively)"
+      },
+      {
+        "description": "16 trial closes in one presentation",
+        "result": "Felt like overkill; cut to 7-9"
+      },
+      {
+        "description": "Registration page image: beach/lifestyle scene vs curiosity-driven image",
+        "result": "Curiosity image 'crushes them every single time' (no numbers)"
+      }
+    ],
+    "lessons": [
+      "The stack is not decoration: removing it is the single documented largest loser in this family (2 vs 17 sales).",
+      "Urgency needs a mechanism long enough to let the room buy; a clock that expires too soon kills late deciders.",
+      "Teach to break three specific false beliefs, not to completeness; each secret ends with the belief restated as true.",
+      "Trial closes (yes/no questions) throughout nearly doubled revenue per registrant in the author's account.",
+      "Price is revealed last, after value is restated, and anchored against a stated total; 'if all it did was' questions pre-justify it."
+    ],
+    "notes": "Public source is Brunson's own long training transcript (auto-captions), not a replay of the Funnel Hacks webinar itself; stack dollar figures are garbled in places. Companion template page: https://gfunnel.videotoblog.ai/perfect-webinar-script-training (induction 60-90s; 60-90 minute session; 20-40% show-up typical; 10-20% close target). Flagged as the Expert Secrets canonical webinar in docs/03-copy-research.md Section 12."
+  },
+  {
+    "id": "controls_webinar_vsl-02",
+    "title": "10X Growth Con 2018 'Funnel Hacks' stage presentation ($3M in 90 minutes)",
+    "author_or_company": "Russell Brunson / ClickFunnels (at Grant Cardone's 10X Growth Con, Mandalay Bay, Las Vegas)",
+    "format": "webinar",
+    "market": "Business owners and salespeople in Cardone's audience, mostly unfamiliar with Brunson or funnels",
+    "funnel_position": "front-end high-ticket ($2,997 one-pay) from a free keynote; double close next day for a one-day workshop",
+    "traffic": "cold",
+    "source_url": "https://videohighlight.com/v/0O3tDgC64wQ",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "YouTube: '10X Growth Con Russell Brunson 3 Million Dollar Presentation' (~90 min). Opens with thanks to Cardone, a promise to show how to ethically outspend competitors, and a 'flashlight' moment (audience phones up as entrepreneurs who can change the world).",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a $2,997 Funnel Hacks bundle to a cold arena of business owners on the promise that any company can be '10x-ed' with one or two funnels in 12 months, because whoever can spend the most to acquire a customer wins and a funnel is the salesperson that makes outspending profitable.",
+      "hook": "Flashlight exercise plus a Bannister/Landy four-minute-mile story leading to John Reese's $1M-in-18-hours day (2004) and Brunson's own first $1M year (Oct 2007): the impossible becomes repeatable once someone shows the pattern.",
+      "mechanism": "A funnel raises customer value so you can outbid competitors for traffic; secret 1 spend more than competitors to acquire a customer, secret 2 a funnel sells 24/7, secret 3 'steal' competitors' customers with targeted traffic.",
+      "big_idea": "Every company is one or two funnels away from 10x.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "close"
+        },
+        {
+          "type": "guarantee",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "stack_with_running_total",
+        "price_anchor (retail $5,997 vs $2,997 event price)",
+        "guarantee (30-day money back as summarized)",
+        "bonus (Funnel Scripts 1 yr stated $11.5k value; 'Flex' bonus stated $3,564)",
+        "physical_order_form_on_every_seat",
+        "photo_with_speaker_as_buy_incentive",
+        "spouse_letter_in_buyer_packet",
+        "double_close_next_day"
+      ],
+      "close": "Beat list with timestamps from the public replay summary: 00:12-01:49 intro/promise/flashlight; 03:03-05:21 origin story (Bannister, Reese, first $1M year); 05:53 Two Comma Club frame; 08:23 'every company can be 10x-ed with one or two funnels'; 15:09 three secrets named; 40:33 secret 2 expanded (funnel as 24/7 salesperson); 01:00:02 traffic method (secret 3); 01:07:33 transition into 'Funnel Hacks' package; 01:08:02-01:09:52 stack item 1 ClickFunnels 12 months + software-replacement list, 'saves over $1,000/month'; 01:18:04 six-week masterclass, running total $6,561; 01:18:45 Traffic Secrets; 01:23:12 Funnel Builder Secrets + Funnel Scripts ($11.5k value), total restated $11,552; 01:23:28 '10x in 12 months' claim; 01:27:08 price $2,997 one pay (retail $5,997); 01:27:21 Flex bonus $3,564, CTA; 01:28:12 30-day guarantee; 01:28:57 success story (Alex and Leila, $10M+ in 8 months); 01:29:37 end. Order forms were pre-placed in a sealed packet on every chair (form, pen, stickers, PopSocket, notes); buyers carried forms to tables; the photo line was the incentive to buy now; failed cards were re-run the next morning; a 10-minute 'double close' the next day sold a one-day workshop.",
+      "voice_notes": "Same Perfect Webinar skeleton as the Funnel Hacks webinar, rebuilt for an audience that had never heard of him; stories carry the credentials rather than a bio.",
+      "length_words_est": 13000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Brunson (podcast, Feb 27 2018): 'we sold over $3 million in sales, not just contracts, but collected cash in the bank in just 90 short minutes'; ~$2.4M in the bank that night with ~$800k+ in failed cards; estimated '$3.5 to $4 million' once declines were resolved; double close added 'about another $250,000, $300,000'; audience 'almost 9,000' (third party: 9,318); roughly 1,200 buyers estimated from the photo line. The official ClickFunnels FAQ states '$3.2 million in sales in just 90 minutes' (https://support.myclickfunnels.com/docs/10x-secrets-masterclass-faqs/).",
+      "source_url": "https://podscripts.co/podcasts/the-russell-brunson-show/how-i-made-3-million-dollars-in-90-minutes"
+    },
+    "losing_variants": [
+      {
+        "description": "Other speakers at the same event sold through the event app instead of physical order forms",
+        "result": "Brunson refused the app to force a table rush; no comparative figures given"
+      },
+      {
+        "description": "Handing out order forms during the pitch (earlier events)",
+        "result": "Pulled attention from the speaker; replaced by pre-seated sealed packets"
+      }
+    ],
+    "lessons": [
+      "A cold room can take a 90-minute webinar structure if the first 15 minutes are stories that install the big domino rather than a bio.",
+      "Price is anchored twice: against the stated stack total and against the product's retail price.",
+      "Logistics are part of the close: the order form must be in the buyer's hand the moment the price is said.",
+      "A second short close to non-buyers the next day added roughly 8-10% on top (as stated).",
+      "Timestamp pattern: ~75% teaching, pitch opens at ~1:07 of 1:30, price at ~1:27, i.e. price within 20 minutes of the transition."
+    ],
+    "notes": "Timestamps come from an AI summary page of the public YouTube replay (video ID 0O3tDgC64wQ); the page notes stack totals conflict ($6,561 / $11,552 / $11,550) because they are running totals. Revenue figures are the presenter's."
+  },
+  {
+    "id": "controls_webinar_vsl-03",
+    "title": "Amazing Selling Machine affiliate webinar funnel ('traditional retail is dying')",
+    "author_or_company": "Jason Fladlien / Rapid Crush (affiliate for Amazing.com's Amazing Selling Machine)",
+    "format": "webinar",
+    "market": "Aspiring e-commerce sellers wanting to sell physical products on Amazon FBA",
+    "funnel_position": "affiliate promotion of a ~$4,000-$5,000 course; three-webinar sequence with bonuses and a hard deadline",
+    "traffic": "warm",
+    "source_url": "https://www.inspiredinsider.com/jason-fladlien-interview/2",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Hook as described by Fladlien via Entrepreneur: 'traditional retail is dying' (the Amazon opportunity webinar). Opening close (first 2-3 min): two agendas, teach a bold claim in 45-60 minutes and make an offer; if the lesson does not deliver, never buy from me again.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a multi-thousand-dollar Amazon FBA course to would-be sellers on the promise that a four-step select-source-list-launch process lets ordinary people ride the collapse of traditional retail, because the free webinar teaches the full manual method and the course plus Fladlien's bonuses only make it faster and safer.",
+      "hook": "Market-level proclamation (retail is dying, Amazon is where the money is moving) followed immediately by the 'two agendas' contract so the pitch is never a surprise.",
+      "mechanism": "Four-step overview (select, source, list, launch); solving the first problem for free exposes the next problem, which the paid program solves; bonuses anchored against expensive alternatives.",
+      "big_idea": "The same force killing retail stores is the biggest transfer of opportunity to small sellers; you only need the four steps and someone who has done it.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "bonus (affiliate bonus stack anchored to high-cost alternatives)",
+        "deadline_with_mechanism (products 'available only during the webinar' or a 48-hour window; framed as a contract that forbids selling later)",
+        "guarantee_denominated (double-your-money-back conditioned on tasks: daily check-ins for 60 days, a test purchase)",
+        "beta_framing ('Mona Lisa in a brown paper bag')",
+        "two_choice_close (do it alone vs all my resources, support and accountability)",
+        "10-20 testimonials distributed through the content",
+        "commitment_elicitation (type yes in chat)"
+      ],
+      "close": "Three-webinar architecture: (1) the four-step overview with the pitch; (2) a deep dive on launching; (3) a multi-hour objection-handling session with live Q&A and no new content. Within each: opening close in the first 2-3 minutes (two agendas), teaching that removes the main limiting belief before information, offer around 30+ minutes in, two-choice framing, scarcity stated as a contractual fact, conditional double-money-back guarantee, and more objection reps on longer webinars (six price closes instead of three, 12 time objections instead of four, 19 belief objections instead of one or two).",
+      "voice_notes": "Plain, teacherly, no jargon on front-end webinars; 'have we earned the right to sell to them?' as the governing question; slides only, no camera.",
+      "length_words_est": 15000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Fladlien states (Headsmack podcast, Jan 2025) a '$9.8M eight-day webinar' that 'was a record in the affiliate space' and a later launch of '$57.9 million in 226 days' ('day one was idea, day 226 was $57.9 million'; product not named on the page). Entrepreneur (2017) names the Amazon webinar as his most successful and states he has sold 'upwards of $100 million' through webinars, 50+ unique pitches and 300+ live webinars. He says the Amazon three-webinar funnel 'produced some of the biggest promotions on the internet'. No conversion or attendance figures given.",
+      "source_url": "https://headsmack.buzzsprout.com/2352873/episodes/16425571-jason-fladlien-webinar-goat-author-creator-of-a-57million-webinar"
+    },
+    "losing_variants": [
+      {
+        "description": "Tony Robbins / Matthew McConaughey webinar run without an upfront sales agenda",
+        "result": "Fladlien: 'did really good' but 'could have done better' with the two-agendas opening (no figures)"
+      },
+      {
+        "description": "Shorter webinars with fewer objection reps",
+        "result": "Lower conversion than longer versions that cycle more price/time/belief objections (stated qualitatively)"
+      }
+    ],
+    "lessons": [
+      "Announce the pitch in the first three minutes as a conditional contract; it raises permission rather than lowering it.",
+      "Teach the complete manual method for free; the paid offer is speed and support, not withheld information.",
+      "Scarcity must be a fact the presenter is bound by (a contract), not a timer.",
+      "Guarantee strength scales with conditions that prove activation (daily check-ins, a test purchase) rather than with hedges.",
+      "Long webinars win when the extra minutes are objection reps, not more content."
+    ],
+    "notes": "Structure assembled from Fladlien's own interviews (Inspired Insider, Entrepreneur 12 steps https://www.entrepreneur.com/growing-a-business/12-steps-for-creating-the-perfect-webinar/295977, Headsmack). Replay of the actual ASM webinar is not publicly posted; no timestamps."
+  },
+  {
+    "id": "controls_webinar_vsl-04",
+    "title": "The $3.29M one-shot webinar (587 attendees, 90 minutes, no replay)",
+    "author_or_company": "Jason Fladlien / Rapid Crush",
+    "format": "webinar",
+    "market": "Existing customers / warm list for a back-end offer (product not named in the public source)",
+    "funnel_position": "back-end, high-ticket, single live event with no follow-up or replay",
+    "traffic": "owned_list",
+    "source_url": "https://www.inspiredinsider.com/jason-fladlien-interview/2",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Fladlien: 'We did that webinar one-time to $3.29 million in 90 minutes, without follow up, without replay, nothing.' Also referenced as 'a $3.29 million webinar to 587 people in 60 minutes' in a podcast listing.",
+    "full_text": null,
+    "structure": {
+      "awareness": "product_aware",
+      "sophistication": "unknown",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a high-ticket back-end offer to a small, already-bought-in audience on the promise of a specific transformation, because the audience already trusts the teacher and the webinar's only job is to remove the last belief and present a one-time offer.",
+      "hook": "Two-agendas opening close (teach a bold claim, then make an offer; viewer commits to buy only if the lesson delivers).",
+      "mechanism": "Transformation before information: remove the limiting belief first; back-end webinars can use jargon and cover far more ground than front-end ones.",
+      "big_idea": "unknown (product not disclosed in the public source)",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "deadline_with_mechanism (one-time offer, no replay)",
+        "two_choice_close",
+        "guarantee_denominated (conditional double-money-back as his standard device)",
+        "bonus"
+      ],
+      "close": "Per his described method: offer presented around the 30-minute mark or later, two-choice frame, scarcity as a binding fact (available only during the webinar), guarantee conditioned on activation tasks, multiple price/time/belief objection closes cycled before the end. Specific beats and timestamps for this webinar are not public.",
+      "voice_notes": "Back-end register: assumes vocabulary and prior results; dense with specifics; built for the 5% of the audience who, he says, control ~70% of spending.",
+      "length_words_est": 12000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "'$3.29 million in 90 minutes, without follow up, without replay' (Inspired Insider interview). A podcast listing states '587 people in 60 minutes' (https://www.audible.in/podcast/ITEM_NAME/B0H1T81LCL). Implied revenue per attendee ~ $5,600; buyer count and price not disclosed.",
+      "source_url": "https://www.inspiredinsider.com/jason-fladlien-interview/2"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "Revenue per attendee, not attendance, is the metric for back-end webinars; 587 attendees can outperform 50,000 registrants.",
+      "A no-replay, one-time offer is credible only when the presenter has a history of keeping that promise.",
+      "Design for the engaged 5%: more specifics, more objection reps, no simplification."
+    ],
+    "notes": "Documented result with thin public structure; product name withheld by presenter. Kept because it is one of the few public per-attendee revenue datapoints for a back-end webinar."
+  },
+  {
+    "id": "controls_webinar_vsl-05",
+    "title": "Jon Benson $997 email-copywriting offer webinar (run by Fladlien)",
+    "author_or_company": "Jason Fladlien presenting for Jon Benson",
+    "format": "webinar",
+    "market": "Online marketers and copywriters wanting to write high-converting emails",
+    "funnel_position": "front-end $997 offer with a $97/month option after three months; first rollout to warm list, then cold traffic",
+    "traffic": "warm",
+    "source_url": "https://digitalmarketer.com/?p=85912",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "DigitalMarketer case note: a $997 offer for Jon Benson 'converted at 21% on the first rollout and 12-14% on cold traffic'; the offer also had a $97/month payment option after three months.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a $997 email copywriting system to marketers on the promise of emails that sell, because the inventor of the VSL has a repeatable formula and the webinar teaches enough of it to prove the rest is worth paying for.",
+      "hook": "unknown",
+      "mechanism": "Benson's formula-based copywriting (structure over talent), delivered through Fladlien's value-first webinar frame.",
+      "big_idea": "unknown",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "installments ($97/month after three months)",
+        "price_anchor",
+        "bonus",
+        "deadline_with_mechanism"
+      ],
+      "close": "Fladlien standard: earned-right-to-sell teaching, transition, offer with payment option, deadline. Beat-level detail not public.",
+      "voice_notes": "unknown",
+      "length_words_est": 12000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Vendor (DigitalMarketer workshop page quoting Fladlien): 21% conversion on first rollout (warm), 12-14% on cold traffic, $997 price, $97/month option after three months. Same page cites a John F. Carter options-trading webinar Fladlien ran that produced '$1.5 million in sales'.",
+      "source_url": "https://digitalmarketer.com/?p=85912"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "The warm-to-cold conversion gap for an identical webinar is roughly 1.5-1.75x here (21% vs 12-14%); budget for it.",
+      "A deferred payment plan (first payment after three months) is an offer device, not a discount.",
+      "A documented cold-traffic webinar at 12-14% on a $997 offer is a usable benchmark ceiling for the engine's 'beat/lose' predictions."
+    ],
+    "notes": "Numbers are a vendor's sales-page citation; treat as self-reported. Included for the rare cold vs warm pair on one presentation."
+  },
+  {
+    "id": "controls_webinar_vsl-06",
+    "title": "Every Other Day Diet 'ugly' VSL (the first words-on-screen video sales letter)",
+    "author_or_company": "Jon Benson",
+    "format": "vsl_long",
+    "market": "Weight-loss buyers (dieters who want to keep eating their favorite foods)",
+    "funnel_position": "front-end ClickBank ebook sale (~$39-$47 range typical; price not stated in source); affiliate PPC traffic",
+    "traffic": "cold",
+    "source_url": "https://ilovemarketing.com/episode-44the-one-with-jon-benson-video-sales-letters",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "USP as Benson states it: 'The only diet in the world that allows you to eat your favorite foods and still lose weight.' Format: black text on white, one sentence per slide, Benson's voice, no face, 18 minutes, buy button appears at 16:34.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells a diet ebook to frustrated dieters on the promise that they can eat their favorite foods and still lose weight, because alternating 'diet' and 'feed' days works with the metabolism, and the author's own 68-pound loss proves it.",
+      "hook": "First ~10 seconds: a pattern break ('snap suggestion') to lower defenses plus a reason to keep watching (a method will be revealed); USP stated within the first ~10 slides.",
+      "mechanism": "Every-other-day eating (alternate restricted and 'feed' days) framed as the enabler that makes the benefit possible; one benefit plus one enabler in a 20-word USP.",
+      "big_idea": "Dieting fails because it forbids the foods you love; a schedule that lets you keep them is the only diet you can stay on.",
+      "proof_elements": [
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "delayed_button (appears at 16:34 of 18:00)",
+        "guarantee",
+        "exit_splash (text article or webinar for leavers)",
+        "price_anchor"
+      ],
+      "close": "Timed beats: 0:00-0:10 pattern break and reason to watch; first 10 slides USP and personal credibility (lost 68 lb after obesity); body as one centered sentence per slide ending in ellipsis or colon, pacing varied every 5-10 slides (3 words, full sentence, 3 words), key words highlighted and stretched in the voice-over; 16:34 'click the button below' and the button is injected by JavaScript; ~18:00 end. Benson: 'you haven't sold anyone until the very end', so buyers arrive qualified. Exit splash catches abandoners with a text or webinar version.",
+      "voice_notes": "Flat 'ugly' production on purpose; spoken rhythm with deliberate slowdowns on key words; no stock footage; sentences left incomplete on screen so the viewer cannot predict the slide change.",
+      "length_words_est": 2600
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Benson (I Love Marketing ep. 44): sales-page conversion rose from about 1% to 6.5% within ~3 weeks vs the text letter (host: 'six times'); he also describes response 'literally 30 times' higher than the earlier approach and the six-minute YouTube teaser converting 'like 7,000%' (comparison undefined); two PPC affiliates were spending 'about $1-million a month or more on Google'. Length guidance from the same source: nothing under 15 minutes; most successful 30-40 minutes. Year not stated (after the 2004 Fit Over 40 book).",
+      "source_url": "https://ilovemarketing.com/episode-44the-one-with-jon-benson-video-sales-letters"
+    },
+    "losing_variants": [
+      {
+        "description": "The original text sales letter for the same book",
+        "result": "~1% conversion vs ~6.5% for the VSL (as stated)"
+      },
+      {
+        "description": "VSLs under 15 minutes",
+        "result": "Benson: do not work for this price range; 15 minutes is the floor at ~$19.95"
+      }
+    ],
+    "lessons": [
+      "Hide the buy button until the argument is complete; it raises conversion and buyer quality (6.5x here, self-reported).",
+      "One sentence per slide, ending open, is a pacing device that forces attention; vary slide density every 5-10 slides.",
+      "State the USP (one benefit, one enabler, under 20 words) in the first 10 slides; credibility is a personal result, not a bio.",
+      "Production quality is not a lever; argument and pacing are."
+    ],
+    "notes": "Replay not publicly hosted; structure from Benson's own account. Benson is credited across sources as the VSL's originator (see https://easywebinar.com/blog/billion-dollar-copywriting-secrets-with-jon-benson/)."
+  },
+  {
+    "id": "controls_webinar_vsl-07",
+    "title": "The End of America (Stansberry Research VSL, Nov 2010 onward)",
+    "author_or_company": "Mike Palmer (copy) / Porter Stansberry (presenter), Stansberry & Associates (Agora family)",
+    "format": "vsl_long",
+    "market": "US retail investors and savers, 50+, fearful about the dollar, debt and government after the 2008 crisis",
+    "funnel_position": "front-end newsletter subscription (Stansberry's Investment Advisory, ~$39-$49.50/yr as readers reported) with free special reports; mailed as video, email, direct mail, TV and radio spots",
+    "traffic": "cold",
+    "source_url": "https://briandeer.com/stansberry/postmodern-porter-stansberry-1.htm",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Title card: 'The End of America'. Opening caveat: 'The following presentation is controversial and may be offensive to some audiences. Viewer discretion is advised.' Stansberry says he is 'more certain about this looming crisis' than anything else in his life.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "4",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a ~$49 investment newsletter to fearful savers on the promise that a handful of 'secret' steps will protect them from the coming collapse of the dollar, because the presenter claims to have predicted the 2008 crisis and the same debt mechanics now point to a currency crisis within about two years.",
+      "hook": "A warning label (controversial, may be offensive) as explicit-content tease, then a dated prediction: the end of the US monetary system as we know it, with riots, shortages and martial law named plainly.",
+      "mechanism": "Quantitative easing ('printing money') -> commodity inflation -> interest rate spike -> mortgage rates up to 15% -> stocks down 40% in weeks -> the 'game is up'; credibility borrowed from quoted public figures and the claimed 2008 call.",
+      "big_idea": "America as a going concern is ending; the question is only what you do before everyone else figures it out.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "bonus (free special reports / booklets: gold stored offshore, selling puts, farmland)",
+        "price_anchor (low annual price against the stakes)",
+        "trial (six-month trial with refund, per a subscriber)",
+        "auto_renewal",
+        "no_playback_controls (slides with audio, scrubbing disabled)"
+      ],
+      "close": "Beat list reconstructed from critic and subscriber accounts (no public timestamps): (1) warning card; (2) proclamation of certainty and the prediction; (3) the debt and money-printing chain of consequences with specific numbers (15% mortgages, 40% stock drop); (4) practical survival advice (a place to go, six months of food, water, medicine) that raises stakes and signals candor; (5) the 'secret' strategies teased; (6) turn to the newsletter as the vehicle for the strategies, with free reports as the bonus; (7) low annual price, trial and refund; (8) order page. Subscriber: 'I knew it was a sales pitch when I got to the end.' Length 77 minutes (Wikipedia); transcript ~13,000 words (Deer).",
+      "voice_notes": "Grave, first-person certainty; long documentary-style argument before any product mention; precise-sounding figures; quotes from authorities; fear held in check by practical, specific advice.",
+      "length_words_est": 13000
+    },
+    "results": {
+      "type": "longevity",
+      "detail": "AWAI (Aug 2013): began November 2010 and 'still running strong'; 'around 500,000 new paid subscribers'; 'helped double the size of Stansberry Research in less than a year'; described as 'the most successful promotion in the financial industry in more than a decade' and possibly 'the most-imitated promotion of the past decade' (trade-group statements, not audited). Ran as video, email, direct mail, radio and TV; landing pages versioned endofamerica10/11/15.com (Deer). Wikipedia: 77-minute video, 2011, Motley Fool called it 'a mixture of valid points and hyperbole'.",
+      "source_url": "https://www.awai.com/2013/08/mike-palmer-to-speak-at-awais-2013-bootcamp/"
+    },
+    "losing_variants": [
+      {
+        "description": "Follow-on 2012 promotion predicting Obama would win 'three or more' terms (~14,500-word document)",
+        "result": "Reach described as large by the critic; no sales figures; the 'End of America' prediction itself did not occur, which the critic uses to attack credibility"
+      }
+    ],
+    "lessons": [
+      "An unaware market takes a 60-plus-minute indirect lead if the first sentence is a dated, falsifiable proclamation and the product is withheld until the end.",
+      "Specific-sounding numbers (15%, 40%, two years) carry the argument; the engine must ledger each one or not use the shape.",
+      "A low price against enormous stakes plus free 'how to act' reports is the offer shape; the newsletter is sold as the vehicle for the secrets, not as content.",
+      "Compliance lesson: this control's prediction failed and drew regulator/critic attention; the shape is reusable, the unsupported certainty is not."
+    ],
+    "notes": "Full video not publicly hosted by the publisher; structure from Brian Deer's four-part critique (pages 1-3 fetched), reader reports (https://briandeer.com/?p=14019) and Wikipedia (https://en.wikipedia.org/wiki/Porter_Stansberry). Stansberry was ordered to pay $1.5M in 2007 in an SEC case over a 2002 stock-tip promotion, relevant to the proof-vs-claim rule. Palmer's AWAI bio also cites 'The Secret Currency' at 79,000 subscribers and $5.2M gross (https://www.awai.com/bio/mike-palmer/)."
+  },
+  {
+    "id": "controls_webinar_vsl-08",
+    "title": "Consulting Accelerator automated webinar ('broke to $65 million by age 26 from my laptop')",
+    "author_or_company": "Sam Ovens / Consulting.com",
+    "format": "webinar",
+    "market": "People who want to start a consulting business from scratch (US-wide Facebook targeting)",
+    "funnel_position": "front-end, evergreen automated webinar from paid social; $1,999 course (anchored to $6,000), five payments of $599",
+    "traffic": "cold",
+    "source_url": "https://youtubesummary.com/summary/GfpNI8a_dco",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Title: 'This is how I went from broke to $65 million by age 26 from my laptop.' Opens with the founder story: dropping out, starting in his parents' garage in New Zealand, landing a first $1,000 client.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells a six-week consulting course to beginners on the promise of a first high-value client within 42 days, because demand validation plus a narrow niche, a value-proposition formula and a six-step acquisition funnel are a repeatable system the presenter used to go from a garage to $18M a year.",
+      "hook": "Rags-to-riches origin with a specific first-client number; two failed ventures confessed before the mechanism is taught.",
+      "mechanism": "Validate demand before building; pick a narrow customer group; make the offer concrete; six-step client-acquisition funnel; consultative sales-call structure; price on the value of the problem ($2,000+, range $3,000-$30,000).",
+      "big_idea": "You already have a sellable skill; consulting is the fastest laptop business because the product is you and demand can be validated for free.",
+      "proof_elements": [
+        {
+          "type": "specific_result",
+          "placement": "lead"
+        },
+        {
+          "type": "candor",
+          "placement": "lead"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "offer"
+        },
+        {
+          "type": "authority",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "price_anchor ($6,000 regular vs $1,999 webinar price)",
+        "installments (5 x $599)",
+        "social_proof_count (3,000+ reviews, 4.85/5, 21 millionaires, ~451 six-figure earners, 2,838 left jobs, as stated)",
+        "live-chat moderators 24/7 on an automated replay"
+      ],
+      "close": "Order (no public timestamps): founder story -> validation lesson -> frameworks (foundation, niche, value proposition, six-step funnel, sales call) -> benchmark numbers (ad cost, conversion, CPA, price ranges) -> pitch for the six-week Consulting Accelerator -> social-proof counts and Forbes net-worth claim -> $1,999 vs $6,000 and 5 x $599. Guarantee, bonuses and deadline not described in the public summary.",
+      "voice_notes": "Flat, analytical, numbers-heavy; the credibility is a ladder of revenue figures by year; frameworks named and numbered.",
+      "length_words_est": 12000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Ovens on Mixergy (2017): 2016 revenue '$18.25 million', mostly from 'one online training program'; ad spend 'most of the time $30,000 a day'; '700,000 fires on my conversion pixel'; Tai Lopez affiliate traffic worth 'between $4 million and $6 million'; webinars 'automated' with moderators '24/7, 365'. Webinar claims: 240 customers first month, later 10,000+ customers in 72 countries. No conversion rate given; the host had earlier suspected the numbers were invented.",
+      "source_url": "https://mixergy.com/interviews/consulting-with-sam-ovens/"
+    },
+    "losing_variants": [
+      {
+        "description": "Earlier higher-priced version (~$5,800 per the host) sold before the $1,999 accelerator",
+        "result": "Replaced by the under-$2,000 beginner offer that produced the 2016 revenue (no comparative figures)"
+      }
+    ],
+    "lessons": [
+      "An evergreen automated webinar can carry $30k/day of cold spend if the lead is a story with a ledgered first-dollar result and the offer is priced under $2,000 with installments.",
+      "Benchmarks taught inside the webinar (CPA, conversion, price ranges) double as proof of process.",
+      "Social proof is presented as counts, not adjectives; each count would need a ledger ID in our system."
+    ],
+    "notes": "Video ID GfpNI8a_dco; summary page order is inferred from the summary's flow. All business figures are the presenter's."
+  },
+  {
+    "id": "controls_webinar_vsl-09",
+    "title": "Digital Course Academy 2025 live webinar series (six live webinars, no replays)",
+    "author_or_company": "Amy Porterfield",
+    "format": "webinar",
+    "market": "Coaches, consultants and small business owners who want to create and launch a digital course",
+    "funnel_position": "launch webinar for a multi-thousand-dollar course; fed by a paid 3-part bootcamp ($47/$97 VIP) and a 60-day pre-launch; ~10-day cart",
+    "traffic": "warm",
+    "source_url": "https://pod.wave.co/podcast/the-amy-porterfield-show/webinars-arent-dead-how-i-2xd-conversions",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Episode: 'Webinars Aren't Dead: How I 2x'd Conversions' (Nov 25 2025, 34:41). Target run-of-show: start the transition to selling by minute 45, price and link by minute 55; fast-action bonus is the printed, full-color DCA guidebook for live buyers.",
+    "full_text": null,
+    "structure": {
+      "awareness": "solution_aware",
+      "sophistication": "4",
+      "lead_type": "promise",
+      "argument_sentence": "This sells the Digital Course Academy to people with an existing business who want consistent revenue on the promise that a course can be built and launched with her system and personal coaching, because the webinar teaches the plan live, shows the portal, and swaps income hype for relatable student results.",
+      "hook": "Live-only event framed as higher-trust ('trust recession'); masterclass finale of a value-only bootcamp.",
+      "mechanism": "Teach-then-offer with the pitch moved earlier (45/55 minutes) because attendance collapses at minute 60; new offer elements (Porter AI tool, coaching review) moved to the front of the pitch; three self-selection questions before Q&A.",
+      "big_idea": "Showing up live is the proof; the course is the shortest path from an existing business to recurring course revenue.",
+      "proof_elements": [
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "close"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "offer"
+        },
+        {
+          "type": "guarantee",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "bonus (Porter AI tool; coaching review of student work)",
+        "fast_action_bonus (printed guidebook for webinar buyers only; free shipping US)",
+        "installments (payment plan referenced)",
+        "deadline_with_mechanism (~10-day cart; fast-action bonus expires with the live webinar)",
+        "live portal demo",
+        "'on the fence' comment prompt during Q&A",
+        "three self-selection questions before Q&A"
+      ],
+      "close": "Timing from her account: content to ~45:00, transition to selling by 45:00, price and link by 55:00 (first webinar slipped to 53:00, second to 50:00, third hit target); then three questions (will this get me closer to my goals; does it raise my odds vs alone; can I make the investment work); announce Q&A in five minutes, then live Q&A with the portal demoed on request and the 'on the fence' prompt. No replays at all this launch. Six live webinars (five planned, one added mid-launch).",
+      "voice_notes": "Warm, direct, deliberately de-glamorized: cut flashy income numbers and jet-set imagery, cut testimonials from the front of the pitch; StoryBrand-built messaging aimed at a 'middle' audience.",
+      "length_words_est": 11000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Porterfield: average webinar conversion 9.3%; show-up 38-40% with no replays; the lowest-attendance webinar (~28% show-up) had the highest conversion; trimming content to hit the 45/55 target raised conversion 2-3% on that webinar and 4% on the next; bootcamp-to-DCA conversion 23% overall and 40% for VIP (prior year 26%); 'multi million dollar launch'. The episode title's '2x' is not supported by a stated before/after figure.",
+      "source_url": "https://pod.wave.co/podcast/the-amy-porterfield-show/webinars-arent-dead-how-i-2xd-conversions"
+    },
+    "losing_variants": [
+      {
+        "description": "Prior launches with replay access",
+        "result": "Replays produced few sales, so replays were dropped entirely in 2025 (stated qualitatively)"
+      },
+      {
+        "description": "Webinars 1 and 2 of 2025 with the pitch at 53:00 and 50:00 instead of 45:00/55:00",
+        "result": "Lower conversion than webinars 3+ by 2-3 points, then 4 points"
+      },
+      {
+        "description": "Earlier pitch openings with testimonials and big income numbers up front",
+        "result": "Replaced by relatable student results and new offer elements first; conversion rose (no separate figure)"
+      }
+    ],
+    "lessons": [
+      "Attendance falls off a cliff at minute 60; price and link must land before it (target 55:00).",
+      "Removing replays can raise conversion and clarify the deadline; the fast-action bonus does the work the replay used to do.",
+      "Lower show-up can mean higher-intent rooms; do not optimize show-up at the cost of qualification.",
+      "Self-selection questions before Q&A convert the undecided without a harder sell."
+    ],
+    "notes": "No public replay of a DCA webinar is hosted; structure is from the presenter's own post-launch debrief. Earlier show-notes page: https://www.amyporterfield.com/show-notes/40."
+  },
+  {
+    "id": "controls_webinar_vsl-10",
+    "title": "Knowledge Business Blueprint live cast (Tony Robbins, Dean Graziosi, Russell Brunson, Feb 2019)",
+    "author_or_company": "Dean Graziosi and Tony Robbins (Mastermind.com), with Russell Brunson",
+    "format": "webinar",
+    "market": "Aspiring experts, coaches and 'knowledge brokers' who want to run masterminds or workshops",
+    "funnel_position": "launch live stream for a $2,000 course + MindMint software; affiliate-driven registration; first-round bonus stack",
+    "traffic": "warm",
+    "source_url": "https://www.eofire.com/podcast/tony-robbins-live-cast-dean-graziosi-russell-brunson-knowledge-business-blueprint/",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Live cast as rebroadcast by Entrepreneurs on Fire (Part II): 3:20 what a mastermind is ('the beauty of a mastermind is that you're constantly learning'); 7:15 the fear 'I'm not an expert' and the KBB Triangle (Expert, Reporter, Knowledge Broker).",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "proclamation",
+      "argument_sentence": "This sells a $2,000 course plus software to would-be experts on the promise that anyone can profitably run a mastermind or workshop, because the 'self-education' industry is booming and you can enter as an expert, a reporter of others' expertise, or a broker who organizes it.",
+      "hook": "Celebrity co-presenters plus the proclamation that self-education is the fastest-growing way to learn and earn; 'if you have a skill, you should feel guilty for not sharing it'.",
+      "mechanism": "KBB Triangle (Expert / Reporter / Knowledge Broker) removes the 'I'm not an expert' objection; formats (virtual, in-person, community, workshop) remove the 'how'; MindMint software removes the build.",
+      "big_idea": "You do not have to be the expert to sell expertise; you can report it or broker it.",
+      "proof_elements": [
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "testimonial",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "offer"
+        }
+      ],
+      "offer_devices": [
+        "bonus (first-round only: Robbins' Ultimate Edge, Dean's Inner Circle, Robbins' Platinum Bonus, Brunson's Mastermind Funnels, Robbins' Priming Exercise)",
+        "affiliate_bonus_stacks",
+        "price_anchor",
+        "deadline_with_mechanism (bonuses 'first round only')"
+      ],
+      "close": "Part II beats (podcast timestamps): 3:20 define mastermind; 5:35 examples of people who started one; 7:15 'I'm not an expert' fear and the KBB Triangle; 15:00 guilt frame and format options; 17:05 Tony on taking over a company (authority story); 23:00 how KBB finds ideal customers, recession-proofing; 25:30 serve the audience, 'not about resources, about being resourceful'; 28:45 self-education; 29:15 breakdown of the Knowledge Business Blueprint and bonus mention. Price ($2,000), payment plan and deadline were in the live cast but are not on this page.",
+      "voice_notes": "Two-host conversational energy; Robbins' aphorisms carry authority; objections handled as named fears.",
+      "length_words_est": 20000
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "Affiliate partner (EOFire): 'over 250,000 attendees on LIVE!' at the initial live cast; 'over 17,000 individuals have invested in the Knowledge Broker Blueprint throughout its initial launch' (a later page version says 25,000+); 2019 price $2,000; described by the affiliate as one of 'the biggest online course launches in HISTORY'. Implied gross ~$34M at list price (our arithmetic, not a stated figure). No conversion rate stated.",
+      "source_url": "https://www.eofire.com/knowledge-business-blueprint-review/"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A triangle of entry roles (expert/reporter/broker) is a reusable device for the 'I'm not qualified' objection.",
+      "Celebrity authority is placed in the lead; the offer breakdown is held to roughly the final third.",
+      "Launch bonuses tied to 'first round only' create a deadline mechanism that survives a replay."
+    ],
+    "notes": "Timestamps are from the podcast rebroadcast (Part II of 4), not the original stream clock. Attendance and enrolment figures are affiliate statements."
+  },
+  {
+    "id": "controls_webinar_vsl-11",
+    "title": "'Here in my garage' YouTube pre-roll (67 Steps)",
+    "author_or_company": "Tai Lopez",
+    "format": "youtube_ad",
+    "market": "Young men on YouTube interested in money, cars and self-improvement",
+    "funnel_position": "cold pre-roll ad -> free video on landing page -> opt-in (frustration question) -> 'I agree' step -> 67 Steps sales page",
+    "traffic": "cold",
+    "source_url": "https://knowyourmeme.com/memes/here-in-my-garage",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Opening line: 'Here in my garage, just bought this new Lamborghini here.' Pre-roll ran across YouTube from February 2015 through the first half of the year; CTA is a free short video on his site with 'three tips'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "4",
+      "lead_type": "story",
+      "argument_sentence": "This sells a click to a free video (then the 67 Steps program) to young men who want wealth on the promise of three tips from a self-made reader, because the Lamborghini stops the scroll and the 2,000 books reframe the wealth as earned knowledge rather than luck.",
+      "hook": "Pattern interrupt with a status object in the first second, then an immediate reversal ('materialistic things aren't important') that pivots to the bookshelves.",
+      "mechanism": "Knowledge, specifically reading a book a day like Warren Buffett and learning from a few mentors; the $47-and-no-degree origin makes the mechanism available to the viewer.",
+      "big_idea": "The car is not the point; the books behind it are, and you can read them too.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "headline"
+        },
+        {
+          "type": "authority",
+          "placement": "lead"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "specific_result",
+          "placement": "body"
+        }
+      ],
+      "offer_devices": [
+        "free_video_lead_magnet",
+        "disclaimer_as_candor ('not get rich quick')",
+        "soft CTA to site"
+      ],
+      "close": "Beat order (no public timestamps): (1) garage, new Lamborghini; (2) 'but you know what I like more than materialistic things? Knowledge' pivot to seven shelves/2,000 books; (3) Buffett reads a lot, I read a book a day; (4) the car reminds me of having $47 and no degree; (5) a few mentors made the difference; (6) free video on my site shares three tips; (7) disclaimer against get-rich-quick, be optimistic, click through. Landing page: inspirational rise-from-broke video, name/email plus 'biggest frustration' field, second 'I agree' opt-in, then sales page restating benefits with customer social proof (The Hustle).",
+      "voice_notes": "Casual, unscripted-looking, direct to camera; props do the proving; self-deprecating disclaimer.",
+      "length_words_est": 300
+    },
+    "results": {
+      "type": "self_reported",
+      "detail": "The Hustle: '66 million people watched this video advertisement'; Lopez's channel went 'from averaging one million views a month in July 2015 to 100 million views a month in October 2015'. Lopez's own podcast titles the campaign a '$100 Million' (description: '$50 million') ad campaign without stating spend or revenue (https://omny.fm/shows/the-tai-lopez-show-3/696-100-million-here-in-my-garage-ad-campaign-brea). No conversion or revenue figure is independently stated; the ad became a meme, which is itself a measure of saturation.",
+      "source_url": "https://thehustle.co/tai-lopez-is-the-internets-most-hated-entrepreneur-and-thats-why-he-is-so-successful"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A cold-traffic short ad can open with the status object if the second beat reverses it into the mechanism; the reversal is the hook.",
+      "Props (car, books) are demonstrations; they replace claims.",
+      "The ad sells only the click to a free video; the price never appears in the cold asset (matches the short-VSL spec: no stack, no price).",
+      "Saturation risk: the same ad ran for months and became a parody, a documented cost of frequency."
+    ],
+    "notes": "YouTube video ID Cv1RJTHf5fk (transcript summary unavailable from the public summary service); beats taken from Know Your Meme and The Hustle descriptions. Ownership of the car/house was disputed by critics, a reminder that demonstrations must be true."
+  },
+  {
+    "id": "controls_webinar_vsl-12",
+    "title": "'This Unicorn Changed the Way I Poop' (Squatty Potty)",
+    "author_or_company": "Harmon Brothers for Squatty Potty",
+    "format": "vsl_short",
+    "market": "General consumers, 25-55, with constipation/hemorrhoid/bloating complaints they do not talk about",
+    "funnel_position": "cold social/YouTube video to squattypotty.com product page",
+    "traffic": "cold",
+    "source_url": "https://videohighlight.com/v/YbYWhdLO43Q",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "YouTube title: 'This Unicorn Changed the Way I Poop - #SquattyPotty'. Description lead: 'Pooping will never be the same.' A prince narrates while a unicorn demonstrates the effect of toilet posture; closes 'Pooping will never be the same and neither will ice cream.'",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "2",
+      "lead_type": "story",
+      "argument_sentence": "This sells a toilet stool to people who never thought about toilet posture on the promise of easier, more complete elimination, because the modern sitting toilet kinks the colon and squatting unkinks it, shown with a unicorn and soft-serve ice cream.",
+      "hook": "A unicorn pooping rainbow soft-serve, served to children, with a prince as straight-faced narrator.",
+      "mechanism": "The 'colon kink': sitting puts a bend in the colon; raising the feet into a squat straightens it. Harmon Brothers found in testing that viewers only understood the product once they heard the kink explanation, so the whole video is built around it.",
+      "big_idea": "Your toilet has one fault, it makes you sit; a $25 stool fixes a design flaw you inherited.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "authority",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "single CTA to site",
+        "authority_mentions (Shark Tank, Dr. Oz)",
+        "studies_show (unnamed)"
+      ],
+      "close": "Beat order from the public description and press (no public timestamps): (1) unicorn and ice cream open; (2) the toilet's 'one major fault': it requires us to sit; strain outcomes named (hemorrhoids, constipation, bloating, IBS); (3) unicorn demonstrates improper posture vs squat; (4) product introduced as the squat enabler; (5) 'studies show' plus Shark Tank, Dr. Oz, 'thousands of happy customers'; (6) buy at squattypotty.com; (7) ice-cream callback close.",
+      "voice_notes": "Deadpan fairy-tale narration over gross-out visual metaphor; the joke never interrupts the mechanism; every laugh line carries a benefit.",
+      "length_words_est": 450
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "Utah Business (May 2016): video launched October 2015; 'online sales had already increased by a total of 600 percent and retail sales by 200 percent' by end of January 2016; company estimated $12 million for the year and reached $18 million; 2016 target $25 million; founder: 'It's still getting viewership, and it's still converting customers.' Entrepreneur (2016): ~30 million views in the first week; $500,000 total for production, focus grouping and promotion; revenue 600 percent higher than projected; sales 'last year eclipsed $15 million' (figures differ by source and baseline).",
+      "source_url": "https://www.utahbusiness.com/potty-talk-marketing-unconventional-product/"
+    },
+    "losing_variants": [
+      {
+        "description": "Pre-video explanations of the product in Harmon Brothers' testing that did not lead with the 'colon kink'",
+        "result": "Viewers did not understand the product; the kink explanation became the organizing message (Entrepreneur)"
+      }
+    ],
+    "lessons": [
+      "Find the one mechanism sentence that makes the product click in testing, then build the entire video around it.",
+      "Humor is the delivery vehicle for a mechanism demonstration, not a substitute for it.",
+      "Unaware markets buy a design-flaw story ('your toilet has one fault') before a benefit list.",
+      "Documented spend-to-result: $500k all-in against +600% online sales in four months."
+    ],
+    "notes": "Harmon Brothers' earlier Poo-Pourri work used the same shape (see record 14). Wikipedia confirms the 2015 date and 5M+ units sold overall (https://en.wikipedia.org/wiki/Squatty_Potty)."
+  },
+  {
+    "id": "controls_webinar_vsl-13",
+    "title": "'Our Blades Are F***ing Great' (Dollar Shave Club launch video, March 6 2012)",
+    "author_or_company": "Michael Dubin / Dollar Shave Club",
+    "format": "vsl_short",
+    "market": "Men who overpay for brand-name razor cartridges",
+    "funnel_position": "launch video -> subscription sign-up at $1/month entry plan",
+    "traffic": "cold",
+    "source_url": "https://videohighlight.com/v/ZUG9qYTJMsI",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Title: 'DollarShaveClub.com - Our Blades Are F***ing Great'. Founder introduces the club and the promise: quality razors delivered monthly for a dollar; beats at 00:00 intro, 00:47 'creating jobs', 00:56 'saving money'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "problem_aware",
+      "sophistication": "3",
+      "lead_type": "offer",
+      "argument_sentence": "This sells a razor subscription to men who resent $20-a-month cartridges on the promise of great blades delivered for a dollar, because the brand-name price pays for features nobody needs (vibrating handles, flashlights, ten blades) and the subscription ends forgetting to restock.",
+      "hook": "Founder names the price and the product in the first sentence, then the profane quality claim as the title.",
+      "mechanism": "Cut the unnecessary features and the retail markup; mail the blades on a schedule.",
+      "big_idea": "Shaving is a commodity you have been overpaying for; the club is the obvious correction.",
+      "proof_elements": [
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "process_specifics",
+          "placement": "body"
+        },
+        {
+          "type": "candor",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "price_in_line_one ($1/month)",
+        "comparison_anchor (up to $20/month brand razors)",
+        "subscription_as_convenience",
+        "job-creation_story (Alejandra)"
+      ],
+      "close": "Beats with timestamps from the public summary: 00:00 founder intro and the dollar-a-month promise with blade specs (stainless edges, aloe strip, pivot head); objections handled in sequence (brand cost up to $20/month; unneeded features; forgetting to restock); 00:47 'creating jobs' (Alejandra, previously unemployed); 00:56 'saving money' adds up; CTA 'Try the Club' / join at the site. Roughly 90 seconds.",
+      "voice_notes": "Deadpan founder walking through a warehouse; one gag per sentence; price and promise never buried under the humor.",
+      "length_words_est": 250
+    },
+    "results": {
+      "type": "revenue",
+      "detail": "Wikipedia: released March 6, 2012; 'drove 12,000 orders within two days of release'; crashed the server within the first hour; over 27 million views as of November 2020; company later had 3.2 million subscribers (2016) and was acquired by Unilever on July 19, 2016 for 'a reported $1 billion in cash'. Production cost not stated on the page (commonly reported as ~$4,500; not fetched, not relied on).",
+      "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "A most-aware-style offer lead (product, price, deal in line one) works cold when the price itself is the news.",
+      "Objections are handled as jokes in order: cost, features, forgetting; each joke is a reason.",
+      "Under 100 seconds, the video never explains the category; it names the enemy (cartridge pricing) and the fix."
+    ],
+    "notes": "Video ID ZUG9qYTJMsI. Beat timestamps from an AI summary of the public video; opening and closing lines not quoted by the source."
+  },
+  {
+    "id": "controls_webinar_vsl-14",
+    "title": "'Girls Don't Poop' (Poo-Pourri, 2013)",
+    "author_or_company": "Poo-Pourri (Suzy Batiz), produced by the team that became Harmon Brothers",
+    "format": "vsl_short",
+    "market": "Women (and gift buyers) embarrassed by bathroom odor at home, work or a partner's place",
+    "funnel_position": "cold YouTube/social video to PooPourri.com product page; money-back guarantee",
+    "traffic": "cold",
+    "source_url": "https://videohighlight.com/v/ZKLnhuzh9uY",
+    "rights_status": "publicly_posted_copyrighted",
+    "excerpt": "Title: 'Girls Don't Poop - PooPourri.com'. Description opens: 'Some say the secret to a happy relationship is separate bathrooms.' A prim British-accented woman on a toilet explains the before-you-go spray; 'unconditional Money Back Stink-Free Guarantee'.",
+    "full_text": null,
+    "structure": {
+      "awareness": "unaware",
+      "sophistication": "2",
+      "lead_type": "story",
+      "argument_sentence": "This sells a before-you-go toilet spray to people embarrassed by bathroom odor on the promise that nobody will ever know, because a few sprays form an essential-oil barrier on the bowl water that traps odor beneath the surface.",
+      "hook": "A composed, elegant woman delivering frank poop talk; the taboo itself is the interrupt.",
+      "mechanism": "Spray before you go; the oils form a film on the water that traps odor below it, leaving a scent of essential oils.",
+      "big_idea": "You can leave the bathroom smelling better than you found it.",
+      "proof_elements": [
+        {
+          "type": "mechanism",
+          "placement": "body"
+        },
+        {
+          "type": "demonstration",
+          "placement": "body"
+        },
+        {
+          "type": "social_proof_count",
+          "placement": "close"
+        },
+        {
+          "type": "guarantee",
+          "placement": "close"
+        }
+      ],
+      "offer_devices": [
+        "guarantee (unconditional money-back 'Stink-Free Guarantee')",
+        "range_of_sizes_and_scents",
+        "'clinically proven' claim (unsupported in the public description)",
+        "single CTA to site"
+      ],
+      "close": "Beat order from the public description (no timestamps): (1) taboo-breaking open with relationship joke; (2) the embarrassment problem in offices, dates, in-laws; (3) spray-before-you-go mechanism with the barrier explanation; (4) product and variants; (5) 'clinically proven', thousands of customers, septic-safe; (6) money-back guarantee; (7) buy at PooPourri.com; closing line about leaving the bathroom better than you found it.",
+      "voice_notes": "Refined narration against crude subject matter; puns throughout; mechanism explained in one sentence and repeated visually.",
+      "length_words_est": 350
+    },
+    "results": {
+      "type": "none",
+      "detail": "Wikipedia: debuted 2013; 'seen more than 31 million times'; company had sold over 17 million bottles by January 2016 and over 60 million by May 2019; 2016 valuation $300 million. The page does not tie sales figures to the video; widely reported backorder figures after launch were not fetched and are not recorded here. USA Today listed it among 2013's worst advertisements.",
+      "source_url": "https://en.wikipedia.org/wiki/Poo-Pourri"
+    },
+    "losing_variants": [],
+    "lessons": [
+      "The same shape (refined narrator, taboo product, one-sentence mechanism, guarantee) was reused two years later for Squatty Potty with documented results; treat it as a template for unaware consumer markets.",
+      "A denominated, unconditional guarantee closes a product people cannot test in a store.",
+      "A 'clinically proven' claim without a named study is exactly the kind of line the factual review must flag."
+    ],
+    "notes": "Included as the pattern precursor to record 12; results are not attributed to the video by the fetched source, so results.type is 'none'."
+  }
+]

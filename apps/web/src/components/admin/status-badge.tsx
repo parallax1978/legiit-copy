@@ -24,6 +24,8 @@ const TONES: Record<string, string> = {
   unknown: "bg-surface-sunken text-ink-muted",
   // misc
   active: "bg-good-soft text-good",
+  set: "bg-good-soft text-good",
+  not_set: "bg-warn-soft text-warn",
   yes: "bg-good-soft text-good",
   no: "bg-surface-sunken text-ink-soft",
   high: "bg-good-soft text-good",

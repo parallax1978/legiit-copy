@@ -45,6 +45,15 @@ export function ExtractionBanner({ offerId, status, sources }: { offerId: string
   }, [active, offerId, router]);
 
   if (!active) return null;
+  const allFailed = sources.length > 0 && failed.length === sources.length;
+  if (allFailed) {
+    return (
+      <div className="mb-6 rounded-card border border-bad-soft bg-bad-soft/40 p-4 text-sm" role="status">
+        <p className="font-medium text-bad">None of the sources could be read.</p>
+        <p className="mt-0.5 text-ink-muted">Retry or remove them in the sources list below, or add a different source. Extraction starts again once one is read.</p>
+      </div>
+    );
+  }
   const done = sources.length - pendingSources.length;
   const readingPhase = pendingSources.length > 0;
   const pct = sources.length === 0 ? 10 : readingPhase ? Math.max(8, Math.round((done / sources.length) * 70)) : 85;

@@ -6,6 +6,12 @@ import type { VariantKind } from "./constants";
 type Tables = Database["public"]["Tables"];
 export type OfferRow = Tables["offers"]["Row"];
 export type OfferSourceRow = Tables["offer_sources"]["Row"];
+/** A source row without the extracted text, which can be long; the client only needs its size. */
+export type OfferSourceView = Omit<OfferSourceRow, "extracted_text"> & { extracted_chars: number };
+export function toSourceView(s: OfferSourceRow): OfferSourceView {
+  const { extracted_text, ...rest } = s;
+  return { ...rest, extracted_chars: extracted_text?.length ?? 0 };
+}
 export type OfferClaimRow = Tables["offer_claims"]["Row"];
 export type OfferConfigRow = Tables["offer_config"]["Row"];
 export type OfferVariantRow = Tables["offer_variants"]["Row"];

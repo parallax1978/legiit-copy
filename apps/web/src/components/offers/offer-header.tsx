@@ -49,7 +49,7 @@ export function OfferHeader({ offer, editable, sourceCount }: { offer: { id: str
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-2">
         {!archived && (
-          <Button asChild className="rounded-full shadow-glow" disabled={extracting}>
+          <Button asChild className="rounded-full shadow-glow">
             <Link href={`/app/generations/new?offer=${offer.id}`}>
               <PenSquare className="size-4" /> Write copy
             </Link>

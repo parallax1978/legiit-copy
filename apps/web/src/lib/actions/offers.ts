@@ -371,7 +371,7 @@ export async function decideClaim(offerId: string, claimId: string, decision: "k
   const g = await editor();
   if (!g.ok) return fail(g.error);
   const { supabase, workspaceId } = g.ctx;
-  const { data: claim } = await supabase.from("offer_claims").select("id, claim_text, flag, evidence_grade").eq("id", claimId).eq("workspace_id", workspaceId).maybeSingle();
+  const { data: claim } = await supabase.from("offer_claims").select("id, flag").eq("id", claimId).eq("workspace_id", workspaceId).maybeSingle();
   if (!claim) return fail("Claim not found.");
   const flag = (claim.flag ?? {}) as { suggested_rewrite?: string | null };
   const update: ClaimUpdate = { user_decision: decision };

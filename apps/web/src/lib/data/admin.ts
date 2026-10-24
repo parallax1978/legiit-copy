@@ -159,7 +159,7 @@ export async function listExamples(filters: ExampleFilters, limit = 200): Promis
   let q = supabase
     .from("examples")
     .select(
-      "id, title, author, format, market, selling_situation, awareness, sophistication, lead_type, argument_sentence, hook, mechanism_type, proof_placement, offer_devices, voice_profile, funnel_position, documented_result, is_loser, rights_status, source_url, excerpt, lessons, status, created_by, created_at, updated_at, embedding",
+      "id, title, author, format, market, selling_situation, awareness, sophistication, lead_type, argument_sentence, hook, mechanism_type, proof_placement, offer_devices, voice_profile, funnel_position, documented_result, is_loser, rights_status, source_url, excerpt, lessons, status, created_by, created_at, updated_at",
     )
     .order("updated_at", { ascending: false })
     .limit(limit);
@@ -177,10 +177,17 @@ export async function listExamples(filters: ExampleFilters, limit = 200): Promis
     q = q.or(`title.ilike.${term},author.ilike.${term},market.ilike.${term}`);
   }
   const { data } = await q;
-  return (data ?? []).map((row) => {
-    const { embedding, ...rest } = row;
-    return { ...rest, has_embedding: embedding !== null } as ExampleListRow;
-  });
+  const rows = data ?? [];
+  const embedded = await embeddedIds("examples", rows.map((r) => r.id));
+  return rows.map((row) => ({ ...row, has_embedding: embedded.has(row.id) }) as ExampleListRow);
+}
+
+/** Which of these rows carry an embedding, without transferring the vectors. */
+async function embeddedIds(table: "examples" | "critiques", ids: string[]): Promise<Set<string>> {
+  if (!ids.length) return new Set();
+  const supabase = await createClient();
+  const { data } = await supabase.from(table).select("id").in("id", ids).not("embedding", "is", null);
+  return new Set((data ?? []).map((r) => r.id));
 }
 
 export async function getExample(id: string) {
@@ -213,7 +220,13 @@ export type CritiqueListRow = Omit<CritiqueRow, "embedding"> & { has_embedding: 
 
 export async function listCritiques(filters: CritiqueFilters, limit = 300): Promise<CritiqueListRow[]> {
   const supabase = await createClient();
-  let q = supabase.from("critiques").select("*").order("created_at", { ascending: false }).limit(limit);
+  let q = supabase
+    .from("critiques")
+    .select(
+      "id, external_id, source, source_url, chief, format, brief, weak_draft, strong_revision, quote_status, defect, defect_named, principle, reason, tested, evidence, confidence, ai_failure_map, tags, status, created_at",
+    )
+    .order("created_at", { ascending: false })
+    .limit(limit);
   if (filters.format) q = q.eq("format", filters.format);
   if (filters.status) q = q.eq("status", filters.status);
   if (filters.confidence) q = q.eq("confidence", filters.confidence);
@@ -224,10 +237,9 @@ export async function listCritiques(filters: CritiqueFilters, limit = 300): Prom
     q = q.or(`chief.ilike.${term},defect.ilike.${term},defect_named.ilike.${term},principle.ilike.${term},external_id.ilike.${term}`);
   }
   const { data } = await q;
-  return (data ?? []).map((row) => {
-    const { embedding, ...rest } = row;
-    return { ...rest, has_embedding: embedding !== null };
-  });
+  const rows = data ?? [];
+  const embedded = await embeddedIds("critiques", rows.map((r) => r.id));
+  return rows.map((row) => ({ ...row, has_embedding: embedded.has(row.id) }));
 }
 
 export async function getCritique(id: string) {
@@ -347,8 +359,9 @@ export async function getComparePairs(runId: string, otherRunId: string, userId:
     supabase.from("eval_outputs").select("id, brief_id, format, markdown, run_id").eq("run_id", otherRunId),
     supabase.from("eval_briefs").select("id, name"),
   ]);
+  type OutputLite = Pick<EvalOutputRow, "id" | "brief_id" | "format" | "markdown" | "run_id">;
   const briefName = new Map((briefs.data ?? []).map((x) => [x.id, x.name]));
-  const byKey = new Map<string, (typeof a.data)[number]>();
+  const byKey = new Map<string, OutputLite>();
   for (const o of a.data ?? []) byKey.set(`${o.brief_id}:${o.format}`, o);
   const candidates: ComparePair[] = [];
   for (const o of b.data ?? []) {

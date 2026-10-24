@@ -6,7 +6,7 @@ import { ExternalLink, FileText, Link2, Loader2, PenLine, Plus, RotateCw, Trash2
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { addOfferSources, deleteSource, retrySource } from "@/lib/actions/offers";
-import type { OfferSourceRow } from "./normalize";
+import type { OfferSourceView } from "./normalize";
 import { linesToArray } from "./normalize";
 import { SourceStatusBadge } from "./badges";
 import { SectionCard } from "./fields";
@@ -14,7 +14,7 @@ import { SourceInputs, emptySourceDraft, sourceDraftCount, uploadPendingFiles, t
 
 const KIND_ICON = { url: Link2, file: FileText, text: PenLine } as const;
 
-export function SourcesPanel({ offerId, workspaceId, sources, editable }: { offerId: string; workspaceId: string; sources: OfferSourceRow[]; editable: boolean }) {
+export function SourcesPanel({ offerId, workspaceId, sources, editable }: { offerId: string; workspaceId: string; sources: OfferSourceView[]; editable: boolean }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -58,9 +58,9 @@ export function SourcesPanel({ offerId, workspaceId, sources, editable }: { offe
                     )}
                   </div>
                   <p className="truncate text-xs text-ink-muted">
-                    {s.kind === "url" ? s.url : s.kind === "file" ? (s.mime_type ?? "document") : `${(s.extracted_text ?? "").length.toLocaleString()} characters`}
+                    {s.kind === "url" ? s.url : s.kind === "file" ? (s.mime_type ?? "document") : `${s.extracted_chars.toLocaleString()} characters`}
                     {" · "}added {new Date(s.created_at).toLocaleDateString()}
-                    {s.extracted_text && s.kind !== "text" ? ` · ${s.extracted_text.length.toLocaleString()} characters read` : ""}
+                    {s.extracted_chars > 0 && s.kind !== "text" ? ` · ${s.extracted_chars.toLocaleString()} characters read` : ""}
                   </p>
                   {s.error && <p className="mt-1 text-xs text-bad">{s.error}</p>}
                 </div>

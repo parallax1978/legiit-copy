@@ -34,7 +34,7 @@ export function SettingField({ keyName, label, hint, value, secret }: { keyName:
         <label htmlFor={keyName} className="text-sm font-semibold text-ink">
           {label} <span className="ml-1 font-mono text-xs font-normal text-ink-soft">{keyName}</span>
         </label>
-        {secret && <StatusBadge value={value ? "active" : "unknown"} className={value ? "" : ""} />}
+        {secret && <StatusBadge value={value ? "set" : "not_set"} />}
       </div>
       <p className="mt-1 text-xs text-ink-muted">{hint}</p>
       <div className="mt-3 flex gap-2">

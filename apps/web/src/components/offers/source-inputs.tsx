@@ -43,9 +43,9 @@ export async function uploadPendingFiles(
   offerId: string,
   files: PendingFile[],
   onState: (id: string, patch: Partial<PendingFile>) => void,
-): Promise<{ uploaded: UploadedFile[]; failed: PendingFile[] }> {
+): Promise<{ uploaded: (UploadedFile & { id: string })[]; failed: PendingFile[] }> {
   const supabase = createClient();
-  const uploaded: UploadedFile[] = [];
+  const uploaded: (UploadedFile & { id: string })[] = [];
   const failed: PendingFile[] = [];
   for (const pf of files) {
     onState(pf.id, { state: "uploading" });
@@ -58,7 +58,7 @@ export async function uploadPendingFiles(
       failed.push({ ...pf, state: "error", error: error.message });
     } else {
       onState(pf.id, { state: "done" });
-      uploaded.push({ name: pf.file.name, storage_path: path, mime_type: mime });
+      uploaded.push({ id: pf.id, name: pf.file.name, storage_path: path, mime_type: mime });
     }
   }
   return { uploaded, failed };
