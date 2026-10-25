@@ -5,7 +5,8 @@ const HTML = `
 <nav><a href="/">Home</a> <a href="/pricing">Pricing</a> <a href="https://www.example.com/about-us">About us</a>
 <a href="/blog/post-1">A post</a> <a href="/faq">FAQ</a> <a href="#top">Top</a> <a href="mailto:x@example.com">Mail</a></nav>
 <footer><a href="/legal/terms">Terms of service</a> <a href="/legal/refund-policy">Refund policy</a>
-<a href="https://other.example.net/terms">Partner terms</a> <a href="/how-it-works">How it works</a> <a href="/pricing#plans">Plans</a></footer>`;
+<a href="https://other.example.net/terms">Partner terms</a> <a href="/how-it-works">How it works</a> <a href="/pricing#plans">Plans</a>
+<a href="/login?intent=buy&plan=single">Buy a plan</a> <a href="/signup">Create an account</a></footer>`;
 
 Deno.test("discoverKeyPages: same-site key pages, best first, deduplicated, capped, the base page excluded", () => {
   const pages = discoverKeyPages(HTML, "https://example.com/");
@@ -13,6 +14,7 @@ Deno.test("discoverKeyPages: same-site key pages, best first, deduplicated, capp
   assertEquals(pages[0].url, "https://example.com/legal/refund-policy");
   assertEquals(pages.some((p) => p.url.includes("other.example.net")), false);
   assertEquals(pages.some((p) => p.url.includes("/blog/")), false);
+  assertEquals(pages.some((p) => /login|signup/.test(p.url)), false); // sign-in pages never carry offer facts
   assertEquals(pages.filter((p) => p.url.startsWith("https://example.com/pricing")).length, 1);
   assertEquals(discoverKeyPages(HTML, "https://example.com/", { max: 2 }).length, 2);
   assertEquals(discoverKeyPages(HTML, "https://example.com/", { exclude: ["https://example.com/faq"] }).some((p) => p.label === "faq"), false);

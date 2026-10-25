@@ -19,6 +19,9 @@ const PATTERNS: { label: string; re: RegExp; rank: number }[] = [
 
 export const MAX_KEY_PAGES = 6;
 
+/** Pages that never carry offer facts, whatever their link text says. */
+const SKIP_PATH = /\/(login|log-in|signin|sign-in|signup|sign-up|register|account|cart|checkout|logout|auth|oauth|password|reset)(\/|$|\?)/i;
+
 function sameSite(a: URL, b: URL): boolean {
   const strip = (h: string) => h.toLowerCase().replace(/^www\./, "");
   return strip(a.hostname) === strip(b.hostname);
@@ -46,6 +49,7 @@ export function discoverKeyPages(html: string, base: string, opts: { exclude?: s
       continue;
     }
     if (!/^https?:$/.test(url.protocol) || !sameSite(url, baseUrl)) continue;
+    if (SKIP_PATH.test(url.pathname + "/")) continue;
     url.hash = "";
     const key = normalize(url.toString());
     if (exclude.has(key) || found.has(key)) continue;
