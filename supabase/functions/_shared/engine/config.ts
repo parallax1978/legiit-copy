@@ -44,7 +44,7 @@ export const STEP_DEFAULTS: Record<StepName, { model: string; effort: Effort; ma
   argument: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 12000 },
   draft: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
   cold_read: { model: COLD_READ_MODEL, effort: "medium", maxTokens: 4000 },
-  editorial: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 12000 }, // thinking shares the budget with the verdict
+  editorial: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 }, // xhigh spent the whole budget thinking on the first live runs
   mechanical: { model: CHEAP_MODEL, effort: "low", maxTokens: 1000 }, // code path; model unused
   factual: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
   revise: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
