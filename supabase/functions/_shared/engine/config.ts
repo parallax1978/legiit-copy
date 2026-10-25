@@ -56,5 +56,7 @@ export const MAX_TOKENS_PER_CALL = 12000;
 export const MAX_REVISION_CYCLES = 2;
 export const MAX_STEP_ATTEMPTS = 3;
 export const REQUEST_TIMEOUT_MS = 380_000;
-export const WEB_SEARCH_MAX_USES = 12;
-export const WEB_FETCH_MAX_USES = 12;
+export const WEB_SEARCH_MAX_USES = 8;
+export const WEB_FETCH_MAX_USES = 8;
+/** The worker fails a generation whose model calls have cost this much; a runaway loop never bills past it. */
+export const MAX_GENERATION_COST_USD = 25;

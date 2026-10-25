@@ -1,18 +1,41 @@
 /**
- * Step 1, research: the dossier, with web search and web fetch. One structured-output call; one retry with a
- * lower verbatim cap when the output hits max_tokens. Code enforces what code can: themes with fewer than three
- * quotes are low confidence, objections without a verbatim move to unsourced hypotheses, sources are merged.
+ * Step 1, research: the dossier, in two model calls across two invocations.
+ *   collect    web search and fetch; returns the tagged verbatim table, findings and sources. Checkpointed.
+ *   synthesize no tools; builds every other dossier section from the checkpoint. Merged, finalized, stored.
+ * Each phase is one call per invocation (a search-heavy call runs four to five minutes; a retry in the same
+ * invocation would outlive the function). A truncated output checkpoints a retry flag and asks for another
+ * invocation, which runs the phase again with tighter caps and one rung less effort; a second truncation fails
+ * the attempt. Code enforces what code can: themes with fewer than three quotes are low confidence, objections
+ * without a verbatim move to unsourced hypotheses, sources are merged.
  */
-import { MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
+import { z } from "zod";
+import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
 import researchPrompt from "../prompts/research.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { OfferBrief } from "../schemas/brief.ts";
-import { Dossier } from "../schemas/research.ts";
+import { Dossier, ResearchCollect, ResearchSynthesis } from "../schemas/research.ts";
+import { remainingBudgetMs } from "./budget.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
-export const RESEARCH_VERBATIM_CAP = 120;
-export const RESEARCH_RETRY_VERBATIM_CAP = 60;
+export const RESEARCH_VERBATIM_CAP = 60;
+export const RESEARCH_RETRY_VERBATIM_CAP = 30;
+
+export const COLLECT_RETRY_REASON = "The verbatim table ran past the output budget; retrying with fewer verbatims";
+export const SYNTHESIZE_RETRY_REASON = "The dossier ran past the output budget; retrying with tighter caps";
+
+/** The checkpoint between invocations (generation_steps.output.partial). */
+export const ResearchPartial = z.object({
+  phase: z.enum(["collect", "synthesize"]),
+  retry: z.boolean().optional(),
+  collect: ResearchCollect.optional(),
+});
+export type ResearchPartial = z.infer<typeof ResearchPartial>;
+
+export function parseResearchPartial(p: unknown): ResearchPartial | null {
+  const r = ResearchPartial.safeParse(p);
+  return r.success ? r.data : null;
+}
 
 export interface ResearchDeps {
   call: typeof callModel;
@@ -32,6 +55,14 @@ const URL_RE = /^https?:\/\/\S+$/i;
 export function fetchFirstUrls(brief: OfferBrief): string[] {
   const all = [...brief.urls, ...brief.competitors, ...brief.audience.verbatim_sources].map((s) => s.trim()).filter((s) => URL_RE.test(s));
   return [...new Set(all)];
+}
+
+/** Pages the search and fetch tools reported, added to the sources the model listed (first listing wins). */
+export function mergeSources(listed: Dossier["sources"], extra: { url: string; title?: string | null }[]): Dossier["sources"] {
+  const byUrl = new Map<string, Dossier["sources"][number]>();
+  for (const s of listed) if (s.url && !byUrl.has(s.url)) byUrl.set(s.url, s);
+  for (const s of extra) if (s.url && !byUrl.has(s.url)) byUrl.set(s.url, { url: s.url, title: s.title ?? null, kind: null });
+  return [...byUrl.values()];
 }
 
 /** Code-enforced rules on the dossier, applied before it is stored. */
@@ -64,11 +95,11 @@ export function finalizeDossier(d: Dossier, extraSources: { url: string; title?:
 
   const resident_emotion = { ...d.resident_emotion, verbatim_ids: known(d.resident_emotion.verbatim_ids) };
 
-  const byUrl = new Map<string, Dossier["sources"][number]>();
-  for (const s of d.sources) if (s.url && !byUrl.has(s.url)) byUrl.set(s.url, s);
-  for (const s of extraSources) if (s.url && !byUrl.has(s.url)) byUrl.set(s.url, { url: s.url, title: s.title ?? null, kind: null });
+  return Dossier.parse({ ...d, verbatims, themes, objection_map, resident_emotion, unsourced_hypotheses: [...new Set(unsourced)], sources: mergeSources(d.sources, extraSources) });
+}
 
-  return Dossier.parse({ ...d, verbatims, themes, objection_map, resident_emotion, unsourced_hypotheses: [...new Set(unsourced)], sources: [...byUrl.values()] });
+function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
 export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
@@ -79,43 +110,84 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
     const fetchFirst = fetchFirstUrls(brief);
     const p = resolvePrompt(ctx, researchPrompt);
     const d = STEP_DEFAULTS.research;
+    const effort = p.effort ?? d.effort;
+    const maxTokens = Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL);
+    const partial: ResearchPartial = parseResearchPartial(ctx.partial) ?? { phase: "collect" };
+    const retry = !!partial.retry;
+    const common = { brief, claims, config: ctx.config, fetchFirst };
+    const log = (purpose: string) => ({
+      db: ctx.db,
+      workspaceId: ctx.generation.workspace_id,
+      generationId: ctx.generation.id,
+      step: "research" as const,
+      attempt: ctx.attempt,
+      purpose,
+      promptVersionId: p.promptVersionId,
+    });
 
-    const run = (verbatimCap: number, retry: boolean) =>
-      call({
-        model: p.model ?? d.model,
-        effort: p.effort ?? d.effort,
-        maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
-        system: p.system,
-        user: researchPrompt.user(ctx, { brief, claims, config: ctx.config, fetchFirst, verbatimCap, retry }),
-        schema: Dossier,
-        webTools: true,
-        log: {
-          db: ctx.db,
-          workspaceId: ctx.generation.workspace_id,
-          generationId: ctx.generation.id,
-          step: "research",
-          attempt: ctx.attempt,
-          purpose: retry ? "research.dossier.retry_fewer_verbatims" : "research.dossier",
-          promptVersionId: p.promptVersionId,
-        },
-      });
-
-    await ctx.progress(`Researching ${brief.product_name}: reviews, forums, competitors${fetchFirst.length ? `, ${fetchFirst.length} page${fetchFirst.length === 1 ? "" : "s"} from the brief` : ""}`);
-    let res;
-    try {
-      res = await run(RESEARCH_VERBATIM_CAP, false);
-    } catch (e) {
-      if (!(e instanceof TruncatedError)) throw e;
-      await ctx.progress("The dossier ran past the output budget; retrying with fewer verbatims");
-      res = await run(RESEARCH_RETRY_VERBATIM_CAP, true);
+    if (partial.phase === "collect") {
+      const verbatimCap = retry ? RESEARCH_RETRY_VERBATIM_CAP : RESEARCH_VERBATIM_CAP;
+      // Searching is reading, not reasoning: one rung less thinking leaves the budget to the table.
+      const collectEffort = retry ? lowerEffort(lowerEffort(effort)) : lowerEffort(effort);
+      await ctx.progress(
+        `Researching ${brief.product_name}: reviews, forums, competitors${fetchFirst.length ? `, ${plural(fetchFirst.length, "page")} from the brief` : ""}${retry ? ` (retry, at most ${verbatimCap} verbatims)` : ""}`,
+      );
+      let res;
+      try {
+        res = await call({
+          model: p.model ?? d.model,
+          effort: collectEffort,
+          maxTokens,
+          timeoutMs: remainingBudgetMs(ctx),
+          system: p.system,
+          user: researchPrompt.user(ctx, { ...common, phase: "collect", verbatimCap, retry }),
+          schema: ResearchCollect,
+          webTools: true,
+          log: log(retry ? "research.collect.retry_fewer_verbatims" : "research.collect"),
+        });
+      } catch (e) {
+        if (!(e instanceof TruncatedError) || retry) throw e;
+        const next: ResearchPartial = { phase: "collect", retry: true };
+        await ctx.savePartial(next);
+        return { output: next, summary: "collection ran past the output budget; retrying with fewer verbatims", continueLater: { reason: COLLECT_RETRY_REASON } };
+      }
+      const parsed = ResearchCollect.parse(res.output);
+      const collect: ResearchCollect = { ...parsed, sources: mergeSources(parsed.sources, res.sources) };
+      const next: ResearchPartial = { phase: "synthesize", collect };
+      await ctx.savePartial(next);
+      const summary = `${plural(collect.verbatims.length, "verbatim")} and ${plural(collect.findings.length, "finding")} from ${plural(collect.sources.length, "source")}; synthesizing next`;
+      return { output: next, model: res.model, summary, continueLater: { reason: `Collected ${plural(collect.verbatims.length, "verbatim")} from ${plural(collect.sources.length, "source")}; building the dossier` } };
     }
 
-    const dossier = finalizeDossier(Dossier.parse(res.output), res.sources);
+    const collect = partial.collect;
+    if (!collect) throw new Error("research checkpoint has no collected material; requeue the step from research");
+    await ctx.progress(`Building the dossier from ${plural(collect.verbatims.length, "verbatim")}${retry ? " (retry with tighter caps)" : ""}`);
+    let res;
+    try {
+      res = await call({
+        model: p.model ?? d.model,
+        effort: retry ? lowerEffort(effort) : effort,
+        maxTokens,
+        timeoutMs: remainingBudgetMs(ctx),
+        system: p.system,
+        user: researchPrompt.user(ctx, { ...common, phase: "synthesize", verbatimCap: collect.verbatims.length, retry, collect }),
+        schema: ResearchSynthesis,
+        log: log(retry ? "research.synthesize.retry_tighter_caps" : "research.synthesize"),
+      });
+    } catch (e) {
+      if (!(e instanceof TruncatedError) || retry) throw e;
+      const next: ResearchPartial = { ...partial, retry: true };
+      await ctx.savePartial(next);
+      return { output: next, summary: "synthesis ran past the output budget; retrying with tighter caps", continueLater: { reason: SYNTHESIZE_RETRY_REASON } };
+    }
+
+    const synthesis = ResearchSynthesis.parse(res.output);
+    const dossier = finalizeDossier(Dossier.parse({ ...synthesis, verbatims: collect.verbatims, sources: collect.sources }));
     const clusters = new Set(dossier.verbatims.map((v) => v.desire_cluster).filter((c): c is string => !!c)).size;
     const result: StepResult<Dossier> = {
       output: dossier,
       model: res.model,
-      summary: `${dossier.verbatims.length} verbatims in ${clusters} clusters from ${dossier.sources.length} sources; ${dossier.themes.length} themes; ${dossier.competitor_table.length} competitors; sophistication stage ${dossier.sophistication.stage}; ${dossier.objection_map.length} objections`,
+      summary: `${plural(dossier.verbatims.length, "verbatim")} in ${plural(clusters, "cluster")} from ${plural(dossier.sources.length, "source")}; ${plural(dossier.themes.length, "theme")}; ${plural(dossier.competitor_table.length, "competitor")}; sophistication stage ${dossier.sophistication.stage}; ${plural(dossier.objection_map.length, "objection")}`,
       effects: { research: { dossier, sources: dossier.sources } },
     };
     return result;

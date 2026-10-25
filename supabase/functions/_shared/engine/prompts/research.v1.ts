@@ -4,8 +4,9 @@
  * Runs with web search and web fetch.
  */
 import type { OfferBrief } from "../schemas/brief.ts";
+import type { ResearchCollect } from "../schemas/research.ts";
 import type { OfferConfigRow, StepContext } from "../steps/types.ts";
-import { type ClaimLike, renderBrief, renderClaims, renderConfig, renderQuestionsBlock, xml } from "./intake.v1.ts";
+import { type ClaimLike, neutralizeTags, renderBrief, renderClaims, renderConfig, renderQuestionsBlock, renderSources, verbatimLine, xml } from "./intake.v1.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, LEAD_SELECTION, PROOF_PLACEMENT } from "./standard.ts";
 import type { PromptModule } from "./types.ts";
 
@@ -15,9 +16,13 @@ export interface ResearchArgs {
   config: OfferConfigRow | null;
   /** The client's and competitors' pages to open before searching. */
   fetchFirst: string[];
+  /** collect: search and fetch, return verbatims, findings and sources. synthesize: no tools, build the rest from <collected>. */
+  phase: "collect" | "synthesize";
   /** Target number of verbatims; the retry after a truncated output lowers it. */
   verbatimCap: number;
   retry?: boolean;
+  /** Phase 1's checkpoint, shown to phase 2. */
+  collect?: ResearchCollect;
 }
 
 const ROLE = `You are the research editor for a direct response copy engine. You build the dossier a copywriter assembles before choosing an argument: the market's own words, tagged and sourced; who the competitors are and what they claim; how aware and how sophisticated each traffic segment is; what proof exists and how strong it is; what the buyer objects to, in the buyer's words. Use web search and web fetch. Open the pages. Everything you report is either a quote with its URL or is labeled an unsourced hypothesis.
@@ -65,19 +70,64 @@ Output only the JSON object in the requested structure, within the output budget
 
 export const RESEARCH_SYSTEM = [ROLE, LEAD_SELECTION, PROOF_PLACEMENT, CLAIMS_AND_FACTUAL_REVIEW].join("\n\n---\n\n");
 
+/** Phase 1's checkpoint as phase 2 sees it. */
+export function renderCollected(c: ResearchCollect): string {
+  const findings = c.findings
+    .map((f) => `- [${f.kind}] ${neutralizeTags(f.text)}${f.quote ? ` | quote: ${neutralizeTags(f.quote)}` : ""}${f.source_url ? ` | ${f.source_url}` : ""}`)
+    .join("\n");
+  return xml(
+    "collected",
+    [
+      xml("cluster_vocabulary", c.cluster_vocabulary.map(neutralizeTags).join(", ") || "(none)"),
+      xml("verbatims", c.verbatims.map(verbatimLine).join("\n") || "(none)", { count: c.verbatims.length }),
+      xml("findings", findings || "(none)", { count: c.findings.length }),
+      xml("sources", renderSources(c.sources), { count: c.sources.length }),
+    ].join("\n"),
+    { verbatims: c.verbatims.length, findings: c.findings.length, sources: c.sources.length },
+  );
+}
+
 export function researchUser(ctx: StepContext, args: ResearchArgs): string {
   const parts = [
     xml("brief", renderBrief(args.brief)),
     xml("claims", renderClaims(args.claims), { count: args.claims.length }),
     xml("config", renderConfig(args.config)),
     renderQuestionsBlock(ctx.questions),
-    xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"),
   ];
+  const subject = `"${args.brief.product_name}" (${args.brief.one_line}) for the reader "${args.brief.audience.who}"`;
+
+  if (args.phase === "collect") {
+    parts.push(xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"));
+    if (args.retry) {
+      parts.push(
+        xml(
+          "constraints",
+          `The previous attempt ran past the output budget. Cap verbatims at ${args.verbatimCap}, each at 40 words or fewer, and findings at 25, each one sentence. Omit every optional key whose value would be its default.`,
+        ),
+      );
+    }
+    parts.push(
+      xml(
+        "task",
+        [
+          `Research ${subject}. This is phase 1 of 2: collect.`,
+          `Open every URL in <fetch_first> first, then search reviews, forums and competitor pages. Define the cluster vocabulary before tagging.`,
+          `Target ${args.verbatimCap} verbatims or fewer from at least 6 sources, exact wording only.`,
+          args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
+          `Return only cluster_vocabulary, verbatims, findings and sources. findings holds every fact the dossier sections will need that is not a verbatim, each with its URL and the exact words when a quote carries it: each competitor's category claim, audience, headline outcome, top claims and the proof offered for each; every proof item about the product with its evidence type and the grade it would earn; refund and first-week mentions; documented story events with dates, numbers and names; who speaks for the product; awareness and sophistication signals (whether the category word appears in the market's words, how many competitors make the same claim, qualifier language, "they all say that"). Phase 2 has no web access and works only from what you return here.`,
+        ].join("\n"),
+      ),
+    );
+    return parts.join("\n\n");
+  }
+
+  const collect = args.collect ?? { cluster_vocabulary: [], verbatims: [], findings: [], sources: [] };
+  parts.push(renderCollected(collect));
   if (args.retry) {
     parts.push(
       xml(
         "constraints",
-        `The previous attempt ran past the output budget. Cap verbatims at ${args.verbatimCap}, each at 40 words or fewer; themes at 8; competitor top_claims at 3 each. Keep every other section complete.`,
+        "The previous attempt ran past the output budget. Cap themes at 6, competitor_table at 4 with top_claims at 3 each, proof_inventory at 12, objection_map at 8, story_inventory at 5 and unsourced_hypotheses at 8; one or two sentences per evidence field. Omit every optional key whose value would be its default.",
       ),
     );
   }
@@ -85,11 +135,8 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
     xml(
       "task",
       [
-        `Research "${args.brief.product_name}" (${args.brief.one_line}) for the reader "${args.brief.audience.who}".`,
-        `Open every URL in <fetch_first> first, then search reviews, forums and competitor pages. Define the cluster vocabulary before tagging.`,
-        `Target ${Math.min(args.verbatimCap, 120)} verbatims or fewer from at least 6 sources, exact wording only.`,
-        args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
-        "Return the complete dossier.",
+        `Phase 2 of 2: synthesize the dossier for ${subject} from <collected>, <brief> and <claims>. No web access: cite only URLs in <collected>, quote only text in <collected>, and reference verbatims by their ids.`,
+        "Return every dossier section except verbatims and sources: themes, competitor_table, logo_swap_result, awareness_by_segment, sophistication, proof_inventory, objection_map, resident_emotion, story_inventory, speaker, forces, first_week_experience, refund_history, unsourced_hypotheses. A theme or objection with no verbatim ids from <collected> is not a theme or objection; it goes to unsourced_hypotheses.",
       ].join("\n"),
     ),
   );

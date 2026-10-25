@@ -15,7 +15,7 @@ import { z } from "zod";
 import { type Db, serviceClient } from "shared/supabase.ts";
 import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
-import { MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
+import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { nextSteps, type PipelineState } from "engine/pipeline.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
@@ -71,6 +71,7 @@ interface StepRowLite {
   attempt: number;
   status: string;
   output: Json | null;
+  error: string | null;
   started_at: string | null;
   finished_at: string | null;
   created_at: string;
@@ -204,6 +205,18 @@ async function runMessage(body: Body): Promise<void> {
   const failedBefore = thisPass.filter((r) => r.status === "failed" || r.status === "interrupted").length;
   const continuedAttempts = thisPass.filter((r) => r.status === "continued").map((r) => r.attempt);
   const resumeFrom = resumePartial(thisPass);
+
+  // Interrupted attempts never reach failAttempt (the worker was shut down), so the cap is enforced here too:
+  // otherwise a step that outlives every invocation is redelivered, and billed, forever.
+  if (failedBefore >= MAX_STEP_ATTEMPTS) {
+    await failGeneration(db, { tag, gen, step, msgId }, `${label(step)} failed after ${failedBefore} attempts: the attempts were interrupted before finishing (the step outlived the function's time budget). ${lastError(thisPass)}`);
+    return;
+  }
+  const spent = await sumLlmCalls(db, { generationId }).catch(() => null);
+  if (spent && spent.cost_usd >= MAX_GENERATION_COST_USD) {
+    await failGeneration(db, { tag, gen, step, msgId }, `Stopped before ${label(step)}: this generation's model calls have cost $${spent.cost_usd.toFixed(2)}, at or over the $${MAX_GENERATION_COST_USD} ceiling per generation.`);
+    return;
+  }
 
   // 3. running row + generation status
   const startedAt = new Date().toISOString();
@@ -434,16 +447,7 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
   try {
     if (exhausted) {
       const attemptsUsed = Math.max(a.readCt, a.failedBefore + 1);
-      await db
-        .from("generations")
-        .update({
-          status: "failed",
-          current_step: a.step,
-          error: `${label(a.step)} failed${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${message}`.slice(0, 2000),
-          progress_message: `${label(a.step)} failed`,
-        })
-        .eq("id", a.gen.id);
-      await archive(db, a.msgId);
+      await failGeneration(db, a, `${label(a.step)} failed${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${message}`);
     } else {
       // not acked: pgmq makes the message visible again after the visibility timeout and the dispatcher retries it
       await db
@@ -454,6 +458,22 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
   } catch (err) {
     console.error(`${a.tag} failure bookkeeping failed`, err);
   }
+}
+
+/** Marks the generation failed with a message the user can act on and archives the queue message. */
+async function failGeneration(db: Db, a: { tag: string; gen: GenerationRow; step: StepName; msgId: number }, message: string): Promise<void> {
+  console.error(`${a.tag} generation failed: ${message}`);
+  await db
+    .from("generations")
+    .update({ status: "failed", current_step: a.step, error: message.slice(0, 2000), progress_message: `${label(a.step)} failed` })
+    .eq("id", a.gen.id);
+  await archive(db, a.msgId);
+}
+
+/** The newest recorded error of this pass, for the failure message. */
+function lastError(rows: StepRowLite[]): string {
+  const r = [...rows].reverse().find((x) => x.status === "failed" || x.status === "interrupted");
+  return r?.error ? `Last error: ${r.error.slice(0, 300)}` : "";
 }
 
 // ---------- pipeline state from the database ----------
@@ -514,7 +534,7 @@ async function resolveVariantId(db: Db, gen: GenerationRow, step: StepName, appl
 async function loadHistory(db: Db, generationId: string): Promise<StepRowLite[]> {
   const { data, error } = await db
     .from("generation_steps")
-    .select("id, step, attempt, status, output, started_at, finished_at, created_at")
+    .select("id, step, attempt, status, output, error, started_at, finished_at, created_at")
     .eq("generation_id", generationId)
     .order("created_at", { ascending: true });
   if (error) throw new Error(`generation_steps load failed: ${error.message}`);

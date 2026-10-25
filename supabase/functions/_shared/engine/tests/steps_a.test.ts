@@ -12,11 +12,11 @@ import researchPrompt from "../prompts/research.v1.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";
 import { type OfferConstruction } from "../schemas/offer.ts";
-import { type Dossier } from "../schemas/research.ts";
+import { type Dossier, type ResearchCollect, type ResearchSynthesis } from "../schemas/research.ts";
 import { type ArgumentDeps, CANDIDATE_COUNT, makeArgumentStep, NO_SURVIVOR_PAUSE_REASON } from "../steps/argument.ts";
 import { INTAKE_RETRY_ROW_CAP, makeIntakeStep, prepareSources, type RawSource } from "../steps/intake.ts";
 import { ensureOfferLedgerRows, makeOfferStep, OFFER_PAUSE_REASON } from "../steps/offer.ts";
-import { fetchFirstUrls, finalizeDossier, makeResearchStep, requireBrief } from "../steps/research.ts";
+import { COLLECT_RETRY_REASON, fetchFirstUrls, finalizeDossier, makeResearchStep, requireBrief, type ResearchPartial } from "../steps/research.ts";
 import type { ClaimRow, StepContext } from "../steps/types.ts";
 
 /* ---------------------------------------------------------------- fakes */
@@ -64,10 +64,11 @@ function fakeCall(responder: (rec: Recorded, n: number) => unknown): { call: Cal
   return { call, calls };
 }
 
-type Ctx = StepContext & { messages: string[] };
+type Ctx = StepContext & { messages: string[]; saved: unknown[] };
 
 function fakeCtx(over: Partial<StepContext> = {}): Ctx {
   const messages: string[] = [];
+  const saved: unknown[] = [];
   const ctx = {
     db: {} as StepContext["db"],
     generation: { id: "gen-1", workspace_id: "ws-1", options: {}, format: "sales_letter" } as unknown as StepContext["generation"],
@@ -92,8 +93,16 @@ function fakeCtx(over: Partial<StepContext> = {}): Ctx {
       messages.push(m);
       return Promise.resolve();
     },
+    partial: null,
+    savePartial: (p: unknown) => {
+      saved.push(p);
+      return Promise.resolve();
+    },
+    timeBudgetMs: 300_000,
+    startedAt: Date.now(),
     ...over,
     messages,
+    saved,
   };
   return ctx as unknown as Ctx;
 }
@@ -196,6 +205,13 @@ const DOSSIER: Dossier = {
   unsourced_hypotheses: ["people want to look disciplined"],
   sources: [{ url: "https://www.trustpilot.com/review/dailygreens.example", title: "Trustpilot", kind: "review_site" }],
 };
+const COLLECT: ResearchCollect = {
+  cluster_vocabulary: ["routine", "energy", "taste"],
+  verbatims: DOSSIER.verbatims,
+  findings: [{ kind: "competitor_claim", text: "Other Greens Co claims 75 ingredients", source_url: "https://competitor.example", quote: "75 ingredients" }],
+  sources: DOSSIER.sources,
+};
+const SYNTHESIS: ResearchSynthesis = (({ verbatims: _v, sources: _s, ...rest }) => rest)(DOSSIER);
 
 const INTAKE_OUTPUT: IntakeOutput = {
   brief: BRIEF,
@@ -348,7 +364,7 @@ Deno.test("questions reach the prompts: answers as the user's facts, open ones a
   assertStringIncludes(calls[0].user, "Still open (unanswered; these facts are unknown: never fill them, never imply them):\n- What does the accuracy report show? (it matters)");
   assertStringIncludes(calls[0].user, 'evidence.source_ref "user_answer"');
 
-  const research = fakeCall(() => DOSSIER);
+  const research = fakeCall(() => COLLECT);
   await makeResearchStep({ call: research.call })(fakeCtx({ brief: BRIEF, questions }));
   assertStringIncludes(research.calls[0].user, '<questions answered="1" open="1">');
 
@@ -438,42 +454,112 @@ Deno.test("finalizeDossier: low confidence under three quotes, unsourced objecti
   assertEquals(finalizeDossier(DOSSIER).themes, DOSSIER.themes);
 });
 
-Deno.test("research step: web tools on, truncation retried once with fewer verbatims, sources merged", async () => {
-  const { call, calls } = fakeCall((_rec, n) => {
-    if (n === 1) throw new TruncatedError("{partial");
-    return DOSSIER;
-  });
+Deno.test("research step, phase 1: collects with web tools at one rung less effort, checkpoints, continues", async () => {
+  const { call, calls } = fakeCall(() => COLLECT);
   const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, config: { offer_id: "offer-1", workspace_id: "ws-1", vertical: "supplements", business_opportunity: false, notice_recipient: false, humor_policy: {}, greeting: null, edge_tolerance: null, refund_window_days: 90, first_week_experience: null, updated_at: "" } });
   const res = await makeResearchStep({ call })(ctx);
 
-  assertEquals(calls.length, 2);
-  assertEquals(calls.map((c) => c.webTools), [true, true]);
-  assertEquals(calls.map((c) => c.maxTokens), [12000, 12000]);
-  assertEquals(calls.map((c) => c.purpose), ["research.dossier", "research.dossier.retry_fewer_verbatims"]);
+  assertEquals(calls.length, 1);
+  assertEquals([calls[0].webTools, calls[0].effort, calls[0].maxTokens, calls[0].purpose], [true, "medium", 12000, "research.collect"]);
   assertEquals(calls[0].system, researchPrompt.system);
   assertStringIncludes(calls[0].user, "<fetch_first>\n- https://dailygreens.example\n");
   assertStringIncludes(calls[0].user, "[[L:c-stat]]");
   assert(!calls[0].user.includes("c-drop"));
   assertStringIncludes(calls[0].user, '"vertical": "supplements"');
+  assertStringIncludes(calls[0].user, "phase 1 of 2: collect");
+  assertStringIncludes(calls[0].user, "Target 60 verbatims or fewer");
   assert(!calls[0].user.includes("<constraints>"));
-  assertStringIncludes(calls[1].user, "Cap verbatims at 60");
+  assert(!calls[0].user.includes("<collected"));
   assertStringIncludes(calls[0].system, "Invent an avatar");
   assertStringIncludes(calls[0].system, "## 3. Lead selection by awareness level");
 
-  assertEquals(res.effects?.research?.dossier.sources.map((s) => s.url), [
-    "https://www.trustpilot.com/review/dailygreens.example",
-    "https://example.com/fetched-page",
-  ]);
-  assertStringIncludes(res.summary, "12 verbatims in 3 clusters from 2 sources");
-  assertEquals(ctx.messages.length, 2);
-  assertStringIncludes(ctx.messages[1], "fewer verbatims");
+  assertEquals(res.continueLater?.reason, "Collected 12 verbatims from 2 sources; building the dossier");
+  assertEquals(res.effects, undefined);
+  assertEquals(ctx.saved.length, 1);
+  const saved = ctx.saved[0] as ResearchPartial;
+  assertEquals(saved.phase, "synthesize");
+  assertEquals(saved.retry, undefined);
+  // pages the tools reported join the sources the model listed
+  assertEquals(saved.collect?.sources.map((s) => s.url), ["https://www.trustpilot.com/review/dailygreens.example", "https://example.com/fetched-page"]);
+  assertEquals(res.output, saved);
+  assertStringIncludes(ctx.messages[0], "4 pages from the brief");
 });
 
-Deno.test("research step: a second truncation is not retried again", async () => {
-  const { call } = fakeCall(() => {
+Deno.test("research step, phase 2: synthesizes from the checkpoint without tools and merges the dossier", async () => {
+  const { call, calls } = fakeCall(() => SYNTHESIS);
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, partial: { phase: "synthesize", collect: COLLECT } });
+  const res = await makeResearchStep({ call })(ctx);
+
+  assertEquals(calls.length, 1);
+  assertEquals([calls[0].webTools, calls[0].effort, calls[0].purpose], [undefined, "high", "research.synthesize"]);
+  assertStringIncludes(calls[0].user, '<collected verbatims="12" findings="1" sources="1">');
+  assertStringIncludes(calls[0].user, "<cluster_vocabulary>\nroutine, energy, taste\n</cluster_vocabulary>");
+  assertStringIncludes(calls[0].user, "V1 | desire");
+  assertStringIncludes(calls[0].user, "[competitor_claim] Other Greens Co claims 75 ingredients | quote: 75 ingredients | https://competitor.example");
+  assertStringIncludes(calls[0].user, "Phase 2 of 2");
+  assert(!calls[0].user.includes("<fetch_first>"));
+  assert(!calls[0].user.includes("<constraints>"));
+
+  assertEquals(res.continueLater, undefined);
+  assertEquals(ctx.saved.length, 0);
+  const dossier = res.effects?.research?.dossier;
+  assertEquals(dossier?.verbatims.length, 12);
+  assertEquals(dossier?.sources.map((s) => s.url), ["https://www.trustpilot.com/review/dailygreens.example"]);
+  assertEquals(dossier?.themes[0].count, 6);
+  assertEquals(dossier?.objection_map, [{ text: "too expensive to keep up", verbatim_ids: ["V7"] }]);
+  assertStringIncludes(res.summary, "12 verbatims in 3 clusters from 1 source; 2 themes; 1 competitor");
+});
+
+Deno.test("research step: a truncated collection checkpoints a retry for the next invocation, which runs with fewer verbatims and less effort; a second truncation fails", async () => {
+  const first = fakeCall(() => {
     throw new TruncatedError("{partial");
   });
-  await assertRejects(() => makeResearchStep({ call })(fakeCtx({ brief: BRIEF })), TruncatedError);
+  const ctx = fakeCtx({ brief: BRIEF });
+  const res = await makeResearchStep({ call: first.call })(ctx);
+  assertEquals(res.continueLater?.reason, COLLECT_RETRY_REASON);
+  assertEquals(ctx.saved, [{ phase: "collect", retry: true }]);
+  assertEquals(first.calls.length, 1);
+
+  const second = fakeCall(() => COLLECT);
+  const ctx2 = fakeCtx({ brief: BRIEF, partial: { phase: "collect", retry: true } });
+  const res2 = await makeResearchStep({ call: second.call })(ctx2);
+  assertEquals([second.calls[0].webTools, second.calls[0].effort, second.calls[0].purpose], [true, "low", "research.collect.retry_fewer_verbatims"]);
+  assertStringIncludes(second.calls[0].user, "Cap verbatims at 30");
+  assertStringIncludes(second.calls[0].user, "Target 30 verbatims or fewer");
+  assertEquals((ctx2.saved[0] as ResearchPartial).phase, "synthesize");
+  assertEquals(res2.continueLater?.reason.startsWith("Collected 12 verbatims"), true);
+
+  const third = fakeCall(() => {
+    throw new TruncatedError("{partial");
+  });
+  await assertRejects(() => makeResearchStep({ call: third.call })(fakeCtx({ brief: BRIEF, partial: { phase: "collect", retry: true } })), TruncatedError);
+});
+
+Deno.test("research step: a truncated synthesis is retried once with tighter caps", async () => {
+  const first = fakeCall(() => {
+    throw new TruncatedError("{partial");
+  });
+  const ctx = fakeCtx({ brief: BRIEF, partial: { phase: "synthesize", collect: COLLECT } });
+  const res = await makeResearchStep({ call: first.call })(ctx);
+  assert(res.continueLater);
+  assertEquals(ctx.saved, [{ phase: "synthesize", collect: COLLECT, retry: true }]);
+
+  const second = fakeCall(() => SYNTHESIS);
+  const ctx2 = fakeCtx({ brief: BRIEF, partial: { phase: "synthesize", collect: COLLECT, retry: true } });
+  const res2 = await makeResearchStep({ call: second.call })(ctx2);
+  assertEquals([second.calls[0].effort, second.calls[0].purpose], ["medium", "research.synthesize.retry_tighter_caps"]);
+  assertStringIncludes(second.calls[0].user, "Cap themes at 6");
+  assertEquals(res2.effects?.research?.dossier.verbatims.length, 12);
+
+  const third = fakeCall(() => {
+    throw new TruncatedError("{partial");
+  });
+  await assertRejects(() => makeResearchStep({ call: third.call })(fakeCtx({ brief: BRIEF, partial: { phase: "synthesize", collect: COLLECT, retry: true } })), TruncatedError);
+});
+
+Deno.test("research step: a checkpoint without collected material is an error, not a silent restart", async () => {
+  const { call } = fakeCall(() => SYNTHESIS);
+  await assertRejects(() => makeResearchStep({ call })(fakeCtx({ brief: BRIEF, partial: { phase: "synthesize" } })), Error, "no collected material");
 });
 
 /* ---------------------------------------------------------------- offer */

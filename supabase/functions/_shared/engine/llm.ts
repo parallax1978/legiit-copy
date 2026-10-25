@@ -33,6 +33,8 @@ export interface CallOptions<T extends z.ZodTypeAny | undefined> {
   webTools?: boolean;
   allowedDomains?: string[];
   cacheSystem?: boolean;
+  /** Hard deadline for this call. Set it from the invocation's remaining budget; the SDK then makes no retries. */
+  timeoutMs?: number;
   log: CallLog;
 }
 
@@ -112,16 +114,17 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
     return p;
   };
 
+  const reqOpts = opts.timeoutMs ? { timeout: opts.timeoutMs, maxRetries: 0 } : undefined;
   let response: Anthropic.Beta.BetaMessage;
   let error: string | null = null;
   try {
     try {
-      response = await client.beta.messages.create(buildParams(nativeFormat));
+      response = await client.beta.messages.create(buildParams(nativeFormat), reqOpts);
     } catch (e) {
       // The union-count heuristic can be off; if the API rejects the schema, retry once with the prompt-described form.
       if (nativeFormat && e instanceof Anthropic.BadRequestError && /union types|output_config|format/i.test(e.message)) {
         nativeFormat = false;
-        response = await client.beta.messages.create(buildParams(false));
+        response = await client.beta.messages.create(buildParams(false), reqOpts);
       } else {
         throw e;
       }

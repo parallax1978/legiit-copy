@@ -156,15 +156,20 @@ export function renderVariant(variant: OfferVariantRow | null): string {
 }
 
 /** The dossier with verbatims as one line each (id | tags | cluster | source | date | markers | text | url) and the rest as JSON sections. */
+/** One verbatim as every prompt shows it: id | tags | cluster | source type (speaker) | date | markers | text | url. */
+export function verbatimLine(v: Dossier["verbatims"][number]): string {
+  const markers = [v.intensity_marker ? "intensity" : null, v.duration_marker ? "duration" : null].filter(Boolean).join(",") || "none";
+  return `${v.id} | ${v.tags.join(",") || "-"} | cluster=${v.desire_cluster ?? "-"} | ${v.source_type}${v.speaker_role ? ` (${neutralizeTags(v.speaker_role)})` : ""} | ${v.date ?? "undated"} | markers=${markers} | ${neutralizeTags(v.text)} | ${v.source_url ?? "no url"}`;
+}
+
+export function renderSources(sources: Dossier["sources"]): string {
+  return sources.map((s) => `${s.url}${s.title ? ` | ${neutralizeTags(s.title)}` : ""}${s.kind ? ` | ${s.kind}` : ""}`).join("\n") || "(none)";
+}
+
 export function renderDossier(d: Dossier, opts: { verbatimLimit?: number } = {}): string {
   const limit = opts.verbatimLimit ?? d.verbatims.length;
   const shown = d.verbatims.slice(0, limit);
-  const verbatims = shown
-    .map((v) => {
-      const markers = [v.intensity_marker ? "intensity" : null, v.duration_marker ? "duration" : null].filter(Boolean).join(",") || "none";
-      return `${v.id} | ${v.tags.join(",") || "-"} | cluster=${v.desire_cluster ?? "-"} | ${v.source_type}${v.speaker_role ? ` (${neutralizeTags(v.speaker_role)})` : ""} | ${v.date ?? "undated"} | markers=${markers} | ${neutralizeTags(v.text)} | ${v.source_url ?? "no url"}`;
-    })
-    .join("\n");
+  const verbatims = shown.map(verbatimLine).join("\n");
   const sections = [
     xml("verbatims", verbatims || "(none)", { count: d.verbatims.length, shown: shown.length }),
     xml("themes", json(d.themes)),
@@ -181,7 +186,7 @@ export function renderDossier(d: Dossier, opts: { verbatimLimit?: number } = {})
     xml("first_week_experience", neutralizeTags(d.first_week_experience ?? "unknown")),
     xml("refund_history", neutralizeTags(d.refund_history ?? "unknown")),
     xml("unsourced_hypotheses", d.unsourced_hypotheses.map((h) => `- ${neutralizeTags(h)}`).join("\n") || "(none)"),
-    xml("sources", d.sources.map((s) => `${s.url}${s.title ? ` | ${neutralizeTags(s.title)}` : ""}${s.kind ? ` | ${s.kind}` : ""}`).join("\n") || "(none)"),
+    xml("sources", renderSources(d.sources)),
   ];
   return xml("dossier", sections.join("\n"));
 }
