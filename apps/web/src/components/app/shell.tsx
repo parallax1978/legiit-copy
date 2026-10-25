@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LinkPending } from "@/components/app/link-pending";
 import { LayoutDashboard, Package, FileText, Settings, Shield, Library, FlaskConical, Receipt, Activity, BookOpen, SlidersHorizontal } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { cn } from "@/lib/utils";
@@ -52,12 +53,14 @@ export function AppShell({ user, workspaces, currentWorkspaceId, isAdmin, childr
                 className={cn("flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors", active ? "bg-brand-faint text-brand-strong" : "text-ink-muted hover:bg-surface-sunken hover:text-ink")}>
                 <item.icon className="h-4 w-4" />
                 {item.label}
+                <LinkPending className="ml-auto" />
               </Link>
             );
           })}
           {isAdmin && (
             <Link href={inAdmin ? "/app" : "/admin"} className="mt-4 flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-ink-muted hover:bg-surface-sunken hover:text-ink">
               <Shield className="h-4 w-4" /> {inAdmin ? "Back to app" : "Admin"}
+              <LinkPending className="ml-auto" />
             </Link>
           )}
         </nav>
