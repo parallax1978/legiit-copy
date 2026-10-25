@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function LoginForm({ next }: { next?: string }) {
-  const [email, setEmail] = useState("");
+export function LoginForm({ next, initialEmail }: { next?: string; initialEmail?: string }) {
+  const [email, setEmail] = useState(initialEmail ?? "");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
 

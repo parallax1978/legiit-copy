@@ -4,7 +4,7 @@ import { LoginForm } from "./login-form";
 
 export const metadata = { title: "Sign in" };
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string }> }) {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; error?: string; email?: string }> }) {
   const sp = await searchParams;
   return (
     <main className="min-h-screen bg-surface-alt">
@@ -16,7 +16,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           {sp.error === "link" && (
             <p className="mt-4 rounded-md bg-bad-soft px-3 py-2 text-sm text-bad">That link expired or was already used. Request a new one.</p>
           )}
-          <LoginForm next={sp.next} />
+          <LoginForm next={sp.next} initialEmail={sp.email} />
         </div>
         <p className="text-xs text-ink-soft">A Legiit product. By signing in you agree to the <Link className="underline" href="/terms">terms</Link> and <Link className="underline" href="/privacy">privacy policy</Link>.</p>
       </div>

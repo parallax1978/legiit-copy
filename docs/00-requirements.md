@@ -50,7 +50,7 @@ Each format is defined by a **format spec**: structure, length band, required su
 - Automatic angle selection with alternatives visible; "try another angle" reruns from the argument step
 - Live progress with step timeline (research → argument → draft → editorial → factual → final), survives page reload
 - Structured output (blocks) so pages render with headline, subheads, body, CTA, bullets, PS, etc.
-- Bounded revision loop (max 2 cycles) so cost and time stay predictable
+- Bounded revision loop (max 3 cycles) so cost and time stay predictable
 
 ### Editor
 - Rich text editor on the final draft with version history (system versions and user versions)
