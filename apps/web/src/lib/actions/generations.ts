@@ -5,7 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { FORMAT_IDS } from "@/lib/formats";
-import type { GenerationOptions, DraftRow } from "@/lib/data/generations";
+import { settingsToInput, type GenerationOptions, type DraftRow } from "@/lib/data/generations";
 import type { Json } from "@/lib/supabase/database.types";
 import { initialSteps } from "@engine/pipeline.ts";
 import { draftFromMarkdown, draftToMarkdown, readDraftOutput, replaceInDraft, ledgerIdsInDraft, draftWords } from "@/components/editor/markdown-blocks";
@@ -35,31 +35,14 @@ const CreateInput = z.object({
 });
 export type CreateGenerationInput = z.input<typeof CreateInput>;
 
-/** Settings of an existing piece as wizard input: what "Rewrite" and "Write another" start from. */
-export function settingsToInput(s: { offer_id: string; format: string; purpose: string; options: GenerationOptions; voice_profile_id: string | null }): CreateGenerationInput {
-  const o = s.options ?? {};
-  return {
-    offer_id: s.offer_id,
-    format: s.format as CreateGenerationInput["format"],
-    purpose: s.purpose ?? o.purpose ?? "",
-    length: o.length ?? "standard",
-    cta: o.cta ?? "",
-    deadline: o.deadline ?? "",
-    instructions: o.instructions ?? "",
-    sequence_type: o.sequence_type ?? "",
-    control_text: o.control_text ?? "",
-    skip_offer: !!o.skip_offer,
-    voice_profile_id: s.voice_profile_id ?? null,
-  };
-}
-
 /** Write the same piece again with the same settings (after new research, answered questions or ledger changes). Redirects to the new run. */
 export async function rewriteGeneration(generationId: string): Promise<ActionResult> {
   const ctx = await editorContext();
   if (ctx.error) return { ok: false, error: ctx.error };
   const { data: g } = await ctx.supabase.from("generations").select("offer_id, format, purpose, options, voice_profile_id").eq("id", generationId).eq("workspace_id", ctx.current.workspace.id).maybeSingle();
   if (!g) return { ok: false, error: "That piece is not in this workspace." };
-  return createGeneration(settingsToInput({ offer_id: g.offer_id, format: g.format, purpose: g.purpose ?? "", options: (g.options as GenerationOptions | null) ?? {}, voice_profile_id: g.voice_profile_id ?? null }));
+  // settingsToInput builds the wizard shape; createGeneration validates it (the format enum included) before anything is written.
+  return createGeneration(settingsToInput({ offer_id: g.offer_id, format: g.format, purpose: g.purpose ?? "", options: (g.options as GenerationOptions | null) ?? {}, voice_profile_id: g.voice_profile_id ?? null }) as CreateGenerationInput);
 }
 
 /** Insert a queued generation; the database trigger enqueues the first step. Redirects to the generation page. */

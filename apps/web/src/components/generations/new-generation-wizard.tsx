@@ -11,8 +11,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { formatCardsByFamily, SEQUENCE_TYPES, LENGTH_OPTIONS, isFormatId, type FormatCard, type FormatId } from "@/lib/formats";
-import type { OfferOption } from "@/lib/data/generations";
-import { createGeneration, type CreateGenerationInput } from "@/lib/actions/generations";
+import { type OfferOption, type GenerationInputValues } from "@/lib/data/generations";
+import type { CreateGenerationInput } from "@/lib/actions/generations";
+import { createGeneration } from "@/lib/actions/generations";
 
 interface Props {
   offers: OfferOption[];
@@ -20,7 +21,7 @@ interface Props {
   initialOfferId: string | null;
   initialFormat: string | null;
   /** Settings of a previous piece to start from (Write another). */
-  initial?: CreateGenerationInput | null;
+  initial?: GenerationInputValues | null;
 }
 
 const STEPS = ["Offer and format", "Purpose and options", "Confirm"];

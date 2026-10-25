@@ -182,3 +182,37 @@ export async function getGenerationSettings(generationId: string, workspaceId: s
   if (!data) return null;
   return { offer_id: data.offer_id, format: data.format, purpose: data.purpose ?? "", options: (data.options as GenerationOptions | null) ?? {}, voice_profile_id: data.voice_profile_id ?? null };
 }
+
+/** The wizard's input shape, mirrored here so a plain module can build it (server-action files may export only async functions). */
+export interface GenerationInputValues {
+  offer_id: string;
+  format: string;
+  purpose: string;
+  length: "shorter" | "standard" | "longer";
+  cta: string;
+  deadline: string;
+  instructions: string;
+  sequence_type: string;
+  control_text: string;
+  skip_offer: boolean;
+  voice_profile_id: string | null;
+}
+
+/** Settings of an existing piece as wizard input: what "Rewrite" and "Write another" start from. */
+export function settingsToInput(s: { offer_id: string; format: string; purpose: string; options: GenerationOptions; voice_profile_id: string | null }): GenerationInputValues {
+  const o = s.options ?? {};
+  return {
+    offer_id: s.offer_id,
+    format: s.format,
+    purpose: s.purpose ?? o.purpose ?? "",
+    length: o.length ?? "standard",
+    cta: o.cta ?? "",
+    deadline: o.deadline ?? "",
+    instructions: o.instructions ?? "",
+    sequence_type: o.sequence_type ?? "",
+    control_text: o.control_text ?? "",
+    skip_offer: !!o.skip_offer,
+    voice_profile_id: s.voice_profile_id ?? null,
+  };
+}
+

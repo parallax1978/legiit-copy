@@ -2,8 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { requireWorkspace, canEdit } from "@/lib/auth";
-import { getGenerationSettings, listOfferOptions, listVoiceProfiles } from "@/lib/data/generations";
-import { settingsToInput } from "@/lib/actions/generations";
+import { getGenerationSettings, listOfferOptions, listVoiceProfiles, settingsToInput } from "@/lib/data/generations";
 import { PageHeader } from "@/components/app/page-header";
 import { NewGenerationWizard } from "@/components/generations/new-generation-wizard";
 
