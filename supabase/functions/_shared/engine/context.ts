@@ -6,11 +6,12 @@ import type { Db } from "../supabase.ts";
 import type { Json } from "../database.types.ts";
 import type { StepName } from "./config.ts";
 import { getFormat } from "./formats/index.ts";
+import { withLength } from "./formats/length.ts";
+import { parseOptions } from "./draft/options.ts";
 import { FormatId } from "./schemas/common.ts";
 import { OfferBrief, ClaimRowInput } from "./schemas/brief.ts";
 import { Dossier } from "./schemas/research.ts";
 import type { AngleRow, DraftRow, OfferVariantRow, StepContext, StepResult, VoiceProfileRow } from "./steps/types.ts";
-import { parseOptions } from "./draft/options.ts";
 
 /** jsonb columns declared NOT NULL take NonNullable<Json>; our values are validated objects, so the cast is a type shim only. */
 const J = (v: unknown) => v as NonNullable<Json>;
@@ -30,7 +31,7 @@ export async function buildContext(db: Db, generationId: string, attempt: number
 
   const fmt = FormatId.safeParse(generation.format);
   if (!fmt.success) throw new Error(`generation ${generationId} has an unknown format: ${generation.format}`);
-  const format = getFormat(fmt.data);
+  const format = withLength(getFormat(fmt.data), parseOptions(generation.options).length);
 
   const [claims, config, variant, research, voice, angles, drafts, steps, prompts] = await Promise.all([
     db.from("offer_claims").select("*").eq("offer_id", offer.id).order("created_at", { ascending: true }),

@@ -1,7 +1,8 @@
+import { withLength } from "../formats/length.ts";
 import { assert, assertEquals } from "@std/assert";
 import { FORMAT_IDS } from "../schemas/common.ts";
 import { BlockType } from "../schemas/draft.ts";
-import { FORMATS, listFormats, sectionBaseId, sectionItemIndex } from "../formats/index.ts";
+import { FORMATS, getFormat, listFormats, sectionBaseId, sectionItemIndex } from "../formats/index.ts";
 import { GATE_METRICS, parseGate } from "../tells.ts";
 
 const specs = listFormats();
@@ -117,4 +118,19 @@ Deno.test("platform limits are present where the platform fixes them", () => {
   assertEquals(FORMATS.google_rsa.platform_limits?.description_chars, 90);
   assertEquals(FORMATS.meta_ad.platform_limits?.primary_text_chars, 150);
   assertEquals(FORMATS.tiktok_reels.platform_limits?.spoken_words, 90);
+});
+
+Deno.test("withLength: longer raises bands and their floors, shorter lowers them, tiny sections and platform-capped families stay", () => {
+  const social = getFormat("organic_social");
+  const longer = withLength(social, "longer");
+  assertEquals(longer.length_band_words, [280, 600]);
+  assertEquals(longer.sections.find((s) => s.id === "main")!.band_words, [196, 420]);
+  assertEquals(longer.sections.find((s) => s.id === "cta")!.band_words, [4, 25]); // too small to scale
+  assertEquals(social.sections.find((s) => s.id === "main")!.band_words, [30, 280]); // the spec itself is untouched
+  const shorter = withLength(social, "shorter");
+  assertEquals(shorter.sections.find((s) => s.id === "main")!.band_words, [18, 168]);
+  assertEquals(withLength(social, "standard"), social);
+  assertEquals(withLength(social, undefined), social);
+  const sms = getFormat("sms");
+  assertEquals(withLength(sms, "longer"), sms);
 });

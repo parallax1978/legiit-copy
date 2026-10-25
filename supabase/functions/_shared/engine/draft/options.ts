@@ -23,6 +23,8 @@ export const GenerationOptions = z.looseObject({
   /** User chose to keep the offer as-is (no offer construction step). */
   skip_offer: z.boolean().optional(),
   purpose: z.string().optional(),
+  /** How long the piece should run relative to the format's usual bands; applied to the spec before any step reads it. */
+  length: z.enum(["shorter", "standard", "longer"]).optional(),
   /** The call to action and one-off instructions the user gave for this piece; the argument and the draft serve them. */
   cta: z.string().optional(),
   instructions: z.string().optional(),
