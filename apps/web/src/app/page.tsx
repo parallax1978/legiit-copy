@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Check, ChevronRight, FileSearch, Gavel, Quote, Sparkles, X } from "lucide-react";
+import { Check, ChevronRight, FileSearch, Gavel, Quote, Sparkles } from "lucide-react";
 import { readerText } from "@engine/draft/ledger.ts";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -135,7 +135,7 @@ export default function Landing() {
       <div className="border-b border-line bg-surface">
         <div className="mx-auto max-w-5xl px-4 py-4">
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-ink">
-            {["Every number has a source", "The argument is chosen before the prose", "Reviewed by a copy chief before you see it", "23 direct response formats"].map((t) => (
+            {["Sales pages, emails and ads for your offer", "Written from what your buyers say", "Every claim tied to its source", "Free during early access"].map((t) => (
               <li key={t} className="flex items-center gap-2"><Check className="h-4 w-4 text-brand" />{t}</li>
             ))}
           </ul>
@@ -144,7 +144,7 @@ export default function Landing() {
       </div>
 
       {/* What you get */}
-      <Section eyebrow="This is what you get" title="A piece that was argued, written and reviewed" lead="This page is the sample: Legiit Copy wrote it from its own saved offer. The copy is on the left, with the ledger tags the public page hides; the review the copy chief gave it is on the right.">
+      <Section eyebrow="This is what you get" title="This page is the sample" lead="Legiit Copy wrote the words on this page from its own saved offer. The draft is on the left, with the evidence tags the public page hides; what sits beside it in the app is on the right.">
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           <Chrome crumb="Legiit Copy · Home page · Draft">
             <p className="eyebrow text-brand">The piece</p>
@@ -157,84 +157,41 @@ export default function Landing() {
                 <p className="mt-1 text-sm text-ink-muted"><Tagged text={(opening[0] ?? benefits[0].body[0]).text} /></p>
               </div>
             )}
-            <p className="mt-3 text-xs text-ink-soft">Each tag is a ledger row: the fact, its source, its grade.</p>
+            <p className="mt-3 text-xs text-ink-soft">Each tag opens the fact behind the line and where it came from.</p>
           </Chrome>
-          <Chrome crumb="Legiit Copy · Home page · Review">
-            <p className="eyebrow text-brand">The copy chief</p>
-            <p className="mt-2 flex items-center gap-2 text-lg font-bold tracking-tight">{review.stoppedAt && !review.flagsPending ? "Notes applied" : review.verdict} <Chip tone="good">Read it cold</Chip></p>
+          <Chrome crumb="Legiit Copy · Home page · Beside the draft">
+            <p className="eyebrow text-brand">Beside the draft</p>
             <dl className="mt-3 divide-y divide-line text-sm">
-              <Row k="Gates" v={review.stoppedAt ? `stopped at ${review.stoppedAt}: it names the failing line and the fix${review.flagsPending ? "" : "; the line was rewritten"}` : "argument, lead, claims, voice: all four passed, in order"} />
-              <Row k="Tells" v={`${review.tellsPer300} per 300 words`} />
-              <Row k="Facts" v={review.flagsDecided || review.flagsPending ? `${review.flagsDecided + review.flagsPending} notes, each with the line, the rule and a rewrite; ${review.flagsPending ? `${review.flagsPending} still to decide` : "every one decided: keep, rewrite or drop"}` : "every claim on the ledger, nothing invented"} />
-              {review.argument && <Row k="Argument" v={review.argument} />}
-              {review.coldRead && <Row k="Cold read" v={review.coldRead} />}
+              {review.argument && <Row k="Argument" v={`${review.argument} (chosen before a word was written)`} />}
+              {review.quotes > 0 && <Row k="Research" v={`${review.quotes} quotes from the market, each with its source`} />}
+              <Row k="Evidence" v="every number, name and quote tied to where it came from" />
+              <Row k="Angle" v="Try another angle picks a different argument and writes it again" />
             </dl>
-            <p className="mt-3 text-xs text-ink-soft">What is left for you is what only you can decide.</p>
           </Chrome>
         </div>
         <CtaCentre />
       </Section>
 
-      {/* Why it matters */}
-      <Section alt eyebrow="Why it matters" title="An AI writer leaves the argument to you." lead="It writes whatever it is told, invents what it does not know, and reads like what it is. The expensive part of copy, deciding what to argue and proving it, is still yours.">
-        <div className="mt-8 grid gap-8 md:grid-cols-2">
-          <div>
-            <p className="text-sm font-semibold text-ink">A prompt gives you</p>
-            <ul className="mt-3 space-y-2 text-sm text-ink-muted">
-              {["Whatever angle it landed on first", "Testimonials and numbers it made up", "\"Unlock\", \"Discover\", \"Elevate\" and the bold-label bullets", "A draft nobody reviewed", "Claims you find out about from a lawyer"].map((t) => (
-                <li key={t} className="flex gap-2"><X className="mt-0.5 h-4 w-4 shrink-0 text-ink-soft" />{t}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-brand">Legiit Copy gives you</p>
-            <ul className="mt-3 space-y-2 text-sm text-ink">
-              {benefits.map((b) => (
-                <li key={b.title} className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-good" />{b.title}</li>
-              ))}
-              {benefits.length < 4 && <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 shrink-0 text-good" />The line, the rule and a rewrite for every risky claim; you decide</li>}
-            </ul>
-          </div>
-        </div>
-        {opening.length > 0 && <div className="mt-8 max-w-2xl text-sm text-ink-muted"><Body body={opening} /></div>}
-        <div className="mt-10 grid gap-6 border-t border-line pt-8 md:grid-cols-3">
-          {benefits.slice(0, 3).map((b) => (
-            <div key={b.title}>
-              <p className="text-sm font-semibold">{b.title}</p>
+      {/* How it works: the piece's own benefits */}
+      <Section id="how" alt eyebrow="How it works" title={opening[0] ? clean(opening[0].text) : "How it works"}>
+        <div className="mt-8 grid gap-5 md:grid-cols-2">
+          {benefits.map((b) => (
+            <div key={b.title} className="rounded-xl border border-line bg-surface p-5 shadow-card">
+              <p className="font-semibold">{b.title}</p>
               <div className="text-sm text-ink-muted"><Body body={b.body} /></div>
             </div>
           ))}
         </div>
-      </Section>
-
-      {/* How it works */}
-      <Section id="how" eyebrow="How it works" title="Three steps, and the writing is the last one">
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          <Step n={1} title="Save the offer" body="Paste the pages, upload what you have, answer what only you know. It reads everything into a brief and a claims ledger: every fact, its source, its grade." note="One pass" />
-          <Step n={2} title="It argues before it writes" body="Research in your customers' own words, twenty candidate arguments scored and gated in order. One wins and is chosen before any prose." note="The expensive part, done first" />
-          <Step n={3} title="Reviewed like a copy chief" body="Cold read on a second model, gates that stop at the first failure, a tell detector, a factual review. The drafter fixes the notes itself, up to three rounds." note="Before you see it" />
-        </div>
-        <div className="mt-4 rounded-xl border border-line bg-surface px-4 py-3 text-sm">
-          <span className="font-semibold">What the review does, step by step</span> <span className="text-ink-muted">cold read · copy chief · tell detector · factual review · revision, then it ships to you</span>
-        </div>
         <CtaCentre />
       </Section>
 
-      {/* Inside the piece */}
-      <Section alt eyebrow="Inside the piece" title="Proof beside every claim">
-        <div className="mt-8 grid gap-5 lg:grid-cols-[1.2fr_1fr]">
-          <Chrome crumb="Legiit Copy · Home page · Show evidence">
-            {benefits.slice(0, 3).map((b) => (
-              <div key={b.title} className="border-b border-line py-3 last:border-0">
-                <p className="text-sm font-semibold">{b.title}</p>
-                {b.body.slice(0, 1).map((blk, i) => <p key={i} className="mt-1 text-sm text-ink-muted"><Tagged text={blk.text} /></p>)}
-              </div>
-            ))}
-          </Chrome>
-          <div className="space-y-4">
+      {/* Who is behind it */}
+      {(proof.length > 0 || demo.length > 0) && (
+        <Section eyebrow="Who is behind it" title="From the team behind Legiit">
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
             {proof.length > 0 && (
               <div className="rounded-xl border border-line bg-surface p-5 shadow-card">
-                <p className="flex items-center gap-2 text-sm font-semibold"><Quote className="h-4 w-4 text-brand" /> Who is behind it</p>
+                <p className="flex items-center gap-2 text-sm font-semibold"><Quote className="h-4 w-4 text-brand" /> Chris M. Walker, founder of Legiit</p>
                 <div className="text-sm text-ink-muted"><Body body={proof} /></div>
               </div>
             )}
@@ -246,14 +203,14 @@ export default function Landing() {
             ))}
             <div className="rounded-xl border border-line bg-surface p-5 shadow-card">
               <p className="flex items-center gap-2 text-sm font-semibold"><FileSearch className="h-4 w-4 text-brand" /> Nothing is invented</p>
-              <p className="mt-2 text-sm text-ink-muted">It never generates a testimonial, a narrator, a study or a statistic. A fact the sources do not settle becomes a question for you, not a line in the copy.</p>
+              <p className="mt-2 text-sm text-ink-muted">It never makes up a testimonial, a customer, a study or a statistic. A fact your sources do not settle becomes a question for you, not a line in the copy.</p>
             </div>
           </div>
-        </div>
-      </Section>
+        </Section>
+      )}
 
       {/* Formats */}
-      <Section id="formats" eyebrow="Formats" title="Every format direct response runs on" lead="Each has its own spec: the sections, the word band, the order it is drafted in and the gates the copy chief checks.">
+      <Section id="formats" eyebrow="Formats" title="Every format direct response runs on" lead="Pick the piece. Each one has its own sections, length and job.">
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {FORMAT_FAMILIES.map((f) => (
             <div key={f.name} className="rounded-xl border border-line bg-surface p-4 shadow-card">
@@ -279,7 +236,7 @@ export default function Landing() {
       {/* Band */}
       <section className="hero-dark">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:py-20">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{preheadline || headlineLines[0]}</h2>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{headlineLines.join(" ")}</h2>
           <p className="mt-3 text-white/70">{repeatLine || ctaLine}</p>
           <Button asChild size="lg" className="mt-7 h-12 rounded-full px-6 text-base shadow-glow"><Link href={SIGN_IN}>{repeatButton} <ChevronRight className="h-4 w-4" /></Link></Button>
           <p className="mt-4 text-xs text-white/60">No password. Nothing is charged.</p>
@@ -319,12 +276,11 @@ const FORMAT_FAMILIES = [
 ];
 
 /**
- * The product in the hero, drawn in HTML like the sister sites' mockups: the draft sheet behind, the review in
- * front with the gates ring, and two chips. Everything on it is this page's own run.
+ * The product in the hero, drawn in HTML like the sister sites' mockups: the draft sheet behind, what sits beside
+ * it in the app in front (the research it was written from, the argument, the evidence), and two chips. Everything
+ * on it is this page's own run.
  */
 function HeroVisual() {
-  // the ring is the machine-tell score per 300 words: the deterministic check, full when nothing was found
-  const pct = Math.max(0, 100 - Math.min(100, review.tellsPer300 * 50));
   const deckBlock = first("subhead", "deck") ?? "";
   return (
     <div className="relative mx-auto w-full min-w-0 max-w-lg lg:max-w-none" aria-hidden="true">
@@ -346,29 +302,29 @@ function HeroVisual() {
         <span className="mt-3 inline-flex items-center rounded-full bg-brand px-2.5 py-1 text-[10px] font-semibold text-white">{buttonText}</span>
       </div>
 
-      {/* the review, in front */}
+      {/* beside the draft, in front */}
       <div className="relative rounded-2xl border border-white/10 bg-white p-5 text-ink shadow-pop md:ml-[26%] md:mt-16 sm:p-6">
-        <p className="eyebrow text-brand">The review</p>
-        <p className="mt-1 text-base font-bold tracking-tight">This page, before anyone saw it</p>
+        <p className="eyebrow text-brand">Beside the draft</p>
+        <p className="mt-1 text-base font-bold tracking-tight">What this page is built on</p>
         <div className="mt-4 flex items-center gap-5">
           <div className="relative h-22 w-22 shrink-0">
             <svg viewBox="0 0 36 36" className="h-22 w-22 -rotate-90">
               <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-sunken)" strokeWidth="3.2" />
-              <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" strokeWidth="3.2" strokeLinecap="round" pathLength={100} strokeDasharray={`${pct} 100`} />
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" strokeWidth="3.2" strokeLinecap="round" pathLength={100} strokeDasharray="100 100" />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-bold leading-none tracking-tight">{review.tellsPer300}</span>
-              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">tells</span>
+              <span className="text-xl font-bold leading-none tracking-tight">{review.quotes}</span>
+              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">quotes</span>
             </div>
           </div>
           <ol className="min-w-0 flex-1 divide-y divide-line">
-            <MiniRow label="Cold read" sub="second model, no brief" chip="Read it cold" tone="good" />
-            <MiniRow label="Copy chief" sub={review.stoppedAt ? (review.flagsPending ? `stopped at ${review.stoppedAt}` : `stopped at ${review.stoppedAt}, then fixed`) : "argument · lead · claims · voice"} chip={review.stoppedAt ? (review.flagsPending ? review.verdict : "Notes fixed") : review.verdict} tone={review.stoppedAt && review.flagsPending ? "warn" : "good"} />
-            <MiniRow label="Facts" sub="every claim on the ledger" chip={review.flagsPending ? `${review.flagsPending} to decide` : review.flagsDecided ? `${review.flagsDecided} notes, decided` : "nothing invented"} tone={review.flagsPending ? "warn" : "good"} />
+            <MiniRow label="Research" sub="what buyers want, in their words" chip={`${review.sources} sources`} tone="good" />
+            <MiniRow label="Argument" sub="chosen before a word was written" chip="Chosen first" tone="good" />
+            <MiniRow label="Evidence" sub="every claim tied to its source" chip="Nothing invented" tone="good" />
           </ol>
         </div>
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-3">
-          <p className="text-xs text-ink-muted">{review.tellsPer300 === 0 ? "0 machine tells" : `${review.tellsPer300} machine tells`} per 300 words{review.words ? ` · ${review.words.toLocaleString()} words` : ""}</p>
+          <p className="text-xs text-ink-muted">Sales page · emails · ads</p>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-glow"><Sparkles className="h-3 w-3" /> Show evidence</span>
         </div>
       </div>
@@ -416,16 +372,6 @@ function CtaCentre() {
     <div className="mt-10 flex flex-col items-center">
       <Button asChild size="lg" className="h-12 rounded-full px-6 text-base shadow-glow"><Link href={SIGN_IN}>{buttonText} <ChevronRight className="h-4 w-4" /></Link></Button>
       <p className="mt-3 max-w-md text-center text-xs text-ink-muted">{ctaLine}</p>
-    </div>
-  );
-}
-
-function Step({ n, title, body, note }: { n: number; title: string; body: string; note: string }) {
-  return (
-    <div className="rounded-xl border border-line bg-surface-alt p-5">
-      <p className="flex items-center gap-2 text-sm font-semibold"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">{n}</span>{title}</p>
-      <p className="mt-3 text-sm text-ink-muted">{body}</p>
-      <p className="mt-3 text-xs font-semibold text-brand">{note}</p>
     </div>
   );
 }

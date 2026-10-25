@@ -14,14 +14,8 @@ export const piece: HomeSection[] = [
     "section_id": "headline",
     "blocks": [
       {
-        "type": "preheadline",
-        "text": "Direct response copy for the offer you save",
-        "items": null,
-        "meta": null
-      },
-      {
         "type": "headline",
-        "text": "AI sales copy still needs a hard edit. Here, the edit happens before you see it.",
+        "text": "Your offer in. Your sales page, emails and ads out.",
         "items": null,
         "meta": null
       }
@@ -32,7 +26,7 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "deck",
-        "text": "For course sellers, SaaS and service businesses, and the freelancers and agencies who write their copy [[L:12e76023-0232-4866-9dd7-8a31ee659be9]]. A separate AI copy chief reads every draft and names the failing line and the fix [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]], and the writer revises on those notes, up to three rounds, before you get it [[L:d7a3ccdc-cc6e-4ad5-8fbd-f9442b0a84a1]].",
+        "text": "For course sellers, SaaS and service businesses, and the freelancers and agencies who write for them [[L:12e76023-0232-4866-9dd7-8a31ee659be9]]: a writer that reads your offer's pages and researches your market before it writes.",
         "items": null,
         "meta": null
       }
@@ -43,13 +37,13 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "cta",
-        "text": "Enter your email and a sign-in link arrives in your inbox, no password. Then you save your first offer. [[L:defb52fb-f8bf-4612-807c-9760fac2ed2d]]",
+        "text": "Nothing is charged during early access [[L:816b48f2-2e37-4829-8e39-337553e236a1]]. Enter your email, get a sign-in link (no password), then save your first offer [[L:defb52fb-f8bf-4612-807c-9760fac2ed2d]]. From there, you write your first piece.",
         "items": null,
         "meta": null
       },
       {
         "type": "button",
-        "text": "Sign in with my email",
+        "text": "Write your first piece free",
         "items": null,
         "meta": null
       }
@@ -60,55 +54,55 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "paragraph",
-        "text": "I'm Chris M. Walker. I founded Legiit, which has been running since 2018 [[L:a72985e9-6a7b-4351-8f12-ee9da1bcea8b]]. You've tried ChatGPT or an AI writer on your sales copy [[L:4c6d3f0a-7d7e-4538-a2fc-0e6737e6b1bd]], and you've seen the kind of line one Jasper reviewer wrote: “It requires heavy editing for quality output, so be advised.” [[L:69c21ef5-6681-4f6c-9012-bf1b3138f79b]] Legiit Copy runs its own review inside the app: a copy chief names the failing line and the fix [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]], and the writer revises, up to three rounds, before the draft reaches you [[L:d7a3ccdc-cc6e-4ad5-8fbd-f9442b0a84a1]].",
+        "text": "I'm Chris M. Walker; I founded Legiit and built Legiit Copy [[L:a72985e9-6a7b-4351-8f12-ee9da1bcea8b]] to write for one thing: the offer you save.",
         "items": null,
         "meta": null
       },
       {
         "type": "crosshead",
-        "text": "An AI copy chief points at the line that fails",
+        "text": "Your offer goes in once: pages, documents, terms",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "Every note names the line from your draft that fails and the fix [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]]. The copy chief reads every draft against a written standard and stops at the first gate it fails [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]]. Over-explaining gets marked down [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]].",
+        "text": "A prompt like “write a sales page for my product” [[L:26bd90a5-e24f-4476-9bc9-1cf0da795f86]] starts from nothing. This starts from your own pages, refund and terms included. Paste a URL and it reads the refund, terms, pricing and FAQ pages on that site too; a PDF, DOCX, TXT or Markdown file or a typed description works as well. It asks what your guarantee is. Then pick the piece (a sales page, an email or a sequence, an ad) and its purpose, length, call to action and deadline [[L:ae6a0cb6-6a71-4fc6-b57a-2affc463fff6]].",
         "items": null,
         "meta": null
       },
       {
         "type": "crosshead",
-        "text": "A second AI reads your page cold before you do",
+        "text": "It reads your market before it writes",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "A second, different AI model gives it a cold read first, as a reader who has not seen the brief [[L:ae5fd030-11b0-400d-95e3-d1597404315c]].",
+        "text": "Research runs two passes: what buyers are trying to buy, in their own words, then what they got and what they complain about [[L:d8c4c066-e8ef-403f-a28b-6d71b2df6c75]]. Every quote is kept with its source [[L:2a782089-d3e3-47f4-9aaa-148a25d028af]]. The draft is written from that research.",
         "items": null,
         "meta": null
       },
       {
         "type": "crosshead",
-        "text": "You keep, rewrite or drop every flagged claim",
+        "text": "It picks the argument before it writes a sentence",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "A factual review shows each problem as the line, the rule it breaks and a rewritten line. You keep it, rewrite it or drop it; Legiit Copy never quietly softens a claim behind your back [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]]. The writer works under one rule: a claim is never bigger than its proof, and the proof sits within two sentences of it [[L:0b1565a6-2cdc-4cf7-a2a7-10af66b6984d]].",
+        "text": "Before any prose, it develops candidate arguments and selects one [[L:3b497c07-8cae-47e2-8ca9-e2a0ead7fdfb]]. Want a different angle? Click Try another angle and it drops the winner and writes the piece again [[L:708a5969-5921-4ca4-b1db-358cc2321f25]].",
         "items": null,
         "meta": null
       },
       {
         "type": "crosshead",
-        "text": "Your market's own words are gathered before a line is written",
+        "text": "The sources and flags sit beside the draft",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "Research runs two passes. First: what people are trying to buy, in their own words. Then: what they got, and what they complain about [[L:d8c4c066-e8ef-403f-a28b-6d71b2df6c75]]. Only after that is the argument chosen, in its own step, before any prose is written [[L:3b497c07-8cae-47e2-8ca9-e2a0ead7fdfb]]. One writer blames generic output on “the same lazy prompt everyone else uses.” [[L:32768653-c88f-4d4d-8f75-bc549aa915b8]] Here, research and the choice of argument each run as their own step before any prose is written [[L:3b497c07-8cae-47e2-8ca9-e2a0ead7fdfb]].",
+        "text": "Beside the draft you see the chosen argument and why, the research sources, the factual flags and the open questions [[L:aac0d8c3-71e8-42eb-98d5-ca065a04db8c]]. Any claim without a source is flagged beside the draft with the rule and a suggested rewrite; you keep, rewrite or drop it [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]]. If a draft states a fact none of your sources hold, Legiit Copy stops it there [[L:d084dc92-5a57-4eaa-ac4d-7437027cb794]].",
         "items": null,
         "meta": null
       }
@@ -119,13 +113,7 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Legiit Copy is new. No blind evaluation has been run yet, so I won't tell you it sells better than ChatGPT or anything else [[L:e61424d3-67c9-4471-9bd2-5e1442f87639]]. What I will tell you is that every draft is reviewed and revised, up to three rounds, before it reaches you [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]] [[L:d7a3ccdc-cc6e-4ad5-8fbd-f9442b0a84a1]]. What's left for you is what only you can decide [[L:d41866f1-c1ec-4059-b934-d082ce3187f5]].",
-        "items": null,
-        "meta": null
-      },
-      {
-        "type": "paragraph",
-        "text": "Behind the product is Legiit, the company I founded, running since 2018 [[L:a72985e9-6a7b-4351-8f12-ee9da1bcea8b]]. Its marketplace at legiit.com shows 1M+ orders processed [[L:1f6ae968-6b06-4a3b-9148-20001ddb4587]] and 100K+ businesses served [[L:0b872e7b-9912-4556-a58f-d7d12037c699]], as of 25 October 2026. Those figures describe the marketplace, not Legiit Copy [[L:13fa85ab-7961-4396-8cd1-45142464e0f1]].",
+        "text": "Legiit, the marketplace I started in 2018 [[L:a72985e9-6a7b-4351-8f12-ee9da1bcea8b]], has processed 1M+ orders [[L:1f6ae968-6b06-4a3b-9148-20001ddb4587]] and served 100K+ businesses [[L:0b872e7b-9912-4556-a58f-d7d12037c699]]. Legiit Copy comes from the same team as Legiit Leads and Legiit Keywords [[L:a72985e9-6a7b-4351-8f12-ee9da1bcea8b]].",
         "items": null,
         "meta": null
       }
@@ -136,31 +124,31 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "crosshead",
-        "text": "A mechanical check flags the patterns that give machine copy away before you read the draft",
+        "text": "It writes from your buyers' words, and in your voice when you paste samples",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "One seller of AI writing prompts names the fear this way: “Robotic, soulless writing that screams ‘I used ChatGPT!’” [[L:7225e431-159b-4791-a75a-02c59fa9a270]] Paste samples of your own writing, and the copy for that offer is written within the voice profile the app builds from them [[L:2f16da88-8c22-42cd-8e40-416ce85feab8]]. Then a mechanical check flags what gives machine copy away: bold-label bullets, placeholders, leftover assistant notes and any authority with no source behind it [[L:95bbf92b-e328-416f-8f7e-6f547ecd453f]].",
+        "text": "The fear is copy that “sounds like everyone else's” [[L:bd15db87-97ab-4a31-b17c-6a5a7aa084de]]. Here the draft starts from your offer's pages and the market quotes research kept with their sources [[L:2a782089-d3e3-47f4-9aaa-148a25d028af]]. Paste samples of your own writing and it writes inside that voice [[L:2f16da88-8c22-42cd-8e40-416ce85feab8]]. A check flags the patterns that make copy read machine-written before you see a line [[L:95bbf92b-e328-416f-8f7e-6f547ecd453f]].",
         "items": null,
         "meta": null
       },
       {
         "type": "crosshead",
-        "text": "Nothing is charged while Legiit Copy is in early access",
+        "text": "A copy chief reads it before you do",
         "items": null,
         "meta": null
       },
       {
         "type": "paragraph",
-        "text": "One reviewer of a paid AI writer put the other worry plainly: “I don't recommend this app, it is expensive and not worth it. Better use ChatGPT4 or even 3.5” [[L:e97e9b6f-8e06-46cf-93ce-cc636ee1689a]]. Legiit Copy has no published price. Signing in and writing are free during early access [[L:816b48f2-2e37-4829-8e39-337553e236a1]], and sign-in asks for your email, with no password [[L:defb52fb-f8bf-4612-807c-9760fac2ed2d]].",
+        "text": "One reviewer of another AI writer warns that the output “requires heavy editing” [[L:69c21ef5-6681-4f6c-9012-bf1b3138f79b]]. Here a separate review names the failing line and the fix [[L:3488f094-2db6-4c28-9d8b-762c1ad5d927]]. The writer revises on those notes, up to three rounds, before the piece reaches you [[L:d7a3ccdc-cc6e-4ad5-8fbd-f9442b0a84a1]]. What reaches you is the revised draft, with the remaining factual flags and open questions beside it [[L:aac0d8c3-71e8-42eb-98d5-ca065a04db8c]].",
         "items": null,
         "meta": null
       },
       {
         "type": "guarantee",
-        "text": "Nothing is charged during early access, so there is nothing to refund. [[L:816b48f2-2e37-4829-8e39-337553e236a1]]",
+        "text": "Signing in and writing is free during early access. Nothing is charged, so there is nothing to refund [[L:816b48f2-2e37-4829-8e39-337553e236a1]].",
         "items": null,
         "meta": null
       }
@@ -175,13 +163,13 @@ export const piece: HomeSection[] = [
     "blocks": [
       {
         "type": "cta",
-        "text": "Enter your email and a sign-in link arrives in your inbox, no password. The next thing you do is save your first offer. [[L:defb52fb-f8bf-4612-807c-9760fac2ed2d]]",
+        "text": "Enter your email, get a sign-in link with no password, save your first offer [[L:defb52fb-f8bf-4612-807c-9760fac2ed2d]] and write your first piece. Nothing is charged during early access [[L:816b48f2-2e37-4829-8e39-337553e236a1]].",
         "items": null,
         "meta": null
       },
       {
         "type": "button",
-        "text": "Sign in with my email",
+        "text": "Write your first piece free",
         "items": null,
         "meta": null
       }
@@ -192,18 +180,21 @@ export const piece: HomeSection[] = [
 /** The run's own review, as the app reported it. */
 export const review = {
   /** what a blind reader on a second model said the page promises, in one sentence */
-  coldRead: "Sign in free and the AI will write your sales copy, and have it checked and revised by a second AI up to three times, so you get a cleaner draft than a raw ChatGPT output, though it hasn't been proven to sell better.",
+  coldRead: "Save your offer once, and this free tool will research your market and write sales copy from it, showing its sources and flagging unsupported claims, so you edit less than with a generic AI prompt.",
   /** the copy chief's verdict label as the app shows it */
-  verdict: "Not ready",
+  verdict: "Needs work",
   /** the gate it stopped at, or null when all four passed */
-  stoppedAt: "the claims" as string | null,
+  stoppedAt: null as string | null,
   /** flags still waiting on the owner, and flags the owner decided (keep, rewrite or drop) */
   flagsPending: 0,
-  flagsDecided: 14,
-  tellsPer300: 0,
-  words: 682,
+  flagsDecided: 11,
+  tellsPer300: 4.22,
+  words: 589,
   /** the argument it chose, before a word was written */
-  argument: "The editing happens before you see it",
+  argument: "Your offer in. Your sales page out.",
+  /** market quotes the research kept, and the sources it read */
+  quotes: 59,
+  sources: 150,
   /** the lead it chose */
   lead: "",
 };
