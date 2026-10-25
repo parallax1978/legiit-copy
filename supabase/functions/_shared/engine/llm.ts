@@ -7,7 +7,7 @@
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import type { z } from "zod";
+import { z } from "zod";
 import type { Db } from "../supabase.ts";
 import { costUsd } from "./cost.ts";
 import { MAX_TOKENS_PER_CALL, REQUEST_TIMEOUT_MS, WEB_FETCH_MAX_USES, WEB_SEARCH_MAX_USES, type Effort } from "./config.ts";
@@ -92,11 +92,12 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
   const fmt = opts.schema ? zodOutputFormat(opts.schema) : undefined;
   const fmtSchema = fmt ? (fmt as unknown as { schema?: unknown }).schema ?? fmt : undefined;
   let nativeFormat = !!fmt && countUnionParams(fmtSchema) <= MAX_UNION_PARAMS;
+  const promptSchema = opts.schema && !nativeFormat ? promptJsonSchema(opts.schema) : undefined;
 
   const buildParams = (useNative: boolean) => {
     const systemBlocks: Anthropic.Beta.BetaTextBlockParam[] = useNative || !opts.schema
       ? system
-      : [{ ...system[0], text: `${opts.system}\n\n${jsonOnlyInstruction(fmtSchema)}` }];
+      : [{ ...system[0], text: `${opts.system}\n\n${jsonOnlyInstruction(promptSchema ?? promptJsonSchema(opts.schema!))}` }];
     // deno-lint-ignore no-explicit-any
     const p: any = {
       model: opts.model,
@@ -198,10 +199,22 @@ export function countUnionParams(schema: unknown): number {
   return n;
 }
 
-function jsonOnlyInstruction(schema: unknown): string {
+/**
+ * The JSON Schema a model is shown when a schema cannot use native structured outputs. Built from the zod
+ * input side, so fields with defaults are optional in `required` and carry their `default`: the model can
+ * omit them, and zod fills them in on parse. (The SDK's output-format schema marks every field required.)
+ */
+export function promptJsonSchema(schema: z.ZodTypeAny): unknown {
+  const js = z.toJSONSchema(schema, { io: "input", unrepresentable: "any" }) as Record<string, unknown>;
+  delete js.$schema;
+  return js;
+}
+
+export function jsonOnlyInstruction(schema: unknown): string {
   return [
     "OUTPUT FORMAT: respond with exactly one JSON object and nothing else: no prose before or after it, no code fences, no comments.",
-    "Every field in the schema is required; use null where the schema allows null and you have nothing to put. Strings must be valid JSON strings.",
+    "Write compact JSON: no indentation and no line breaks between tokens. Strings must be valid JSON strings.",
+    "Every key named in an object's `required` list must be present; use null where the schema allows null and you have nothing to put. A key not named in `required` has a `default`: leave it out entirely when its value would be that default (null, false or an empty object) and write it only when you have a real value.",
     "The object must validate against this JSON Schema:",
     JSON.stringify(schema),
   ].join("\n");

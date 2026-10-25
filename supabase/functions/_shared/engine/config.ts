@@ -14,6 +14,13 @@ export const COLD_READ_MODEL = env("ENGINE_COLD_READ_MODEL") ?? "claude-sonnet-5
 export const CHEAP_MODEL = env("ENGINE_CHEAP_MODEL") ?? "claude-haiku-5-5";
 
 export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
+export const EFFORT_ORDER: readonly Effort[] = ["low", "medium", "high", "xhigh", "max"];
+
+/** One rung down the effort ladder ("low" stays "low"). A retry after a truncated output uses it: thinking and the answer share max_tokens. */
+export function lowerEffort(e: Effort): Effort {
+  const i = EFFORT_ORDER.indexOf(e);
+  return EFFORT_ORDER[Math.max(0, i - 1)] ?? "low";
+}
 
 export const STEP_NAMES = [
   "intake",
@@ -31,7 +38,7 @@ export const STEP_NAMES = [
 export type StepName = (typeof STEP_NAMES)[number];
 
 export const STEP_DEFAULTS: Record<StepName, { model: string; effort: Effort; maxTokens: number }> = {
-  intake: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
+  intake: { model: DEFAULT_MODEL, effort: "medium", maxTokens: 12000 }, // extraction, not reasoning; thinking shares max_tokens with the ledger
   research: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
   offer: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 8000 },
   argument: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 12000 },

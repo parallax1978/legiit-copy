@@ -28,38 +28,51 @@ export const ClaimFlag = z.object({
   rule: z.string().describe("the rule or regulation, cited"),
   severity: Severity,
   issue: z.string(),
-  suggested_rewrite: z.string().nullable(),
+  suggested_rewrite: z.string().nullable().default(null),
 });
+
+/*
+ * Ledger rows are the bulk of intake's output, and the intake schema is too large for native structured
+ * outputs (see llm.ts), so the model writes prompt-described JSON. Every field that can be empty carries a
+ * default: the model omits those keys instead of spelling out null for each, which roughly halves the size
+ * of a row, and parsing fills them back in so every consumer sees the complete shape.
+ */
+const nstr = () => z.string().nullable().default(null);
+const nnum = () => z.number().nullable().default(null);
+const nbool = () => z.boolean().default(false);
 
 export const ClaimRowInput = z.object({
   claim_text: z.string(),
   claim_type: ClaimType,
   role: z.enum(["promise", "mechanism", "proof", "offer_term", "credential", "story", "feature", "other"]),
-  evidence_grade: EvidenceGrade.nullable(),
-  evidence: z.object({
-    source_ref: z.string().nullable(),
-    quote: z.string().nullable(),
-    endpoint: z.string().nullable(),
-    population: z.string().nullable(),
-    dose: z.string().nullable(),
-    duration: z.string().nullable(),
-    effect_size: z.string().nullable(),
-  }),
-  precision: z.string().nullable().describe("the exact figure as the evidence states it"),
-  typical_result: z.string().nullable(),
+  evidence_grade: EvidenceGrade.nullable().default(null),
+  evidence: z
+    .object({
+      source_ref: nstr(),
+      quote: nstr(),
+      endpoint: nstr(),
+      population: nstr(),
+      dose: nstr(),
+      duration: nstr(),
+      effect_size: nstr(),
+    })
+    .prefault({}),
+  precision: nstr().describe("the exact figure as the evidence states it"),
+  typical_result: nstr(),
   earnings_context: z
-    .object({ dates: z.string().nullable(), cohort_size: z.string().nullable(), percent_achieving: z.string().nullable(), time_and_effort: z.string().nullable(), expenses: z.string().nullable() })
-    .nullable(),
-  material_connection: z.boolean(),
-  guarantee_terms: z.object({ text: z.string(), days: z.number().nullable(), conditions: z.string().nullable(), approver: z.string().nullable() }).nullable(),
-  former_price: z.object({ amount: z.string(), basis: z.string().nullable() }).nullable(),
-  scarcity: z.object({ number: z.string().nullable(), enforced: z.boolean() }).nullable(),
-  deadline: z.object({ date_or_rule: z.string(), mechanism: z.string().nullable() }).nullable(),
-  trial_terms: z.object({ text: z.string() }).nullable(),
-  story_claim: z.boolean(),
-  establishment_signal: z.boolean(),
+    .object({ dates: nstr(), cohort_size: nstr(), percent_achieving: nstr(), time_and_effort: nstr(), expenses: nstr() })
+    .nullable()
+    .default(null),
+  material_connection: nbool(),
+  guarantee_terms: z.object({ text: z.string(), days: nnum(), conditions: nstr(), approver: nstr() }).nullable().default(null),
+  former_price: z.object({ amount: z.string(), basis: nstr() }).nullable().default(null),
+  scarcity: z.object({ number: nstr(), enforced: nbool() }).nullable().default(null),
+  deadline: z.object({ date_or_rule: z.string(), mechanism: nstr() }).nullable().default(null),
+  trial_terms: z.object({ text: z.string() }).nullable().default(null),
+  story_claim: nbool(),
+  establishment_signal: nbool(),
   status: z.enum(["verified", "unverified", "flagged"]),
-  flag: ClaimFlag.nullable(),
+  flag: ClaimFlag.nullable().default(null),
 });
 export type ClaimRowInput = z.infer<typeof ClaimRowInput>;
 

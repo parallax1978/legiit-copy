@@ -177,6 +177,8 @@ export interface IntakeSource {
 export interface IntakeArgs {
   sources: IntakeSource[];
   truncatedCount: number;
+  /** Set on the retry after a truncated output: caps the ledger so the answer fits the budget. The default rendering is unchanged. */
+  compact?: { rowCap: number; quoteWords: number };
 }
 
 const ROLE = `You are the intake editor for a direct response copy engine. From an offer's name, the user's own notes and the extracted text of its sources, you produce four things: the offer brief, the claims ledger (one row per fact), the per-offer config, and the open questions. Everything a later step says about this offer traces back to a row you write here, so completeness beats brevity and precision beats polish.
@@ -218,6 +220,16 @@ function renderSource(s: IntakeSource): string {
   return xml("source", neutralizeTags(s.text), { id: s.id, kind: s.kind, url: s.url, title: s.title, chars: s.text.length, truncated: s.truncated ? "true" : null });
 }
 
+/** The retry instruction after a truncated output: fewer, shorter rows, nothing softened, the shortfall recorded. */
+export function compactNote(c: NonNullable<IntakeArgs["compact"]>): string {
+  return [
+    `The previous attempt ran past the output budget. Cap the ledger at ${c.rowCap} rows and keep the brief, config and questions complete.`,
+    "Keep every price, former price, guarantee, deadline, scarcity figure, trial or continuity term, testimonial, credential, study, statistic and result; merge plain feature lists into one row per deliverable; drop nothing else and soften nothing.",
+    `Cut each evidence quote to the shortest exact span that carries the fact, ${c.quoteWords} words or fewer. Omit every optional key whose value would be its default.`,
+    'Record what the cap leaves out in brief.unknowns as "ledger incomplete: ..." so the user can add rows by hand.',
+  ].join(" ");
+}
+
 export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
   const userBrief = {
     ...(ctx.offer.brief && typeof ctx.offer.brief === "object" ? (ctx.offer.brief as Record<string, unknown>) : {}),
@@ -243,6 +255,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
         `Produce the intake output for "${ctx.offer.name}": brief, claims (one row per fact, typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened), config, questions (blocking only when drafting cannot proceed).`,
         args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
+        args.compact ? compactNote(args.compact) : null,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -254,6 +267,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
 const intakePrompt: PromptModule<IntakeArgs> = {
   step: "intake",
   version: 1,
+  effort: "medium",
   system: INTAKE_SYSTEM,
   user: intakeUser,
 };

@@ -1,10 +1,12 @@
 /**
  * Step 0, intake: brief, claims ledger (typed, graded, flagged), per-offer config and open questions, from the
- * offer's extracted sources. One structured-output model call. The runner writes the brief, claims, config and
- * questions from the effects.
+ * offer's extracted sources. One model call writing prompt-described JSON (the schema is too large for native
+ * structured outputs), plus one retry with a capped ledger and one rung less thinking when the output runs past
+ * max_tokens, which thinking and the answer share. The runner writes the brief, claims, config and questions
+ * from the effects.
  */
-import { MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
-import { callModel } from "../llm.ts";
+import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
+import { callModel, TruncatedError } from "../llm.ts";
 import intakePrompt, { type IntakeSource } from "../prompts/intake.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { IntakeOutput } from "../schemas/brief.ts";
@@ -13,6 +15,10 @@ import type { StepContext, StepFn, StepResult } from "./types.ts";
 /** Character budgets for source text in one call (roughly a quarter of that in tokens). */
 export const SOURCE_CHAR_CAP_EACH = 120_000;
 export const SOURCE_CHAR_CAP_TOTAL = 400_000;
+
+/** The retry after a truncated output: at most this many ledger rows, evidence quotes this short. */
+export const INTAKE_RETRY_ROW_CAP = 60;
+export const INTAKE_RETRY_QUOTE_WORDS = 25;
 
 export interface RawSource {
   id: string;
@@ -77,24 +83,39 @@ export function makeIntakeStep(deps: Partial<IntakeDeps> = {}): StepFn {
 
     const p = resolvePrompt(ctx, intakePrompt);
     const d = STEP_DEFAULTS.intake;
+    const effort = p.effort ?? d.effort;
+    const run = (retry: boolean) =>
+      call({
+        model: p.model ?? d.model,
+        effort: retry ? lowerEffort(effort) : effort,
+        maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
+        system: p.system,
+        user: intakePrompt.user(ctx, {
+          sources,
+          truncatedCount,
+          ...(retry ? { compact: { rowCap: INTAKE_RETRY_ROW_CAP, quoteWords: INTAKE_RETRY_QUOTE_WORDS } } : {}),
+        }),
+        schema: IntakeOutput,
+        log: {
+          db: ctx.db,
+          workspaceId: ctx.generation.workspace_id,
+          generationId: ctx.generation.id,
+          step: "intake",
+          attempt: ctx.attempt,
+          purpose: retry ? "intake.retry_compact_ledger" : "intake.brief_ledger_config_questions",
+          promptVersionId: p.promptVersionId,
+        },
+      });
+
     await ctx.progress(`Building the brief and claims ledger from ${sources.length} source${sources.length === 1 ? "" : "s"}`);
-    const res = await call({
-      model: p.model ?? d.model,
-      effort: p.effort ?? d.effort,
-      maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
-      system: p.system,
-      user: intakePrompt.user(ctx, { sources, truncatedCount }),
-      schema: IntakeOutput,
-      log: {
-        db: ctx.db,
-        workspaceId: ctx.generation.workspace_id,
-        generationId: ctx.generation.id,
-        step: "intake",
-        attempt: ctx.attempt,
-        purpose: "intake.brief_ledger_config_questions",
-        promptVersionId: p.promptVersionId,
-      },
-    });
+    let res;
+    try {
+      res = await run(false);
+    } catch (e) {
+      if (!(e instanceof TruncatedError)) throw e;
+      await ctx.progress(`The ledger ran past the output budget; retrying with at most ${INTAKE_RETRY_ROW_CAP} rows`);
+      res = await run(true);
+    }
     const output = IntakeOutput.parse(res.output);
 
     const blocking = output.questions.filter((q) => q.blocking);
