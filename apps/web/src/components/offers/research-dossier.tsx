@@ -2,12 +2,12 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ExternalLink, Loader2, Search } from "lucide-react";
+import { Check, ExternalLink, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { refreshResearch } from "@/lib/actions/offers";
+import { activateResearch, refreshResearch } from "@/lib/actions/offers";
 import { cn } from "@/lib/utils";
 import { titleCase } from "./constants";
 import { GradeBadge } from "./badges";
@@ -63,6 +63,19 @@ export function ResearchDossier({ offerId, research, editable }: { offerId: stri
     });
   }
 
+  function activate() {
+    if (!row) return;
+    start(async () => {
+      const r = await activateResearch(offerId, row.id);
+      if (!r.ok) {
+        toast.error(r.error);
+        return;
+      }
+      toast.success(`Research v${row.version} is now the version the writer uses.`);
+      router.refresh();
+    });
+  }
+
   const refreshButton = editable && (
     <Button size="sm" onClick={refresh} disabled={pending || running}>
       {pending || running ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
@@ -105,6 +118,11 @@ export function ResearchDossier({ offerId, research, editable }: { offerId: stri
             {row.active ? "Active version, used by the writer" : "Older version"}
             {row.model ? ` · ${row.model}` : ""}
           </span>
+          {editable && !row.active && (
+            <Button size="sm" variant="outline" onClick={activate} disabled={pending || running} title="The writer reads this version from now on; the others are kept">
+              {pending ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />} Use this version
+            </Button>
+          )}
         </div>
         {refreshButton}
       </div>

@@ -17,7 +17,7 @@ import researchPrompt from "../prompts/research.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { OfferBrief } from "../schemas/brief.ts";
 import { Dossier, ResearchCollect, ResearchSynthesis } from "../schemas/research.ts";
-import { answersFromDossier, ledgerRowsFromDossier } from "../research/answers.ts";
+import { answersFromDossier, ledgerRowsFromDossier, verbatimKey } from "../research/answers.ts";
 import { remainingBudgetMs } from "./budget.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
@@ -120,6 +120,25 @@ export function mergeCollects(a: ResearchCollect | undefined, b: ResearchCollect
   };
 }
 
+/**
+ * A refresh builds on what earlier research found: the active dossier's verbatims that this run did not collect
+ * again are carried into the collect (ids prefixed P so they never collide with the new V ids), with their
+ * sources, before synthesis. The first run of an offer has no prior dossier and is unchanged.
+ */
+export function carryPriorResearch(collect: ResearchCollect, prior: Dossier | null | undefined): ResearchCollect {
+  if (!prior || prior.verbatims.length === 0) return collect;
+  const seen = new Set(collect.verbatims.map((v) => verbatimKey(v.text)));
+  const carried: ResearchCollect["verbatims"] = [];
+  for (const v of prior.verbatims) {
+    const key = verbatimKey(v.text);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    carried.push({ ...v, id: `P${carried.length + 1}` });
+  }
+  if (carried.length === 0) return collect;
+  return { ...collect, verbatims: [...collect.verbatims, ...carried], sources: mergeSources(collect.sources, prior.sources.map((x) => ({ url: x.url, title: x.title }))) };
+}
+
 export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
   const call = deps.call ?? callModel;
   return async (ctx) => {
@@ -181,9 +200,11 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
         await ctx.savePartial(next);
         return { output: next, model: res.model, summary: `pass ${pass}: ${got}; pass ${pass + 1} next`, continueLater: { reason: `Collected ${got} on ${where}; now what they got (reviews, competitor pages)` } };
       }
-      const next: ResearchPartial = { phase: "synthesize", collect };
+      const carried = carryPriorResearch(collect, ctx.dossier);
+      const next: ResearchPartial = { phase: "synthesize", collect: carried };
       await ctx.savePartial(next);
-      const summary = `${plural(collect.verbatims.length, "verbatim")} and ${plural(collect.findings.length, "finding")} from ${plural(collect.sources.length, "source")} over ${COLLECT_PASSES} passes; synthesizing next`;
+      const kept = carried.verbatims.length - collect.verbatims.length;
+      const summary = `${plural(collect.verbatims.length, "verbatim")} and ${plural(collect.findings.length, "finding")} from ${plural(collect.sources.length, "source")} over ${COLLECT_PASSES} passes${kept ? `, ${plural(kept, "verbatim")} kept from the previous dossier` : ""}; synthesizing next`;
       return { output: next, model: res.model, summary, continueLater: { reason: `Collected ${plural(collect.verbatims.length, "verbatim")} from ${plural(collect.sources.length, "source")}; building the dossier` } };
     }
 

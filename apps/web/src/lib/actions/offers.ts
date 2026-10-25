@@ -324,6 +324,23 @@ export async function refreshResearch(offerId: string): Promise<ActionResult> {
   return err ? fail(err) : done(undefined);
 }
 
+/** Makes an earlier dossier the one the writer uses; the others are kept. */
+export async function activateResearch(offerId: string, researchId: string): Promise<ActionResult> {
+  const g = await editor();
+  if (!g.ok) return fail(g.error);
+  const offer = await loadOffer(g.ctx, offerId);
+  if (!offer) return fail("Offer not found.");
+  const { data: row } = await g.ctx.supabase.from("offer_research").select("id, active").eq("id", researchId).eq("offer_id", offer.id).maybeSingle();
+  if (!row) return fail("That research version is not on this offer.");
+  if (row.active) return done(undefined);
+  const off = await g.ctx.supabase.from("offer_research").update({ active: false }).eq("offer_id", offer.id).eq("active", true);
+  if (off.error) return fail(off.error.message);
+  const on = await g.ctx.supabase.from("offer_research").update({ active: true }).eq("id", row.id);
+  if (on.error) return fail(on.error.message);
+  revalidateOffer(offer.id);
+  return done(undefined);
+}
+
 // ---------------------------------------------------------------- claims ledger
 
 const ClaimInput = z.object({
