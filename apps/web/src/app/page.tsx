@@ -119,9 +119,9 @@ export default function Landing() {
                 <p className="mt-1 text-base font-bold tracking-tight">This page, before anyone saw it</p>
               </div>
               <ol className="mt-4 divide-y divide-line rounded-xl border border-line">
-                <ReviewRow n={1} label="Cold read" sub="a second model, no brief" chips={[[review.coldRead, "good"]]} />
-                <ReviewRow n={2} label="Copy chief" sub={`${review.gatesPassed} gates, in order`} chips={[[review.verdict, "good"]]} />
-                <ReviewRow n={3} label="Facts" sub={review.claims ? `${review.claims} claims checked against the ledger` : "every claim checked against the ledger"} chips={[[review.flags ? `${review.flags} for you to decide` : "nothing invented", review.flags ? "warn" : "good"]]} />
+                <ReviewRow n={1} label="Cold read" sub="a second model, no brief" chips={[["Read it cold", "good"]]} />
+                <ReviewRow n={2} label="Copy chief" sub="argument, lead, claims, voice: in order" chips={[[review.verdict, review.stoppedAt ? "warn" : "good"]]} />
+                <ReviewRow n={3} label="Facts" sub="every claim checked against the ledger" chips={[[review.flags ? `${review.flags} for you to decide` : "nothing invented", review.flags ? "warn" : "good"]]} />
               </ol>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <p className="text-xs text-ink-muted">{review.tellsPer300 === 0 ? "0 machine tells per 300 words" : `${review.tellsPer300} machine tells per 300 words`}{review.words ? ` · ${review.words.toLocaleString()} words` : ""}</p>
@@ -172,10 +172,11 @@ export default function Landing() {
             <p className="eyebrow text-brand">The copy chief</p>
             <p className="mt-2 flex items-center gap-2 text-lg font-bold tracking-tight">{review.verdict} <Chip tone="good">{review.coldRead}</Chip></p>
             <dl className="mt-3 divide-y divide-line text-sm">
-              <Row k="Gates" v={`${review.gatesPassed} passed, in order; it stops at the first failure`} />
+              <Row k="Gates" v={review.stoppedAt ? `stopped at ${review.stoppedAt}; the rest wait until that is fixed` : "argument, lead, claims, voice: all four passed, in order"} />
               <Row k="Tells" v={`${review.tellsPer300} per 300 words`} />
               <Row k="Facts" v={review.flags ? `${review.flags} flagged, each with the line, the rule and a rewrite` : "every claim on the ledger, nothing invented"} />
               {review.argument && <Row k="Argument" v={review.argument} />}
+              {review.coldRead && <Row k="Cold read" v={review.coldRead} />}
             </dl>
             <p className="mt-3 text-xs text-ink-soft">What is left for you is what only you can decide.</p>
           </Chrome>

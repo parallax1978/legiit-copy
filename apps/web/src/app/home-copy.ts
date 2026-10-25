@@ -63,14 +63,19 @@ export const piece: HomeSection[] = [
 
 /** The run's own review, as the app reported it. */
 export const review = {
-  coldRead: "Clear",
+  /** what a blind reader on a second model said the page promises, in one sentence */
+  coldRead: "",
+  /** the copy chief's verdict label as the app shows it */
   verdict: "Ready to use",
-  gatesPassed: 11,
-  claims: 0,
+  /** the gate it stopped at, or null when all four passed */
+  stoppedAt: null as string | null,
+  /** factual flags left for the owner to decide */
   flags: 0,
   tellsPer300: 0,
   words: 0,
+  /** the argument it chose, before a word was written */
   argument: "",
+  /** the lead it chose */
   lead: "",
 };
 
