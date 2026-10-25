@@ -86,22 +86,45 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
     { type: "text", text: opts.system, ...(opts.cacheSystem !== false ? { cache_control: { type: "ephemeral" as const } } : {}) },
   ];
 
-  // deno-lint-ignore no-explicit-any
-  const params: any = {
-    model: opts.model,
-    max_tokens: maxTokens,
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    system,
-    messages: [{ role: "user", content: typeof opts.user === "string" ? [{ type: "text", text: opts.user }] : opts.user }],
-    output_config: { effort: opts.effort, ...(opts.schema ? { format: zodOutputFormat(opts.schema) } : {}) },
-    ...(tools ? { tools } : {}),
+  // Structured outputs: the API compiles the schema into a grammar and rejects schemas with more than
+  // MAX_UNION_PARAMS nullable/union-typed fields. Large schemas fall back to prompt-described JSON that we
+  // validate client-side with the same zod schema (the model sees the JSON Schema in the system prompt).
+  const fmt = opts.schema ? zodOutputFormat(opts.schema) : undefined;
+  const fmtSchema = fmt ? (fmt as unknown as { schema?: unknown }).schema ?? fmt : undefined;
+  let nativeFormat = !!fmt && countUnionParams(fmtSchema) <= MAX_UNION_PARAMS;
+
+  const buildParams = (useNative: boolean) => {
+    const systemBlocks: Anthropic.Beta.BetaTextBlockParam[] = useNative || !opts.schema
+      ? system
+      : [{ ...system[0], text: `${opts.system}\n\n${jsonOnlyInstruction(fmtSchema)}` }];
+    // deno-lint-ignore no-explicit-any
+    const p: any = {
+      model: opts.model,
+      max_tokens: maxTokens,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      system: systemBlocks,
+      messages: [{ role: "user", content: typeof opts.user === "string" ? [{ type: "text", text: opts.user }] : opts.user }],
+      output_config: { effort: opts.effort, ...(useNative && fmt ? { format: fmt } : {}) },
+      ...(tools ? { tools } : {}),
+    };
+    return p;
   };
 
   let response: Anthropic.Beta.BetaMessage;
   let error: string | null = null;
   try {
-    response = await client.beta.messages.create(params);
+    try {
+      response = await client.beta.messages.create(buildParams(nativeFormat));
+    } catch (e) {
+      // The union-count heuristic can be off; if the API rejects the schema, retry once with the prompt-described form.
+      if (nativeFormat && e instanceof Anthropic.BadRequestError && /union types|output_config|format/i.test(e.message)) {
+        nativeFormat = false;
+        response = await client.beta.messages.create(buildParams(false));
+      } else {
+        throw e;
+      }
+    }
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
     await logCall(opts, { model: opts.model, usage: null, costUsd: 0, latencyMs: Date.now() - started, stopReason: null, requestId: null, error });
@@ -149,6 +172,39 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
     output = result.data;
   }
   return { output: output as Infer<T>, text, model: response.model, usage, costUsd: cost, latencyMs, stopReason: response.stop_reason, requestId, sources: dedupeSources(sources) };
+}
+
+/** The API's limit on nullable/union-typed parameters in a structured-output schema. */
+export const MAX_UNION_PARAMS = 16;
+
+/** Counts schema properties typed as a union (anyOf, oneOf, or a type array such as ["string","null"]). */
+export function countUnionParams(schema: unknown): number {
+  let n = 0;
+  const walk = (node: unknown) => {
+    if (Array.isArray(node)) {
+      for (const x of node) walk(x);
+      return;
+    }
+    if (!node || typeof node !== "object") return;
+    const o = node as Record<string, unknown>;
+    if (Array.isArray(o.type) && o.type.length > 1) n += 1;
+    if (Array.isArray(o.anyOf) || Array.isArray(o.oneOf)) n += 1;
+    for (const [k, v] of Object.entries(o)) {
+      if (k === "type") continue;
+      walk(v);
+    }
+  };
+  walk(schema);
+  return n;
+}
+
+function jsonOnlyInstruction(schema: unknown): string {
+  return [
+    "OUTPUT FORMAT: respond with exactly one JSON object and nothing else: no prose before or after it, no code fences, no comments.",
+    "Every field in the schema is required; use null where the schema allows null and you have nothing to put. Strings must be valid JSON strings.",
+    "The object must validate against this JSON Schema:",
+    JSON.stringify(schema),
+  ].join("\n");
 }
 
 function safeJson(text: string): unknown {
