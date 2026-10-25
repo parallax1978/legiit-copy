@@ -100,7 +100,7 @@ export async function saveSetup(offerId: string, raw: SetupInput, reextract = fa
   if (error) return fail(error.message);
   revalidateOffer(offer.id);
   if (reextract) return reextractOffer(offer.id);
-  return done();
+  return done(undefined);
 }
 
 export async function createOffer(input: { name?: string; firstUrl?: string; firstFile?: string; description?: string; setup?: SetupInput }): Promise<ActionResult<{ offerId: string; workspaceId: string }>> {
