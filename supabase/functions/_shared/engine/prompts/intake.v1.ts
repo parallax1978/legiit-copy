@@ -207,6 +207,10 @@ export interface IntakeSource {
 export interface IntakeArgs {
   sources: IntakeSource[];
   truncatedCount: number;
+  /** brief: the brief, config and questions. ledger: the claims, with the brief from the first call as context. */
+  phase: "brief" | "ledger";
+  /** The ledger call sees the brief the first call wrote, so rows and brief agree. */
+  brief?: OfferBrief;
   /** The ledger budget: row cap and quote length; retry marks the rerun after a truncated output, which tightens both. */
   compact?: { rowCap: number; quoteWords: number; retry: boolean };
 }
@@ -254,8 +258,8 @@ function renderSource(s: IntakeSource): string {
 export function compactNote(c: NonNullable<IntakeArgs["compact"]>): string {
   return [
     c.retry
-      ? `The previous attempt ran past the output budget. Cap the ledger at ${c.rowCap} rows and keep the brief, config and questions complete.`
-      : `Output budget: the ledger holds at most ${c.rowCap} rows; the brief, config and questions stay complete.`,
+      ? `The previous attempt ran past the output budget. Cap the ledger at ${c.rowCap} rows.`
+      : `Output budget: the ledger holds at most ${c.rowCap} rows.`,
     "Keep every price, former price, guarantee, deadline, scarcity figure, trial or continuity term, testimonial, credential, study, statistic and result; merge plain feature lists into one row per deliverable; drop nothing else and soften nothing.",
     `Keep each evidence quote to the shortest exact span that carries the fact, ${c.quoteWords} words or fewer. Omit every optional key whose value would be its default.`,
     'Record what the cap leaves out in brief.unknowns as "ledger incomplete: ..." naming the facts left out, so the user can add rows by hand.',
@@ -282,15 +286,31 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
     }),
   );
   parts.push(CACHE_BREAK);
+  if (args.phase === "brief") {
+    parts.push(
+      xml(
+        "task",
+        [
+          `Call 1 of 2 for "${ctx.offer.name}": produce the brief, the config and the questions. No claims in this call: the ledger is call 2, with the whole output budget to itself, so return claims as an empty list.`,
+          args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
+          ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Never re-ask a question the user answered in <questions>." : null,
+          "Blocking is rare: with a price, terms, deliverables, a mechanism and an identifiable reader on file, no question is blocking; a choice the source's own page already makes (the offer its calls to action lead with) is recorded as the default and asked as non-blocking. Never ask what the sources answer; when the sources answer half of a question, ask only the unsettled half.",
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      ),
+    );
+    return parts.join("\n\n");
+  }
+  if (args.brief) parts.push(xml("brief", neutralizeTags(json(args.brief))));
   parts.push(
     xml(
       "task",
       [
-        `Produce the intake output for "${ctx.offer.name}": brief, claims (one row per fact, typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened), config, questions (blocking only when drafting cannot proceed).`,
-        args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
+        `Call 2 of 2 for "${ctx.offer.name}": the claims ledger, one row per fact in the sources (typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened). The brief in <brief> is already written; rows must agree with it. Return only claims.`,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
-        ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified; never re-ask an answered question." : null,
-        "A suggested_rewrite keeps every alternative the source states (plan A or plan B, both prices, both terms); it never picks one for the user. Blocking is rare: with a price, terms, deliverables, a mechanism and an identifiable reader on file, no question is blocking; a choice the source's own page already makes (the offer its calls to action lead with) is recorded as the default and asked as non-blocking. Never ask what the sources answer; when the sources answer half of a question, ask only the unsettled half.",
+        ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified." : null,
+        "A suggested_rewrite keeps every alternative the source states (plan A or plan B, both prices, both terms); it never picks one for the user.",
         args.compact ? compactNote(args.compact) : null,
       ]
         .filter(Boolean)

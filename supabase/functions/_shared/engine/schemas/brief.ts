@@ -96,3 +96,9 @@ export const IntakeOutput = z.object({
   questions: z.array(Question),
 });
 export type IntakeOutput = z.infer<typeof IntakeOutput>;
+
+/** Intake runs as two calls: the brief, config and questions first; then the ledger with the whole output budget to itself. */
+export const IntakeBriefOutput = IntakeOutput.omit({ claims: true });
+export type IntakeBriefOutput = z.infer<typeof IntakeBriefOutput>;
+export const IntakeLedgerOutput = z.object({ claims: z.array(ClaimRowInput) });
+export type IntakeLedgerOutput = z.infer<typeof IntakeLedgerOutput>;

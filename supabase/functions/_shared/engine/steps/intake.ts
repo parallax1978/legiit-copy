@@ -1,15 +1,17 @@
 /**
  * Step 0, intake: brief, claims ledger (typed, graded, flagged), per-offer config and open questions, from the
- * offer's extracted sources. One model call writing prompt-described JSON (the schema is too large for native
- * structured outputs), plus one retry with a capped ledger and one rung less thinking when the output runs past
- * max_tokens, which thinking and the answer share. The runner writes the brief, claims, config and questions
- * from the effects.
+ * offer's extracted sources. Two model calls writing prompt-described JSON (the schema is too large for native
+ * structured outputs): the brief, config and questions first, then the ledger with the whole output budget to
+ * itself (at one rung less thinking: it is reading, and thinking shares max_tokens with the rows). Either call
+ * is retried once with less when it runs past the budget. The runner writes the brief, claims, config and
+ * questions from the effects.
  */
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
 import intakePrompt, { type IntakeSource } from "../prompts/intake.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
-import { IntakeOutput } from "../schemas/brief.ts";
+import { IntakeBriefOutput, IntakeLedgerOutput, IntakeOutput } from "../schemas/brief.ts";
+import { remainingBudgetMs } from "./budget.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
 /** Character budgets for source text in one call (roughly a quarter of that in tokens). */
@@ -21,8 +23,8 @@ export const SOURCE_CHAR_CAP_TOTAL = 400_000;
  * the model's thinking; an unbudgeted first call ran past the cap on every live extraction, so the first call
  * carries a budget too and the retry after a truncation tightens it.
  */
-export const INTAKE_ROW_CAP = 60;
-export const INTAKE_RETRY_ROW_CAP = 40;
+export const INTAKE_ROW_CAP = 80;
+export const INTAKE_RETRY_ROW_CAP = 50;
 export const INTAKE_QUOTE_WORDS = 30;
 export const INTAKE_RETRY_QUOTE_WORDS = 20;
 
@@ -90,39 +92,67 @@ export function makeIntakeStep(deps: Partial<IntakeDeps> = {}): StepFn {
     const p = resolvePrompt(ctx, intakePrompt);
     const d = STEP_DEFAULTS.intake;
     const effort = p.effort ?? d.effort;
-    const run = (retry: boolean) =>
+    const base = { model: p.model ?? d.model, maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL), system: p.system };
+    const log = (purpose: string) => ({
+      db: ctx.db,
+      workspaceId: ctx.generation.workspace_id,
+      generationId: ctx.generation.id,
+      step: "intake" as const,
+      attempt: ctx.attempt,
+      purpose,
+      promptVersionId: p.promptVersionId,
+    });
+    const n = `${sources.length} source${sources.length === 1 ? "" : "s"}`;
+
+    // Call 1: brief, config, questions.
+    const runBrief = (retry: boolean) =>
       call({
-        model: p.model ?? d.model,
+        ...base,
         effort: retry ? lowerEffort(effort) : effort,
-        maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
-        system: p.system,
+        timeoutMs: remainingBudgetMs(ctx),
+        user: intakePrompt.user(ctx, { phase: "brief", sources, truncatedCount }),
+        schema: IntakeBriefOutput,
+        log: log(retry ? "intake.brief_config_questions.retry" : "intake.brief_config_questions"),
+      });
+    await ctx.progress(`Building the brief from ${n}`);
+    let briefRes;
+    try {
+      briefRes = await runBrief(false);
+    } catch (e) {
+      if (!(e instanceof TruncatedError)) throw e;
+      await ctx.progress("The brief ran past the output budget; retrying with less thinking");
+      briefRes = await runBrief(true);
+    }
+    const head = IntakeBriefOutput.parse(briefRes.output);
+
+    // Call 2: the ledger, with the budget to itself. Reading, not reasoning: one rung less thinking.
+    const ledgerEffort = lowerEffort(effort);
+    const runLedger = (retry: boolean) =>
+      call({
+        ...base,
+        effort: retry ? lowerEffort(ledgerEffort) : ledgerEffort,
+        timeoutMs: remainingBudgetMs(ctx),
         user: intakePrompt.user(ctx, {
+          phase: "ledger",
           sources,
           truncatedCount,
+          brief: head.brief,
           compact: retry ? { rowCap: INTAKE_RETRY_ROW_CAP, quoteWords: INTAKE_RETRY_QUOTE_WORDS, retry: true } : { rowCap: INTAKE_ROW_CAP, quoteWords: INTAKE_QUOTE_WORDS, retry: false },
         }),
-        schema: IntakeOutput,
-        log: {
-          db: ctx.db,
-          workspaceId: ctx.generation.workspace_id,
-          generationId: ctx.generation.id,
-          step: "intake",
-          attempt: ctx.attempt,
-          purpose: retry ? "intake.retry_compact_ledger" : "intake.brief_ledger_config_questions",
-          promptVersionId: p.promptVersionId,
-        },
+        schema: IntakeLedgerOutput,
+        log: log(retry ? "intake.ledger.retry_compact" : "intake.ledger"),
       });
-
-    await ctx.progress(`Building the brief and claims ledger from ${sources.length} source${sources.length === 1 ? "" : "s"}`);
-    let res;
+    await ctx.progress(`Building the claims ledger from ${n}`);
+    let ledgerRes;
     try {
-      res = await run(false);
+      ledgerRes = await runLedger(false);
     } catch (e) {
       if (!(e instanceof TruncatedError)) throw e;
       await ctx.progress(`The ledger ran past the output budget; retrying with at most ${INTAKE_RETRY_ROW_CAP} rows`);
-      res = await run(true);
+      ledgerRes = await runLedger(true);
     }
-    const output = IntakeOutput.parse(res.output);
+    const res = ledgerRes;
+    const output = IntakeOutput.parse({ ...head, claims: IntakeLedgerOutput.parse(ledgerRes.output).claims });
 
     const blocking = output.questions.filter((q) => q.blocking);
     const flagged = output.claims.filter((c) => c.status === "flagged").length;
