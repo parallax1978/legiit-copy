@@ -110,9 +110,9 @@ export interface ProofGateResult {
   reason: string;
 }
 
-/** Accepts bare ledger ids or the inline form [[L:<id>]]. */
+/** Accepts a bare ledger id, the inline form [[L:<id>]], or the prefixed form L:<id> models copy from the handle. */
 export function ledgerIdOf(ref: string): string {
-  const m = /^\s*\[\[L:(.+?)\]\]\s*$/.exec(ref);
+  const m = /^\s*(?:\[\[)?\s*(?:L:)?\s*(.+?)\s*(?:\]\])?\s*$/.exec(ref);
   return (m ? m[1] : ref).trim();
 }
 

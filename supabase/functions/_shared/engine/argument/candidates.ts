@@ -4,6 +4,7 @@
  */
 import { z } from "zod";
 import { Candidate } from "../schemas/argument.ts";
+import { ledgerIdOf } from "./gates.ts";
 import { type ClusterStats, findCluster } from "./magnitude.ts";
 
 export type CandidateT = z.infer<typeof Candidate>;
@@ -88,7 +89,7 @@ export function normalizeCandidates(raw: CandidateT[], table: ClusterStats[], ex
       id,
       cluster: stats?.cluster ?? c.cluster.trim().toLowerCase(),
       k: stats?.k ?? 0,
-      proof_ledger_refs: [...new Set(c.proof_ledger_refs.map((r) => r.trim()).filter(Boolean))],
+      proof_ledger_refs: [...new Set(c.proof_ledger_refs.map(ledgerIdOf).filter(Boolean))],
     });
   }
   return { candidates: out, dropped };

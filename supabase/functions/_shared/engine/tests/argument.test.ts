@@ -49,6 +49,16 @@ function toVerbatims(rows: Row[]): VerbatimLike[] {
 
 /* ---------------------------------------------------------------- markers and magnitude */
 
+Deno.test("ledgerIdOf accepts bare ids, [[L:id]] handles and the L:id form models copy", () => {
+  assertEquals(ledgerIdOf("abc"), "abc");
+  assertEquals(ledgerIdOf(" [[L:abc]] "), "abc");
+  assertEquals(ledgerIdOf("L:abc"), "abc");
+  assertEquals(ledgerIdOf("[[L:34915922-c9d0-4cee-8600-6601eb72a442]]"), "34915922-c9d0-4cee-8600-6601eb72a442");
+  const claims = [{ id: "abc", claim_type: "price_discount", evidence_grade: null }];
+  assertEquals(proofGate(["L:abc"], claims).status, "pass");
+  assertEquals(proofGate(["L:abc"], claims).unknown_refs, []);
+});
+
 Deno.test("markers: the ported lexicons match the Python on every corpus row", () => {
   for (const [name, corpus] of Object.entries(FIXTURE.corpora)) {
     corpus.rows.forEach(([, text], i) => {

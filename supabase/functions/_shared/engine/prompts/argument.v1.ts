@@ -96,7 +96,7 @@ export function argumentUser(ctx: StepContext, args: ArgumentArgs): string {
         "task",
         [
           `Produce exactly ${args.count} candidates for "${args.brief.product_name}", to be written as ${args.formatName} for "${args.brief.audience.who}".`,
-          `Use the cluster tokens and k values from <cluster_table> exactly. Cite proof_ledger_refs only from <claims>.`,
+          `Use the cluster tokens and k values from <cluster_table> exactly. Cite proof_ledger_refs only from <claims>, each as the bare id (for [[L:abc]] write "abc").`,
           args.exclusions.promises.length ? `The user rejected the ${args.exclusions.promises.length} promise(s) in <excluded>: propose none of them and no close variant.` : null,
           `Return cluster_vocabulary_used and candidates.`,
         ]
