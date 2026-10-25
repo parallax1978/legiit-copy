@@ -653,14 +653,14 @@ isOneToOne: false
                   ]
                 },"offers": {
                   Row: {
-                    "audience": string | null,"brief": NonNullable<Json>,"created_at": string,"created_by": string | null,"guarantee": string | null,"id": string,"name": string,"positioning": string | null,"price": string | null,"status": string,"updated_at": string,"workspace_id": string
+                    "audience": string | null,"brief": NonNullable<Json>,"created_at": string,"created_by": string | null,"guarantee": string | null,"id": string,"name": string,"positioning": string | null,"price": string | null,"setup": NonNullable<Json>,"status": string,"updated_at": string,"workspace_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "audience"?: string | null,"brief"?: NonNullable<Json>,"created_at"?: string,"created_by"?: string | null,"guarantee"?: string | null,"id"?: string,"name": string,"positioning"?: string | null,"price"?: string | null,"status"?: string,"updated_at"?: string,"workspace_id": string
+                    "audience"?: string | null,"brief"?: NonNullable<Json>,"created_at"?: string,"created_by"?: string | null,"guarantee"?: string | null,"id"?: string,"name": string,"positioning"?: string | null,"price"?: string | null,"setup"?: NonNullable<Json>,"status"?: string,"updated_at"?: string,"workspace_id": string
                   }
                   Update: {
-                    "audience"?: string | null,"brief"?: NonNullable<Json>,"created_at"?: string,"created_by"?: string | null,"guarantee"?: string | null,"id"?: string,"name"?: string,"positioning"?: string | null,"price"?: string | null,"status"?: string,"updated_at"?: string,"workspace_id"?: string
+                    "audience"?: string | null,"brief"?: NonNullable<Json>,"created_at"?: string,"created_by"?: string | null,"guarantee"?: string | null,"id"?: string,"name"?: string,"positioning"?: string | null,"price"?: string | null,"setup"?: NonNullable<Json>,"status"?: string,"updated_at"?: string,"workspace_id"?: string
                   }
                   Relationships: [
                     {

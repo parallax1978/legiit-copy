@@ -1,0 +1,46 @@
+"use client";
+import { Field, TextInput, TextArea } from "./fields";
+
+/** What only the client knows. Asked at offer setup, kept on the offer, never asked again. */
+export interface SetupValues {
+  speaker_name: string;
+  speaker_role: string;
+  reader: string;
+  lead_offer: string;
+  refund_policy: string;
+  proof_on_hand: string;
+}
+
+export const EMPTY_SETUP: SetupValues = { speaker_name: "", speaker_role: "", reader: "", lead_offer: "", refund_policy: "", proof_on_hand: "" };
+
+export function setupFromJson(raw: unknown): SetupValues {
+  const o = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  const s = (k: keyof SetupValues) => (typeof o[k] === "string" ? (o[k] as string) : "");
+  return { speaker_name: s("speaker_name"), speaker_role: s("speaker_role"), reader: s("reader"), lead_offer: s("lead_offer"), refund_policy: s("refund_policy"), proof_on_hand: s("proof_on_hand") };
+}
+
+export function SetupFields({ value, onChange, disabled }: { value: SetupValues; onChange: (v: SetupValues) => void; disabled?: boolean }) {
+  const set = (k: keyof SetupValues) => (v: string) => onChange({ ...value, [k]: v });
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <Field label="Who signs the copy?" htmlFor="setup-speaker" hint="The person the reader hears from. Emails and posts carry this name.">
+        <TextInput id="setup-speaker" value={value.speaker_name} onChange={set("speaker_name")} placeholder="Chris M. Walker" disabled={disabled} />
+      </Field>
+      <Field label="Their role" htmlFor="setup-role" hint="As it should appear after the name.">
+        <TextInput id="setup-role" value={value.speaker_role} onChange={set("speaker_role")} placeholder="Founder, Legiit" disabled={disabled} />
+      </Field>
+      <Field label="Who is the reader?" htmlFor="setup-reader" hint="The one person this is written to, by situation. Leave blank to let the research decide." className="md:col-span-2">
+        <TextInput id="setup-reader" value={value.reader} onChange={set("reader")} placeholder="SEO freelancers and small agencies who already pay for a keyword tool" disabled={disabled} />
+      </Field>
+      <Field label="Which offer should the copy lead with?" htmlFor="setup-lead" hint="When there are several plans or deals, name the one every piece states. Blank means the one your page leads with." className="md:col-span-2">
+        <TextInput id="setup-lead" value={value.lead_offer} onChange={set("lead_offer")} placeholder="The $1 seven-day Pro trial, then $59/mo" disabled={disabled} />
+      </Field>
+      <Field label="Refund or guarantee" htmlFor="setup-refund" hint="Only if it is not already on your site. The copy never promises one you do not offer." className="md:col-span-2">
+        <TextInput id="setup-refund" value={value.refund_policy} onChange={set("refund_policy")} placeholder="None, or: 30-day money back on the first month" disabled={disabled} />
+      </Field>
+      <Field label="Proof you can show" htmlFor="setup-proof" hint="Real customer results, testimonials with names, numbers you can stand behind. The copy uses only these; it never invents a testimonial." className="md:col-span-2">
+        <TextArea id="setup-proof" rows={3} value={value.proof_on_hand} onChange={set("proof_on_hand")} placeholder="Jane Doe of Acme ranked 6 pages in 90 days (screenshot on file). 1,200 paying users. None yet." disabled={disabled} />
+      </Field>
+    </div>
+  );
+}

@@ -3,6 +3,7 @@ import { requireWorkspace, canEdit } from "@/lib/auth";
 import { getOffer, getOfferSources, getOfferQuestions } from "@/lib/data/offers";
 import { normalizeBrief, isBriefEmpty, toSourceView } from "@/components/offers/normalize";
 import { BriefForm } from "@/components/offers/brief-form";
+import { SetupForm } from "@/components/offers/setup-form";
 import { OpenQuestions } from "@/components/offers/open-questions";
 import { SourcesPanel } from "@/components/offers/sources-panel";
 
@@ -28,6 +29,7 @@ export default async function OfferBriefPage({ params, searchParams }: { params:
   const editable = canEdit(role) && offer.status !== "archived";
   return (
     <div className="space-y-5">
+      <SetupForm key={`setup-${offer.updated_at}`} offerId={offer.id} setup={(offer as { setup?: unknown }).setup ?? {}} editable={editable} extracted={sources.length > 0 && offer.status !== "extracting"} />
       <OpenQuestions offerId={offer.id} questions={questions} unknowns={brief.unknowns} editable={editable} extracting={offer.status === "extracting"} />
       <BriefForm key={offer.updated_at} offerId={offer.id} name={offer.name} brief={brief} editable={editable} empty={isBriefEmpty(brief)} />
       <SourcesPanel offerId={offer.id} workspaceId={workspace.id} sources={sources.map(toSourceView)} editable={editable} />

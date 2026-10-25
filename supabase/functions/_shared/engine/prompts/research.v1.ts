@@ -183,7 +183,7 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
       [
         `Phase 2 of 2: synthesize the dossier for ${subject} from <collected>, <brief> and <claims>. No web access: cite only URLs in <collected>, quote only text in <collected>, and reference verbatims by their ids.`,
         "Return every dossier section except verbatims and sources: themes, competitor_table, logo_swap_result, awareness_by_segment, sophistication, proof_inventory, objection_map, resident_emotion, story_inventory, speaker, forces, first_week_experience, refund_history, unsourced_hypotheses. A theme or objection with no verbatim ids from <collected> is not a theme or objection; it goes to unsourced_hypotheses.",
-        "speaker (name, role, stake, source URL), refund_history and first_week_experience come from the findings; write them in full when a finding settles them and null only when none does.",
+        "speaker (name, role, stake, source URL), refund_history and first_week_experience come from the findings, or from <brief> when it already names them (the user's own answers win); null only when nothing settles them.",
       ].join("\n"),
     ),
   );

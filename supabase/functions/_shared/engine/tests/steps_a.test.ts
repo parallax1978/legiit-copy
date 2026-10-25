@@ -123,6 +123,8 @@ const BRIEF: OfferBrief = {
   competitors: ["https://competitor.example", "Other Greens Co"],
   urls: ["https://dailygreens.example", "https://dailygreens.example/label"],
   unknowns: ["refund rate"],
+  speaker: null,
+  lead_offer: null,
 };
 
 function claimRow(id: string, over: Partial<ClaimRow> = {}): ClaimRow {

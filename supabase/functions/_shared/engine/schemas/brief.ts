@@ -8,6 +8,27 @@ export const Price = z.object({
   plan: z.string().nullable().describe("one-time | monthly | annual | installments | free | by application"),
 });
 
+/**
+ * What only the client knows, asked once at offer setup (offers.setup). Intake treats every answer as the
+ * user's own word: it goes into the brief and the ledger and is never asked again.
+ */
+export const OfferSetup = z.object({
+  speaker_name: z.string().nullable().default(null),
+  speaker_role: z.string().nullable().default(null),
+  reader: z.string().nullable().default(null),
+  lead_offer: z.string().nullable().default(null),
+  refund_policy: z.string().nullable().default(null),
+  proof_on_hand: z.string().nullable().default(null),
+});
+export type OfferSetup = z.infer<typeof OfferSetup>;
+export function parseSetup(raw: unknown): OfferSetup {
+  const r = OfferSetup.safeParse(raw && typeof raw === "object" ? raw : {});
+  return r.success ? r.data : OfferSetup.parse({});
+}
+export function setupHasAnswers(s: OfferSetup): boolean {
+  return Object.values(s).some((v) => typeof v === "string" && v.trim().length > 0);
+}
+
 export const OfferBrief = z.object({
   product_name: z.string(),
   one_line: z.string().describe("what it is, for whom, in one sentence, no adjectives"),
@@ -21,6 +42,10 @@ export const OfferBrief = z.object({
   competitors: z.array(z.string()),
   urls: z.array(z.string()),
   unknowns: z.array(z.string()).describe("facts the sources do not settle"),
+  /** Who signs the copy, from the user's setup answers (or the sources when they name one). */
+  speaker: z.object({ name: z.string().nullable().default(null), role: z.string().nullable().default(null) }).nullable().default(null),
+  /** The offer every asset leads with, from the user's setup answers (or the page's own calls to action). */
+  lead_offer: z.string().nullable().default(null),
 });
 export type OfferBrief = z.infer<typeof OfferBrief>;
 

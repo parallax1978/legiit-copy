@@ -9,9 +9,11 @@ import { createOffer, submitOfferSources } from "@/lib/actions/offers";
 import { linesToArray } from "./normalize";
 import { Field } from "./fields";
 import { SourceInputs, emptySourceDraft, sourceDraftCount, uploadPendingFiles, type SourceDraft, type PendingFile, type UploadedFile } from "./source-inputs";
+import { EMPTY_SETUP, SetupFields, type SetupValues } from "./setup-fields";
 
 export function NewOfferForm() {
   const [name, setName] = useState("");
+  const [setup, setSetup] = useState<SetupValues>(EMPTY_SETUP);
   const [draft, setDraft] = useState<SourceDraft>(emptySourceDraft());
   const [phase, setPhase] = useState<"idle" | "creating" | "uploading" | "starting">("idle");
   const [created, setCreated] = useState<{ offerId: string; workspaceId: string } | null>(null);
@@ -45,7 +47,7 @@ export function NewOfferForm() {
       setPhase("creating");
       let ids = created;
       if (!ids) {
-        const r = await createOffer({ name, firstUrl: urls[0], firstFile: draft.files[0]?.file.name, description: draft.text });
+        const r = await createOffer({ name, firstUrl: urls[0], firstFile: draft.files[0]?.file.name, description: draft.text, setup });
         if (!r.ok) {
           toast.error(r.error);
           setPhase("idle");
@@ -85,6 +87,11 @@ export function NewOfferForm() {
         <Field label="Offer name" hint="Optional. We take it from the first source if you leave it blank." htmlFor="name" className="max-w-md">
           <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Retainer Launchpad" disabled={busy} />
         </Field>
+      </div>
+      <div className="rounded-card border border-line bg-surface p-5 shadow-card sm:p-6">
+        <h2 className="text-base font-semibold text-ink">Before we write</h2>
+        <p className="mb-5 mt-0.5 text-sm text-ink-muted">What a copywriter asks on day one and only you can answer. Everything here is treated as fact; blanks become questions later.</p>
+        <SetupFields value={setup} onChange={setSetup} disabled={busy} />
       </div>
       <div className="rounded-card border border-line bg-surface p-5 shadow-card sm:p-6">
         <h2 className="text-base font-semibold text-ink">Sources</h2>

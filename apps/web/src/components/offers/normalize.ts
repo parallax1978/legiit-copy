@@ -47,6 +47,8 @@ export function emptyBrief(): OfferBrief {
     competitors: [],
     urls: [],
     unknowns: [],
+    speaker: null,
+    lead_offer: null,
   };
 }
 
@@ -68,6 +70,8 @@ export function normalizeBrief(json: Json | null | undefined): OfferBrief {
     competitors: strArr(b.competitors),
     urls: strArr(b.urls),
     unknowns: strArr(b.unknowns),
+    speaker: b.speaker && typeof b.speaker === "object" ? { name: nstr(obj(b.speaker).name), role: nstr(obj(b.speaker).role) } : null,
+    lead_offer: nstr(b.lead_offer),
   };
 }
 

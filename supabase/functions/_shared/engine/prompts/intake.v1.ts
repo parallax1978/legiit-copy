@@ -3,7 +3,7 @@
  * Also exports the material renderers (brief, ledger, config, dossier, variant) the research, offer and argument
  * prompts share, so every step shows a model the same ledger with the same [[L:<id>]] handles.
  */
-import type { OfferBrief } from "../schemas/brief.ts";
+import { type OfferBrief, parseSetup, setupHasAnswers } from "../schemas/brief.ts";
 import type { Dossier } from "../schemas/research.ts";
 import type { OfferConfigRow, OfferQuestionRow, OfferVariantRow, StepContext } from "../steps/types.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, RULES } from "./standard.ts";
@@ -277,6 +277,18 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
   const parts = [
     xml("offer", xml("user_brief", Object.keys(userBrief).length ? neutralizeTags(json(userBrief)) : "(the user entered no notes)"), { id: ctx.offer.id, name: ctx.offer.name }),
   ];
+  const setup = parseSetup((ctx.offer as { setup?: unknown }).setup);
+  const hasSetup = setupHasAnswers(setup);
+  if (hasSetup) {
+    const lines = [
+      setup.speaker_name ? `Who signs the copy: ${neutralizeTags(setup.speaker_name)}${setup.speaker_role ? `, ${neutralizeTags(setup.speaker_role)}` : ""}` : null,
+      setup.reader ? `Who the reader is: ${neutralizeTags(setup.reader)}` : null,
+      setup.lead_offer ? `The offer every asset leads with: ${neutralizeTags(setup.lead_offer)}` : null,
+      setup.refund_policy ? `Refund or guarantee terms: ${neutralizeTags(setup.refund_policy)}` : null,
+      setup.proof_on_hand ? `Proof on hand (testimonials, results, numbers): ${neutralizeTags(setup.proof_on_hand)}` : null,
+    ].filter(Boolean);
+    parts.push(xml("setup", lines.join("\n")));
+  }
   if (ctx.claims.length) parts.push(xml("existing_ledger", renderClaims(ctx.claims), { count: ctx.claims.length }));
   if (ctx.questions.length) parts.push(renderQuestionsBlock(ctx.questions));
   parts.push(
@@ -292,6 +304,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
         "task",
         [
           `Call 1 of 2 for "${ctx.offer.name}": produce the brief, the config and the questions. No claims in this call: the ledger is call 2, with the whole output budget to itself, so return claims as an empty list.`,
+          hasSetup ? "The answers in <setup> are the user's own word and settle the matter: copy who signs the copy into brief.speaker and the lead offer into brief.lead_offer exactly as given, use the reader as brief.audience.who when the sources do not name one more precisely, and never ask a question <setup> answers." : "brief.speaker and brief.lead_offer come from the sources when they name a person or lead with one offer; null otherwise.",
           args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
           ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Never re-ask a question the user answered in <questions>." : null,
           "Blocking is rare: with a price, terms, deliverables, a mechanism and an identifiable reader on file, no question is blocking; a choice the source's own page already makes (the offer its calls to action lead with) is recorded as the default and asked as non-blocking. Never ask what the sources answer; when the sources answer half of a question, ask only the unsettled half.",
@@ -308,6 +321,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
       "task",
       [
         `Call 2 of 2 for "${ctx.offer.name}": the claims ledger, one row per fact in the sources (typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened). The brief in <brief> is already written; rows must agree with it. Return only claims.`,
+        hasSetup ? "Every fact the user stated in <setup> becomes a ledger row with evidence.source_ref \"user_setup\" and status unverified: a credential row for who signs the copy, a guarantee row for refund or guarantee terms, a results_testimonial or experience_testimonial row for each piece of proof on hand, an offer_term row for the lead offer." : null,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
         ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified." : null,
         "A suggested_rewrite keeps every alternative the source states (plan A or plan B, both prices, both terms); it never picks one for the user.",

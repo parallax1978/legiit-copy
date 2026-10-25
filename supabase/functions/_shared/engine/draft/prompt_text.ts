@@ -61,6 +61,8 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
     brief.terms ? `terms: ${brief.terms}` : "",
     `guarantee: ${brief.guarantee.text ?? "none"}${brief.guarantee.days ? ` (${brief.guarantee.days} days)` : ""}${brief.guarantee.denominated ? " denominated" : ""}`,
     `audience: ${brief.audience.who}${brief.audience.situation ? `; situation: ${brief.audience.situation}` : ""}`,
+    brief.speaker?.name ? `signed by: ${brief.speaker.name}${brief.speaker.role ? `, ${brief.speaker.role}` : ""}` : "",
+    brief.lead_offer ? `lead offer (every asset states this one deal): ${brief.lead_offer}` : "",
     brief.positioning ? `positioning: ${brief.positioning}` : "",
     brief.proof_available.length ? `proof available: ${brief.proof_available.map((p) => `${p.claim} — ${p.evidence}${p.source ? ` (${p.source})` : ""}`).join(" | ")}` : "",
     brief.competitors.length ? `competitors: ${brief.competitors.join(", ")}` : "",

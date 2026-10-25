@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { FORMAT_IDS } from "@engine/schemas/common.ts";
 import { initialSteps, nextSteps } from "@engine/pipeline.ts";
+import { MAX_REVISION_CYCLES } from "@engine/config.ts";
 import { renderMarkdown, stripLedger } from "@engine/render.ts";
 
 describe("engine modules used by the web app", () => {
@@ -18,7 +19,7 @@ describe("engine modules used by the web app", () => {
     const done = { hasActiveResearch: true, hasApprovedOffer: true, completed: ["editorial", "mechanical", "factual"] as const, revisionCycles: 0 };
     expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "APPROVE" })).toEqual(["ship"]);
     expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE" })).toEqual(["revise"]);
-    expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE", revisionCycles: 2 })).toEqual(["ship"]);
+    expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE", revisionCycles: MAX_REVISION_CYCLES })).toEqual(["ship"]);
   });
   it("renders blocks to markdown and strips ledger tags", () => {
     const md = renderMarkdown({ sections: [{ section_id: "s", title: null, blocks: [{ id: "1", type: "headline", text: "Hello [[L:abc12345]]", items: null, meta: null }] }] });

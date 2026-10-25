@@ -75,7 +75,35 @@ const SourcesInput = z.object({
 export type SourcesInput = z.input<typeof SourcesInput>;
 
 /** Step 1 of the new-offer flow: create the shell so files can be uploaded under its id. */
-export async function createOffer(input: { name?: string; firstUrl?: string; firstFile?: string; description?: string }): Promise<ActionResult<{ offerId: string; workspaceId: string }>> {
+const SetupInput = z.object({
+  speaker_name: z.string().trim().max(120).default(""),
+  speaker_role: z.string().trim().max(120).default(""),
+  reader: z.string().trim().max(500).default(""),
+  lead_offer: z.string().trim().max(500).default(""),
+  refund_policy: z.string().trim().max(1000).default(""),
+  proof_on_hand: z.string().trim().max(4000).default(""),
+});
+export type SetupInput = z.input<typeof SetupInput>;
+function setupJson(raw: unknown): J {
+  const r = SetupInput.safeParse(raw ?? {});
+  const s = r.success ? r.data : SetupInput.parse({});
+  return Object.fromEntries(Object.entries(s).map(([k, v]) => [k, v || null])) as J;
+}
+
+/** The setup answers (who signs, the reader, the lead offer, refunds, proof). Optionally reads the sources again so the brief and ledger use them. */
+export async function saveSetup(offerId: string, raw: SetupInput, reextract = false): Promise<ActionResult> {
+  const g = await editor();
+  if (!g.ok) return fail(g.error);
+  const offer = await loadOffer(g.ctx, offerId);
+  if (!offer) return fail("Offer not found.");
+  const { error } = await g.ctx.supabase.from("offers").update({ setup: setupJson(raw) }).eq("id", offer.id);
+  if (error) return fail(error.message);
+  revalidateOffer(offer.id);
+  if (reextract) return reextractOffer(offer.id);
+  return done();
+}
+
+export async function createOffer(input: { name?: string; firstUrl?: string; firstFile?: string; description?: string; setup?: SetupInput }): Promise<ActionResult<{ offerId: string; workspaceId: string }>> {
   const g = await editor();
   if (!g.ok) return fail(g.error);
   const { supabase, workspaceId, userId } = g.ctx;
@@ -86,7 +114,7 @@ export async function createOffer(input: { name?: string; firstUrl?: string; fir
   if (!name) name = "Untitled offer";
   const { data, error } = await supabase
     .from("offers")
-    .insert({ workspace_id: workspaceId, name: name.slice(0, 120), status: "draft", created_by: userId })
+    .insert({ workspace_id: workspaceId, name: name.slice(0, 120), status: "draft", created_by: userId, setup: setupJson(input.setup) })
     .select("id")
     .single();
   if (error) return fail(error.message);
