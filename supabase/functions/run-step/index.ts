@@ -24,6 +24,8 @@ import { type AppliedEffects, applyEffects, buildContext } from "engine/context.
 
 /** pgmq visibility timeout used by app.dispatch_pipeline; a running row older than this is presumed dead. */
 const VISIBILITY_MS = 450_000;
+/** A failed attempt is re-enqueued this soon; the dispatcher polls every five seconds. */
+const RETRY_DELAY_SECONDS = 15;
 
 const Body = z.object({
   msg_id: z.coerce.number().int(),
@@ -453,11 +455,15 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
       const attemptsUsed = Math.max(a.readCt, a.failedBefore + 1);
       await failGeneration(db, a, `${label(a.step)} could not finish${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${plainReason(e)}. Use "Retry" to run it again; if it keeps failing, support can read the details.`);
     } else {
-      // not acked: pgmq makes the message visible again after the visibility timeout and the dispatcher retries it
+      // Retry now, not after the 450s visibility timeout: re-enqueue the step with a short delay and ack this
+      // delivery. The attempt cap counts rows, so the cap holds across re-enqueues. If the enqueue fails the
+      // message is left unacked and the visibility timeout redelivers it.
       await db
         .from("generations")
-        .update({ progress_message: `${label(a.step)}: ${plainReason(e)}; starting it again in a few minutes.`.slice(0, 500) })
+        .update({ progress_message: `${label(a.step)}: ${plainReason(e)}; starting it again.`.slice(0, 500) })
         .eq("id", a.gen.id);
+      await enqueue(db, a.gen.id, a.step, RETRY_DELAY_SECONDS);
+      await ack(db, a.msgId);
     }
   } catch (err) {
     console.error(`${a.tag} failure bookkeeping failed`, err);
@@ -579,8 +585,8 @@ function isVerdict(v: unknown): v is "REJECT" | "REVISE" | "APPROVE" {
   return v === "REJECT" || v === "REVISE" || v === "APPROVE";
 }
 
-async function enqueue(db: Db, generationId: string, step: StepName): Promise<void> {
-  const { error } = await db.rpc("enqueue_step", { p_generation_id: generationId, p_step: step });
+async function enqueue(db: Db, generationId: string, step: StepName, delaySeconds = 0): Promise<void> {
+  const { error } = await db.rpc("enqueue_step", { p_generation_id: generationId, p_step: step, p_delay_seconds: delaySeconds });
   if (error) throw new Error(`enqueue_step(${step}) failed: ${error.message}`);
 }
 async function ack(db: Db, msgId: number): Promise<void> {
