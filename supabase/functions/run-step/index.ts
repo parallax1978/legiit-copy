@@ -403,8 +403,15 @@ async function continueLater(db: Db, a: ContinueArgs, result: StepResult, savedP
 }
 
 /** The checkpoint to resume from: the newest attempt of this pass that stopped (continued, interrupted, failed) with output.partial. */
+/**
+ * The checkpoint to resume from: the newest continued, interrupted or failed attempt of this pass. A completed
+ * attempt ends the search: a checkpoint older than a completion belongs to a finished run of the step, and a
+ * requeue after it (Try another angle, Retry on a later step) must start the step afresh, not replay the old
+ * candidates with the new exclusions ignored.
+ */
 function resumePartial(thisPass: StepRowLite[]): unknown | null {
   for (const r of [...thisPass].reverse()) {
+    if (r.status === "completed") return null;
     if (r.status !== "continued" && r.status !== "interrupted" && r.status !== "failed") continue;
     const out = asRecord(r.output);
     if (out && "partial" in out && out.partial !== undefined) return out.partial ?? null;

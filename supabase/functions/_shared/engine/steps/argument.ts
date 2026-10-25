@@ -14,7 +14,7 @@
  */
 import { z } from "zod";
 import { assembleArgument, gateCandidates, indexJudged, isSurvivor, type JudgedEntry, ScoringOutput } from "../argument/assemble.ts";
-import { CandidatesOutput, normalizeCandidates, readExclusions } from "../argument/candidates.ts";
+import { CandidatesOutput, isExcluded, normalizeCandidates, readExclusions } from "../argument/candidates.ts";
 import { computeClusterTable, renderClusterTable } from "../argument/magnitude.ts";
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
@@ -105,8 +105,10 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const common = { brief, claims, dossier, variant: ctx.variant, clusterTable, formatName: ctx.format.name, piece: { purpose: opts.purpose ?? null, cta: opts.cta ?? null, instructions: opts.instructions ?? null } };
     const partial = parseArgumentPartial(ctx.partial) ?? {};
 
-    let candidates = partial.candidates ?? [];
-    let droppedReasons = partial.dropped ?? [];
+    // A checkpoint written before an exclusion was added still carries the excluded candidates: filter here too.
+    const stale = (partial.candidates ?? []).filter((c) => isExcluded(c, exclusions));
+    let candidates = (partial.candidates ?? []).filter((c) => !isExcluded(c, exclusions));
+    let droppedReasons = [...(partial.dropped ?? []), ...stale.map((c) => `${c.id} excluded: ${c.big_idea}`)];
     let model: string | undefined;
     if (!candidates.length) {
       const retry = !!partial.retry;
