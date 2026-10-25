@@ -35,6 +35,8 @@ export interface ScoringArgs extends Common {
   phase: "scoring";
   survivors: GatedCandidate[];
   formatName: string;
+  /** Set on the retry after a truncated output: one-sentence rationales. */
+  compact?: boolean;
 }
 
 export type ArgumentArgs = CandidatesArgs | ScoringArgs;
@@ -115,7 +117,8 @@ export function argumentUser(ctx: StepContext, args: ArgumentArgs): string {
         `Score each of the ${args.survivors.length} survivors on C4-C14 for "${args.brief.product_name}" written as ${args.formatName} for "${args.brief.audience.who}".`,
         `Use the anchored table in Section 2 of the system text verbatim; integers only; C9 is 3, 2 or 1 as defined for phase 2.`,
         `Return scored: one entry per survivor id with scores and rationale.`,
-      ].join("\n"),
+        args.compact ? "The previous attempt ran past the output budget: one sentence of rationale per survivor, citing one verbatim id and one ledger id at most." : null,
+      ].filter(Boolean).join("\n"),
     ),
   );
   return parts.join("\n\n");

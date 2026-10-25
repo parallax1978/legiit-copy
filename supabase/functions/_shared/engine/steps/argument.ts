@@ -6,23 +6,49 @@
  *   4. code: weighted totals, tie-breaks (C9, C3, C14), three finalists, the winner, two losers kept
  *   5. code: the thesis sentence in the exact form of Section 1, rule 1
  * The runner writes the angles from the effects and sets selected_angle_id from isWinner.
+ *
+ * Resumable: the candidates are checkpointed (ctx.savePartial) so scoring can run in the next invocation when
+ * the budget is short, and a truncated call checkpoints a retry flag: the next invocation asks for fewer
+ * candidates (or one-sentence rationales) at one rung less effort. Candidate generation runs one rung below
+ * the step's effort: it is a search, and thinking shares max_tokens with twenty candidates.
  */
+import { z } from "zod";
 import { assembleArgument, gateCandidates, indexJudged, isSurvivor, type JudgedEntry, ScoringOutput } from "../argument/assemble.ts";
 import { CandidatesOutput, normalizeCandidates, readExclusions } from "../argument/candidates.ts";
 import { computeClusterTable, renderClusterTable } from "../argument/magnitude.ts";
-import { MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
-import { callModel } from "../llm.ts";
+import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
+import { callModel, TruncatedError } from "../llm.ts";
 import argumentPrompt from "../prompts/argument.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { formatExamplesForPrompt, retrieve } from "../retrieval.ts";
-import { ArgumentOutput } from "../schemas/argument.ts";
+import { ArgumentOutput, Candidate } from "../schemas/argument.ts";
 import type { OfferBrief } from "../schemas/brief.ts";
 import type { Dossier } from "../schemas/research.ts";
 import { requireDossier } from "./offer.ts";
+import { remainingBudgetMs } from "./budget.ts";
 import { requireBrief } from "./research.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
 export const CANDIDATE_COUNT = 20;
+export const CANDIDATE_RETRY_COUNT = 12;
+/** Scoring needs about this long; with less left in the invocation the step checkpoints and continues later. */
+export const SCORING_ESTIMATE_MS = 150_000;
+export const CANDIDATES_RETRY_REASON = "Candidate generation ran past the output budget; retrying with fewer candidates";
+export const SCORING_RETRY_REASON = "Scoring ran past the output budget; retrying with one-sentence rationales";
+
+/** The checkpoint between invocations (generation_steps.output.partial). */
+export const ArgumentPartial = z.object({
+  candidates: z.array(Candidate).optional(),
+  dropped: z.array(z.string()).optional(),
+  /** candidates missing: retry candidate generation with fewer; candidates present: retry scoring compact. */
+  retry: z.boolean().optional(),
+});
+export type ArgumentPartial = z.infer<typeof ArgumentPartial>;
+
+export function parseArgumentPartial(p: unknown): ArgumentPartial | null {
+  const r = ArgumentPartial.safeParse(p);
+  return r.success ? r.data : null;
+}
 export const NO_SURVIVOR_PAUSE_REASON =
   "no candidate argument passed both gates (desire magnitude >= 4/9 with k >= 5 verbatims; a verifiable ledger fact covering the promise). Add proof rows to the ledger or verbatims to the research, then try another angle.";
 
@@ -75,31 +101,67 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const exclusions = readExclusions(ctx.generation.options, ctx.angles);
     const examples = await examplesForPrompt(ctx, brief, dossier, retrieveFn);
     const common = { brief, claims, dossier, variant: ctx.variant, clusterTable, formatName: ctx.format.name };
+    const partial = parseArgumentPartial(ctx.partial) ?? {};
 
-    await ctx.progress(`Generating ${CANDIDATE_COUNT} candidate arguments by search`);
-    const gen = await call({
-      ...base,
-      user: argumentPrompt.user(ctx, { phase: "candidates", ...common, count: CANDIDATE_COUNT, examples, exclusions }),
-      schema: CandidatesOutput,
-      log: log("argument.candidates"),
-    });
-    const { candidates, dropped } = normalizeCandidates(gen.output.candidates, table, exclusions);
+    let candidates = partial.candidates ?? [];
+    let droppedReasons = partial.dropped ?? [];
+    let model: string | undefined;
     if (!candidates.length) {
-      throw new Error(`the model returned no usable candidates (${dropped.length} dropped: ${dropped.map((x) => x.reason).join("; ") || "none"})`);
+      const retry = !!partial.retry;
+      const count = retry ? CANDIDATE_RETRY_COUNT : CANDIDATE_COUNT;
+      await ctx.progress(`Generating ${count} candidate arguments by search${retry ? " (retry after a truncated output)" : ""}`);
+      let gen;
+      try {
+        gen = await call({
+          ...base,
+          effort: retry ? lowerEffort(lowerEffort(base.effort)) : lowerEffort(base.effort),
+          timeoutMs: remainingBudgetMs(ctx),
+          user: argumentPrompt.user(ctx, { phase: "candidates", ...common, count, examples, exclusions }),
+          schema: CandidatesOutput,
+          log: log(retry ? "argument.candidates.retry_fewer" : "argument.candidates"),
+        });
+      } catch (e) {
+        if (!(e instanceof TruncatedError) || retry) throw e;
+        const next: ArgumentPartial = { retry: true };
+        await ctx.savePartial(next);
+        return { output: next, summary: "candidate generation ran past the output budget; retrying with fewer candidates", continueLater: { reason: CANDIDATES_RETRY_REASON } };
+      }
+      const norm = normalizeCandidates(gen.output.candidates, table, exclusions);
+      if (!norm.candidates.length) {
+        throw new Error(`the model returned no usable candidates (${norm.dropped.length} dropped: ${norm.dropped.map((x) => x.reason).join("; ") || "none"})`);
+      }
+      candidates = norm.candidates;
+      droppedReasons = norm.dropped.map((x) => x.reason);
+      model = gen.model;
+      const checkpoint: ArgumentPartial = { candidates, dropped: droppedReasons };
+      await ctx.savePartial(checkpoint);
+      if (remainingBudgetMs(ctx) < SCORING_ESTIMATE_MS) {
+        return { output: checkpoint, model, summary: `${candidates.length} candidates generated; scoring continues in the next invocation`, continueLater: { reason: `${candidates.length} candidates generated; scoring them next` } };
+      }
     }
 
     const gated = gateCandidates(candidates, table, claims);
     const survivors = gated.filter(isSurvivor);
     let judged: Record<string, JudgedEntry> = {};
-    let model = gen.model;
     if (survivors.length) {
-      await ctx.progress(`Scoring ${survivors.length} gate survivor${survivors.length === 1 ? "" : "s"} on C4-C14`);
-      const sc = await call({
-        ...base,
-        user: argumentPrompt.user(ctx, { phase: "scoring", ...common, survivors }),
-        schema: ScoringOutput,
-        log: log("argument.scoring"),
-      });
+      const compact = !!partial.candidates && !!partial.retry;
+      await ctx.progress(`Scoring ${survivors.length} gate survivor${survivors.length === 1 ? "" : "s"} on C4-C14${compact ? " (retry, one-sentence rationales)" : ""}`);
+      let sc;
+      try {
+        sc = await call({
+          ...base,
+          effort: compact ? lowerEffort(base.effort) : base.effort,
+          timeoutMs: remainingBudgetMs(ctx),
+          user: argumentPrompt.user(ctx, { phase: "scoring", ...common, survivors, compact }),
+          schema: ScoringOutput,
+          log: log(compact ? "argument.scoring.retry_compact" : "argument.scoring"),
+        });
+      } catch (e) {
+        if (!(e instanceof TruncatedError) || compact) throw e;
+        const next: ArgumentPartial = { candidates, dropped: droppedReasons, retry: true };
+        await ctx.savePartial(next);
+        return { output: next, model, summary: "scoring ran past the output budget; retrying with one-sentence rationales", continueLater: { reason: SCORING_RETRY_REASON } };
+      }
       judged = indexJudged(sc.output);
       model = sc.model;
     }
@@ -107,7 +169,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const asm = assembleArgument({ gated, judged, reader: brief.audience.who });
     const output = ArgumentOutput.parse(asm.output);
     const winner = output.candidates.find((c) => c.id === output.winner_id)!;
-    const droppedNote = dropped.length ? `; ${dropped.length} dropped (${dropped.map((x) => x.reason).join("; ")})` : "";
+    const droppedNote = droppedReasons.length ? `; ${droppedReasons.length} dropped (${droppedReasons.join("; ")})` : "";
 
     const result: StepResult<ArgumentOutput> = {
       output,

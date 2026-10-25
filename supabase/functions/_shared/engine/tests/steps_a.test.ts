@@ -13,7 +13,7 @@ import { ArgumentOutput } from "../schemas/argument.ts";
 import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";
 import { type OfferConstruction } from "../schemas/offer.ts";
 import { type Dossier, type ResearchCollect, type ResearchSynthesis } from "../schemas/research.ts";
-import { type ArgumentDeps, CANDIDATE_COUNT, makeArgumentStep, NO_SURVIVOR_PAUSE_REASON } from "../steps/argument.ts";
+import { type ArgumentDeps, type ArgumentPartial, CANDIDATE_COUNT, CANDIDATE_RETRY_COUNT, CANDIDATES_RETRY_REASON, makeArgumentStep, NO_SURVIVOR_PAUSE_REASON, SCORING_RETRY_REASON } from "../steps/argument.ts";
 import { INTAKE_RETRY_ROW_CAP, makeIntakeStep, prepareSources, type RawSource } from "../steps/intake.ts";
 import { ensureOfferLedgerRows, makeOfferStep, OFFER_PAUSE_REASON } from "../steps/offer.ts";
 import { COLLECT_RETRY_REASON, fetchFirstUrls, finalizeDossier, makeResearchStep, requireBrief, type ResearchPartial } from "../steps/research.ts";
@@ -694,7 +694,8 @@ Deno.test("argument step: two calls, code gates between them, exclusions honored
   const res = await makeArgumentStep({ call, retrieve: retrieveFake })(ctx);
 
   assertEquals(calls.map((c) => c.purpose), ["argument.candidates", "argument.scoring"]);
-  assertEquals(calls.every((c) => c.system === argumentPrompt.system && c.effort === "xhigh" && c.maxTokens === 12000), true);
+  assertEquals(calls.every((c) => c.system === argumentPrompt.system && c.maxTokens === 12000), true);
+  assertEquals(calls.map((c) => c.effort), ["high", "xhigh"]); // candidates one rung below the step; scoring at the step's effort
   assertStringIncludes(calls[0].system, "| C9 | Claim ≤ proof | 2 |");
   const u1 = calls[0].user;
   assertStringIncludes(u1, "<phase>\ncandidates\n</phase>");
@@ -785,6 +786,73 @@ Deno.test("argument step: no survivors means one call, nothing selected, pause",
   assertEquals(out.finalist_ids, []);
   assertEquals((res.effects?.angles ?? []).some((a) => a.isWinner), false);
   assertStringIncludes(res.summary, "No candidate passed both gates");
+});
+
+const noRetrieve = (() => Promise.resolve({ examples: [], critiques: [] })) as unknown as ArgumentDeps["retrieve"];
+const SCORED_A1 = { scored: [{ id: "A01", scores: judgedAll({ C9: 3 }), rationale: "r" }] }; // candidates are renumbered A01, A02, ... on parse
+
+Deno.test("argument step: candidates are checkpointed; a short budget defers scoring to the next invocation", async () => {
+  const { call, calls } = fakeCall(() => ({ cluster_vocabulary_used: ["routine"], candidates: [cand("A1", "routine", ["c-guar"])] }));
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, timeBudgetMs: 100_000 });
+  const res = await makeArgumentStep({ call, retrieve: noRetrieve })(ctx);
+  assertEquals(calls.map((c) => c.purpose), ["argument.candidates"]);
+  assertEquals(res.continueLater?.reason, "1 candidates generated; scoring them next");
+  assertEquals(ctx.saved.length, 1);
+  const saved = ctx.saved[0] as ArgumentPartial;
+  assertEquals(saved.candidates?.map((c) => c.id), ["A01"]);
+  assertEquals(saved.retry, undefined);
+
+  // the next invocation resumes from the checkpoint: no candidates call, scoring only
+  const resume = fakeCall(() => SCORED_A1);
+  const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: saved });
+  const res2 = await makeArgumentStep({ call: resume.call, retrieve: noRetrieve })(ctx2);
+  assertEquals(resume.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring", "xhigh"]]);
+  assertEquals(res2.continueLater, undefined);
+  assertEquals(ArgumentOutput.parse(res2.output).winner_id, "A01");
+  assertEquals((res2.effects?.angles ?? []).filter((a) => a.isWinner).length, 1);
+});
+
+Deno.test("argument step: a truncated candidates call is retried next invocation with fewer candidates at less effort", async () => {
+  const first = fakeCall(() => {
+    throw new TruncatedError("{partial");
+  });
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER });
+  const res = await makeArgumentStep({ call: first.call, retrieve: noRetrieve })(ctx);
+  assertEquals(res.continueLater?.reason, CANDIDATES_RETRY_REASON);
+  assertEquals(ctx.saved, [{ retry: true }]);
+
+  const second = fakeCall((rec) => (rec.purpose.startsWith("argument.candidates") ? { cluster_vocabulary_used: ["routine"], candidates: [cand("A1", "routine", ["c-guar"])] } : SCORED_A1));
+  const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: { retry: true } });
+  const res2 = await makeArgumentStep({ call: second.call, retrieve: noRetrieve })(ctx2);
+  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.candidates.retry_fewer", "medium"], ["argument.scoring", "xhigh"]]);
+  assertStringIncludes(second.calls[0].user, `${CANDIDATE_RETRY_COUNT} candidates`);
+  assertEquals(res2.continueLater, undefined);
+
+  const third = fakeCall(() => {
+    throw new TruncatedError("{partial");
+  });
+  await assertRejects(() => makeArgumentStep({ call: third.call, retrieve: noRetrieve })(fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: { retry: true } })), TruncatedError);
+});
+
+Deno.test("argument step: a truncated scoring call keeps the candidates and retries compact next invocation", async () => {
+  const candidates = [cand("A1", "routine", ["c-guar"])];
+  const first = fakeCall((rec) => {
+    if (rec.purpose === "argument.candidates") return { cluster_vocabulary_used: ["routine"], candidates };
+    throw new TruncatedError("{partial");
+  });
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER });
+  const res = await makeArgumentStep({ call: first.call, retrieve: noRetrieve })(ctx);
+  assertEquals(res.continueLater?.reason, SCORING_RETRY_REASON);
+  assertEquals(ctx.saved.length, 2);
+  const saved = ctx.saved[1] as ArgumentPartial;
+  assertEquals([saved.candidates?.length, saved.retry], [1, true]);
+
+  const second = fakeCall(() => SCORED_A1);
+  const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: saved });
+  const res2 = await makeArgumentStep({ call: second.call, retrieve: noRetrieve })(ctx2);
+  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring.retry_compact", "high"]]);
+  assertStringIncludes(second.calls[0].user, "one sentence of rationale per survivor");
+  assertEquals(ArgumentOutput.parse(res2.output).winner_id, "A01");
 });
 
 Deno.test("argument step: the model returning only excluded candidates is an error", async () => {
