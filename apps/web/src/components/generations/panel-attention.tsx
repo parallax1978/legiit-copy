@@ -29,7 +29,8 @@ export function collectAttention(detail: GenerationDetail, current: DraftRow | n
 }
 
 export function attentionCount(items: AttentionItems): number {
-  return items.attention.length + items.needsSource.length + items.questions.length;
+  // open questions belong to the offer, not this piece; they are shown but not counted against it
+  return items.attention.length + items.needsSource.length;
 }
 
 export function AttentionPanel({ items, offerId }: { items: AttentionItems; offerId: string | null }) {

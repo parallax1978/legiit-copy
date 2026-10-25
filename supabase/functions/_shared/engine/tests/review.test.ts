@@ -227,7 +227,7 @@ Deno.test("revisionQuotes gathers every note source; diffBlocks reports changed,
 
 // ---------------------------------------------------------------- ship
 
-Deno.test("userAttention lists pending fatal/high flags, NEEDS SOURCE lines and open questions, deduplicated", () => {
+Deno.test("userAttention lists pending fatal/high flags, deduplicated; sources and open questions have their own sections", () => {
   const items = userAttention({
     editorial: verdict({ verdict: "REJECT", reject_gate: "C" }),
     factual: null,
@@ -241,11 +241,9 @@ Deno.test("userAttention lists pending fatal/high flags, NEEDS SOURCE lines and 
     needsSource: ["Cuts the audit to 4 hours [[NEEDS SOURCE]]."],
     openQuestions: ["What is the refund window?"],
   });
-  assertEquals(items.length, 4);
+  assertEquals(items.length, 2);
   assert(items[0].startsWith("Fix first (copy chief)"));
   assert(items[1].startsWith("Fix first (fact check"));
-  assert(items[2].startsWith("Needs a source:"));
-  assert(items[3].startsWith("Unanswered question:"));
 
   const fallback = userAttention({
     editorial: verdict({ verdict: "REJECT", reject_gate: "C" }),

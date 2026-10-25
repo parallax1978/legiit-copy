@@ -299,12 +299,14 @@ export function userAttention(input: AttentionInput): string[] {
   for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` — "${f.quote}"` : ""}`);
   if (input.pendingFlags.length === 0) {
     if (input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
-      push(`Fix first (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} — "${input.editorial.one_thing.quote}"`);
+      // A rejection at a gate blocks; a "revise" note after the last revision pass is advice, not a blocker.
+      const label = input.editorial.verdict === "REJECT" ? "Fix first" : "Worth fixing";
+      push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} — "${input.editorial.one_thing.quote}"`);
     }
     for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} — "${f.quote}"`);
     for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`Fix first (tell check): ${r}`);
   }
-  for (const n of input.needsSource) push(`Needs a source: ${n}`);
-  for (const q of input.openQuestions) push(`Unanswered question: ${q}`);
+  // Lines that need a source and the offer's open questions are shown in their own sections of the piece
+  // (and the questions on the offer page); listing them here again made every piece look blocked.
   return out;
 }
