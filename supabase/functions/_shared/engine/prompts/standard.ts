@@ -4,7 +4,7 @@ export const RULES = `## 1. The standard
 
 Argument
 
-1. Sell one thing to one reader on one promise with one reason to believe it. Write the thesis first: "This draft exists to prove that [mechanism] is a different and superior way to get [promise] for [reader], and the proof is [carrier]."
+1. Sell one thing to one reader on one promise with one reason to believe it. The promise is the reader's outcome in the reader's terms: the finished thing they get or the state they want. The product's category and internals (that it is AI, its steps, its reviews, its research) are reasons to believe, placed in the body; they never are the promise, the headline or the deck's opening unless the reader's own verbatims ask for them by name. Write the thesis first: "This draft exists to prove that [mechanism] is a different and superior way to get [promise] for [reader], and the proof is [carrier]."
 2. Take the desire from the market's verbatims; every description of the reader's state maps to one.
 3. The headline and lead are set by the diagnosed awareness state of the traffic segment, never by the format.
 4. At sophistication stage 3 or higher the argument is a mechanism, stated in two parts (why the usual fixes fail, why this one works), in one step, with intuitive and empirical proof.
@@ -14,11 +14,11 @@ Argument
 
 Proof
 
-8. Never make the claim bigger than the proof. Size the claim to the ledger grade; never draft around a missing carrier.
+8. Never make the claim bigger than the proof. Size the claim to the ledger grade; never draft around a missing carrier, and never announce one: a claim with no carrier is cut, not confessed. With no result proof on file, promise the deliverable the ledger covers, stated as what the reader gets, and let the mechanism carry it.
 9. Every claim carries its proof within two sentences. No proof box, no proof wall at the end.
 10. Precision matches the evidence: 2,146 when the ledger holds 2,146, "about 2,000" when it holds about 2,000.
 11. Every study, number, name, credential, quote, price and deadline carries a ledger ID.
-12. One damaging admission per piece: true, minor, from the brief, followed at once by the claim it licenses.
+12. At most one damaging admission per piece, and only when the brief holds one: a true, minor flaw that makes the promise easier to believe (a price, a look, a limit this reader does not care about), followed at once by the claim it licenses. Never admit the absence of proof, tests, results, customers or reviews; that is not an admission, it is a confession, and it is a Tier 0 tell.
 13. Testimonials are documented people with a specific result, placed beside the claim they support. Never generate a testimonial, a composite or a narrator.
 
 Offer
@@ -57,6 +57,8 @@ export const ARGUMENT_SELECTION = `## 2. Argument selection
 3. Gates, before any sum. Desire: C1+C2+C3 ≥ 4 of 9 with k ≥ 5 verbatims (fewer passes only as provisional). Proof: C9 ≥ 2, meaning the ledger holds a verifiable fact that covers the promise.
 4. Score survivors on C4-C14. Weighted total = Σ weight × score, maximum 57.
 5. Tie-break: C9, then C3, then C14. Still tied, present both.
+A promise that restates the mechanism, or names the product's category or one of its steps, is a mechanism, not a promise: C5 and C11 score at most 1.
+
 6. Output three finalists, each with the lead verbatim, the belief to displace, the mechanism mapped to ledger rows and the proof asset. Keep the two losers as body reasons and the next two lead tests.
 7. A stated purpose. When the user states what the piece is for, each candidate carries its fit: named (its promise is the desire or big idea the purpose states, in the purpose's terms), serves (it advances the purpose's outcome by another desire) or none. The argument is chosen among the named survivors when there are any, else among those that serve; the rest are kept, ranked below, with the reason. A named or serving candidate passes the desire gate as provisional when the research is thin or silent on its cluster, so the user's steering is never failed by evidence alone; the proof gate still applies.
 
@@ -169,6 +171,7 @@ Tier 0, hard reject
 | Bracket placeholder | "[Product Name] helps [target audience]" | Fill from the ledger or stop |
 | Unledgered authority, study, number, name or credential | "A Harvard study found 73% of..." | The ledger item, or cut the claim |
 | "AI" in copy for a non-AI product | "our AI-powered approach" | Describe the mechanism |
+| Proof confession: announcing that a test, result, proof or customer does not exist | "No blind test has been run, so I won't tell you it sells better." | Cut it. Make only the claims the ledger carries; absence of proof is never copy (rules 8 and 12). Zero hits in 871,661 words of human direct response |
 | Markdown bold-label-colon bullets (\`**Label:**\`), markdown headings, or emoji bullets in email, video, message, social and audio formats | "**Speed:** get reports in minutes" | A sentence with the claim and its carrier. Plain-text "Label:" lines are human-normal (92% of human sales pages) and only count at Tier 3 above 3 per 1,000 words. Check-mark bullets on pages and commerce formats are allowed at one per 300 words |
 
 Tier 1, weight 4

@@ -541,3 +541,23 @@ Deno.test("raw text analysis skips gates that need block structure", () => {
   const r = analyzeText("A short page with no blocks at all.", { format: FORMATS.sales_letter });
   assertEquals(r.format_gate_failures, []);
 });
+
+Deno.test("proof confession: announcing missing proof is a Tier 0 hard reject; ordinary candor is not", () => {
+  const spec = FORMATS.landing_page_short;
+  const hit = (t: string) => analyzeText(t, { format: spec }).flags.some((f) => f.tell === "proof_confession");
+  for (const t of [
+    "Legiit Copy is new. No blind evaluation has been run yet, so I won't tell you it sells better than ChatGPT.",
+    "Here's what I can't show you yet: a blind test against a plain prompt.",
+    "It hasn't been proven to raise conversions.",
+    "We have no customer results yet, but here is how it works.",
+    "I won't claim this copy outsells your control.",
+  ]) assertEquals(hit(t), true, t);
+  for (const t of [
+    "I won't tell you it's easy. It takes a weekend.",
+    "Tested on 40 pages, it held its rate.",
+    "No contract, no setup fee, cancel any time.",
+    "You can't show a skeptic a promise. You can show him the ledger.",
+  ]) assertEquals(hit(t), false, t);
+  const r = analyzeText("No blind evaluation has been run yet, so I won't tell you it sells better.", { format: spec });
+  assertEquals(r.hard_fail, true);
+});

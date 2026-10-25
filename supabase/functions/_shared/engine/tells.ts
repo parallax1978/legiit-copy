@@ -132,6 +132,24 @@ export const TELLS: TellRule[] = [
 
   // ---- Tier 1: weight 4 (phrases at 0.00-0.02 per 1,000 in 879k human words) ----
   {
+    tier: 0, name: "proof_confession", weight: 10, scope: "all",
+    regex: new RegExp(
+      "\\b(?:no (?:blind |independent |split |a/b )?(?:test|evaluation|study|trial|comparison)s? (?:has|have) (?:yet )?been (?:run|done|conducted|completed)" +
+        `|(?:has|have)n${A}t (?:yet )?been (?:tested|proven|measured|evaluated)` +
+        `|(?:we|I) (?:have ?n${A}t|have not) (?:yet )?(?:tested|proven|measured)` +
+        `|can${A}t (?:show|prove) (?:you )?(?:yet|that it|it (?:sells|works|converts))` +
+        `|won${A}t (?:tell|claim|promise)(?: you)? (?:that )?(?:it|this|the copy|this copy) (?:sells|works|converts|outsells|beats)` +
+        "|(?:is|are|has|have) not (?:yet )?(?:been )?proven to" +
+        `|hasn${A}t been proven` +
+        "|no (?:customer )?(?:results|testimonials|reviews|case studies) (?:yet|to show)" +
+        `|(?:we|I) (?:don${A}t|do not) have (?:any )?(?:proof|results|testimonials|data) (?:yet|that))`,
+      "gi",
+    ),
+    example: "No blind test has been run, so I won't tell you it sells better.",
+    fix: "Cut it. Make only the claims the ledger carries; the absence of proof is never copy (rules 8 and 12).",
+    note: "Zero hits in 871,661 words of human direct response (900 documents); six in 2,410 words of the engine's own drafts before rule 12 was tightened.",
+  },
+  {
     tier: 1, name: "thats_why_we_built", weight: 4, scope: "all",
     regex: new RegExp(`\\bthat${A}s why (?:we|I) (?:created|built|made|designed|developed|put together)\\b`, "gi"),
     example: "That's why we built Reportly.",
