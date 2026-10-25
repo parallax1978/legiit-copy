@@ -180,12 +180,17 @@ export function formatRulesText(spec: FormatSpec): string {
   ].filter(Boolean).join("\n");
 }
 
-/** Sections rendered with ids so a reviewer can quote and a reviser can address blocks. Ledger tags kept. */
+/**
+ * Sections rendered with ids so a reviewer can quote and a reviser can address blocks. Ledger tags kept. The
+ * text is the block's own, without markdown decoration: the type label says what the block is, and a heading
+ * mark the renderer added once read to the copy chief as a markdown heading the drafter wrote (a gate D reject
+ * that cost a revision cycle).
+ */
 export function sectionsWithIds(sections: Section[]): string {
   return sections
     .map((s) => {
       const head = `=== section ${s.section_id}${s.title ? `: ${s.title}` : ""} ===`;
-      const body = s.blocks.map((b) => `[${b.id} | ${b.type}${b.meta?.role ? ` | ${b.meta.role}` : ""}] ${renderBlock(b)}`).join("\n\n");
+      const body = s.blocks.map((b) => `[${b.id} | ${b.type}${b.meta?.role ? ` | ${b.meta.role}` : ""}] ${renderBlock(b, { plain: true })}`).join("\n\n");
       return `${head}\n${body || "(empty)"}`;
     })
     .join("\n\n");

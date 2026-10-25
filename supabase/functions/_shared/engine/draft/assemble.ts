@@ -35,8 +35,21 @@ export interface AssembleInput {
   keepOrder?: boolean;
 }
 
+/** Heading marks and emphasis wrappers a drafter writes into a display block's text; the block type carries that. */
+const HEADING_MARK = /^\s{0,3}#{1,6}\s+/;
+const DISPLAY_BLOCKS = new Set(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button"]);
+export function cleanBlockText(sections: Section[]): Section[] {
+  return sections.map((s) => ({
+    ...s,
+    blocks: s.blocks.map((b) => {
+      if (!DISPLAY_BLOCKS.has(b.type) || !HEADING_MARK.test(b.text)) return b;
+      return { ...b, text: b.text.replace(HEADING_MARK, "").replace(/^\*\*(.+)\*\*$/s, "$1").trim() };
+    }),
+  }));
+}
+
 export function assembleDraft(input: AssembleInput): DraftOutput {
-  const sections = input.keepOrder ? input.sections : orderSections(input.spec, input.sections);
+  const sections = cleanBlockText(input.keepOrder ? input.sections : orderSections(input.spec, input.sections));
   const fromText = needsSourceLines(sections);
   const needs = [...fromText];
   for (const n of input.needsSource ?? []) {

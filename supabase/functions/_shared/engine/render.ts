@@ -12,8 +12,28 @@ export function renderSection(s: Section, opts: { stripLedger?: boolean } = {}):
   return s.blocks.map((b) => renderBlock(b, opts)).filter(Boolean).join("\n\n");
 }
 
-export function renderBlock(b: Block, opts: { stripLedger?: boolean } = {}): string {
+/**
+ * One block as markdown. `plain` drops the markdown decoration (heading marks, emphasis, quote and button
+ * brackets) and keeps only list markers: the view reviewers and revisers get, where the block type is already
+ * labelled, so a heading mark the renderer added can never read as a markdown heading the drafter wrote.
+ */
+export function renderBlock(b: Block, opts: { stripLedger?: boolean; plain?: boolean } = {}): string {
   const t = opts.stripLedger ? stripLedger(b.text) : b.text;
+  if (opts.plain) {
+    switch (b.type) {
+      case "bullets":
+        return (b.items ?? []).map((i) => `- ${opts.stripLedger ? stripLedger(i) : i}`).join("\n");
+      case "numbered":
+        return (b.items ?? []).map((i, n) => `${n + 1}. ${opts.stripLedger ? stripLedger(i) : i}`).join("\n");
+      case "ps":
+        return t.startsWith("P.S.") ? t : `P.S. ${t}`;
+      case "beat":
+      case "slide":
+        return `${b.meta?.timestamp ? `(${b.meta.timestamp}) ` : ""}${t}`;
+      default:
+        return t;
+    }
+  }
   switch (b.type) {
     case "preheadline":
       return `*${t}*`;
