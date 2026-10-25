@@ -109,7 +109,7 @@ export function EditorPage({ detail, canEdit, notice }: { detail: GenerationDeta
                 {!editing && (
                   <div className="flex items-center gap-1.5">
                     <Switch id="ledger-toggle" checked={showLedger} onCheckedChange={setShowLedger} aria-label="Show ledger references" />
-                    <Label htmlFor="ledger-toggle" className="text-xs text-ink-muted">Ledger refs</Label>
+                    <Label htmlFor="ledger-toggle" className="text-xs text-ink-muted">Show evidence</Label>
                   </div>
                 )}
                 {canEdit && !editing && (
