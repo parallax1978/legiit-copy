@@ -11,8 +11,7 @@ import {
   normalizeCluster,
   renderClusterTable,
   type VerbatimLike,
-  yearOf,
-} from "../argument/magnitude.ts";
+  yearOf, countCap } from "../argument/magnitude.ts";
 import { carrierValue, desireGate, ledgerIdOf, type LedgerClaimLike, proofGate } from "../argument/gates.ts";
 import {
   buildScores,
@@ -71,7 +70,7 @@ Deno.test("markers: the ported lexicons match the Python on every corpus row", (
 
 Deno.test("magnitude: reproduces magnitude.py bands for AG1, Motley Fool and ClickUp", () => {
   for (const [name, corpus] of Object.entries(FIXTURE.corpora)) {
-    const table = computeClusterTable(toVerbatims(corpus.rows), { useModelMarkers: false });
+    const table = computeClusterTable(toVerbatims(corpus.rows), { useModelMarkers: false, countFloors: false });
     assertEquals(table.length, Object.keys(corpus.expected).length, `${name}: cluster count`);
     for (const [cluster, exp] of Object.entries(corpus.expected)) {
       const got = findCluster(table, cluster);
@@ -87,12 +86,12 @@ Deno.test("magnitude: reproduces magnitude.py bands for AG1, Motley Fool and Cli
 });
 
 Deno.test("magnitude: the documented examples from the research doc", () => {
-  const ag1 = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const ag1 = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
   const energy = findCluster(ag1, "energy")!;
   assertEquals([energy.k, energy.magnitude], [13, 5]); // "Steady energy without coffee" (13 verbatims) passes desire
   const simplify = findCluster(ag1, "simplify")!;
   assertEquals([simplify.k, simplify.magnitude], [2, 6]); // "replace my supplements" at two verbatims: provisional
-  const fool = computeClusterTable(toVerbatims(FIXTURE.corpora.FOOL.rows), { useModelMarkers: false });
+  const fool = computeClusterTable(toVerbatims(FIXTURE.corpora.FOOL.rows), { useModelMarkers: false, countFloors: false });
   const returns = findCluster(fool, "returns")!;
   assertEquals([returns.k, returns.distinct_years, returns.c2, returns.magnitude], [29, 3, 2, 7]);
   // table ordering: largest cluster first
@@ -130,14 +129,33 @@ Deno.test("magnitude: distinct years lift staying power when the duration share 
   assertEquals(row.c3, 3); // 100% prevalence
 });
 
+Deno.test("magnitude: a share band needs the count behind it (Section 2, rule 2)", () => {
+  const v = (id: string, cluster: string, intense: boolean, dur = false): VerbatimLike => ({ id, text: "fine", desire_cluster: cluster, date: null, intensity_marker: intense, duration_marker: dur });
+  // six verbatims, three intense: 50% is band 3 by share, but three marked verbatims support band 2
+  const small = [v("a", "speed", true), v("b", "speed", true), v("c", "speed", true), v("d", "speed", false), v("e", "speed", false), v("f", "speed", false)];
+  // seventeen verbatims, two intense: 12% is band 1, and two marked verbatims support it
+  const big = Array.from({ length: 17 }, (_, i) => v(`g${i}`, "converts", i < 2));
+  const table = computeClusterTable([...small, ...big]);
+  assertEquals(findCluster(table, "speed")!.c1, 2);
+  assertEquals(findCluster(table, "converts")!.c1, 1);
+  assertEquals(findCluster(computeClusterTable([...small, ...big], { countFloors: false }), "speed")!.c1, 3);
+  // one duration marker in six is 17%: band 1 by share, band 0 by count
+  const one = [v("a", "x", false, true), v("b", "x", false), v("c", "x", false), v("d", "x", false), v("e", "x", false), v("f", "x", false)];
+  assertEquals(findCluster(computeClusterTable(one), "x")!.c2, 0);
+  assertEquals(findCluster(computeClusterTable(one, { countFloors: false }), "x")!.c2, 1);
+  assertEquals([countCap(0), countCap(1), countCap(2), countCap(3), countCap(4), countCap(5), countCap(9)], [0, 0, 1, 2, 2, 3, 3]);
+});
+
 Deno.test("magnitude: model markers count by default and can be switched off", () => {
   const vs: VerbatimLike[] = [
     { id: "a", text: "it works", desire_cluster: "x", date: null, intensity_marker: true, duration_marker: true },
     { id: "b", text: "it works", desire_cluster: "x", date: null, intensity_marker: false, duration_marker: false },
   ];
-  const [withTags] = computeClusterTable(vs);
+  const [withTags] = computeClusterTable(vs, { countFloors: false });
   assertEquals([withTags.urgency_pct, withTags.staying_pct, withTags.c1, withTags.c2], [50, 50, 3, 3]);
-  const [lexiconOnly] = computeClusterTable(vs, { useModelMarkers: false });
+  const [floored] = computeClusterTable(vs);
+  assertEquals([floored.c1, floored.c2], [0, 0]); // one marked verbatim supports no band
+  const [lexiconOnly] = computeClusterTable(vs, { useModelMarkers: false, countFloors: false });
   assertEquals([lexiconOnly.c1, lexiconOnly.c2], [0, 0]);
 });
 
@@ -165,7 +183,7 @@ Deno.test("magnitude: verbatims without a cluster count toward n only; cluster n
 /* ---------------------------------------------------------------- gates */
 
 Deno.test("desire gate: pass, provisional, fail, unknown cluster", () => {
-  const ag1 = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const ag1 = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
   assertEquals(desireGate(findCluster(ag1, "routine")).status, "pass"); // 7/9, k=10
   assertEquals(desireGate(findCluster(ag1, "energy")).status, "pass"); // 5/9, k=13
   const simplify = desireGate(findCluster(ag1, "simplify")); // 6/9, k=2
@@ -319,6 +337,7 @@ Deno.test("thesis: the exact form of Section 1, rule 1", () => {
 function candidate(id: string, over: Partial<CandidateT> = {}): CandidateT {
   return {
     id,
+    purpose_fit: "none",
     core_desire: "energy that lasts",
     cluster: "energy",
     k: 99,
@@ -351,7 +370,7 @@ Deno.test("exclusions: options and prior angles resolve to promises; matching ig
 });
 
 Deno.test("normalizeCandidates: ids reassigned, k recomputed, cluster snapped, excluded and duplicate promises dropped", () => {
-  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
   const ex = readExclusions({ exclude_promises: ["banned promise"] });
   const raw = [
     candidate("whatever", { cluster: "Energy", k: 5, proof_ledger_refs: [" a ", "a", "", "b"] }),
@@ -380,7 +399,7 @@ const LEDGER: LedgerClaimLike[] = [
 ];
 
 function ag1Gated(cands: CandidateT[]) {
-  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
   return gateCandidates(cands, table, LEDGER);
 }
 
@@ -455,7 +474,7 @@ Deno.test("purpose steering: a candidate that serves the stated purpose passes t
     candidate("A02", { cluster: "taste", proof_ledger_refs: ["guar"], promise: "greens that taste fine", serves_purpose: true }), // desire would fail; the purpose asserts it
     candidate("A03", { cluster: "nowhere", proof_ledger_refs: ["guar"], promise: "a plan before the site exists", serves_purpose: true }), // k=0, still provisional
   ];
-  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
   const gated = gateCandidates(cands, table, LEDGER, { purposeGiven: true });
   assertEquals(gated.map((g) => g.desire.status), ["pass", "provisional", "provisional"]);
   assertStringIncludes(gated[1].desire.reason, "the stated purpose names this desire");
@@ -467,6 +486,20 @@ Deno.test("purpose steering: a candidate that serves the stated purpose passes t
   const judged = indexJudged(ScoringOutput.parse({ scored: cands.map((c) => ({ id: c.id, scores: { ...allThrees, C9: 3 }, rationale: "r" })) }));
   const asm = assembleArgument({ gated, judged, reader: "a reader", purposeGiven: true });
   assertEquals(asm.output.winner_id, "A02"); // best among those serving the purpose; A01 would win on total alone
+
+  // the purpose names a desire: a candidate on it is chosen ahead of a higher-scoring one that merely serves
+  const named = [
+    candidate("A01", { cluster: "routine", proof_ledger_refs: ["guar"], promise: "a routine that holds", serves_purpose: true, purpose_fit: "serves" }),
+    candidate("A02", { cluster: "taste", proof_ledger_refs: ["guar"], promise: "greens that taste fine", serves_purpose: true, purpose_fit: "named" }),
+  ];
+  const namedGated = gateCandidates(named, table, LEDGER, { purposeGiven: true });
+  const namedJudged = indexJudged(ScoringOutput.parse({ scored: [{ id: "A01", scores: { ...allThrees, C9: 3 }, rationale: "r" }, { id: "A02", scores: { ...allThrees, C5: 1, C11: 1, C9: 3 }, rationale: "r" }] }));
+  const namedAsm = assembleArgument({ gated: namedGated, judged: namedJudged, reader: "a reader", purposeGiven: true });
+  assertEquals(namedAsm.output.winner_id, "A02");
+  assertStringIncludes(namedAsm.output.candidates.find((c) => c.id === "A01")!.rationale, "the stated purpose names another desire");
+  assertStringIncludes(namedAsm.output.tie_break_note ?? "", "names the desire A02");
+  // without a purpose the fit is ignored
+  assertEquals(assembleArgument({ gated: gateCandidates(named, table, LEDGER), judged: namedJudged, reader: "a reader" }).output.winner_id, "A01");
   assert(!asm.output.finalist_ids.includes("A01"));
   const a01 = asm.output.candidates.find((c) => c.id === "A01")!;
   assertStringIncludes(a01.rationale, "set aside: eligible, but it does not serve the stated purpose");

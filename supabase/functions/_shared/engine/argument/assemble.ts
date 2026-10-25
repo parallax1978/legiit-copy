@@ -120,13 +120,18 @@ export function assembleArgument(input: {
     };
   });
 
-  // With a stated purpose, the argument is chosen among the survivors that serve it; survivors that do not
-  // are kept in the output, ranked below, and say why they were set aside.
+  // With a stated purpose (Section 2, rule 7), the argument is chosen among the survivors whose promise is the
+  // desire the purpose names; failing any, among those that serve it. The rest are kept, ranked below, with why.
   const eligibleRows = rows.filter((r) => r.eligible);
-  const servers = eligibleRows.filter((r) => r.candidate.serves_purpose);
-  const pool = input.purposeGiven && servers.length ? servers : eligibleRows;
+  const named = eligibleRows.filter((r) => r.candidate.purpose_fit === "named");
+  const servers = eligibleRows.filter((r) => r.candidate.purpose_fit === "serves" || (r.candidate.purpose_fit === "none" && r.candidate.serves_purpose));
+  const pool = !input.purposeGiven ? eligibleRows : named.length ? named : servers.length ? servers : eligibleRows;
   const setAside = eligibleRows.filter((r) => !pool.includes(r));
-  for (const r of setAside) r.rationale += " | set aside: eligible, but it does not serve the stated purpose of this piece";
+  for (const r of setAside) {
+    r.rationale += named.length && pool === named
+      ? " | set aside: eligible, but the stated purpose names another desire, and candidates on that desire passed both gates"
+      : " | set aside: eligible, but it does not serve the stated purpose of this piece";
+  }
   const ranked = rankCandidates(pool);
   const rest = [...rankCandidates(setAside), ...rows
     .filter((r) => !r.eligible)
@@ -147,7 +152,11 @@ export function assembleArgument(input: {
   const notes: string[] = [];
   const tie = describeTieBreak(ranked);
   if (tie) notes.push(tie);
-  if (setAside.length) notes.push(`${setAside.length} candidate${setAside.length === 1 ? "" : "s"} passed both gates but did not serve the stated purpose and ${setAside.length === 1 ? "was" : "were"} set aside.`);
+  if (setAside.length) {
+    notes.push(pool === named && named.length
+      ? `${setAside.length} candidate${setAside.length === 1 ? "" : "s"} passed both gates but ${setAside.length === 1 ? "was" : "were"} set aside: the stated purpose names the desire ${named.map((r) => r.id).join(", ")} ${named.length === 1 ? "sits" : "sit"} on.`
+      : `${setAside.length} candidate${setAside.length === 1 ? "" : "s"} passed both gates but did not serve the stated purpose and ${setAside.length === 1 ? "was" : "were"} set aside.`);
+  }
   if (input.purposeGiven && !servers.length && eligibleRows.length) notes.push("No survivor serves the stated purpose; the winner is the best evidence-backed argument instead. Refresh the research or restate the purpose if that is not the piece you want.");
   if (noSurvivors) {
     notes.push(

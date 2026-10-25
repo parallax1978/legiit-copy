@@ -14,6 +14,7 @@ export const Candidate = z.object({
   proof_ledger_refs: z.array(z.string()),
   search_origin: z.enum(["unused_fact", "opposite_idea", "mechanism_in_process", "verbatim", "other"]),
   serves_purpose: z.boolean().default(false).describe("true when the promise is what the PURPOSE in <piece> asks this piece to achieve; false when no purpose was given"),
+  purpose_fit: z.enum(["named", "serves", "none"]).default("none").describe("named: the promise is the desire or big idea the PURPOSE states, in its terms; serves: it advances the purpose's outcome by another desire; none: otherwise, or no purpose given"),
 });
 
 export const Gates = z.object({

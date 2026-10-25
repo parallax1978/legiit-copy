@@ -84,12 +84,16 @@ export function normalizeCandidates(raw: CandidateT[], table: ClusterStats[], ex
     }
     seen.add(key);
     const stats = findCluster(table, c.cluster);
+    // purpose_fit is the finer reading; the boolean follows it (a model that set only the boolean keeps "serves")
+    const purpose_fit = c.purpose_fit !== "none" ? c.purpose_fit : c.serves_purpose ? "serves" : "none";
     out.push({
       ...c,
       id,
       cluster: stats?.cluster ?? c.cluster.trim().toLowerCase(),
       k: stats?.k ?? 0,
       proof_ledger_refs: [...new Set(c.proof_ledger_refs.map(ledgerIdOf).filter(Boolean))],
+      purpose_fit,
+      serves_purpose: purpose_fit !== "none",
     });
   }
   return { candidates: out, dropped };

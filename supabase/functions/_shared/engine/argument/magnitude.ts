@@ -28,6 +28,17 @@ export interface MagnitudeOptions {
    * Set false to reproduce magnitude.py exactly.
    */
   useModelMarkers?: boolean;
+  /**
+   * Cap each share band at what its count supports (Section 2, rule 2): two marked verbatims for band 1, three
+   * for band 2, five for band 3. Default true. Set false to reproduce magnitude.py's raw shares.
+   */
+  countFloors?: boolean;
+}
+
+/** Marked verbatims a share band needs: band 1, 2, 3. */
+export const COUNT_FLOORS: readonly number[] = [2, 3, 5];
+export function countCap(marked: number): number {
+  return band(marked, COUNT_FLOORS);
 }
 
 export interface ClusterStats {
@@ -88,11 +99,15 @@ export function computeClusterTable(verbatims: VerbatimLike[], opts: MagnitudeOp
   for (const [cluster, rows] of groups) {
     const k = rows.length;
     const prevalence = n ? (100 * k) / n : 0;
-    const urgency = (100 * rows.filter((v) => hasUrgencyMarker(v, opts)).length) / k;
-    const staying = (100 * rows.filter((v) => hasStayingMarker(v, opts)).length) / k;
+    const urgMarked = rows.filter((v) => hasUrgencyMarker(v, opts)).length;
+    const stayMarked = rows.filter((v) => hasStayingMarker(v, opts)).length;
+    const urgency = (100 * urgMarked) / k;
+    const staying = (100 * stayMarked) / k;
     const years = new Set(rows.map((v) => yearOf(v.date)).filter((y): y is string => y !== null)).size;
-    const c1 = band(urgency, URGENCY_CUTS);
-    const c2 = Math.max(band(staying, STAYING_SHARE_CUTS), band(years, STAYING_YEARS_CUTS));
+    const floors = opts.countFloors ?? true;
+    const c1 = floors ? Math.min(band(urgency, URGENCY_CUTS), countCap(urgMarked)) : band(urgency, URGENCY_CUTS);
+    const stayShareBand = floors ? Math.min(band(staying, STAYING_SHARE_CUTS), countCap(stayMarked)) : band(staying, STAYING_SHARE_CUTS);
+    const c2 = Math.max(stayShareBand, band(years, STAYING_YEARS_CUTS));
     const c3 = band(prevalence, SCOPE_CUTS);
     out.push({
       cluster,

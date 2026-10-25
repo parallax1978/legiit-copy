@@ -53,11 +53,12 @@ Process
 export const ARGUMENT_SELECTION = `## 2. Argument selection
 
 1. Generate twenty candidates per offer by search (the unused fact, the opposite of the category idea, the mechanism in the process), one line each: core desire [cluster, k] | promise | mechanism.
-2. Compute C1-C3 per cluster (\`research/rubric/magnitude.py\`): urgency = share of verbatims with intensity or time-pressure markers, banded 0-3 at 10/25/50 percent; staying power = the higher of the duration-marker share banded at 10/30/50 and distinct years banded at 2/3/4; scope = prevalence banded at 5/15/30 percent.
+2. Compute C1-C3 per cluster (\`research/rubric/magnitude.py\`): urgency = share of verbatims with intensity or time-pressure markers, banded 0-3 at 10/25/50 percent; staying power = the higher of the duration-marker share banded at 10/30/50 and distinct years banded at 2/3/4; scope = prevalence banded at 5/15/30 percent. A share band needs the count behind it: band 1 needs two marked verbatims, band 2 three, band 3 five; a small cluster stays at the band its count supports, so three intense quotes in a cluster of six do not outrank seventeen quieter ones. Years and prevalence are counts already.
 3. Gates, before any sum. Desire: C1+C2+C3 ≥ 4 of 9 with k ≥ 5 verbatims (fewer passes only as provisional). Proof: C9 ≥ 2, meaning the ledger holds a verifiable fact that covers the promise.
 4. Score survivors on C4-C14. Weighted total = Σ weight × score, maximum 57.
 5. Tie-break: C9, then C3, then C14. Still tied, present both.
 6. Output three finalists, each with the lead verbatim, the belief to displace, the mechanism mapped to ledger rows and the proof asset. Keep the two losers as body reasons and the next two lead tests.
+7. A stated purpose. When the user states what the piece is for, each candidate carries its fit: named (its promise is the desire or big idea the purpose states, in the purpose's terms), serves (it advances the purpose's outcome by another desire) or none. The argument is chosen among the named survivors when there are any, else among those that serve; the rest are kept, ranked below, with the reason. A named or serving candidate passes the desire gate as provisional when the research is thin or silent on its cluster, so the user's steering is never failed by evidence alone; the proof gate still applies.
 
 | # | Criterion | W | 0 | 1 | 2 | 3 |
 |---|---|---|---|---|---|---|

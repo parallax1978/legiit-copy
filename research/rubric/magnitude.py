@@ -6,6 +6,10 @@ URG = re.compile(r"\b(now|finally|every (single )?day|everyday|daily|can'?t|cann
 STAY = re.compile(r"\b(years?|months?|since \d{4}|still|again|always|for a while|long time|routine|every morning|every day|constantly|ongoing|used to|past \d+|\d+ years?)\b", re.I)
 def band(x, cuts):  # returns 0-3 given thresholds
     return sum(x >= c for c in cuts)
+FLOORS = (2, 3, 5)  # marked verbatims a share band needs: band 1, 2, 3 (docs/04 section 2, rule 2)
+FLOORS_ON = "--no-floors" not in sys.argv
+def cap(marked):
+    return band(marked, FLOORS)
 def analyse(name, rows, exclude=("svc","billing","support")):
     n = len(rows)
     print(f"\n=== {name}: n={n} verbatims ===")
@@ -15,10 +19,14 @@ def analyse(name, rows, exclude=("svc","billing","support")):
     out = {}
     for d, rs in sorted(clusters.items(), key=lambda kv: -len(kv[1])):
         k = len(rs); prev = 100*k/n
-        urg = 100*sum(bool(URG.search(r[2])) for r in rs)/k
-        stay = 100*sum(bool(STAY.search(r[2])) for r in rs)/k
+        urg_m = sum(bool(URG.search(r[2])) for r in rs); stay_m = sum(bool(STAY.search(r[2])) for r in rs)
+        urg = 100*urg_m/k
+        stay = 100*stay_m/k
         yrs = len({r[1][:4] for r in rs})
-        U = band(urg,(10,25,50)); S = max(band(stay,(10,30,50)), band(yrs,(2,3,4))); P = band(prev,(5,15,30))
+        U = band(urg,(10,25,50)); S_share = band(stay,(10,30,50))
+        if FLOORS_ON:
+            U = min(U, cap(urg_m)); S_share = min(S_share, cap(stay_m))
+        S = max(S_share, band(yrs,(2,3,4))); P = band(prev,(5,15,30))
         flag = "" if d not in exclude else "  (service complaint, not a buying desire)"
         print(f"{d:12}{k:4}{prev:7.0f}{urg:6.0f}{stay:7.0f}{yrs:4} | {U} {S} {P}  {U+S+P}{flag}")
         out[d]=(U,S,P)
