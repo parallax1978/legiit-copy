@@ -8,7 +8,7 @@ import type { Dossier } from "../schemas/research.ts";
 import type { OfferVariantRow, StepContext } from "../steps/types.ts";
 import type { CandidateT, Exclusions } from "../argument/candidates.ts";
 import type { GatedCandidate } from "../argument/assemble.ts";
-import { type ClaimLike, renderBrief, renderClaims, renderDossier, renderQuestionsBlock, renderVariant, xml } from "./intake.v1.ts";
+import { type ClaimLike, neutralizeTags, renderBrief, renderClaims, renderDossier, renderQuestionsBlock, renderVariant, xml } from "./intake.v1.ts";
 import { ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, RULES } from "./standard.ts";
 import { CACHE_BREAK, type PromptModule } from "./types.ts";
 
@@ -19,6 +19,8 @@ interface Common {
   variant: OfferVariantRow | null;
   /** renderClusterTable() output: cluster | k | prevalence | urgency | staying | years | C1 C2 C3 | magnitude | gate. */
   clusterTable: string;
+  /** What the user said this piece is for: the brief the argument must serve. */
+  piece?: { purpose?: string | null; cta?: string | null; instructions?: string | null };
 }
 
 export interface CandidatesArgs extends Common {
@@ -61,6 +63,16 @@ Output only the JSON object in the requested structure.`;
 
 export const ARGUMENT_SYSTEM = [ROLE, RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT].join("\n\n---\n\n");
 
+function renderPiece(p: Common["piece"]): string | null {
+  if (!p) return null;
+  const lines = [
+    p.purpose?.trim() ? `PURPOSE (what this piece has to achieve, in the user's words): ${neutralizeTags(p.purpose.trim())}` : null,
+    p.cta?.trim() ? `CALL TO ACTION: ${neutralizeTags(p.cta.trim())}` : null,
+    p.instructions?.trim() ? `INSTRUCTIONS FROM THE USER: ${neutralizeTags(p.instructions.trim())}` : null,
+  ].filter(Boolean);
+  return lines.length ? xml("piece", lines.join("\n")) : null;
+}
+
 function common(args: Common): string[] {
   return [
     xml("brief", renderBrief(args.brief)),
@@ -68,7 +80,8 @@ function common(args: Common): string[] {
     xml("claims", renderClaims(args.claims), { count: args.claims.filter((c) => c.user_decision !== "drop").length }),
     renderDossier(args.dossier),
     xml("cluster_table", args.clusterTable),
-  ];
+    renderPiece(args.piece),
+  ].filter((x): x is string => !!x);
 }
 
 function renderSurvivor(g: GatedCandidate): string {
@@ -99,6 +112,7 @@ export function argumentUser(ctx: StepContext, args: ArgumentArgs): string {
         [
           `Produce exactly ${args.count} candidates for "${args.brief.product_name}", to be written as ${args.formatName} for "${args.brief.audience.who}".`,
           `Use the cluster tokens and k values from <cluster_table> exactly. Cite proof_ledger_refs only from <claims>, each as the bare id (for [[L:abc]] write "abc").`,
+          args.piece?.purpose?.trim() ? `The piece has a stated purpose in <piece>: every candidate's promise must be one this piece can deliver toward that purpose, and at least half the candidates must sit on the desire the purpose names (search its cluster first, even when k is low; the gates will say what the evidence supports). A candidate that cannot serve the purpose is not a candidate.` : null,
           args.exclusions.promises.length ? `The user rejected the ${args.exclusions.promises.length} promise(s) in <excluded>: propose none of them and no close variant.` : null,
           `Return cluster_vocabulary_used and candidates.`,
         ]

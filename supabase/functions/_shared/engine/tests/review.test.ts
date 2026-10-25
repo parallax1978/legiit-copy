@@ -242,10 +242,10 @@ Deno.test("userAttention lists pending fatal/high flags, NEEDS SOURCE lines and 
     openQuestions: ["What is the refund window?"],
   });
   assertEquals(items.length, 4);
-  assert(items[0].startsWith("editorial fatal"));
-  assert(items[1].startsWith("factual high"));
-  assert(items[2].startsWith("NEEDS SOURCE"));
-  assert(items[3].startsWith("open question"));
+  assert(items[0].startsWith("Fix first (copy chief)"));
+  assert(items[1].startsWith("Fix first (fact check"));
+  assert(items[2].startsWith("Needs a source:"));
+  assert(items[3].startsWith("Unanswered question:"));
 
   const fallback = userAttention({
     editorial: verdict({ verdict: "REJECT", reject_gate: "C" }),
@@ -256,7 +256,7 @@ Deno.test("userAttention lists pending fatal/high flags, NEEDS SOURCE lines and 
     openQuestions: [],
   });
   assertEquals(fallback.length, 3, "without stored flags the step outputs stand in");
-  assert(fallback[0].includes("REJECT at Gate C"));
-  assert(fallback[1].includes("fabrication"));
-  assert(fallback[2].includes("mechanical hard fail"));
+  assert(fallback[0].startsWith("Fix first (copy chief, the claims)"));
+  assert(fallback[1].includes("invented fact"));
+  assert(fallback[2].includes("Fix first (tell check)"));
 });

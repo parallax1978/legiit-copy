@@ -331,6 +331,7 @@ function candidate(id: string, over: Partial<CandidateT> = {}): CandidateT {
     proof_ledger_refs: [],
     search_origin: "verbatim",
     ...over,
+    serves_purpose: over.serves_purpose ?? false,
   };
 }
 
@@ -446,6 +447,33 @@ Deno.test("assembly: gates, merged scores, finalists, winner, losers, thesis and
   assertEquals(asm.angles.slice(1).some((a) => a.thesis), false);
   // eligible rows come first, gated-out rows after
   assertEquals(out.candidates.slice(0, 3).map((c) => c.id), out.finalist_ids);
+});
+
+Deno.test("purpose steering: a candidate that serves the stated purpose passes the desire gate as provisional on thin evidence and is ranked ahead of evidence-backed survivors that do not", () => {
+  const cands = [
+    candidate("A01", { cluster: "routine", proof_ledger_refs: ["guar"], promise: "a routine that holds" }), // strong evidence, does not serve the purpose
+    candidate("A02", { cluster: "taste", proof_ledger_refs: ["guar"], promise: "greens that taste fine", serves_purpose: true }), // desire would fail; the purpose asserts it
+    candidate("A03", { cluster: "nowhere", proof_ledger_refs: ["guar"], promise: "a plan before the site exists", serves_purpose: true }), // k=0, still provisional
+  ];
+  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false });
+  const gated = gateCandidates(cands, table, LEDGER, { purposeGiven: true });
+  assertEquals(gated.map((g) => g.desire.status), ["pass", "provisional", "provisional"]);
+  assertStringIncludes(gated[1].desire.reason, "the stated purpose names this desire");
+  assertStringIncludes(gated[2].desire.reason, "no verbatim for it (k=0)");
+  assertEquals(gated.map(isSurvivor), [true, true, true]);
+  // without a purpose the same candidates fail as before
+  assertEquals(gateCandidates(cands, table, LEDGER).map((g) => g.desire.status), ["pass", "fail", "fail"]);
+
+  const judged = indexJudged(ScoringOutput.parse({ scored: cands.map((c) => ({ id: c.id, scores: { ...allThrees, C9: 3 }, rationale: "r" })) }));
+  const asm = assembleArgument({ gated, judged, reader: "a reader", purposeGiven: true });
+  assertEquals(asm.output.winner_id, "A02"); // best among those serving the purpose; A01 would win on total alone
+  assert(!asm.output.finalist_ids.includes("A01"));
+  const a01 = asm.output.candidates.find((c) => c.id === "A01")!;
+  assertStringIncludes(a01.rationale, "set aside: eligible, but it does not serve the stated purpose");
+  assertStringIncludes(asm.output.tie_break_note ?? "", "1 candidate passed both gates but did not serve the stated purpose");
+
+  const plain = assembleArgument({ gated: gateCandidates(cands, table, LEDGER), judged, reader: "a reader" });
+  assertEquals(plain.output.winner_id, "A01");
 });
 
 Deno.test("assembly: the exact ranking in the mixed case", () => {

@@ -91,6 +91,18 @@ export function renderCollected(c: ResearchCollect): string {
   );
 }
 
+/**
+ * Clusters are what the buyer is trying to get, never the irritation voiced. An argument is chosen by desire
+ * magnitude per cluster, so clusters built from complaints would make the engine sell relief from a competitor's
+ * billing instead of the outcome the market is buying.
+ */
+export const OUTCOME_RULE = [
+  "desire_cluster names the OUTCOME the speaker is trying to buy (what they want to have, do or stop losing), never the irritation they voice.",
+  "A complaint about a product they bought is evidence of the outcome they wanted and did not get: tag it with that outcome (\"paid for a keyword tool for years and still don't know which pages to build\" belongs to the outcome cluster for deciding what to build, tags frustration and prior_solution), not with a cluster for the tool's price.",
+  "Price, credits, caps, billing and support complaints take the cluster \"cost\" or \"svc\" only when the quote is about money or service itself and nothing else; those clusters are not buying desires.",
+  "At least half the verbatims must voice what the speaker wants to get (desire, trigger, criteria, proof_need or belief tags), in their words; a table that is mostly dislikes about incumbents has not found the market's desire yet.",
+].join(" ");
+
 export function researchUser(ctx: StepContext, args: ResearchArgs): string {
   const parts = [
     xml("brief", renderBrief(args.brief)),
@@ -103,9 +115,10 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
 
   if (args.phase === "collect") {
     const pass = args.pass ?? 1;
-    if (pass === 1) {
+    if (pass === 2) {
       parts.push(xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"));
-    } else if (args.prior) {
+    }
+    if (pass === 2 && args.prior) {
       const p = args.prior;
       parts.push(
         xml(
@@ -134,16 +147,18 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
         "task",
         pass === 1
           ? [
-            `Research ${subject}. This is phase 1 of 2: collect, pass 1 of 2: post-purchase voice.`,
-            `Open every URL in <fetch_first> first, then read two-, three- and four-star reviews of the product, its competitors and products serving the same outcome (Trustpilot, G2, Capterra, app stores, Amazon product-reviews pages) and the competitors' own pages and promotions. Forums, Q&A threads and comments are pass 2: leave them.`,
+            `Research ${subject}. This is phase 1 of 2: collect, pass 1 of 2: what people want to buy.`,
+            `Find the market's own words for the result they are trying to get and the questions they ask before they choose: forum and community threads (Reddit, niche forums, Quora, Indie Hackers, Facebook and LinkedIn posts), Q&A threads, comments under competitor ads and videos, "how do I", "which should I", "is it worth it" posts, and people describing what they tried and what they still cannot do. Review sites and competitor pages are pass 2: leave them.`,
+            OUTCOME_RULE,
             `Define the cluster vocabulary before tagging; pass 2 will reuse it unchanged. Target ${args.verbatimCap} verbatims or fewer from at least 4 sources, exact wording only, ids V1, V2, ...`,
-            args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
             `Return only cluster_vocabulary, verbatims, findings and sources. ${findingsNote}`,
           ].join("\n")
           : [
-            `Research ${subject}. This is phase 1 of 2: collect, pass 2 of 2: pre-purchase voice.`,
-            `Search Reddit and other forums where prospects argue with each other, Q&A threads, comments under competitor ads and videos, social posts, and public support or cancellation threads. Review sites and competitor pages were pass 1: do not reopen them.`,
-            `Reuse the cluster vocabulary in <already_collected> exactly (add a token only for a desire no existing token covers, and say so in findings). Number verbatims from V${nextId} on. Never repeat a verbatim already collected. Target ${args.verbatimCap} new verbatims or fewer from at least 4 new sources, exact wording only.`,
+            `Research ${subject}. This is phase 1 of 2: collect, pass 2 of 2: what they got.`,
+            `Open every URL in <fetch_first> first, then read two-, three- and four-star reviews of the product, its competitors and products serving the same outcome (Trustpilot, G2, Capterra, app stores, Amazon product-reviews pages) and the competitors' own pages and promotions. Forums and Q&A were pass 1: do not reopen them.`,
+            OUTCOME_RULE,
+            `Reuse the cluster vocabulary in <already_collected> exactly (add a token only for an outcome no existing token covers, and say so in findings). Number verbatims from V${nextId} on. Never repeat a verbatim already collected. Target ${args.verbatimCap} new verbatims or fewer from at least 4 new sources, exact wording only.`,
+            args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
             `Return only cluster_vocabulary (the full list), the new verbatims, new findings and the new sources. ${findingsNote}`,
           ].join("\n"),
       ),

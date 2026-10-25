@@ -23,6 +23,10 @@ export const GenerationOptions = z.looseObject({
   /** User chose to keep the offer as-is (no offer construction step). */
   skip_offer: z.boolean().optional(),
   purpose: z.string().optional(),
+  /** The call to action and one-off instructions the user gave for this piece; the argument and the draft serve them. */
+  cta: z.string().optional(),
+  instructions: z.string().optional(),
+  deadline: z.string().optional(),
 });
 export type GenerationOptions = z.infer<typeof GenerationOptions>;
 

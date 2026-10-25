@@ -50,11 +50,11 @@ export interface GatedCandidate {
   proof: ProofGateResult;
 }
 
-/** Both gates, from the dossier's cluster table and the ledger. */
-export function gateCandidates(candidates: CandidateT[], table: ClusterStats[], claims: LedgerClaimLike[]): GatedCandidate[] {
+/** Both gates, from the dossier's cluster table and the ledger. With a stated purpose, a candidate that serves it is never failed by thin research alone. */
+export function gateCandidates(candidates: CandidateT[], table: ClusterStats[], claims: LedgerClaimLike[], opts: { purposeGiven?: boolean } = {}): GatedCandidate[] {
   return candidates.map((candidate) => ({
     candidate,
-    desire: desireGate(findCluster(table, candidate.cluster)),
+    desire: desireGate(findCluster(table, candidate.cluster), { assertedByUser: !!opts.purposeGiven && candidate.serves_purpose }),
     proof: proofGate(candidate.proof_ledger_refs, claims),
   }));
 }
@@ -87,6 +87,8 @@ export function assembleArgument(input: {
   judged: Record<string, JudgedEntry>;
   /** brief.audience.who: the [reader] slot of the thesis. */
   reader: string;
+  /** The user wrote a purpose for this piece: candidates that serve it are ranked ahead of every other survivor. */
+  purposeGiven?: boolean;
 }): AssembledArgument {
   if (!input.gated.length) throw new Error("argument assembly needs at least one candidate");
 
@@ -118,10 +120,17 @@ export function assembleArgument(input: {
     };
   });
 
-  const ranked = rankCandidates(rows.filter((r) => r.eligible));
-  const rest = rows
+  // With a stated purpose, the argument is chosen among the survivors that serve it; survivors that do not
+  // are kept in the output, ranked below, and say why they were set aside.
+  const eligibleRows = rows.filter((r) => r.eligible);
+  const servers = eligibleRows.filter((r) => r.candidate.serves_purpose);
+  const pool = input.purposeGiven && servers.length ? servers : eligibleRows;
+  const setAside = eligibleRows.filter((r) => !pool.includes(r));
+  for (const r of setAside) r.rationale += " | set aside: eligible, but it does not serve the stated purpose of this piece";
+  const ranked = rankCandidates(pool);
+  const rest = [...rankCandidates(setAside), ...rows
     .filter((r) => !r.eligible)
-    .sort((a, b) => b.gates.desire_magnitude + b.gates.c9 - (a.gates.desire_magnitude + a.gates.c9) || a.id.localeCompare(b.id));
+    .sort((a, b) => b.gates.desire_magnitude + b.gates.c9 - (a.gates.desire_magnitude + a.gates.c9) || a.id.localeCompare(b.id))];
   const ordered = [...ranked, ...rest];
 
   const fin = pickFinalists(ranked);
@@ -138,6 +147,8 @@ export function assembleArgument(input: {
   const notes: string[] = [];
   const tie = describeTieBreak(ranked);
   if (tie) notes.push(tie);
+  if (setAside.length) notes.push(`${setAside.length} candidate${setAside.length === 1 ? "" : "s"} passed both gates but did not serve the stated purpose and ${setAside.length === 1 ? "was" : "were"} set aside.`);
+  if (input.purposeGiven && !servers.length && eligibleRows.length) notes.push("No survivor serves the stated purpose; the winner is the best evidence-backed argument instead. Refresh the research or restate the purpose if that is not the piece you want.");
   if (noSurvivors) {
     notes.push(
       `NO CANDIDATE PASSED BOTH GATES (desire >= ${4}/9 with k >= 5; a verifiable ledger fact covering the promise). winner_id names the best-ranked candidate for reference only; nothing is selected. Add proof rows to the ledger or verbatims to the research, then try another angle.`,

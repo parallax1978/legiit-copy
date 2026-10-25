@@ -44,6 +44,6 @@ const PREDICTION: Record<string, string> = {
 };
 
 export function PredictionBadge({ prediction, className }: { prediction: string; className?: string }) {
-  const label = prediction === "beat" ? "Predicted to beat the control" : prediction === "lose" ? "Predicted to lose to the control" : "Unsure against the control";
+  const label = prediction === "beat" ? "Likely to beat your current copy" : prediction === "lose" ? "Likely to lose to your current copy" : "Too close to call against your current copy";
   return <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold", PREDICTION[prediction] ?? PREDICTION.unsure, className)}>{label}</span>;
 }

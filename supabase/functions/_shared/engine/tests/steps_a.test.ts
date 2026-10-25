@@ -458,7 +458,7 @@ Deno.test("finalizeDossier: low confidence under three quotes, unsourced objecti
   assertEquals(finalizeDossier(DOSSIER).themes, DOSSIER.themes);
 });
 
-Deno.test("research step, collect pass 1: post-purchase voice with web tools at low effort, checkpoints, continues to pass 2", async () => {
+Deno.test("research step, collect pass 1: what people want to buy, with web tools at low effort, checkpoints, continues to pass 2", async () => {
   const { call, calls } = fakeCall(() => COLLECT);
   const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, config: { offer_id: "offer-1", workspace_id: "ws-1", vertical: "supplements", business_opportunity: false, notice_recipient: false, humor_policy: {}, greeting: null, edge_tolerance: null, refund_window_days: 90, first_week_experience: null, updated_at: "" } });
   const res = await makeResearchStep({ call })(ctx);
@@ -466,11 +466,12 @@ Deno.test("research step, collect pass 1: post-purchase voice with web tools at 
   assertEquals(calls.length, 1);
   assertEquals([calls[0].webTools, calls[0].effort, calls[0].maxTokens, calls[0].purpose], [true, "low", 12000, "research.collect1"]);
   assertEquals(calls[0].system, researchPrompt.system);
-  assertStringIncludes(calls[0].user, "<fetch_first>\n- https://dailygreens.example\n");
+  assert(!calls[0].user.includes("<fetch_first>")); // client and competitor pages are pass 2
   assertStringIncludes(calls[0].user, "[[L:c-stat]]");
   assert(!calls[0].user.includes("c-drop"));
   assertStringIncludes(calls[0].user, '"vertical": "supplements"');
-  assertStringIncludes(calls[0].user, "pass 1 of 2: post-purchase voice");
+  assertStringIncludes(calls[0].user, "pass 1 of 2: what people want to buy");
+  assertStringIncludes(calls[0].user, "desire_cluster names the OUTCOME the speaker is trying to buy");
   assertStringIncludes(calls[0].user, "Target 30 verbatims or fewer");
   assert(!calls[0].user.includes("<constraints>"));
   assert(!calls[0].user.includes("<collected"));
@@ -478,7 +479,7 @@ Deno.test("research step, collect pass 1: post-purchase voice with web tools at 
   assertStringIncludes(calls[0].system, "Invent an avatar");
   assertStringIncludes(calls[0].system, "## 3. Lead selection by awareness level");
 
-  assertEquals(res.continueLater?.reason, "Collected 12 verbatims from 1 source from review sites, competitor pages; now forums, Q&A threads and comments");
+  assertEquals(res.continueLater?.reason, "Collected 12 verbatims from 1 source on what people want to buy (forums, Q&A, comments); now what they got (reviews, competitor pages)");
   assertEquals(res.effects, undefined);
   assertEquals(ctx.saved.length, 1);
   const saved = ctx.saved[0] as ResearchPartial;
@@ -486,10 +487,11 @@ Deno.test("research step, collect pass 1: post-purchase voice with web tools at 
   // pages the tools reported join the sources the model listed
   assertEquals(saved.collect?.sources.map((s) => s.url), ["https://www.trustpilot.com/review/dailygreens.example", "https://example.com/fetched-page"]);
   assertEquals(res.output, saved);
-  assertStringIncludes(ctx.messages[0], "(1 of 2): review sites, competitor pages, 4 pages from the brief");
+  assertStringIncludes(ctx.messages[0], "(1 of 2): what people want to buy (forums, Q&A, comments)");
+  assert(!ctx.messages[0].includes("pages from the brief"));
 });
 
-Deno.test("research step, collect pass 2: pre-purchase voice continues the table and checkpoints the merged collection for synthesis", async () => {
+Deno.test("research step, collect pass 2: what they got, with the brief's pages, continues the table and checkpoints the merged collection", async () => {
   const more: ResearchCollect = {
     cluster_vocabulary: ["routine", "energy", "taste", "price"],
     verbatims: [verbatim("V13", "price", '"cancelled after month two, too pricey"')],
@@ -502,12 +504,14 @@ Deno.test("research step, collect pass 2: pre-purchase voice continues the table
   const res = await makeResearchStep({ call })(ctx);
 
   assertEquals([calls[0].webTools, calls[0].effort, calls[0].purpose], [true, "low", "research.collect2"]);
-  assertStringIncludes(calls[0].user, "pass 2 of 2: pre-purchase voice");
+  assertStringIncludes(calls[0].user, "pass 2 of 2: what they got");
+  assertStringIncludes(calls[0].user, "<fetch_first>\n- https://dailygreens.example\n");
+  assertStringIncludes(calls[0].user, "A complaint about a product they bought is evidence of the outcome they wanted");
   assertStringIncludes(calls[0].user, '<already_collected verbatims="12" findings="1" sources="2">');
   assertStringIncludes(calls[0].user, "<cluster_vocabulary>\nroutine, energy, taste\n</cluster_vocabulary>");
   assertStringIncludes(calls[0].user, "V12 | review | cluster=taste");
   assertStringIncludes(calls[0].user, "Number verbatims from V13 on");
-  assert(!calls[0].user.includes("<fetch_first>"));
+  assertStringIncludes(ctx.messages[0], "4 pages from the brief");
 
   assertEquals(res.continueLater?.reason, "Collected 13 verbatims from 3 sources; building the dossier");
   const saved = ctx.saved[0] as ResearchPartial;

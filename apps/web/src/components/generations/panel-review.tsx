@@ -12,26 +12,33 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
   const mech = getMechanical(detail.steps);
   const ship = getShip(detail.steps);
   const prediction = detail.predictions[detail.predictions.length - 1] ?? null;
+  // The beat/lose call only means something against copy the user pasted; without it, the verdict is the review.
+  const hasControl = !!((detail.generation.options as { control_text?: string } | null)?.control_text ?? "").trim();
+  const verdictLabel = editorial?.verdict === "APPROVE" ? "Ready to use" : editorial?.verdict === "REVISE" ? "Needs work" : "Not ready";
+  const gateLabel: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
 
-  if (!editorial && !cold && !mech) return <Empty>Reviews appear here after the cold read: the copy chief&apos;s verdict, the cold reader&apos;s readback and the mechanical tell score.</Empty>;
+  if (!editorial && !cold && !mech) return <Empty>Reviews appear here once the piece is written: the copy chief&apos;s verdict, what a blind reader took from it, and the tell check.</Empty>;
 
   return (
     <div className="space-y-6">
       {(editorial || ship || prediction) && (
         <section className="space-y-3">
-          <Heading icon={<Gavel className="h-3.5 w-3.5" />}>Editorial verdict</Heading>
+          <Heading icon={<Gavel className="h-3.5 w-3.5" />}>Copy chief&apos;s verdict</Heading>
           <div className="flex flex-wrap items-center gap-2">
             {editorial && (
               <span className={cn("rounded-full px-2.5 py-1 text-xs font-bold", editorial.verdict === "APPROVE" ? "bg-good-soft text-good" : editorial.verdict === "REVISE" ? "bg-warn-soft text-warn" : "bg-bad-soft text-bad")}>
-                {editorial.verdict}{editorial.reject_gate ? ` · gate ${editorial.reject_gate}` : ""}
+                {verdictLabel}{editorial.reject_gate ? ` · stopped at ${gateLabel[editorial.reject_gate] ?? editorial.reject_gate}` : ""}
               </span>
             )}
-            <PredictionBadge prediction={ship?.prediction ?? prediction?.prediction ?? editorial?.prediction ?? "unsure"} />
+            {hasControl && <PredictionBadge prediction={ship?.prediction ?? prediction?.prediction ?? editorial?.prediction ?? "unsure"} />}
           </div>
-          {(ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason) && <p className="text-sm text-ink-muted">{ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason}</p>}
+          {editorial && !hasControl && (
+            <p className="text-xs text-ink-soft">To get a head-to-head call, paste the copy you use today as &quot;Your current copy&quot; when you start a piece.</p>
+          )}
+          {hasControl && (ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason) && <p className="text-sm text-ink-muted">{ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason}</p>}
           {prediction?.reported_result ? (
             <p className="rounded-lg bg-surface-alt px-3 py-2 text-xs text-ink-muted">
-              <span className="font-medium text-ink">Reported result:</span> {describeResult(prediction.reported_result)}
+              <span className="font-medium text-ink">What actually happened:</span> {describeResult(prediction.reported_result)}
               {prediction.refund_rate != null ? ` · refunds ${(Number(prediction.refund_rate) * 100).toFixed(1)}%` : ""}
             </p>
           ) : null}
@@ -39,13 +46,13 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
             <>
               {editorial.one_thing && (
                 <div className="rounded-lg border border-bad/30 bg-bad-soft/40 p-3">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-bad">The one thing</div>
+                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-bad">Fix this first</div>
                   <Note note={editorial.one_thing} />
                 </div>
               )}
               {editorial.secondary_notes?.length > 0 && (
                 <div>
-                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Secondary notes</div>
+                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Also worth fixing</div>
                   <ol className="space-y-2">
                     {editorial.secondary_notes.map((n, i) => (
                       <li key={i} className="rounded-lg border border-line p-2.5"><Note note={n} /></li>

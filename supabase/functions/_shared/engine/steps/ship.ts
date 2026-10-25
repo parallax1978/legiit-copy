@@ -44,7 +44,8 @@ export const shipStep: StepFn = async (ctx) => {
     user_attention: userAttention({ editorial, factual, mechanical, pendingFlags, needsSource: draft?.needs_source ?? [], openQuestions }),
   });
 
-  const summary = `Control: draft v${out.control_draft_version}${challenger ? `; challenger: lead ${challenger} (test variable: lead)` : "; no challenger"}; prediction ${out.prediction}; ${out.user_attention.length} item(s) for the user`;
+  const n = out.user_attention.length;
+  const summary = `Done${challenger ? ", with an alternative opening to test" : ""}. ${n === 0 ? "Nothing needs your attention." : `${n} thing${n === 1 ? "" : "s"} to look at.`}`;
   await ctx.progress(summary);
   return { output: out, summary };
 };

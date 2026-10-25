@@ -53,15 +53,14 @@ export function ReportResultDialog({ generationId, prediction, canEdit }: { gene
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" disabled={!canEdit}>
-          <BarChart3 className="h-3.5 w-3.5" /> {reported ? "Update result" : "Report result"}
+          <BarChart3 className="h-3.5 w-3.5" /> {reported ? "Update what happened" : "Log what happened"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Report the result</DialogTitle>
+          <DialogTitle>How did this piece do?</DialogTitle>
           <DialogDescription>
-            {prediction ? `The reviewer predicted this would ${prediction.prediction === "beat" ? "beat" : prediction.prediction === "lose" ? "lose to" : "be a toss-up against"} the control. ` : ""}
-            Logging what happened is how the predictions get calibrated.
+            Once you have used it, record the result. Over time this shows how often the copy chief&apos;s calls were right.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">

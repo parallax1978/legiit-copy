@@ -149,9 +149,9 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
       // Searching is reading, not reasoning: two rungs less thinking leaves the budget to the table and keeps a
       // call with eight searches and eight fetches inside the invocation.
       const collectEffort = lowerEffort(lowerEffort(effort));
-      const where = pass === 1 ? "review sites, competitor pages" : "forums, Q&A threads, comments";
+      const where = pass === 1 ? "what people want to buy (forums, Q&A, comments)" : "what they got (reviews, competitor pages)";
       await ctx.progress(
-        `Researching ${brief.product_name} (${pass} of ${COLLECT_PASSES}): ${where}${pass === 1 && fetchFirst.length ? `, ${plural(fetchFirst.length, "page")} from the brief` : ""}${retry ? ` (retry, at most ${verbatimCap} verbatims)` : ""}`,
+        `Researching ${brief.product_name} (${pass} of ${COLLECT_PASSES}): ${where}${pass === 2 && fetchFirst.length ? `, ${plural(fetchFirst.length, "page")} from the brief` : ""}${retry ? ` (retry, at most ${verbatimCap} verbatims)` : ""}`,
       );
       let res;
       try {
@@ -178,7 +178,7 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
       if (pass < COLLECT_PASSES) {
         const next: ResearchPartial = { phase: "collect", pass: pass + 1, collect };
         await ctx.savePartial(next);
-        return { output: next, model: res.model, summary: `pass ${pass}: ${got}; pass ${pass + 1} next`, continueLater: { reason: `Collected ${got} from ${where}; now ${pass === 1 ? "forums, Q&A threads and comments" : "the next pass"}` } };
+        return { output: next, model: res.model, summary: `pass ${pass}: ${got}; pass ${pass + 1} next`, continueLater: { reason: `Collected ${got} on ${where}; now what they got (reviews, competitor pages)` } };
       }
       const next: ResearchPartial = { phase: "synthesize", collect };
       await ctx.savePartial(next);

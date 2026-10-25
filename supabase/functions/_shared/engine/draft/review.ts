@@ -294,15 +294,17 @@ export function userAttention(input: AttentionInput): string[] {
       out.push(k);
     }
   };
-  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`${f.source} ${f.severity}: ${f.issue ?? ""}${f.quote ? ` — "${f.quote}"` : ""}`);
+  const who: Record<string, string> = { editorial: "copy chief", factual: "fact check", mechanical: "tell check", cold_read: "blind reader" };
+  const gate: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
+  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` — "${f.quote}"` : ""}`);
   if (input.pendingFlags.length === 0) {
     if (input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
-      push(`editorial ${input.editorial.verdict}${input.editorial.reject_gate ? ` at Gate ${input.editorial.reject_gate}` : ""}: ${input.editorial.one_thing.fails} — "${input.editorial.one_thing.quote}"`);
+      push(`Fix first (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} — "${input.editorial.one_thing.quote}"`);
     }
-    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`factual ${f.severity}${f.fabrication ? " (fabrication)" : ""}: ${f.issue} — "${f.quote}"`);
-    for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`mechanical hard fail: ${r}`);
+    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} — "${f.quote}"`);
+    for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`Fix first (tell check): ${r}`);
   }
-  for (const n of input.needsSource) push(`NEEDS SOURCE: ${n}`);
-  for (const q of input.openQuestions) push(`open question: ${q}`);
+  for (const n of input.needsSource) push(`Needs a source: ${n}`);
+  for (const q of input.openQuestions) push(`Unanswered question: ${q}`);
   return out;
 }

@@ -219,9 +219,9 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               <Textarea id="instructions" value={instructions} onChange={(e) => setInstructions(e.target.value)} rows={3} placeholder="Anything specific to this piece: mention the webinar replay closes Sunday; do not reference the old price." />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="control">Control</Label>
-              <Textarea id="control" value={controlText} onChange={(e) => setControlText(e.target.value)} rows={5} placeholder="Paste the copy this must beat, if you have it." className="font-mono text-xs" />
-              <p className="text-xs text-ink-muted">The reviewer predicts beat, lose or unsure against this. Without one it predicts against a documented control for the format.</p>
+              <Label htmlFor="control">Your current copy (optional)</Label>
+              <Textarea id="control" value={controlText} onChange={(e) => setControlText(e.target.value)} rows={5} placeholder="Paste the email or page you use today for this job." className="font-mono text-xs" />
+              <p className="text-xs text-ink-muted">If you paste it, the copy chief says whether the new piece is likely to beat it. Leave it empty and you get the verdict on the piece alone.</p>
             </div>
             <label className={cn("flex items-start gap-3 rounded-lg border border-line p-3", offer?.hasApprovedOffer && "opacity-60")}>
               <Checkbox checked={skipOffer || !!offer?.hasApprovedOffer} disabled={!!offer?.hasApprovedOffer} onCheckedChange={(v) => setSkipOffer(v === true)} className="mt-0.5" />
@@ -264,7 +264,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               <Row label="Deadline" value={deadline || "None"} />
               <Row label="Length" value={LENGTH_OPTIONS.find((l) => l.id === length)?.label ?? length} />
               <Row label="Voice" value={voiceProfileId === "none" ? "Default" : voices.find((v) => v.id === voiceProfileId)?.name ?? "Selected profile"} />
-              <Row label="Control" value={controlText ? `${controlText.trim().split(/\s+/).length} words pasted` : "None"} />
+              <Row label="Your current copy" value={controlText ? `${controlText.trim().split(/\s+/).length} words pasted` : "None"} />
               <Row label="Offer construction" value={offer.hasApprovedOffer ? "Approved construction reused" : skipOffer ? "Skipped, offer used as written" : "Proposed, then paused for approval"} />
             </dl>
             <div className="mt-5 rounded-lg bg-surface-alt p-4 text-sm">
@@ -274,7 +274,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
                 {includesOffer && <li>Propose the offer construction and pause for your approval on the offer page.</li>}
                 <li>Pick the argument: twenty candidates, gates, rubric, one winner.</li>
                 <li>Draft inside the claims ledger, cold read on a second model, editorial and factual reviews, revise.</li>
-                <li>Ship with a prediction against the control and a list of what you need to look at.</li>
+                <li>Finish with the copy chief&apos;s verdict and a short list of what to check before you use it.</li>
               </ol>
             </div>
           </section>

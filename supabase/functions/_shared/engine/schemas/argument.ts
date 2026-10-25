@@ -13,6 +13,7 @@ export const Candidate = z.object({
   proof_asset: z.string().describe("the ledger row or proof item that carries the promise"),
   proof_ledger_refs: z.array(z.string()),
   search_origin: z.enum(["unused_fact", "opposite_idea", "mechanism_in_process", "verbatim", "other"]),
+  serves_purpose: z.boolean().default(false).describe("true when the promise is what the PURPOSE in <piece> asks this piece to achieve; false when no purpose was given"),
 });
 
 export const Gates = z.object({

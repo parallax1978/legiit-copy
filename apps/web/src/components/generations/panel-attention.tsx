@@ -33,7 +33,7 @@ export function attentionCount(items: AttentionItems): number {
 }
 
 export function AttentionPanel({ items, offerId }: { items: AttentionItems; offerId: string | null }) {
-  if (attentionCount(items) === 0 && !items.challenger) return <Empty>Nothing waiting on you. The ship step lists open questions, unsourced claims and anything the reviewers want a human to look at.</Empty>;
+  if (attentionCount(items) === 0 && !items.challenger) return <Empty>Nothing waiting on you. Anything the reviewers want a person to look at shows up here.</Empty>;
   return (
     <div className="space-y-5">
       {items.attention.length > 0 && (
@@ -48,8 +48,8 @@ export function AttentionPanel({ items, offerId }: { items: AttentionItems; offe
       )}
       {items.needsSource.length > 0 && (
         <section>
-          <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-bad"><FileQuestion className="h-3 w-3" /> Claims with no evidence in the ledger</h3>
-          <p className="mb-2 text-xs text-ink-muted">These lines were written as <code className="rounded bg-surface-sunken px-1">[[NEEDS SOURCE]]</code>. Add the evidence to the ledger and regenerate, or cut the claim.</p>
+          <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-bad"><FileQuestion className="h-3 w-3" /> Facts that need a source</h3>
+          <p className="mb-2 text-xs text-ink-muted">The writer needed these facts and your offer has no evidence for them yet. Add the evidence on the offer page and write the piece again, or cut the line.</p>
           <ul className="space-y-1.5">
             {items.needsSource.map((s, i) => (
               <li key={i} className="rounded-lg border border-line px-3 py-2 text-sm text-ink">{s}</li>

@@ -29,7 +29,7 @@ export const STEP_BLURBS: Record<StepName, string> = {
   mechanical: "Tell detector, readability, cadence and format gates. Code, not a model.",
   factual: "Every claim checked against the ledger: line, rule, rewritten line.",
   revise: "Changes only the referenced lines and honours the do-not-touch list.",
-  ship: "Control plus challenger, prediction logged, what you need to look at.",
+  ship: "The verdict and a short list of what to check before you use it.",
 };
 
 export const REVIEW_LOOP: StepName[] = ["cold_read", "editorial", "mechanical", "factual", "revise"];
@@ -169,7 +169,7 @@ export function summarize(step: StepName, output: unknown): string | null {
     }
     case "editorial": {
       const e = o as Partial<EditorialVerdict>;
-      if (e.verdict) return `${e.verdict}${e.reject_gate ? ` at gate ${e.reject_gate}` : ""}, predicts ${e.prediction ?? "unsure"}`;
+      if (e.verdict) return e.verdict === "APPROVE" ? "Ready to use" : e.verdict === "REVISE" ? "Needs work" : "Not ready";
       break;
     }
     case "mechanical": {
@@ -190,7 +190,7 @@ export function summarize(step: StepName, output: unknown): string | null {
     }
     case "ship": {
       const s = o as Partial<ShipOutput>;
-      if (s.prediction) return `Predicts ${s.prediction}${s.test_variable ? `; challenger tests ${s.test_variable}` : ""}`;
+      if (s.prediction) return s.test_variable ? "Done, with an alternative opening to test" : "Done";
       break;
     }
   }

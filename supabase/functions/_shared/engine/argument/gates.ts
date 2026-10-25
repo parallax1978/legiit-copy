@@ -22,13 +22,24 @@ export interface DesireGateResult {
   reason: string;
 }
 
-export function desireGate(stats: ClusterStats | null | undefined): DesireGateResult {
+/**
+ * The desire gate. `assertedByUser` marks a candidate that serves the purpose the user wrote for this piece:
+ * the user has asserted the desire, so thin research evidence makes it provisional, never a fail, and the
+ * reason records how thin the evidence is so the user sees the risk.
+ */
+export function desireGate(stats: ClusterStats | null | undefined, opts: { assertedByUser?: boolean } = {}): DesireGateResult {
   if (!stats || stats.k === 0) {
+    if (opts.assertedByUser) {
+      return { status: "provisional", magnitude: 0, c1: 0, c2: 0, c3: 0, k: 0, reason: "desire gate provisional: the stated purpose names this desire; the research holds no verbatim for it (k=0)" };
+    }
     return { status: "fail", magnitude: 0, c1: 0, c2: 0, c3: 0, k: 0, reason: "desire gate fail: cluster not in the dossier (k=0)" };
   }
   const { c1, c2, c3, k, magnitude } = stats;
   const base = `C1 ${c1} + C2 ${c2} + C3 ${c3} = ${magnitude}/9, k=${k}`;
   if (magnitude < DESIRE_GATE.minMagnitude) {
+    if (opts.assertedByUser) {
+      return { status: "provisional", magnitude, c1, c2, c3, k, reason: `desire gate provisional: the stated purpose names this desire; research evidence is thin (${base}, needs >= ${DESIRE_GATE.minMagnitude} with k >= ${DESIRE_GATE.minK})` };
+    }
     return { status: "fail", magnitude, c1, c2, c3, k, reason: `desire gate fail: ${base} (needs >= ${DESIRE_GATE.minMagnitude})` };
   }
   if (k < DESIRE_GATE.minK) {

@@ -25,6 +25,7 @@ import { ArgumentOutput, Candidate } from "../schemas/argument.ts";
 import type { OfferBrief } from "../schemas/brief.ts";
 import type { Dossier } from "../schemas/research.ts";
 import { requireDossier } from "./offer.ts";
+import { parseOptions } from "../draft/options.ts";
 import { remainingBudgetMs } from "./budget.ts";
 import { requireBrief } from "./research.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
@@ -100,7 +101,8 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const clusterTable = renderClusterTable(table);
     const exclusions = readExclusions(ctx.generation.options, ctx.angles);
     const examples = await examplesForPrompt(ctx, brief, dossier, retrieveFn);
-    const common = { brief, claims, dossier, variant: ctx.variant, clusterTable, formatName: ctx.format.name };
+    const opts = parseOptions(ctx.generation.options);
+    const common = { brief, claims, dossier, variant: ctx.variant, clusterTable, formatName: ctx.format.name, piece: { purpose: opts.purpose ?? null, cta: opts.cta ?? null, instructions: opts.instructions ?? null } };
     const partial = parseArgumentPartial(ctx.partial) ?? {};
 
     let candidates = partial.candidates ?? [];
@@ -140,7 +142,8 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
       }
     }
 
-    const gated = gateCandidates(candidates, table, claims);
+    const purposeGiven = !!opts.purpose?.trim();
+    const gated = gateCandidates(candidates, table, claims, { purposeGiven });
     const survivors = gated.filter(isSurvivor);
     let judged: Record<string, JudgedEntry> = {};
     if (survivors.length) {
@@ -166,7 +169,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
       model = sc.model;
     }
 
-    const asm = assembleArgument({ gated, judged, reader: brief.audience.who });
+    const asm = assembleArgument({ gated, judged, reader: brief.audience.who, purposeGiven });
     const output = ArgumentOutput.parse(asm.output);
     const winner = output.candidates.find((c) => c.id === output.winner_id)!;
     const droppedNote = droppedReasons.length ? `; ${droppedReasons.length} dropped (${droppedReasons.join("; ")})` : "";
