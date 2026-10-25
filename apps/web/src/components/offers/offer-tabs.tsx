@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { LinkPending } from "@/components/app/link-pending";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -42,6 +43,7 @@ export function OfferTabs({ offerId, counts }: { offerId: string; counts: TabCou
                 {t.badge ? (
                   <span className={cn("rounded-full px-1.5 py-px text-[11px] font-semibold", t.tone === "warn" ? "bg-warn-soft text-warn" : "bg-surface-sunken text-ink-muted")}>{t.badge}</span>
                 ) : null}
+                <LinkPending />
               </Link>
             </li>
           );

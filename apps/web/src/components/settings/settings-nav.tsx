@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { LinkPending } from "@/components/app/link-pending";
 import { usePathname } from "next/navigation";
 import { User, Building2, Users, Receipt } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export function SettingsNav() {
               >
                 <t.icon className="h-4 w-4" />
                 {t.label}
+                <LinkPending />
               </Link>
             </li>
           );
