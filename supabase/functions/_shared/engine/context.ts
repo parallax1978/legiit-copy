@@ -180,6 +180,14 @@ export async function applyEffects(db: Db, ctx: StepContext, step: StepName, res
     if (upd.error) fail("generations.research_id", upd.error);
   }
 
+  if (fx.answers?.length) {
+    const answered_at = new Date().toISOString();
+    for (const a of fx.answers) {
+      const upd = await db.from("offer_questions").update({ answer: a.answer, answered_at }).eq("id", a.id).eq("offer_id", oid).is("answer", null);
+      if (upd.error) fail("offer_questions answer", upd.error);
+    }
+  }
+
   if (fx.offerVariant) {
     const v = fx.offerVariant;
     const ins = await db.from("offer_variants").insert({ offer_id: oid, workspace_id: ws, options_sheet: J(v.optionsSheet), chosen: v.chosen as Json, reasons: v.reasons, guarantee: v.guarantee as Json, deadline: v.deadline as Json, gap_note: v.gapNote, status: "proposed" }).select("id").single();

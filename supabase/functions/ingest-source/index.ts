@@ -13,6 +13,7 @@ import { extractText } from "unpdf";
 import mammoth from "mammoth";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
 import { assertEditor, background, errorMessage, normalizeWhitespace, parseBody, runIntake, serve } from "shared/http.ts";
+import { discoverKeyPages } from "shared/discover.ts";
 
 const Body = z.object({ source_id: z.uuid(), run_extraction: z.boolean().optional().default(false) });
 
@@ -20,6 +21,9 @@ const MAX_BYTES = 5 * 1024 * 1024;
 const MAX_CHARS = 400_000;
 const FETCH_TIMEOUT_MS = 10_000;
 const MAX_REDIRECTS = 3;
+/** Characters kept per discovered key page (terms, refund, pricing, about, FAQ); intake reads them with the main page. */
+const KEY_PAGE_CHARS = 60_000;
+const DISCOVERY_BUDGET_MS = 20_000;
 
 serve(async (req) => {
   const { client } = await requireUser(req);
@@ -36,6 +40,7 @@ serve(async (req) => {
   let text = "";
   let title: string | null = src.title;
   let mime: string | null = src.mime_type;
+  let html: string | null = null;
   try {
     if (src.kind === "url") {
       if (!src.url) throw new Error("url source has no url");
@@ -43,6 +48,7 @@ serve(async (req) => {
       text = r.text;
       title = title ?? r.title;
       mime = r.mime;
+      html = r.html ?? null;
     } else if (src.kind === "file") {
       if (!src.storage_path) throw new Error("file source has no storage_path");
       if (!storagePathBelongsTo(src.storage_path, src.workspace_id, src.offer_id)) throw new Error("storage_path is outside the offer's folder");
@@ -74,6 +80,15 @@ serve(async (req) => {
   }
 
   const out: Record<string, unknown> = { source_id: src.id, offer_id: src.offer_id, extraction_status: "done", chars: text.length, title };
+  // The site's own key pages (refund, terms, pricing, about, FAQ) become sources of their own, so the policy, the
+  // founder and the plan terms reach intake instead of turning into questions for the user. Never fatal.
+  if (src.kind === "url" && src.url && html) {
+    try {
+      out.discovered = await discoverAndStore(db, src, html);
+    } catch (e) {
+      console.warn("key page discovery failed", errorMessage(e).slice(0, 300));
+    }
+  }
   if (body.run_extraction) {
     // The intake model call takes minutes; it runs after the response. runIntake moves the offer off 'extracting'
     // itself on success or failure, and the offer page watches offers.status.
@@ -84,6 +99,33 @@ serve(async (req) => {
 });
 
 /** Objects live at <workspace_id>/<offer_id>/<file>. Anything else (another folder, "..", encoded or nested segments) is refused before the service client downloads it. */
+type SourceRow = { id: string; offer_id: string; workspace_id: string; url: string | null };
+
+/** Fetches the key pages linked from a URL source and stores each as a done source; returns how many were added. */
+async function discoverAndStore(db: ReturnType<typeof serviceClient>, src: SourceRow, html: string): Promise<number> {
+  const { data: existing } = await db.from("offer_sources").select("url").eq("offer_id", src.offer_id).not("url", "is", null);
+  const known = (existing ?? []).map((r) => r.url as string);
+  const pages = discoverKeyPages(html, src.url!, { exclude: known });
+  if (!pages.length) return 0;
+  const deadline = AbortSignal.timeout(DISCOVERY_BUDGET_MS);
+  const results = await Promise.allSettled(
+    pages.map(async (p) => {
+      if (deadline.aborted) throw new Error("discovery budget spent");
+      const r = await fetchUrlAsText(p.url);
+      const t = normalizeWhitespace(r.text).slice(0, KEY_PAGE_CHARS);
+      if (t.length < 200) throw new Error("too short");
+      return { url: p.url, title: r.title ?? `${p.label} page`, text: t, mime: r.mime };
+    }),
+  );
+  const rows = results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []));
+  if (!rows.length) return 0;
+  const { error } = await db.from("offer_sources").insert(
+    rows.map((r) => ({ offer_id: src.offer_id, workspace_id: src.workspace_id, kind: "url", url: r.url, title: r.title, extracted_text: r.text, extraction_status: "done", mime_type: r.mime })),
+  );
+  if (error) throw new Error(`offer_sources insert failed: ${error.message}`);
+  return rows.length;
+}
+
 export function storagePathBelongsTo(path: string, workspaceId: string, offerId: string): boolean {
   const parts = path.split("/");
   return parts.length === 3 && parts[0] === workspaceId && parts[1] === offerId && /^[A-Za-z0-9][A-Za-z0-9._-]{0,200}$/.test(parts[2]);
@@ -212,7 +254,7 @@ function decodeEntities(s: string): string {
 
 // ---------- guarded URL fetch ----------
 
-async function fetchUrlAsText(input: string): Promise<{ text: string; title: string | null; mime: string }> {
+async function fetchUrlAsText(input: string): Promise<{ text: string; title: string | null; mime: string; html?: string }> {
   let url = parseHttpUrl(input);
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     await assertPublicHost(url);
@@ -247,7 +289,7 @@ async function fetchUrlAsText(input: string): Promise<{ text: string; title: str
     if (m === "application/pdf" || startsWith(bytes, [0x25, 0x50, 0x44, 0x46])) return { text: await pdfToText(bytes), title: null, mime: "application/pdf" };
     if (m === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") return { text: await docxToText(bytes), title: null, mime: m };
     const decoded = decode(bytes, charsetOf(ctype));
-    if (m.includes("html") || m === "application/xhtml+xml" || looksLikeHtml(decoded)) return { text: htmlToText(decoded), title: titleOf(decoded), mime: "text/html" };
+    if (m.includes("html") || m === "application/xhtml+xml" || looksLikeHtml(decoded)) return { text: htmlToText(decoded), title: titleOf(decoded), mime: "text/html", html: decoded };
     return { text: decoded, title: null, mime: m || "text/plain" };
   }
   throw new Error(`more than ${MAX_REDIRECTS} redirects`);

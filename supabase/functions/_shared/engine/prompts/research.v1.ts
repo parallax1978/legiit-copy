@@ -159,6 +159,7 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
             OUTCOME_RULE,
             `Reuse the cluster vocabulary in <already_collected> exactly (add a token only for an outcome no existing token covers, and say so in findings). Number verbatims from V${nextId} on. Never repeat a verbatim already collected. Target ${args.verbatimCap} new verbatims or fewer from at least 4 new sources, exact wording only.`,
             args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
+            `Settle what the brief leaves unknown instead of leaving it to the user: who speaks for the product (the founder or the named owner: the site's about, team or founder page, LinkedIn, Crunchbase, press, podcast bios), the refund and cancellation terms (terms, refund and pricing pages), the guarantee, and the first-week experience (onboarding pages, help centre, reviews that describe the first days). Record each as a finding of kind speaker, refund, first_week or proof with its URL and the exact words.`,
             `Return only cluster_vocabulary (the full list), the new verbatims, new findings and the new sources. ${findingsNote}`,
           ].join("\n"),
       ),
@@ -182,6 +183,7 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
       [
         `Phase 2 of 2: synthesize the dossier for ${subject} from <collected>, <brief> and <claims>. No web access: cite only URLs in <collected>, quote only text in <collected>, and reference verbatims by their ids.`,
         "Return every dossier section except verbatims and sources: themes, competitor_table, logo_swap_result, awareness_by_segment, sophistication, proof_inventory, objection_map, resident_emotion, story_inventory, speaker, forces, first_week_experience, refund_history, unsourced_hypotheses. A theme or objection with no verbatim ids from <collected> is not a theme or objection; it goes to unsourced_hypotheses.",
+        "speaker (name, role, stake, source URL), refund_history and first_week_experience come from the findings; write them in full when a finding settles them and null only when none does.",
       ].join("\n"),
     ),
   );

@@ -199,7 +199,7 @@ const DOSSIER: Dossier = {
   objection_map: [{ text: "too expensive to keep up", verbatim_ids: ["V7"] }],
   resident_emotion: { emotion: "relief", evidence: "finally", verbatim_ids: ["V1"] },
   story_inventory: [],
-  speaker: { name: null, role: "founder", stake: null },
+  speaker: { name: null, role: "founder", stake: null, source: null },
   forces: { push: "tired by 3pm", pull: "one scoop", anxiety: "price", habit: "coffee", dominant: "push" },
   first_week_experience: "a shaker and a bag arrive; taste takes three days",
   refund_history: null,

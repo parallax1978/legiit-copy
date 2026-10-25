@@ -100,7 +100,7 @@ export const Dossier = z.object({
   objection_map: z.array(z.object({ text: z.string(), verbatim_ids: z.array(z.string()) })),
   resident_emotion: z.object({ emotion: z.string(), evidence: z.string(), verbatim_ids: z.array(z.string()) }),
   story_inventory: z.array(z.object({ event: z.string(), date: nstr(), numbers: nstr(), people: nstr(), source: nstr() })),
-  speaker: z.object({ name: nstr(), role: nstr(), stake: nstr() }),
+  speaker: z.object({ name: nstr(), role: nstr(), stake: nstr(), source: nstr().describe("the page that names them") }),
   forces: z.object({ push: z.string(), pull: z.string(), anxiety: z.string(), habit: z.string(), dominant: z.enum(["push", "pull", "anxiety", "habit"]) }),
   first_week_experience: nstr(),
   refund_history: nstr(),

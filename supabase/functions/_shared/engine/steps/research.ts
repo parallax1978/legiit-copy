@@ -17,6 +17,7 @@ import researchPrompt from "../prompts/research.v1.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { OfferBrief } from "../schemas/brief.ts";
 import { Dossier, ResearchCollect, ResearchSynthesis } from "../schemas/research.ts";
+import { answersFromDossier, ledgerRowsFromDossier } from "../research/answers.ts";
 import { remainingBudgetMs } from "./budget.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
@@ -217,6 +218,12 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
       summary: `${plural(dossier.verbatims.length, "verbatim")} in ${plural(clusters, "cluster")} from ${plural(dossier.sources.length, "source")}; ${plural(dossier.themes.length, "theme")}; ${plural(dossier.competitor_table.length, "competitor")}; sophistication stage ${dossier.sophistication.stage}; ${plural(dossier.objection_map.length, "objection")}`,
       effects: { research: { dossier, sources: dossier.sources } },
     };
+    // What research settled is not asked of the user again, and the writer can cite it.
+    const answers = answersFromDossier(dossier, ctx.questions);
+    const rows = ledgerRowsFromDossier(dossier, ctx.claims);
+    if (answers.length) result.effects!.answers = answers;
+    if (rows.length) result.effects!.claimsToAdd = rows;
+    if (answers.length || rows.length) result.summary += `; settled ${answers.length} open question${answers.length === 1 ? "" : "s"} and added ${rows.length} ledger row${rows.length === 1 ? "" : "s"}`;
     return result;
   };
 }

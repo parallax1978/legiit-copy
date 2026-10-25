@@ -73,6 +73,8 @@ export interface StepEffects {
   flags?: { source: "editorial" | "factual" | "mechanical" | "cold_read"; kind: string; severity: string; quote: string | null; rule: string | null; issue: string; suggestedRewrite: string | null; claimId?: string | null }[];
   prediction?: { prediction: "beat" | "lose" | "unsure"; reason: string };
   questions?: { question: string; why: string }[];
+  /** Answers to the offer's open questions that a step settled (research: speaker, refund terms, first week). */
+  answers?: { id: string; answer: string }[];
   editorialVerdict?: "REJECT" | "REVISE" | "APPROVE";
   mechanicalHardFail?: boolean;
   factualFatal?: boolean;

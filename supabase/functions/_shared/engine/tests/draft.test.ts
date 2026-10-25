@@ -149,7 +149,7 @@ const dossierWith = (segments: Dossier["awareness_by_segment"]): Dossier => ({
   objection_map: [],
   resident_emotion: { emotion: "", evidence: "", verbatim_ids: [] },
   story_inventory: [],
-  speaker: { name: null, role: null, stake: null },
+  speaker: { name: null, role: null, stake: null, source: null },
   forces: { push: "", pull: "", anxiety: "", habit: "", dominant: "push" },
   first_week_experience: null,
   refund_history: null,
