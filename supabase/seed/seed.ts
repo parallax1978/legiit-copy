@@ -5,6 +5,7 @@
  */
 import { createClient } from "jsr:@supabase/supabase-js@^2.58.0";
 import { parseArgs } from "jsr:@std/cli@^1.0.0/parse-args";
+import { STEP_DEFAULTS, type StepName } from "../functions/_shared/engine/config.ts";
 
 const url = Deno.env.get("SUPABASE_URL");
 const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -149,7 +150,8 @@ try {
       const { data: existing } = await db.from("prompt_versions").select("id").eq("step", step).eq("version", p.version ?? 1).maybeSingle();
       if (existing) continue;
       const { data: anyActive } = await db.from("prompt_versions").select("id").eq("step", step).eq("active", true).maybeSingle();
-      const { error } = await db.from("prompt_versions").insert({ step, version: p.version ?? 1, template: p.system, model: p.model ?? "claude-opus-5-5", effort: p.effort ?? "high", max_tokens: p.maxTokens ?? 12000, active: !anyActive, notes: "seeded from engine prompt module" });
+      const d = STEP_DEFAULTS[step as StepName];
+      const { error } = await db.from("prompt_versions").insert({ step, version: p.version ?? 1, template: p.system, model: p.model ?? d.model, effort: p.effort ?? d.effort, max_tokens: p.maxTokens ?? d.maxTokens, active: !anyActive, notes: "seeded from engine prompt module" });
       console.log(`prompt ${step} v${p.version ?? 1}`, error ? `ERROR ${error.message}` : "ok");
     } catch (e) {
       console.warn(`prompt module for ${step} not found (${e instanceof Error ? e.message.split("\n")[0] : e})`);

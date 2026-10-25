@@ -16,9 +16,15 @@ import type { StepContext, StepFn, StepResult } from "./types.ts";
 export const SOURCE_CHAR_CAP_EACH = 120_000;
 export const SOURCE_CHAR_CAP_TOTAL = 400_000;
 
-/** The retry after a truncated output: at most this many ledger rows, evidence quotes this short. */
-export const INTAKE_RETRY_ROW_CAP = 60;
-export const INTAKE_RETRY_QUOTE_WORDS = 25;
+/**
+ * Row budgets. One 12K-token answer holds the brief, config, questions and about sixty compact rows alongside
+ * the model's thinking; an unbudgeted first call ran past the cap on every live extraction, so the first call
+ * carries a budget too and the retry after a truncation tightens it.
+ */
+export const INTAKE_ROW_CAP = 60;
+export const INTAKE_RETRY_ROW_CAP = 40;
+export const INTAKE_QUOTE_WORDS = 30;
+export const INTAKE_RETRY_QUOTE_WORDS = 20;
 
 export interface RawSource {
   id: string;
@@ -93,7 +99,7 @@ export function makeIntakeStep(deps: Partial<IntakeDeps> = {}): StepFn {
         user: intakePrompt.user(ctx, {
           sources,
           truncatedCount,
-          ...(retry ? { compact: { rowCap: INTAKE_RETRY_ROW_CAP, quoteWords: INTAKE_RETRY_QUOTE_WORDS } } : {}),
+          compact: retry ? { rowCap: INTAKE_RETRY_ROW_CAP, quoteWords: INTAKE_RETRY_QUOTE_WORDS, retry: true } : { rowCap: INTAKE_ROW_CAP, quoteWords: INTAKE_QUOTE_WORDS, retry: false },
         }),
         schema: IntakeOutput,
         log: {

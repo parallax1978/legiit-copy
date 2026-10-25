@@ -15,7 +15,7 @@ import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";
 import { type OfferConstruction } from "../schemas/offer.ts";
 import { type Dossier, type ResearchCollect, type ResearchSynthesis } from "../schemas/research.ts";
 import { type ArgumentDeps, type ArgumentPartial, CANDIDATE_COUNT, CANDIDATE_RETRY_COUNT, CANDIDATES_RETRY_REASON, makeArgumentStep, NO_SURVIVOR_PAUSE_REASON, SCORING_RETRY_REASON } from "../steps/argument.ts";
-import { INTAKE_RETRY_ROW_CAP, makeIntakeStep, prepareSources, type RawSource } from "../steps/intake.ts";
+import { INTAKE_RETRY_ROW_CAP, INTAKE_ROW_CAP, makeIntakeStep, prepareSources, type RawSource } from "../steps/intake.ts";
 import { ensureOfferLedgerRows, makeOfferStep, OFFER_PAUSE_REASON } from "../steps/offer.ts";
 import { COLLECT_RETRY_REASON, fetchFirstUrls, finalizeDossier, makeResearchStep, requireBrief, type ResearchPartial } from "../steps/research.ts";
 import type { ClaimRow, StepContext } from "../steps/types.ts";
@@ -388,11 +388,12 @@ Deno.test("intake step: a truncated output is retried once with a capped ledger 
   assertEquals([calls[0].effort, calls[0].purpose], ["medium", "intake.brief_ledger_config_questions"]);
   assertEquals([calls[1].effort, calls[1].purpose], ["low", "intake.retry_compact_ledger"]);
   assert(!calls[0].user.includes("ran past the output budget"));
+  assertStringIncludes(calls[0].user, `the ledger holds at most ${INTAKE_ROW_CAP} rows`);
   assertStringIncludes(calls[1].user, `Cap the ledger at ${INTAKE_RETRY_ROW_CAP} rows`);
   assertStringIncludes(calls[1].user, "soften nothing");
   assertEquals(calls[1].system, calls[0].system);
   assertEquals(res.output, INTAKE_OUTPUT);
-  assertStringIncludes(ctx.messages.join("\n"), "retrying with at most 60 rows");
+  assertStringIncludes(ctx.messages.join("\n"), `retrying with at most ${INTAKE_RETRY_ROW_CAP} rows`);
 
   const twice = fakeCall(() => {
     throw new TruncatedError("{partial");

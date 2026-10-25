@@ -812,7 +812,7 @@ isOneToOne: false
           Views: {
             "llm_cost_by_step": {
                   Row: {
-                    "avg_latency_ms": number | null,"calls": number | null,"cost_usd": number | null,"day": string | null,"input_tokens": number | null,"model": string,"output_tokens": number | null,"step": string | null
+                    "avg_latency_ms": number | null,"cache_read_tokens": number | null,"cache_write_tokens": number | null,"calls": number | null,"cost_usd": number | null,"day": string | null,"input_tokens": number | null,"model": string,"output_tokens": number | null,"step": string | null
                   }
                   ComputedFields: never
                   Relationships: [

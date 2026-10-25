@@ -2,6 +2,7 @@
  * Cold read prompt v1. Runs on a different model than the drafter, with no brief, memo or ledger.
  * Skim path first and the readback; then the full draft once; then, when three leads exist, the pick.
  */
+import { COLD_READ_MODEL } from "../config.ts";
 import type { PromptModule } from "./types.ts";
 
 export interface ColdReadArgs {
@@ -32,6 +33,7 @@ const SYSTEM = [
 export const coldReadPrompt: PromptModule<ColdReadArgs> = {
   step: "cold_read",
   version: 1,
+  model: COLD_READ_MODEL, // never the drafter's model: the cold read is blind by design
   effort: "medium",
   maxTokens: 4000,
   system: SYSTEM,

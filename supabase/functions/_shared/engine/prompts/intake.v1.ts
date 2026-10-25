@@ -207,8 +207,8 @@ export interface IntakeSource {
 export interface IntakeArgs {
   sources: IntakeSource[];
   truncatedCount: number;
-  /** Set on the retry after a truncated output: caps the ledger so the answer fits the budget. The default rendering is unchanged. */
-  compact?: { rowCap: number; quoteWords: number };
+  /** The ledger budget: row cap and quote length; retry marks the rerun after a truncated output, which tightens both. */
+  compact?: { rowCap: number; quoteWords: number; retry: boolean };
 }
 
 const ROLE = `You are the intake editor for a direct response copy engine. From an offer's name, the user's own notes and the extracted text of its sources, you produce four things: the offer brief, the claims ledger (one row per fact), the per-offer config, and the open questions. Everything a later step says about this offer traces back to a row you write here, so completeness beats brevity and precision beats polish.
@@ -250,13 +250,15 @@ function renderSource(s: IntakeSource): string {
   return xml("source", neutralizeTags(s.text), { id: s.id, kind: s.kind, url: s.url, title: s.title, chars: s.text.length, truncated: s.truncated ? "true" : null });
 }
 
-/** The retry instruction after a truncated output: fewer, shorter rows, nothing softened, the shortfall recorded. */
+/** The ledger budget: fewer, shorter rows than the sources could fill, nothing softened, the shortfall recorded. */
 export function compactNote(c: NonNullable<IntakeArgs["compact"]>): string {
   return [
-    `The previous attempt ran past the output budget. Cap the ledger at ${c.rowCap} rows and keep the brief, config and questions complete.`,
+    c.retry
+      ? `The previous attempt ran past the output budget. Cap the ledger at ${c.rowCap} rows and keep the brief, config and questions complete.`
+      : `Output budget: the ledger holds at most ${c.rowCap} rows; the brief, config and questions stay complete.`,
     "Keep every price, former price, guarantee, deadline, scarcity figure, trial or continuity term, testimonial, credential, study, statistic and result; merge plain feature lists into one row per deliverable; drop nothing else and soften nothing.",
-    `Cut each evidence quote to the shortest exact span that carries the fact, ${c.quoteWords} words or fewer. Omit every optional key whose value would be its default.`,
-    'Record what the cap leaves out in brief.unknowns as "ledger incomplete: ..." so the user can add rows by hand.',
+    `Keep each evidence quote to the shortest exact span that carries the fact, ${c.quoteWords} words or fewer. Omit every optional key whose value would be its default.`,
+    'Record what the cap leaves out in brief.unknowns as "ledger incomplete: ..." naming the facts left out, so the user can add rows by hand.',
   ].join(" ");
 }
 
@@ -288,6 +290,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
         args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
         ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified; never re-ask an answered question." : null,
+        "A suggested_rewrite keeps every alternative the source states (plan A or plan B, both prices, both terms); it never picks one for the user. Blocking is rare: with a price, terms, deliverables, a mechanism and an identifiable reader on file, no question is blocking; a choice the source's own page already makes (the offer its calls to action lead with) is recorded as the default and asked as non-blocking. Never ask what the sources answer; when the sources answer half of a question, ask only the unsettled half.",
         args.compact ? compactNote(args.compact) : null,
       ]
         .filter(Boolean)

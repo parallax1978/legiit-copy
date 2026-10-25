@@ -12,11 +12,20 @@ import { retryGeneration } from "@/lib/actions/admin";
 export const metadata = { title: "Costs and jobs" };
 export const dynamic = "force-dynamic";
 
+/** Share of this row's input (fresh, cache read, cache write) that was read from the prompt cache. */
+function cacheHit(r: { input_tokens: number | null; cache_read_tokens: number | null; cache_write_tokens: number | null }): string {
+  const read = Number(r.cache_read_tokens ?? 0);
+  const all = Number(r.input_tokens ?? 0) + read + Number(r.cache_write_tokens ?? 0);
+  return all ? `${Math.round((100 * read) / all)}%` : "—";
+}
+
 export default async function CostsPage() {
   const [costRows, topGenerations, workspaceCosts, activeJobs, failedJobs] = await Promise.all([getCostByStep(30), getTopGenerationsByCost(50), getWorkspaceCostsThisMonth(), getActiveJobs(), getFailedJobs(50)]);
   const latency = latencyByStep(costRows);
   const total30 = costRows.reduce((s, r) => s + Number(r.cost_usd ?? 0), 0);
   const calls30 = costRows.reduce((s, r) => s + Number(r.calls ?? 0), 0);
+  const cacheRead30 = costRows.reduce((s, r) => s + Number(r.cache_read_tokens ?? 0), 0);
+  const inputAll30 = costRows.reduce((s, r) => s + Number(r.input_tokens ?? 0) + Number(r.cache_read_tokens ?? 0) + Number(r.cache_write_tokens ?? 0), 0);
   const now = Date.now();
   const stuck = activeJobs.filter((g) => isStuck(g, now));
 
@@ -26,6 +35,7 @@ export default async function CostsPage() {
 
       <StatGrid className="mb-6">
         <StatTile label="Spend, 30 days" value={money(total30)} sub={`${int(calls30)} model calls`} />
+        <StatTile label="Prompt cache hit, 30 days" value={inputAll30 ? `${Math.round((100 * cacheRead30) / inputAll30)}%` : "—"} sub={`${int(cacheRead30)} of ${int(inputAll30)} input tokens read from cache`} tone={inputAll30 && cacheRead30 / inputAll30 >= 0.5 ? "good" : undefined} />
         <StatTile label="Running" value={int(activeJobs.filter((g) => g.status === "running").length)} sub={`${int(activeJobs.filter((g) => g.status === "queued").length)} queued`} tone="brand" />
         <StatTile label="Stuck (> 30 min)" value={int(stuck.length)} tone={stuck.length ? "bad" : "good"} sub="the sweeper fails them at 30 min of inactivity" />
         <StatTile label="Failed" value={int(failedJobs.length)} tone={failedJobs.length ? "bad" : "good"} sub="latest 50" />
@@ -153,6 +163,7 @@ export default async function CostsPage() {
                 <TableHead className="text-right">Calls</TableHead>
                 <TableHead className="text-right">Input tokens</TableHead>
                 <TableHead className="text-right">Output tokens</TableHead>
+                <TableHead className="text-right">Cache hit</TableHead>
                 <TableHead className="text-right">Avg latency</TableHead>
                 <TableHead className="text-right">Cost</TableHead>
               </TableRow>
@@ -160,7 +171,7 @@ export default async function CostsPage() {
             <TableBody>
               {costRows.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-6 text-center text-sm text-ink-soft">
+                  <TableCell colSpan={9} className="py-6 text-center text-sm text-ink-soft">
                     No model calls in the last 30 days.
                   </TableCell>
                 </TableRow>
@@ -173,6 +184,7 @@ export default async function CostsPage() {
                   <TableCell className="text-right text-xs">{int(r.calls)}</TableCell>
                   <TableCell className="text-right text-xs">{int(r.input_tokens)}</TableCell>
                   <TableCell className="text-right text-xs">{int(r.output_tokens)}</TableCell>
+                  <TableCell className="text-right text-xs">{cacheHit(r)}</TableCell>
                   <TableCell className="text-right text-xs">{ms(r.avg_latency_ms)}</TableCell>
                   <TableCell className="text-right text-xs font-medium">{money(r.cost_usd)}</TableCell>
                 </TableRow>
