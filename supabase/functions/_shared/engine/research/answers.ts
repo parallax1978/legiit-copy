@@ -49,6 +49,40 @@ export function ledgerRowsFromDossier(d: Dossier, existing: { claim_text: string
   if (known(d.refund_history) && !has((c) => c.claim_type === "guarantee" && /refund|money.?back/i.test(c.claim_text ?? ""))) {
     rows.push(blank(d.refund_history!.trim(), "guarantee", "offer_term", null, d.refund_history!.trim()));
   }
+  rows.push(...verbatimRows(d, existing));
+  return rows;
+}
+
+/** A verbatim's wording as the ledger stores it: quotation marks and spacing normalised, for matching. */
+export function verbatimKey(text: string): string {
+  return text.replace(/[\u201c\u201d"]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+/** The words of a market verbatim row, without the "Market verbatim (...):" lead-in. */
+export function verbatimWords(claimText: string): string {
+  return claimText.replace(/^Market verbatim \([^)]*\):\s*/, "");
+}
+
+/** The market verbatim row's claim text: who said it and where, then the words. */
+export function verbatimClaimText(v: Dossier["verbatims"][number]): string {
+  const who = [v.source_type.replace(/_/g, " "), v.speaker_role, v.date].filter((x): x is string => !!x && x.trim().length > 0).join(", ");
+  return `Market verbatim (${who}): ${v.text.trim()}`;
+}
+
+/**
+ * Every verbatim the research kept becomes an audience-language ledger row, so the copy can quote the market in
+ * its own words with a ledger tag: the standard wants a row behind every quote, and the factual review treats a
+ * quote with no row as invented. Rows that already hold the words (an earlier research run) are not repeated.
+ */
+export function verbatimRows(d: Dossier, existing: { claim_text: string | null; claim_type: string }[]): ClaimRowInput[] {
+  const held = new Set(existing.filter((c) => c.claim_type === "audience_language").map((c) => verbatimKey(verbatimWords(c.claim_text ?? ""))));
+  const rows: ClaimRowInput[] = [];
+  for (const v of d.verbatims) {
+    const key = verbatimKey(v.text);
+    if (!key || held.has(key)) continue;
+    held.add(key);
+    rows.push(blank(verbatimClaimText(v), "audience_language", "other", v.source_url ?? null, v.text.trim()));
+  }
   return rows;
 }
 

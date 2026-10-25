@@ -74,7 +74,7 @@ export const editorialPrompt: PromptModule<EditorialArgs> = {
       `CONTROL TO PREDICT AGAINST:\n${args.controlText}`,
       offerBlockText(ctx.variant, ctx.brief, ctx.claims),
       ledgerText(ctx.claims, { includeDropped: true }),
-      dossierText(ctx.dossier, { maxVerbatims: 60 }),
+      dossierText(ctx.dossier, { maxVerbatims: 60, claims: ctx.claims }),
       CACHE_BREAK,
       cold,
       mech,

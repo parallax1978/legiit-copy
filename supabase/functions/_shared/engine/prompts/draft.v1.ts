@@ -138,7 +138,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
       offerBlockText(ctx.variant, ctx.brief, ctx.claims),
       briefText(ctx.brief, ctx.offer.name),
       ledgerText(ctx.claims),
-      dossierText(ctx.dossier),
+      dossierText(ctx.dossier, { claims: ctx.claims }),
       voiceText(ctx.voice, ctx.config?.greeting),
       configText(ctx.config),
       questionsText(ctx.questions),

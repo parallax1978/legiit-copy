@@ -34,3 +34,35 @@ Deno.test("ledgerRowsFromDossier adds a credential row for the speaker and a gua
   const already = ledgerRowsFromDossier(base, [{ claim_text: "From the team led by Chris M. Walker", claim_type: "credential" }, { claim_text: "No money-back refund; credits return on failed runs", claim_type: "guarantee" }]);
   assertEquals(already, []);
 });
+
+import { verbatimClaimText, verbatimRows } from "../research/answers.ts";
+import { dossierText } from "../draft/prompt_text.ts";
+
+const V1 = { id: "V1", text: "“requires heavy editing for quality output”", source_url: "https://example.com/review", source_type: "review" as const, speaker_role: "buyer", tags: ["frustration" as const], desire_cluster: "human-voice", intensity_marker: false, duration_marker: false, date: "2026-03" };
+const V2 = { ...V1, id: "V2", text: "\"sounds like everyone else's\"", source_url: null, speaker_role: null, date: null, source_type: "forum" as const };
+
+Deno.test("verbatimRows: every verbatim becomes an audience-language row with its source, once", () => {
+  const d = { ...base, verbatims: [V1, V2] };
+  const rows = verbatimRows(d, []);
+  assertEquals(rows.length, 2);
+  assertEquals(rows[0].claim_type, "audience_language");
+  assertEquals(rows[0].claim_text, "Market verbatim (review, buyer, 2026-03): “requires heavy editing for quality output”");
+  assertEquals(rows[0].evidence.source_ref, "https://example.com/review");
+  assertEquals(rows[0].evidence.quote, V1.text);
+  assertEquals(rows[1].claim_text, "Market verbatim (forum): \"sounds like everyone else's\"");
+  assertEquals(rows[1].evidence.source_ref, "research");
+  // a row that already holds the words is not repeated, whatever the quotation marks
+  const again = verbatimRows(d, [{ claim_text: verbatimClaimText(V1).replace(/[“”]/g, '"'), claim_type: "audience_language" }]);
+  assertEquals(again.map((r) => r.claim_text), [rows[1].claim_text]);
+  // and ledgerRowsFromDossier carries them with the speaker and refund rows
+  assertEquals(ledgerRowsFromDossier(d, []).filter((r) => r.claim_type === "audience_language").length, 2);
+});
+
+Deno.test("dossierText: a verbatim with a ledger row shows its tag; one without shows none", () => {
+  const d = { ...base, verbatims: [V1, V2] };
+  const claims = [{ id: "abc12345-0000", claim_type: "audience_language", claim_text: verbatimClaimText(V1) }];
+  const text = dossierText(d, { claims });
+  assertEquals(text.includes("V1 [[L:abc12345-0000]] [frustration; cluster human-voice; 2026-03]"), true, text);
+  assertEquals(/V2 \[frustration/.test(text), true, text);
+  assertEquals(dossierText(d).includes("[[L:"), false);
+});

@@ -9,6 +9,7 @@ import type { Dossier } from "../schemas/research.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
 import type { Section } from "../schemas/draft.ts";
 import { renderBlock } from "../render.ts";
+import { verbatimKey, verbatimWords } from "../research/answers.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
 import { readerText } from "./ledger.ts";
 
@@ -104,11 +105,27 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
   return lines.join("\n");
 }
 
-export function dossierText(d: Dossier | null, opts: { maxVerbatims?: number } = {}): string {
+/** Ledger rows that hold a verbatim's words, keyed by the words: the tag a quote of that verbatim must carry. */
+export function verbatimLedgerTags(claims: Pick<ClaimRow, "id" | "claim_type" | "claim_text">[]): Map<string, string> {
+  const m = new Map<string, string>();
+  for (const c of claims) {
+    if (c.claim_type !== "audience_language" || !c.claim_text) continue;
+    const key = verbatimKey(verbatimWords(c.claim_text));
+    if (key && !m.has(key)) m.set(key, c.id);
+  }
+  return m;
+}
+
+export function dossierText(d: Dossier | null, opts: { maxVerbatims?: number; claims?: Pick<ClaimRow, "id" | "claim_type" | "claim_text">[] } = {}): string {
   if (!d) return "RESEARCH DOSSIER: none. No verbatims are available: do not describe the reader's state, do not raise objections, do not tell stories. Write only what the brief and ledger support.";
   const maxV = opts.maxVerbatims ?? 80;
   const themed = new Set(d.themes.flatMap((t) => t.verbatim_ids));
   const verbatims = [...d.verbatims].sort((a, b) => Number(themed.has(b.id)) - Number(themed.has(a.id))).slice(0, maxV);
+  const tags = verbatimLedgerTags(opts.claims ?? []);
+  const tagOf = (text: string) => {
+    const id = tags.get(verbatimKey(text));
+    return id ? ` [[L:${id}]]` : "";
+  };
   const out = [
     `RESEARCH DOSSIER`,
     `speaker: ${d.speaker.name ?? "unnamed"}${d.speaker.role ? `, ${d.speaker.role}` : ""}${d.speaker.stake ? `; stake: ${d.speaker.stake}` : ""}`,
@@ -120,7 +137,7 @@ export function dossierText(d: Dossier | null, opts: { maxVerbatims?: number } =
     d.first_week_experience ? `first-week experience: ${d.first_week_experience}` : "first-week experience: unknown",
     d.refund_history ? `refund history: ${d.refund_history}` : "",
     `THEMES: ${d.themes.map((t) => `${t.name} [${t.tag}, n=${t.count}, ${t.confidence}] ← ${t.verbatim_ids.slice(0, 5).join(",")}`).join(" | ") || "none"}`,
-    `VERBATIMS (exact wording; quote these, never paraphrase into generic emotion words):\n${verbatims.map((v) => `  ${v.id} [${v.tags.join(",")}${v.desire_cluster ? `; cluster ${v.desire_cluster}` : ""}${v.date ? `; ${v.date}` : ""}] "${clip(v.text, 400)}"`).join("\n") || "  none"}`,
+    `VERBATIMS (exact wording; quote these, never paraphrase into generic emotion words; a quoted verbatim carries the ledger tag shown beside it, and one with no tag is written with [[NEEDS SOURCE]]):\n${verbatims.map((v) => `  ${v.id}${tagOf(v.text)} [${v.tags.join(",")}${v.desire_cluster ? `; cluster ${v.desire_cluster}` : ""}${v.date ? `; ${v.date}` : ""}] "${clip(v.text, 400)}"`).join("\n") || "  none"}`,
     `OBJECTION MAP (the only objections the copy may raise or answer):\n${d.objection_map.map((o) => `  - ${o.text} ← ${o.verbatim_ids.join(",")}`).join("\n") || "  none: raise no objections"}`,
     `PROOF INVENTORY:\n${d.proof_inventory.map((p) => `  - [${p.grade}] ${p.evidence_type}: ${p.claim}${p.ledger_ref ? ` → [[L:${p.ledger_ref}]]` : " (no ledger row: not citable)"}${p.source ? ` src ${p.source}` : ""}`).join("\n") || "  none"}`,
     `STORY INVENTORY (the only stories the copy may tell):\n${d.story_inventory.map((s) => `  - ${s.event}${s.date ? ` (${s.date})` : ""}${s.numbers ? `; numbers: ${s.numbers}` : ""}${s.people ? `; people: ${s.people}` : ""}${s.source ? `; src ${s.source}` : ""}`).join("\n") || "  none: no story lead is possible"}`,
