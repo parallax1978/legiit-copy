@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Check, ChevronRight, FileSearch, Gavel, Quote, ShieldCheck, Sparkles, X } from "lucide-react";
+import { Check, ChevronRight, FileSearch, Gavel, Quote, Sparkles, X } from "lucide-react";
 import { stripLedger } from "@engine/render.ts";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -111,32 +111,7 @@ export default function Landing() {
             </form>
           </div>
 
-          <div className="relative mx-auto w-full min-w-0 max-w-lg lg:max-w-none" aria-hidden="true">
-            <div className="absolute -inset-6 rounded-[2rem] bg-brand/40 blur-3xl" />
-            <div className="relative rounded-2xl border border-white/10 bg-white p-5 text-ink shadow-pop sm:p-6">
-              <div className="pr-0 sm:pr-28">
-                <p className="eyebrow text-brand">The review</p>
-                <p className="mt-1 text-base font-bold tracking-tight">This page, before anyone saw it</p>
-              </div>
-              <ol className="mt-4 divide-y divide-line rounded-xl border border-line">
-                <ReviewRow n={1} label="Cold read" sub="a second model, no brief" chips={[["Read it cold", "good"]]} />
-                <ReviewRow n={2} label="Copy chief" sub="argument, lead, claims, voice: in order" chips={[[review.verdict, review.stoppedAt ? "warn" : "good"]]} />
-                <ReviewRow n={3} label="Facts" sub="every claim checked against the ledger" chips={[[review.flags ? `${review.flags} for you to decide` : "nothing invented", review.flags ? "warn" : "good"]]} />
-              </ol>
-              <div className="mt-4 flex items-center justify-between gap-3">
-                <p className="text-xs text-ink-muted">{review.tellsPer300 === 0 ? "0 machine tells per 300 words" : `${review.tellsPer300} machine tells per 300 words`}{review.words ? ` · ${review.words.toLocaleString()} words` : ""}</p>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-glow"><Sparkles className="h-3 w-3" /> Show evidence</span>
-              </div>
-            </div>
-            <div className="absolute -right-3 -top-5 hidden rounded-xl border border-line bg-white px-3 py-2 text-xs shadow-pop sm:block">
-              <p className="flex items-center gap-1.5 font-semibold text-ink"><Gavel className="h-3.5 w-3.5 text-brand" /> Argument chosen first</p>
-              <p className="mt-0.5 text-ink-muted">{review.argument || "before a word was written"}</p>
-            </div>
-            <div className="absolute -bottom-9 -left-5 hidden rounded-xl border border-line bg-white px-3 py-2 text-xs shadow-pop sm:block">
-              <p className="flex items-center gap-1.5 font-semibold text-ink"><ShieldCheck className="h-3.5 w-3.5 text-good" /> Headline written last</p>
-              <p className="mt-0.5 text-ink-muted">{review.lead || "offer first, three leads, then the headline"}</p>
-            </div>
-          </div>
+          <HeroVisual />
         </div>
       </section>
 
@@ -326,6 +301,87 @@ const FORMAT_FAMILIES = [
   { name: "Social", items: ["Organic social post"] },
 ];
 
+/**
+ * The product in the hero, drawn in HTML like the sister sites' mockups: the draft sheet behind, the review in
+ * front with the gates ring, and two chips. Everything on it is this page's own run.
+ */
+function HeroVisual() {
+  const gateOrder = ["the argument", "the lead", "the claims", "the voice"];
+  const passed = review.stoppedAt ? Math.max(0, gateOrder.indexOf(review.stoppedAt)) : 4;
+  const pct = (passed / 4) * 100;
+  const deckBlock = first("subhead", "deck") ?? "";
+  return (
+    <div className="relative mx-auto w-full min-w-0 max-w-lg lg:max-w-none" aria-hidden="true">
+      <div className="absolute -inset-8 rounded-[2.5rem] bg-brand/40 blur-3xl" />
+
+      {/* the draft sheet, behind */}
+      <div className="absolute -left-3 top-2 hidden w-[60%] -rotate-3 rounded-xl border border-line bg-white p-4 text-ink shadow-pop md:block">
+        <p className="eyebrow text-brand">The piece</p>
+        {preheadline && <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">{preheadline}</p>}
+        <p className="mt-1 line-clamp-2 text-[13px] font-bold leading-snug tracking-tight">{headline.replace("\n", " ")}</p>
+        <p className="mt-2 line-clamp-3 text-[11px] leading-relaxed text-ink-muted"><Tagged text={deckBlock} /></p>
+        <div className="mt-3 space-y-1.5">
+          <div className="h-1.5 w-11/12 rounded-full bg-surface-sunken" />
+          <div className="h-1.5 w-full rounded-full bg-surface-sunken" />
+          <div className="flex items-center gap-1.5"><div className="h-1.5 w-7/12 rounded-full bg-surface-sunken" /><span className="rounded bg-brand-faint px-1 text-[9px] font-semibold text-brand-strong">L:816b</span></div>
+          <div className="h-1.5 w-10/12 rounded-full bg-surface-sunken" />
+          <div className="flex items-center gap-1.5"><div className="h-1.5 w-5/12 rounded-full bg-surface-sunken" /><span className="rounded bg-brand-faint px-1 text-[9px] font-semibold text-brand-strong">L:d8c4</span></div>
+        </div>
+        <span className="mt-3 inline-flex items-center rounded-full bg-brand px-2.5 py-1 text-[10px] font-semibold text-white">{buttonText}</span>
+      </div>
+
+      {/* the review, in front */}
+      <div className="relative rounded-2xl border border-white/10 bg-white p-5 text-ink shadow-pop md:ml-[26%] md:mt-16 sm:p-6">
+        <p className="eyebrow text-brand">The review</p>
+        <p className="mt-1 text-base font-bold tracking-tight">This page, before anyone saw it</p>
+        <div className="mt-4 flex items-center gap-5">
+          <div className="relative h-22 w-22 shrink-0">
+            <svg viewBox="0 0 36 36" className="h-22 w-22 -rotate-90">
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--surface-sunken)" strokeWidth="3.2" />
+              <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" strokeWidth="3.2" strokeLinecap="round" pathLength={100} strokeDasharray={`${pct} 100`} />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-xl font-bold leading-none tracking-tight">{passed}/4</span>
+              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">gates</span>
+            </div>
+          </div>
+          <ol className="min-w-0 flex-1 divide-y divide-line">
+            <MiniRow label="Cold read" sub="second model, no brief" chip="Read it cold" tone="good" />
+            <MiniRow label="Copy chief" sub={review.stoppedAt ? `stopped at ${review.stoppedAt}` : "argument · lead · claims · voice"} chip={review.verdict} tone={review.stoppedAt ? "warn" : "good"} />
+            <MiniRow label="Facts" sub="every claim on the ledger" chip={review.flags ? `${review.flags} to decide` : "nothing invented"} tone={review.flags ? "warn" : "good"} />
+          </ol>
+        </div>
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-3">
+          <p className="text-xs text-ink-muted">{review.tellsPer300 === 0 ? "0 machine tells" : `${review.tellsPer300} machine tells`} per 300 words{review.words ? ` · ${review.words.toLocaleString()} words` : ""}</p>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-glow"><Sparkles className="h-3 w-3" /> Show evidence</span>
+        </div>
+      </div>
+
+      {/* chips */}
+      <div className="absolute -right-3 -top-4 hidden items-center gap-2 rounded-xl border border-line bg-white py-2 pl-2 pr-3 text-xs shadow-pop sm:flex">
+        <span className="brand-gradient flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold text-white">CW</span>
+        <span><span className="block font-semibold text-ink">Chris M. Walker</span><span className="text-ink-muted">Founder, Legiit</span></span>
+      </div>
+      <div className="absolute -bottom-9 right-10 hidden rounded-xl border border-line bg-white px-3 py-2 text-xs shadow-pop sm:block">
+        <p className="flex items-center gap-1.5 font-semibold text-ink"><Gavel className="h-3.5 w-3.5 text-brand" /> Argument chosen first</p>
+        <p className="mt-0.5 text-ink-muted">{review.argument || "before a word was written"}</p>
+      </div>
+    </div>
+  );
+}
+
+function MiniRow({ label, sub, chip, tone }: { label: string; sub: string; chip: string; tone: "good" | "warn" }) {
+  return (
+    <li className="flex items-center justify-between gap-3 py-2 first:pt-0 last:pb-0">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold leading-tight">{label}</p>
+        <p className="truncate text-[11px] text-ink-muted">{sub}</p>
+      </div>
+      <Chip tone={tone}>{chip}</Chip>
+    </li>
+  );
+}
+
 function Section({ id, alt, eyebrow, title, lead, children }: { id?: string; alt?: boolean; eyebrow: string; title: string; lead?: string; children: ReactNode }) {
   return (
     <section id={id} className={alt ? "bg-surface-alt" : "bg-surface"}>
@@ -370,22 +426,9 @@ function Chrome({ crumb, children }: { crumb: string; children: ReactNode }) {
   );
 }
 
-function ReviewRow({ n, label, sub, chips }: { n: number; label: string; sub: string; chips: [string, "good" | "warn"][] }) {
-  return (
-    <li className="flex items-center gap-3 px-3 py-3">
-      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-faint text-xs font-bold text-brand-strong">{n}</span>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold">{label}</p>
-        <p className="text-xs text-ink-muted">{sub}</p>
-      </div>
-      <div className="flex shrink-0 flex-col items-end gap-1">{chips.map(([t, tone]) => <Chip key={t} tone={tone}>{t}</Chip>)}</div>
-    </li>
-  );
-}
-
 function Chip({ tone, children }: { tone: "good" | "warn"; children: ReactNode }) {
   const cls = tone === "good" ? "bg-good-soft text-good ring-good-soft" : "bg-warn-soft text-warn ring-warn-soft";
-  return <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}><span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone === "good" ? "bg-good" : "bg-warn"}`} />{children}</span>;
+  return <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}><span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone === "good" ? "bg-good" : "bg-warn"}`} />{children}</span>;
 }
 
 function Row({ k, v }: { k: string; v: string }) {
