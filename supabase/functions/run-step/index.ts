@@ -13,7 +13,7 @@
  */
 import { z } from "zod";
 import { type Db, serviceClient } from "shared/supabase.ts";
-import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls } from "shared/http.ts";
+import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls, secretMatches } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { nextSteps, type PipelineState } from "engine/pipeline.ts";
@@ -127,17 +127,6 @@ Deno.serve(async (req) => {
     headers: { "Content-Type": "application/json" },
   });
 });
-
-/** Compares SHA-256 digests: fixed-length, constant-time, and the loop reveals nothing about the secret's length. */
-async function secretMatches(expected: string, given: string): Promise<boolean> {
-  const enc = new TextEncoder();
-  const [a, b] = await Promise.all([crypto.subtle.digest("SHA-256", enc.encode(expected)), crypto.subtle.digest("SHA-256", enc.encode(given))]);
-  const ua = new Uint8Array(a);
-  const ub = new Uint8Array(b);
-  let diff = 0;
-  for (let i = 0; i < ua.length; i++) diff |= ua[i] ^ ub[i];
-  return diff === 0;
-}
 
 // ---------- the worker ----------
 async function runMessage(body: Body): Promise<void> {

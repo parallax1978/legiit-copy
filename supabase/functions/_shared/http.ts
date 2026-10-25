@@ -18,6 +18,17 @@ import { Dossier } from "./engine/schemas/research.ts";
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
 
 /** Keeps a promise alive after the response is sent (Supabase edge runtime); a no-op elsewhere, where the promise simply runs on. */
+/** Compares SHA-256 digests: fixed-length, constant-time, and the loop reveals nothing about the secret's length. */
+export async function secretMatches(expected: string, given: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([crypto.subtle.digest("SHA-256", enc.encode(expected)), crypto.subtle.digest("SHA-256", enc.encode(given))]);
+  const ua = new Uint8Array(a);
+  const ub = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < ua.length; i++) diff |= ua[i] ^ ub[i];
+  return diff === 0;
+}
+
 export function background(p: Promise<unknown>): void {
   if (typeof EdgeRuntime !== "undefined" && EdgeRuntime?.waitUntil) EdgeRuntime.waitUntil(p);
 }
