@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Check, ChevronRight, FileSearch, Gavel, Quote, Sparkles, X } from "lucide-react";
-import { stripLedger } from "@engine/render.ts";
+import { readerText } from "@engine/draft/ledger.ts";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { facts, piece, review, type HomeBlock } from "./home-copy";
@@ -15,7 +15,7 @@ import { facts, piece, review, type HomeBlock } from "./home-copy";
 
 const blocks = (id: string): HomeBlock[] => piece.find((s) => s.section_id === id)?.blocks ?? [];
 const first = (id: string, type: string): string | undefined => blocks(id).find((b) => b.type === type)?.text;
-const clean = (t: string | undefined) => stripLedger(t ?? "");
+const clean = (t: string | undefined) => readerText(t ?? "");
 const SIGN_IN = "/login";
 
 const preheadline = clean(first("headline", "preheadline"));
@@ -33,6 +33,16 @@ function cards(id: string): { title: string; body: HomeBlock[] }[] {
     if (b.type === "crosshead") out.push({ title: clean(b.text), body: [] });
     else if (out.length) out[out.length - 1].body.push(b);
     else out.push({ title: "", body: [b] });
+  }
+  return out.filter((c) => c.title);
+}
+
+/** Blocks of a section before its first crosshead: the opening the writer put ahead of the cards. */
+function intro(id: string): HomeBlock[] {
+  const out: HomeBlock[] = [];
+  for (const b of blocks(id)) {
+    if (b.type === "crosshead") break;
+    out.push(b);
   }
   return out;
 }
@@ -61,10 +71,16 @@ function Body({ body, className = "" }: { body: HomeBlock[]; className?: string 
   );
 }
 
-const headlineLines = headline.split("\n").map((l) => l.trim()).filter(Boolean);
+const headlineLines = (() => {
+  const lines = headline.split("\n").map((l) => l.trim()).filter(Boolean);
+  if (lines.length > 1) return lines;
+  const m = /^(.+?[.!?])\s+(.+)$/.exec(headline.trim());
+  return m ? [m[1], m[2]] : lines;
+})();
 
 export default function Landing() {
   const benefits = cards("benefits");
+  const opening = intro("benefits");
   const objections = cards("objections");
   const demo = cards("demo_offer");
   const proof = blocks("proof_strip");
@@ -135,21 +151,21 @@ export default function Landing() {
             {preheadline && <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">{preheadline}</p>}
             <p className="mt-1 text-lg font-bold leading-snug tracking-tight">{headline.replace("\n", " ")}</p>
             <p className="mt-2 text-sm text-ink-muted"><Tagged text={first("subhead", "deck") ?? ""} /></p>
-            {benefits[0] && (
+            {(opening[0] ?? benefits[0]?.body[0]) && (
               <div className="mt-4 rounded-lg border border-line bg-surface-alt p-3">
-                <p className="text-sm font-semibold">{benefits[0].title}</p>
-                {benefits[0].body.slice(0, 1).map((b, i) => <p key={i} className="mt-1 text-sm text-ink-muted"><Tagged text={b.text} /></p>)}
+                {!opening[0] && benefits[0] && <p className="text-sm font-semibold">{benefits[0].title}</p>}
+                <p className="mt-1 text-sm text-ink-muted"><Tagged text={(opening[0] ?? benefits[0].body[0]).text} /></p>
               </div>
             )}
             <p className="mt-3 text-xs text-ink-soft">Each tag is a ledger row: the fact, its source, its grade.</p>
           </Chrome>
           <Chrome crumb="Legiit Copy · Home page · Review">
             <p className="eyebrow text-brand">The copy chief</p>
-            <p className="mt-2 flex items-center gap-2 text-lg font-bold tracking-tight">{review.verdict} <Chip tone="good">{review.coldRead}</Chip></p>
+            <p className="mt-2 flex items-center gap-2 text-lg font-bold tracking-tight">{review.stoppedAt && !review.flagsPending ? "Notes applied" : review.verdict} <Chip tone="good">Read it cold</Chip></p>
             <dl className="mt-3 divide-y divide-line text-sm">
-              <Row k="Gates" v={review.stoppedAt ? `stopped at ${review.stoppedAt}; the rest wait until that is fixed` : "argument, lead, claims, voice: all four passed, in order"} />
+              <Row k="Gates" v={review.stoppedAt ? `stopped at ${review.stoppedAt}: it names the failing line and the fix${review.flagsPending ? "" : "; the line was rewritten"}` : "argument, lead, claims, voice: all four passed, in order"} />
               <Row k="Tells" v={`${review.tellsPer300} per 300 words`} />
-              <Row k="Facts" v={review.flags ? `${review.flags} flagged, each with the line, the rule and a rewrite` : "every claim on the ledger, nothing invented"} />
+              <Row k="Facts" v={review.flagsDecided || review.flagsPending ? `${review.flagsDecided + review.flagsPending} notes, each with the line, the rule and a rewrite; ${review.flagsPending ? `${review.flagsPending} still to decide` : "every one decided: keep, rewrite or drop"}` : "every claim on the ledger, nothing invented"} />
               {review.argument && <Row k="Argument" v={review.argument} />}
               {review.coldRead && <Row k="Cold read" v={review.coldRead} />}
             </dl>
@@ -180,6 +196,7 @@ export default function Landing() {
             </ul>
           </div>
         </div>
+        {opening.length > 0 && <div className="mt-8 max-w-2xl text-sm text-ink-muted"><Body body={opening} /></div>}
         <div className="mt-10 grid gap-6 border-t border-line pt-8 md:grid-cols-3">
           {benefits.slice(0, 3).map((b) => (
             <div key={b.title}>
@@ -262,8 +279,8 @@ export default function Landing() {
       {/* Band */}
       <section className="hero-dark">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:py-20">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{repeatLine || "Save one offer and read what it argues."}</h2>
-          <p className="mt-3 text-white/70">{ctaLine}</p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{preheadline || headlineLines[0]}</h2>
+          <p className="mt-3 text-white/70">{repeatLine || ctaLine}</p>
           <Button asChild size="lg" className="mt-7 h-12 rounded-full px-6 text-base shadow-glow"><Link href={SIGN_IN}>{repeatButton} <ChevronRight className="h-4 w-4" /></Link></Button>
           <p className="mt-4 text-xs text-white/60">No password. Nothing is charged.</p>
           <p className="mt-6 text-xs text-white/60">Already have an account? <Link href={SIGN_IN} className="underline hover:text-white">Sign in</Link></p>
@@ -306,9 +323,8 @@ const FORMAT_FAMILIES = [
  * front with the gates ring, and two chips. Everything on it is this page's own run.
  */
 function HeroVisual() {
-  const gateOrder = ["the argument", "the lead", "the claims", "the voice"];
-  const passed = review.stoppedAt ? Math.max(0, gateOrder.indexOf(review.stoppedAt)) : 4;
-  const pct = (passed / 4) * 100;
+  // the ring is the machine-tell score per 300 words: the deterministic check, full when nothing was found
+  const pct = Math.max(0, 100 - Math.min(100, review.tellsPer300 * 50));
   const deckBlock = first("subhead", "deck") ?? "";
   return (
     <div className="relative mx-auto w-full min-w-0 max-w-lg lg:max-w-none" aria-hidden="true">
@@ -341,14 +357,14 @@ function HeroVisual() {
               <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--brand)" strokeWidth="3.2" strokeLinecap="round" pathLength={100} strokeDasharray={`${pct} 100`} />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xl font-bold leading-none tracking-tight">{passed}/4</span>
-              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">gates</span>
+              <span className="text-xl font-bold leading-none tracking-tight">{review.tellsPer300}</span>
+              <span className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-ink-muted">tells</span>
             </div>
           </div>
           <ol className="min-w-0 flex-1 divide-y divide-line">
             <MiniRow label="Cold read" sub="second model, no brief" chip="Read it cold" tone="good" />
-            <MiniRow label="Copy chief" sub={review.stoppedAt ? `stopped at ${review.stoppedAt}` : "argument · lead · claims · voice"} chip={review.verdict} tone={review.stoppedAt ? "warn" : "good"} />
-            <MiniRow label="Facts" sub="every claim on the ledger" chip={review.flags ? `${review.flags} to decide` : "nothing invented"} tone={review.flags ? "warn" : "good"} />
+            <MiniRow label="Copy chief" sub={review.stoppedAt ? (review.flagsPending ? `stopped at ${review.stoppedAt}` : `stopped at ${review.stoppedAt}, then fixed`) : "argument · lead · claims · voice"} chip={review.stoppedAt ? (review.flagsPending ? review.verdict : "Notes fixed") : review.verdict} tone={review.stoppedAt && review.flagsPending ? "warn" : "good"} />
+            <MiniRow label="Facts" sub="every claim on the ledger" chip={review.flagsPending ? `${review.flagsPending} to decide` : review.flagsDecided ? `${review.flagsDecided} notes, decided` : "nothing invented"} tone={review.flagsPending ? "warn" : "good"} />
           </ol>
         </div>
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-3">
