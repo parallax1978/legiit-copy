@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { formatCardsByFamily, estimateCost, formatMoneyRange, SEQUENCE_TYPES, LENGTH_OPTIONS, isFormatId, type FormatCard, type FormatId } from "@/lib/formats";
+import { formatCardsByFamily, SEQUENCE_TYPES, LENGTH_OPTIONS, isFormatId, type FormatCard, type FormatId } from "@/lib/formats";
 import type { OfferOption } from "@/lib/data/generations";
 import { createGeneration, type CreateGenerationInput } from "@/lib/actions/generations";
 
@@ -46,7 +46,6 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
   const canNext = step === 0 ? !!offerId && !!card?.available : true;
   const includesResearch = !!offer && !offer.hasResearch;
   const includesOffer = !!offer && !offer.hasApprovedOffer && !skipOffer;
-  const cost = format ? estimateCost(format, { includesResearch }) : null;
 
   const submit = () => {
     if (!offerId || !format) return;
@@ -252,8 +251,8 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
         </div>
       )}
 
-      {step === 2 && card && offer && cost && (
-        <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
+      {step === 2 && card && offer && (
+        <div className="grid gap-5">
           <section className="rounded-card border border-line bg-surface p-5 shadow-card">
             <h2 className="text-base font-semibold text-ink">Ready to write</h2>
             <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
@@ -279,16 +278,6 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               </ol>
             </div>
           </section>
-          <aside className="space-y-3">
-            <div className="rounded-card border border-line bg-surface p-4 shadow-card">
-              <div className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Estimated cost</div>
-              <div className="mt-1 text-2xl font-bold text-ink">{formatMoneyRange(cost)}</div>
-              <p className="mt-1 text-xs text-ink-muted">
-                {includesResearch ? "Includes a one-time research pass for this offer. " : "Research already done for this offer, so none of this is research. "}
-                Billed by tokens used; long formats and revision cycles sit at the top of the range.
-              </p>
-            </div>
-          </aside>
         </div>
       )}
 

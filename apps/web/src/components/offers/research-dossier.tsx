@@ -104,7 +104,6 @@ export function ResearchDossier({ offerId, research, editable }: { offerId: stri
           <span className="text-xs text-ink-soft">
             {row.active ? "Active version, used by the writer" : "Older version"}
             {row.model ? ` · ${row.model}` : ""}
-            {row.cost_usd ? ` · $${Number(row.cost_usd).toFixed(2)}` : ""}
           </span>
         </div>
         {refreshButton}

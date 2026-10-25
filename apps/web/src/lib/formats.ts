@@ -96,36 +96,6 @@ export function isMultiItem(id: string): boolean {
   return isFormatId(id) ? !!formatCard(id).multi_item || ["email_sequence", "webinar_package", "meta_ad", "google_rsa"].includes(id) : false;
 }
 
-/** Rough cost table by family, in USD, shown on the confirm step. */
-export const COST_RANGES: Record<FormatFamily, [number, number]> = {
-  email: [0.3, 0.8],
-  page: [1.5, 4],
-  video: [4, 10],
-  ad: [0.3, 1],
-  social: [0.3, 1],
-  commerce: [0.8, 2.5],
-  message: [0.2, 0.5],
-  audio: [1, 3],
-};
-
-export const RESEARCH_COST_RANGE: [number, number] = [1, 3];
-
-export function estimateCost(id: FormatId, opts: { includesResearch: boolean }): [number, number] {
-  const card = formatCard(id);
-  let [lo, hi] = COST_RANGES[card.family];
-  if (id === "webinar_package") [lo, hi] = [4, 10];
-  if (id === "email_sequence") [lo, hi] = [1.5, 4];
-  if (opts.includesResearch) {
-    lo += RESEARCH_COST_RANGE[0];
-    hi += RESEARCH_COST_RANGE[1];
-  }
-  return [lo, hi];
-}
-
-export function formatMoneyRange([lo, hi]: [number, number]): string {
-  const f = (n: number) => (n < 1 ? `$${n.toFixed(2)}` : `$${n.toFixed(n % 1 ? 2 : 0)}`);
-  return `${f(lo)} – ${f(hi)}`;
-}
 
 export const SEQUENCE_TYPES: { id: string; label: string; description: string }[] = [
   { id: "launch", label: "Launch", description: "Open cart to close cart, one argument built across the series." },
