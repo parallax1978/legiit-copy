@@ -96,7 +96,7 @@ export interface DashboardData {
   offers: number;
   piecesThisMonth: number;
   runningNow: number;
-  costThisMonth: number;
+  awaitingYou: number;
   inProgress: InProgressGeneration[];
   recentDrafts: RecentDraft[];
   checklist: { hasOffer: boolean; hasReadyOffer: boolean; hasGeneration: boolean };
@@ -126,11 +126,11 @@ export async function getDashboardData(workspaceId: string): Promise<DashboardDa
   const supabase = await createClient();
   const monthStart = startOfMonth(new Date()).toISOString();
 
-  const [offers, pieces, running, cost, inProgress, drafts, readyOffers, anyGeneration] = await Promise.all([
+  const [offers, pieces, running, awaiting, inProgress, drafts, readyOffers, anyGeneration] = await Promise.all([
     supabase.from("offers").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).neq("status", "archived"),
     supabase.from("generations").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).eq("status", "completed").gte("completed_at", monthStart),
     supabase.from("generations").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).in("status", ["queued", "running"]),
-    supabase.from("usage_events").select("cost_usd").eq("workspace_id", workspaceId).gte("created_at", monthStart),
+    supabase.from("generations").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId).eq("status", "needs_input"),
     supabase
       .from("generations")
       .select("id, format, status, current_step, progress_message, updated_at, offer:offers(name)")
@@ -148,7 +148,6 @@ export async function getDashboardData(workspaceId: string): Promise<DashboardDa
     supabase.from("generations").select("id", { count: "exact", head: true }).eq("workspace_id", workspaceId),
   ]);
 
-  const costThisMonth = (cost.data ?? []).reduce((sum, r) => sum + Number(r.cost_usd ?? 0), 0);
 
   const inProgressRows = (inProgress.data ?? []) as unknown as GenRow[];
   const draftRows = (drafts.data ?? []) as unknown as DraftRow[];
@@ -157,7 +156,7 @@ export async function getDashboardData(workspaceId: string): Promise<DashboardDa
     offers: offers.count ?? 0,
     piecesThisMonth: pieces.count ?? 0,
     runningNow: running.count ?? 0,
-    costThisMonth,
+    awaitingYou: awaiting.count ?? 0,
     inProgress: inProgressRows.map((g) => ({
       id: g.id,
       format: g.format,

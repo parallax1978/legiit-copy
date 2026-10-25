@@ -109,11 +109,11 @@ export function buildTimeline(generation: GenerationRow, steps: StepRow[]): Time
       step,
       label: STEP_LABELS[step],
       status,
-      attempts: rows.length,
+      attempts: rows.filter((r) => r.status !== "continued").length,
       cycles,
       latest,
       summary: completedRows.length ? summarize(step, completedRows[completedRows.length - 1].output) : null,
-      error: latest?.status === "failed" || latest?.status === "interrupted" ? latest.error : null,
+      error: latest?.status === "failed" || latest?.status === "interrupted" ? plainStepError(latest.error) : null,
       cost,
       durationMs: latest?.duration_ms ?? null,
     };
@@ -196,6 +196,18 @@ export function summarize(step: StepName, output: unknown): string | null {
   }
   const json = JSON.stringify(output);
   return json.length <= 240 ? json : null;
+}
+
+/** Step errors are written for engineers; the timeline shows the cause in plain words. */
+export function plainStepError(error: string | null | undefined): string | null {
+  if (!error) return null;
+  const e = error.toLowerCase();
+  if (e.includes("max_tokens")) return "The answer ran past its length budget; it is being run again.";
+  if (e.includes("timed out") || e.includes("timeout") || e.includes("worker shut down") || e.includes("never finished")) return "This step took too long; it is being run again.";
+  if (e.includes("refus")) return "The model declined to write this content.";
+  if (e.includes("rate limit") || e.includes("overloaded") || e.includes("529")) return "The writing service was busy; it is being run again.";
+  if (e.includes("could not finish") || e.includes("stopped before")) return error;
+  return "This step hit a problem; it is being run again.";
 }
 
 export function formatCost(n: number | null | undefined): string {

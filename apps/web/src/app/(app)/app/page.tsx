@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { Package, FileText, Activity, Receipt, Plus, PenLine, CheckCircle2 } from "lucide-react";
 import { requireWorkspace, getUser, canEdit } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { getDashboardData, formatUsd, formatInt } from "@/lib/data/dashboard";
+import { getDashboardData, formatInt } from "@/lib/data/dashboard";
 import { PageHeader } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
 import { StatTile, StatTiles } from "@/components/dashboard/stat-tiles";
@@ -62,7 +62,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <StatTile label="Offers" value={formatInt(data.offers)} hint="active offers" icon={Package} href="/app/offers" />
         <StatTile label="Copy pieces" value={formatInt(data.piecesThisMonth)} hint={`completed in ${monthLabel}`} icon={FileText} href="/app/generations" />
         <StatTile label="Running now" value={formatInt(data.runningNow)} hint="queued or writing" icon={Activity} accent={data.runningNow > 0} />
-        <StatTile label="Cost" value={formatUsd(data.costThisMonth)} hint={`model usage in ${monthLabel}`} icon={Receipt} href="/app/settings/usage" />
+        <StatTile label="Awaiting you" value={formatInt(data.awaitingYou)} hint="pieces that need a decision" icon={Receipt} href="/app/generations?status=needs_input" accent={data.awaitingYou > 0} />
       </StatTiles>
 
       <div className="grid gap-6 lg:grid-cols-2">

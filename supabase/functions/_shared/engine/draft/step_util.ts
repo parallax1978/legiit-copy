@@ -3,13 +3,17 @@
  * defaults, read earlier step outputs, and describe the argument for prompts. Not pure (calls the model).
  */
 import type { z } from "zod";
-import { callModel, type CallResult } from "../llm.ts";
+import { callModel, type CallResult, TruncatedError } from "../llm.ts";
 import { resolvePrompt, type PromptModule } from "../prompts/types.ts";
-import { MAX_TOKENS_PER_CALL, STEP_DEFAULTS, type Effort, type StepName } from "../config.ts";
+import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS, type Effort, type StepName } from "../config.ts";
+import { remainingBudgetMs } from "../steps/budget.ts";
 import type { AngleRow, StepContext } from "../steps/types.ts";
 import { ArgumentOutput, Candidate } from "../schemas/argument.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import { parseStoredDraft } from "./assemble.ts";
+
+/** A retry after a truncated answer needs this much of the invocation left. */
+export const RETRY_MIN_BUDGET_MS = 90_000;
 
 export function resolvedModel<A>(ctx: StepContext, step: StepName, mod: PromptModule<A>): string {
   return resolvePrompt(ctx, mod).model ?? mod.model ?? STEP_DEFAULTS[step].model;
@@ -30,15 +34,28 @@ export async function callStep<A, S extends z.ZodTypeAny>(
   const model = overrides.model ?? r.model ?? d.model;
   const effort = overrides.effort ?? (r.effort as Effort | undefined) ?? d.effort;
   const maxTokens = Math.min(overrides.maxTokens ?? r.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL);
-  const res = await callModel<S>({
-    model,
-    effort,
-    maxTokens,
-    system: r.system,
-    user: mod.user(ctx, args),
-    schema,
-    log: { db: ctx.db, workspaceId: ctx.generation.workspace_id, generationId: ctx.generation.id, step, attempt: ctx.attempt, purpose, promptVersionId: r.promptVersionId },
-  });
+  const user = mod.user(ctx, args);
+  const run = (eff: Effort, tag: string) =>
+    callModel<S>({
+      model,
+      effort: eff,
+      maxTokens,
+      timeoutMs: remainingBudgetMs(ctx),
+      system: r.system,
+      user,
+      schema,
+      log: { db: ctx.db, workspaceId: ctx.generation.workspace_id, generationId: ctx.generation.id, step, attempt: ctx.attempt, purpose: purpose + tag, promptVersionId: r.promptVersionId },
+    });
+  let res;
+  try {
+    res = await run(effort, "");
+  } catch (e) {
+    // Thinking and the answer share max_tokens: a review whose thinking ate the budget is rerun once with one
+    // rung less thinking, in this invocation when time allows (a review call is a minute or two).
+    if (!(e instanceof TruncatedError) || effort === "low" || remainingBudgetMs(ctx) < RETRY_MIN_BUDGET_MS) throw e;
+    await ctx.progress(`${purpose} is taking a second pass`);
+    res = await run(lowerEffort(effort), " (retry, less thinking)");
+  }
   // Infer<S> resolves to z.infer<S> once S is concrete; the conditional type cannot be reduced for a generic S.
   return res as unknown as CallResult<z.infer<S>>;
 }

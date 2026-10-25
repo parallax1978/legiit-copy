@@ -20,7 +20,7 @@ export default async function SettingsIndexPage() {
       title: "Members",
       description: role === "owner" ? "Invite teammates, change roles, revoke invites." : "Who has access to this workspace and in what role.",
     },
-    { href: "/app/settings/usage", icon: Receipt, title: "Usage", description: "Monthly pieces, tokens and model cost, and what each piece cost to write." },
+    { href: "/app/settings/usage", icon: Receipt, title: "Usage", description: "Pieces written, by month and one by one." },
   ];
   return (
     <div className="space-y-6">

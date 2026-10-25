@@ -2,7 +2,7 @@
 import { CheckCircle2, Circle, Loader2, XCircle, PauseCircle, Clock, MinusCircle, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { GenerationRow, StepRow } from "@/lib/data/generations";
-import { buildTimeline, STEP_BLURBS, formatCost, formatDuration, type TimelineStatus } from "./outputs";
+import { buildTimeline, STEP_BLURBS, formatDuration, type TimelineStatus } from "./outputs";
 
 const ICON: Record<TimelineStatus, { Icon: typeof Circle; className: string; spin?: boolean }> = {
   completed: { Icon: CheckCircle2, className: "text-good" },
@@ -36,8 +36,7 @@ export function StepTimeline({ generation, steps, compact = false }: { generatio
                     <RotateCcw className="h-2.5 w-2.5" /> cycle {e.cycles}
                   </span>
                 )}
-                {e.attempts > 1 && e.cycles <= 1 && <span className="text-[10px] text-ink-soft">attempt {e.attempts}</span>}
-                {!compact && e.cost > 0 && <span className="ml-auto text-[11px] text-ink-soft">{formatCost(e.cost)}{e.durationMs ? ` · ${formatDuration(e.durationMs)}` : ""}</span>}
+                {!compact && e.durationMs ? <span className="ml-auto text-[11px] text-ink-soft">{formatDuration(e.durationMs)}</span> : null}
               </div>
               {isCurrent && generation.progress_message && <p className="mt-0.5 text-xs text-brand-strong">{generation.progress_message}</p>}
               {e.summary && e.status !== "running" && <p className="mt-0.5 text-xs text-ink-muted line-clamp-3">{e.summary}</p>}

@@ -19,7 +19,7 @@ import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName }
 import { nextSteps, type PipelineState } from "engine/pipeline.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
-import { RefusalError } from "engine/llm.ts";
+import { RefusalError, TruncatedError } from "engine/llm.ts";
 import { type AppliedEffects, applyEffects, buildContext } from "engine/context.ts";
 
 /** pgmq visibility timeout used by app.dispatch_pipeline; a running row older than this is presumed dead. */
@@ -212,12 +212,13 @@ async function runMessage(body: Body): Promise<void> {
   // Interrupted attempts never reach failAttempt (the worker was shut down), so the cap is enforced here too:
   // otherwise a step that outlives every invocation is redelivered, and billed, forever.
   if (failedBefore >= MAX_STEP_ATTEMPTS) {
-    await failGeneration(db, { tag, gen, step, msgId }, `${label(step)} failed after ${failedBefore} attempts: the attempts were interrupted before finishing (the step outlived the function's time budget). ${lastError(thisPass)}`);
+    await failGeneration(db, { tag, gen, step, msgId }, `${label(step)} could not finish after ${failedBefore} attempts: each one took too long. Use "Retry" to run it again; if it keeps failing, support can read the details.`);
     return;
   }
   const spent = await sumLlmCalls(db, { generationId }).catch(() => null);
   if (spent && spent.cost_usd >= MAX_GENERATION_COST_USD) {
-    await failGeneration(db, { tag, gen, step, msgId }, `Stopped before ${label(step)}: this generation's model calls have cost $${spent.cost_usd.toFixed(2)}, at or over the $${MAX_GENERATION_COST_USD} ceiling per generation.`);
+    console.error(`${tag} cost ceiling: $${spent.cost_usd.toFixed(2)} >= $${MAX_GENERATION_COST_USD}`);
+    await failGeneration(db, { tag, gen, step, msgId }, `Stopped before ${label(step)}: this piece has used more writing than one piece is allowed. Support can raise the limit.`);
     return;
   }
 
@@ -450,17 +451,29 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
   try {
     if (exhausted) {
       const attemptsUsed = Math.max(a.readCt, a.failedBefore + 1);
-      await failGeneration(db, a, `${label(a.step)} failed${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${message}`);
+      await failGeneration(db, a, `${label(a.step)} could not finish${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${plainReason(e)}. Use "Retry" to run it again; if it keeps failing, support can read the details.`);
     } else {
       // not acked: pgmq makes the message visible again after the visibility timeout and the dispatcher retries it
       await db
         .from("generations")
-        .update({ progress_message: `${label(a.step)} failed (attempt ${a.attempt}); retrying. ${message}`.slice(0, 500) })
+        .update({ progress_message: `${label(a.step)}: ${plainReason(e)}; starting it again in a few minutes.`.slice(0, 500) })
         .eq("id", a.gen.id);
     }
   } catch (err) {
     console.error(`${a.tag} failure bookkeeping failed`, err);
   }
+}
+
+/** What the user is told went wrong: the cause in plain words, never an API error string. */
+export function plainReason(e: unknown): string {
+  if (e instanceof TruncatedError) return "its answer ran past the length budget";
+  if (e instanceof RefusalError) return "the model declined to write this content";
+  const msg = errorMessage(e).toLowerCase();
+  if (msg.includes("timed out") || msg.includes("timeout")) return "it took too long";
+  if (msg.includes("rate") && msg.includes("limit")) return "the writing service was busy";
+  if (msg.includes("overloaded") || msg.includes("529")) return "the writing service was busy";
+  if (msg.includes("run intake first") || msg.includes("needs the intake brief")) return "the offer has no brief yet";
+  return "it hit a problem on our side";
 }
 
 /** Marks the generation failed with a message the user can act on and archives the queue message. */
@@ -473,11 +486,6 @@ async function failGeneration(db: Db, a: { tag: string; gen: GenerationRow; step
   await archive(db, a.msgId);
 }
 
-/** The newest recorded error of this pass, for the failure message. */
-function lastError(rows: StepRowLite[]): string {
-  const r = [...rows].reverse().find((x) => x.status === "failed" || x.status === "interrupted");
-  return r?.error ? `Last error: ${r.error.slice(0, 300)}` : "";
-}
 
 // ---------- pipeline state from the database ----------
 async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[], step: StepName, result: StepResult | null): Promise<PipelineState> {

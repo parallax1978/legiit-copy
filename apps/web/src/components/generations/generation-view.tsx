@@ -13,7 +13,7 @@ import { useLiveRefresh } from "./use-live-refresh";
 import { StatusBadge } from "./status-badge";
 import { StepTimeline } from "./step-timeline";
 import { EditorPage } from "./editor-page";
-import { formatCost, getOffer, STEP_LABELS, type StepName } from "./outputs";
+import { getOffer, STEP_LABELS, type StepName } from "./outputs";
 
 export function GenerationView({ detail, canEdit }: { detail: GenerationDetail; canEdit: boolean }) {
   const { generation, offer } = detail;
@@ -45,8 +45,6 @@ export function GenerationView({ detail, canEdit }: { detail: GenerationDetail; 
               {offer ? <Link href={`/app/offers/${offer.id}`} className="font-medium text-ink hover:underline">{offer.name}</Link> : <span>Offer removed</span>}
               <span>·</span>
               <span title={new Date(generation.created_at).toLocaleString()}>{formatDistanceToNow(new Date(generation.created_at), { addSuffix: true })}</span>
-              <span>·</span>
-              <span>{formatCost(generation.cost_usd)}</span>
               {detail.voiceProfile && <><span>·</span><span>voice: {detail.voiceProfile.name}</span></>}
             </p>
             {generation.purpose && <p className="mt-1 max-w-2xl text-sm text-ink">{generation.purpose}</p>}
