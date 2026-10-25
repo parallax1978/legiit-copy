@@ -4,7 +4,7 @@ Everything runs on one Supabase project plus one Vercel project. Nothing in this
 
 ## 0. Status of the first project
 
-Project `vcxldzuowhktamltlnla` ("Legiit Copy", us-east-1) has all 15 migrations applied, all 12 functions deployed, the dispatcher settings and Vault secret set, email confirmation on, and the library seeded (controls, split tests, critiques, eval briefs, prompt versions). Still to do there: the `ANTHROPIC_API_KEY` and `RESEND_API_KEY` secrets, the Site URL and redirect URL once the web app has a domain, the first admin user, and the embeddings run.
+Project `vcxldzuowhktamltlnla` ("Legiit Copy", us-east-1) has all 15 migrations applied, all 12 functions deployed, the dispatcher settings and Vault secret set, email confirmation on, and the library seeded (controls, split tests, critiques, eval briefs, prompt versions). The `ANTHROPIC_API_KEY` and `SITE_URL` secrets are set, Auth's Site URL and redirect list point at `https://legiit-copy.vercel.app`, and the Vercel project `legiit-copy` (root `apps/web`, production branch `claude/vibrant-wozniak-k19u2i`, linked to the GitHub repo) carries the three public environment variables. Still to do: `RESEND_API_KEY` (optional), the first admin user, the `eval_workspace_id` setting, and the embeddings run.
 
 ## 1. Supabase project (paid plan)
 
