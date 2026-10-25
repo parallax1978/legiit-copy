@@ -75,5 +75,5 @@ jobs:
         run: |
           supabase link --project-ref "$SUPABASE_PROJECT_ID"
           supabase db push
-          supabase functions deploy --no-verify-jwt run-step
-          for f in $(ls -d supabase/functions/*/ | xargs -n1 basename | grep -v -e _shared -e run-step); do supabase functions deploy "$f"; done
+          supabase functions deploy --no-verify-jwt --import-map supabase/functions/deno.json run-step
+          for f in $(ls -d supabase/functions/*/ | xargs -n1 basename | grep -v -e _shared -e run-step); do supabase functions deploy --import-map supabase/functions/deno.json "$f"; done

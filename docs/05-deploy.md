@@ -2,6 +2,10 @@
 
 Everything runs on one Supabase project plus one Vercel project. Nothing in this guide needs the user's own copy; the seed loader fills the library from `research/`.
 
+## 0. Status of the first project
+
+Project `vcxldzuowhktamltlnla` ("Legiit Copy", us-east-1) has all 15 migrations applied, all 12 functions deployed, the dispatcher settings and Vault secret set, email confirmation on, and the library seeded (controls, split tests, critiques, eval briefs, prompt versions). Still to do there: the `ANTHROPIC_API_KEY` and `RESEND_API_KEY` secrets, the Site URL and redirect URL once the web app has a domain, the first admin user, and the embeddings run.
+
 ## 1. Supabase project (paid plan)
 
 1. Create the project. In **Database → Extensions** enable `vector`, `pgmq`, `pg_cron`, `pg_net`. Enable **Queues** in Integrations if the dashboard asks.
@@ -12,7 +16,7 @@ Everything runs on one Supabase project plus one Vercel project. Nothing in this
    supabase secrets set ANTHROPIC_API_KEY=sk-ant-... PIPELINE_SHARED_SECRET=<at least 16 random chars; run-step refuses every request otherwise> RESEND_API_KEY=re_... SITE_URL=https://<your-domain> INVITE_FROM_EMAIL="Legiit Copy <no-reply@your-domain>"
    ```
    Optional: `ENGINE_DEFAULT_MODEL`, `ENGINE_COLD_READ_MODEL`.
-5. **Deploy functions**: `supabase functions deploy --no-verify-jwt run-step` then `supabase functions deploy <name>` for every other folder in `supabase/functions/` (CI does this on `main`).
+5. **Deploy functions**: `supabase functions deploy --no-verify-jwt --import-map supabase/functions/deno.json run-step` then `supabase functions deploy --import-map supabase/functions/deno.json <name>` for every other folder in `supabase/functions/`. The import map flag is required: the remote bundler does not read `supabase/functions/deno.json` on its own. CI does this on `main`.
 6. **Dispatcher settings** (SQL editor, once):
    ```sql
    select public.set_setting('functions_url', 'https://<ref>.supabase.co/functions/v1');

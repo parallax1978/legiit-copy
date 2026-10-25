@@ -142,8 +142,10 @@ try {
   for (const step of steps) {
     try {
       const mod = await import(`${root}supabase/functions/_shared/engine/prompts/${step}.v1.ts`);
-      const p = mod.default;
-      if (!p?.system) continue;
+      // Prompt modules export either a default or a named PromptModule (e.g. draftPrompt); take the first with a string system.
+      // deno-lint-ignore no-explicit-any
+      const p = [mod.default, ...Object.values(mod)].find((m: any) => m && typeof m === "object" && typeof m.system === "string" && m.step) as any;
+      if (!p) { console.warn(`no PromptModule export found for ${step}`); continue; }
       const { data: existing } = await db.from("prompt_versions").select("id").eq("step", step).eq("version", p.version ?? 1).maybeSingle();
       if (existing) continue;
       const { data: anyActive } = await db.from("prompt_versions").select("id").eq("step", step).eq("active", true).maybeSingle();
