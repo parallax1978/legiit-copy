@@ -108,9 +108,12 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
   const promptSchema = opts.schema && !nativeFormat ? promptJsonSchema(opts.schema) : undefined;
 
   const buildParams = (useNative: boolean) => {
-    const systemBlocks: Anthropic.Beta.BetaTextBlockParam[] = useNative || !opts.schema
-      ? system
-      : [{ ...system[0], text: `${opts.system}\n\n${jsonOnlyInstruction(promptSchema ?? promptJsonSchema(opts.schema!))}` }];
+    // The JSON-format instruction (schema included) goes at the end of the user message, never in the system
+    // block: two calls of one step with different schemas then share the cached system and material blocks.
+    const systemBlocks: Anthropic.Beta.BetaTextBlockParam[] = system;
+    const content: Anthropic.Beta.BetaContentBlockParam[] = useNative || !opts.schema
+      ? userContent
+      : [...userContent, { type: "text", text: jsonOnlyInstruction(promptSchema ?? promptJsonSchema(opts.schema!)) }];
     // deno-lint-ignore no-explicit-any
     const p: any = {
       model: opts.model,
@@ -118,7 +121,7 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       system: systemBlocks,
-      messages: [{ role: "user", content: userContent }],
+      messages: [{ role: "user", content }],
       output_config: { effort: opts.effort, ...(useNative && fmt ? { format: fmt } : {}) },
       ...(tools ? { tools } : {}),
     };
