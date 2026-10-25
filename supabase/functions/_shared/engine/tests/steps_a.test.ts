@@ -454,38 +454,67 @@ Deno.test("finalizeDossier: low confidence under three quotes, unsourced objecti
   assertEquals(finalizeDossier(DOSSIER).themes, DOSSIER.themes);
 });
 
-Deno.test("research step, phase 1: collects with web tools at one rung less effort, checkpoints, continues", async () => {
+Deno.test("research step, collect pass 1: post-purchase voice with web tools at low effort, checkpoints, continues to pass 2", async () => {
   const { call, calls } = fakeCall(() => COLLECT);
   const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, config: { offer_id: "offer-1", workspace_id: "ws-1", vertical: "supplements", business_opportunity: false, notice_recipient: false, humor_policy: {}, greeting: null, edge_tolerance: null, refund_window_days: 90, first_week_experience: null, updated_at: "" } });
   const res = await makeResearchStep({ call })(ctx);
 
   assertEquals(calls.length, 1);
-  assertEquals([calls[0].webTools, calls[0].effort, calls[0].maxTokens, calls[0].purpose], [true, "medium", 12000, "research.collect"]);
+  assertEquals([calls[0].webTools, calls[0].effort, calls[0].maxTokens, calls[0].purpose], [true, "low", 12000, "research.collect1"]);
   assertEquals(calls[0].system, researchPrompt.system);
   assertStringIncludes(calls[0].user, "<fetch_first>\n- https://dailygreens.example\n");
   assertStringIncludes(calls[0].user, "[[L:c-stat]]");
   assert(!calls[0].user.includes("c-drop"));
   assertStringIncludes(calls[0].user, '"vertical": "supplements"');
-  assertStringIncludes(calls[0].user, "phase 1 of 2: collect");
-  assertStringIncludes(calls[0].user, "Target 60 verbatims or fewer");
+  assertStringIncludes(calls[0].user, "pass 1 of 2: post-purchase voice");
+  assertStringIncludes(calls[0].user, "Target 30 verbatims or fewer");
   assert(!calls[0].user.includes("<constraints>"));
   assert(!calls[0].user.includes("<collected"));
+  assert(!calls[0].user.includes("<already_collected"));
   assertStringIncludes(calls[0].system, "Invent an avatar");
   assertStringIncludes(calls[0].system, "## 3. Lead selection by awareness level");
 
-  assertEquals(res.continueLater?.reason, "Collected 12 verbatims from 2 sources; building the dossier");
+  assertEquals(res.continueLater?.reason, "Collected 12 verbatims from 1 source from review sites, competitor pages; now forums, Q&A threads and comments");
   assertEquals(res.effects, undefined);
   assertEquals(ctx.saved.length, 1);
   const saved = ctx.saved[0] as ResearchPartial;
-  assertEquals(saved.phase, "synthesize");
-  assertEquals(saved.retry, undefined);
+  assertEquals([saved.phase, saved.pass, saved.retry], ["collect", 2, undefined]);
   // pages the tools reported join the sources the model listed
   assertEquals(saved.collect?.sources.map((s) => s.url), ["https://www.trustpilot.com/review/dailygreens.example", "https://example.com/fetched-page"]);
   assertEquals(res.output, saved);
-  assertStringIncludes(ctx.messages[0], "4 pages from the brief");
+  assertStringIncludes(ctx.messages[0], "(1 of 2): review sites, competitor pages, 4 pages from the brief");
 });
 
-Deno.test("research step, phase 2: synthesizes from the checkpoint without tools and merges the dossier", async () => {
+Deno.test("research step, collect pass 2: pre-purchase voice continues the table and checkpoints the merged collection for synthesis", async () => {
+  const more: ResearchCollect = {
+    cluster_vocabulary: ["routine", "energy", "taste", "price"],
+    verbatims: [verbatim("V13", "price", '"cancelled after month two, too pricey"')],
+    findings: [{ kind: "objection", text: "price comes up in every thread", source_url: "https://reddit.example/r/greens", quote: null }],
+    sources: [{ url: "https://reddit.example/r/greens", title: "r/greens", kind: "forum" }],
+  };
+  const { call, calls } = fakeCall(() => more);
+  const prior: ResearchCollect = { ...COLLECT, sources: [...COLLECT.sources, { url: "https://example.com/fetched-page", title: "Fetched", kind: null }] };
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, partial: { phase: "collect", pass: 2, collect: prior } });
+  const res = await makeResearchStep({ call })(ctx);
+
+  assertEquals([calls[0].webTools, calls[0].effort, calls[0].purpose], [true, "low", "research.collect2"]);
+  assertStringIncludes(calls[0].user, "pass 2 of 2: pre-purchase voice");
+  assertStringIncludes(calls[0].user, '<already_collected verbatims="12" findings="1" sources="2">');
+  assertStringIncludes(calls[0].user, "<cluster_vocabulary>\nroutine, energy, taste\n</cluster_vocabulary>");
+  assertStringIncludes(calls[0].user, "V12 | review | cluster=taste");
+  assertStringIncludes(calls[0].user, "Number verbatims from V13 on");
+  assert(!calls[0].user.includes("<fetch_first>"));
+
+  assertEquals(res.continueLater?.reason, "Collected 13 verbatims from 3 sources; building the dossier");
+  const saved = ctx.saved[0] as ResearchPartial;
+  assertEquals(saved.phase, "synthesize");
+  assertEquals(saved.collect?.verbatims.map((v) => v.id).slice(-2), ["V12", "V13"]);
+  assertEquals(saved.collect?.cluster_vocabulary, ["routine", "energy", "taste", "price"]);
+  assertEquals(saved.collect?.findings.length, 2);
+  assertEquals(saved.collect?.sources.map((s) => s.url), ["https://www.trustpilot.com/review/dailygreens.example", "https://example.com/fetched-page", "https://reddit.example/r/greens"]);
+});
+
+Deno.test("research step, synthesize: builds the dossier from the checkpoint without tools and merges it", async () => {
   const { call, calls } = fakeCall(() => SYNTHESIS);
   const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, partial: { phase: "synthesize", collect: COLLECT } });
   const res = await makeResearchStep({ call })(ctx);
@@ -510,29 +539,29 @@ Deno.test("research step, phase 2: synthesizes from the checkpoint without tools
   assertStringIncludes(res.summary, "12 verbatims in 3 clusters from 1 source; 2 themes; 1 competitor");
 });
 
-Deno.test("research step: a truncated collection checkpoints a retry for the next invocation, which runs with fewer verbatims and less effort; a second truncation fails", async () => {
+Deno.test("research step: a truncated collection pass checkpoints a retry that keeps the earlier pass, runs with fewer verbatims, and fails on a second truncation", async () => {
   const first = fakeCall(() => {
     throw new TruncatedError("{partial");
   });
-  const ctx = fakeCtx({ brief: BRIEF });
+  const ctx = fakeCtx({ brief: BRIEF, partial: { phase: "collect", pass: 2, collect: COLLECT } });
   const res = await makeResearchStep({ call: first.call })(ctx);
   assertEquals(res.continueLater?.reason, COLLECT_RETRY_REASON);
-  assertEquals(ctx.saved, [{ phase: "collect", retry: true }]);
+  assertEquals(ctx.saved, [{ phase: "collect", pass: 2, retry: true, collect: COLLECT }]);
   assertEquals(first.calls.length, 1);
 
   const second = fakeCall(() => COLLECT);
-  const ctx2 = fakeCtx({ brief: BRIEF, partial: { phase: "collect", retry: true } });
+  const ctx2 = fakeCtx({ brief: BRIEF, partial: { phase: "collect", pass: 1, retry: true } });
   const res2 = await makeResearchStep({ call: second.call })(ctx2);
-  assertEquals([second.calls[0].webTools, second.calls[0].effort, second.calls[0].purpose], [true, "low", "research.collect.retry_fewer_verbatims"]);
-  assertStringIncludes(second.calls[0].user, "Cap verbatims at 30");
-  assertStringIncludes(second.calls[0].user, "Target 30 verbatims or fewer");
-  assertEquals((ctx2.saved[0] as ResearchPartial).phase, "synthesize");
+  assertEquals([second.calls[0].webTools, second.calls[0].effort, second.calls[0].purpose], [true, "low", "research.collect1.retry_fewer_verbatims"]);
+  assertStringIncludes(second.calls[0].user, "Cap verbatims at 15");
+  assertStringIncludes(second.calls[0].user, "Target 15 verbatims or fewer");
+  assertEquals((ctx2.saved[0] as ResearchPartial).pass, 2);
   assertEquals(res2.continueLater?.reason.startsWith("Collected 12 verbatims"), true);
 
   const third = fakeCall(() => {
     throw new TruncatedError("{partial");
   });
-  await assertRejects(() => makeResearchStep({ call: third.call })(fakeCtx({ brief: BRIEF, partial: { phase: "collect", retry: true } })), TruncatedError);
+  await assertRejects(() => makeResearchStep({ call: third.call })(fakeCtx({ brief: BRIEF, partial: { phase: "collect", pass: 1, retry: true } })), TruncatedError);
 });
 
 Deno.test("research step: a truncated synthesis is retried once with tighter caps", async () => {

@@ -18,6 +18,10 @@ export interface ResearchArgs {
   fetchFirst: string[];
   /** collect: search and fetch, return verbatims, findings and sources. synthesize: no tools, build the rest from <collected>. */
   phase: "collect" | "synthesize";
+  /** collect: pass 1 reads post-purchase voice (reviews, competitor and client pages), pass 2 pre-purchase voice (forums, Q&A, comments, social). */
+  pass?: number;
+  /** collect pass 2: what pass 1 brought back, so ids continue, tokens stay fixed and nothing is repeated. */
+  prior?: ResearchCollect;
   /** Target number of verbatims; the retry after a truncated output lowers it. */
   verbatimCap: number;
   retry?: boolean;
@@ -97,7 +101,23 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
   const subject = `"${args.brief.product_name}" (${args.brief.one_line}) for the reader "${args.brief.audience.who}"`;
 
   if (args.phase === "collect") {
-    parts.push(xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"));
+    const pass = args.pass ?? 1;
+    if (pass === 1) {
+      parts.push(xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"));
+    } else if (args.prior) {
+      const p = args.prior;
+      parts.push(
+        xml(
+          "already_collected",
+          [
+            xml("cluster_vocabulary", p.cluster_vocabulary.map(neutralizeTags).join(", ") || "(none fixed yet: fix it now)"),
+            xml("verbatims", p.verbatims.map((v) => `${v.id} | ${v.source_type} | cluster=${v.desire_cluster ?? "-"} | ${neutralizeTags(v.text.slice(0, 100))}${v.text.length > 100 ? "…" : ""}`).join("\n") || "(none)", { count: p.verbatims.length }),
+            xml("sources", renderSources(p.sources), { count: p.sources.length }),
+          ].join("\n"),
+          { verbatims: p.verbatims.length, findings: p.findings.length, sources: p.sources.length },
+        ),
+      );
+    }
     if (args.retry) {
       parts.push(
         xml(
@@ -106,16 +126,25 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
         ),
       );
     }
+    const nextId = (args.prior?.verbatims.length ?? 0) + 1;
+    const findingsNote = `findings holds every fact the dossier sections will need that is not a verbatim, each with its URL and the exact words when a quote carries it: each competitor's category claim, audience, headline outcome, top claims and the proof offered for each; every proof item about the product with its evidence type and the grade it would earn; refund and first-week mentions; documented story events with dates, numbers and names; who speaks for the product; awareness and sophistication signals (whether the category word appears in the market's words, how many competitors make the same claim, qualifier language, "they all say that"). The synthesis has no web access and works only from what the collection passes return.`;
     parts.push(
       xml(
         "task",
-        [
-          `Research ${subject}. This is phase 1 of 2: collect.`,
-          `Open every URL in <fetch_first> first, then search reviews, forums and competitor pages. Define the cluster vocabulary before tagging.`,
-          `Target ${args.verbatimCap} verbatims or fewer from at least 6 sources, exact wording only.`,
-          args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
-          `Return only cluster_vocabulary, verbatims, findings and sources. findings holds every fact the dossier sections will need that is not a verbatim, each with its URL and the exact words when a quote carries it: each competitor's category claim, audience, headline outcome, top claims and the proof offered for each; every proof item about the product with its evidence type and the grade it would earn; refund and first-week mentions; documented story events with dates, numbers and names; who speaks for the product; awareness and sophistication signals (whether the category word appears in the market's words, how many competitors make the same claim, qualifier language, "they all say that"). Phase 2 has no web access and works only from what you return here.`,
-        ].join("\n"),
+        pass === 1
+          ? [
+            `Research ${subject}. This is phase 1 of 2: collect, pass 1 of 2: post-purchase voice.`,
+            `Open every URL in <fetch_first> first, then read two-, three- and four-star reviews of the product, its competitors and products serving the same outcome (Trustpilot, G2, Capterra, app stores, Amazon product-reviews pages) and the competitors' own pages and promotions. Forums, Q&A threads and comments are pass 2: leave them.`,
+            `Define the cluster vocabulary before tagging; pass 2 will reuse it unchanged. Target ${args.verbatimCap} verbatims or fewer from at least 4 sources, exact wording only, ids V1, V2, ...`,
+            args.brief.competitors.length ? `Competitors named in the brief: ${args.brief.competitors.join("; ")}. Find at least two more if they exist.` : "No competitors named in the brief: find the three the reviews mention most.",
+            `Return only cluster_vocabulary, verbatims, findings and sources. ${findingsNote}`,
+          ].join("\n")
+          : [
+            `Research ${subject}. This is phase 1 of 2: collect, pass 2 of 2: pre-purchase voice.`,
+            `Search Reddit and other forums where prospects argue with each other, Q&A threads, comments under competitor ads and videos, social posts, and public support or cancellation threads. Review sites and competitor pages were pass 1: do not reopen them.`,
+            `Reuse the cluster vocabulary in <already_collected> exactly (add a token only for a desire no existing token covers, and say so in findings). Number verbatims from V${nextId} on. Never repeat a verbatim already collected. Target ${args.verbatimCap} new verbatims or fewer from at least 4 new sources, exact wording only.`,
+            `Return only cluster_vocabulary (the full list), the new verbatims, new findings and the new sources. ${findingsNote}`,
+          ].join("\n"),
       ),
     );
     return parts.join("\n\n");

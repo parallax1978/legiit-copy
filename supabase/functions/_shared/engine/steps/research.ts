@@ -1,11 +1,13 @@
 /**
- * Step 1, research: the dossier, in two model calls across two invocations.
- *   collect    web search and fetch; returns the tagged verbatim table, findings and sources. Checkpointed.
- *   synthesize no tools; builds every other dossier section from the checkpoint. Merged, finalized, stored.
- * Each phase is one call per invocation (a search-heavy call runs four to five minutes; a retry in the same
- * invocation would outlive the function). A truncated output checkpoints a retry flag and asks for another
- * invocation, which runs the phase again with tighter caps and one rung less effort; a second truncation fails
- * the attempt. Code enforces what code can: themes with fewer than three quotes are low confidence, objections
+ * Step 1, research: the dossier, in three model calls across three invocations.
+ *   collect 1  web search and fetch over post-purchase voice (review sites, competitor and client pages).
+ *   collect 2  the same over pre-purchase voice (forums, Q&A, comments, social), continuing the table.
+ *   synthesize no tools; builds every other dossier section from the merged checkpoint. Finalized, stored.
+ * Each call is one invocation (a search-heavy call runs minutes; a retry in the same invocation would outlive
+ * the function) and each is sized to fit the output budget: at most RESEARCH_VERBATIM_CAP verbatims a pass.
+ * A truncated output checkpoints a retry flag and asks for another invocation, which runs the same pass or
+ * phase again with tighter caps (and, for synthesis, one rung less effort); a second truncation fails the
+ * attempt. Code enforces what code can: themes with fewer than three quotes are low confidence, objections
  * without a verbatim move to unsourced hypotheses, sources are merged.
  */
 import { z } from "zod";
@@ -18,8 +20,9 @@ import { Dossier, ResearchCollect, ResearchSynthesis } from "../schemas/research
 import { remainingBudgetMs } from "./budget.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
-export const RESEARCH_VERBATIM_CAP = 60;
-export const RESEARCH_RETRY_VERBATIM_CAP = 30;
+export const RESEARCH_VERBATIM_CAP = 30;
+export const RESEARCH_RETRY_VERBATIM_CAP = 15;
+export const COLLECT_PASSES = 2;
 
 export const COLLECT_RETRY_REASON = "The verbatim table ran past the output budget; retrying with fewer verbatims";
 export const SYNTHESIZE_RETRY_REASON = "The dossier ran past the output budget; retrying with tighter caps";
@@ -27,7 +30,10 @@ export const SYNTHESIZE_RETRY_REASON = "The dossier ran past the output budget; 
 /** The checkpoint between invocations (generation_steps.output.partial). */
 export const ResearchPartial = z.object({
   phase: z.enum(["collect", "synthesize"]),
+  /** collect only: which pass runs next (1 or 2). */
+  pass: z.number().int().min(1).max(COLLECT_PASSES).optional(),
   retry: z.boolean().optional(),
+  /** What earlier passes collected (collect pass 2 and synthesize). */
   collect: ResearchCollect.optional(),
 });
 export type ResearchPartial = z.infer<typeof ResearchPartial>;
@@ -102,6 +108,17 @@ function plural(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
+/** Pass 2 continues pass 1: ids keep counting, vocabulary is the union, sources and findings are appended. */
+export function mergeCollects(a: ResearchCollect | undefined, b: ResearchCollect): ResearchCollect {
+  if (!a) return b;
+  return {
+    cluster_vocabulary: [...new Set([...a.cluster_vocabulary, ...b.cluster_vocabulary].map((t) => t.trim()).filter(Boolean))],
+    verbatims: [...a.verbatims, ...b.verbatims],
+    findings: [...a.findings, ...b.findings],
+    sources: mergeSources(a.sources, b.sources),
+  };
+}
+
 export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
   const call = deps.call ?? callModel;
   return async (ctx) => {
@@ -126,11 +143,15 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
     });
 
     if (partial.phase === "collect") {
+      const pass = partial.pass ?? 1;
+      const prior = partial.collect;
       const verbatimCap = retry ? RESEARCH_RETRY_VERBATIM_CAP : RESEARCH_VERBATIM_CAP;
-      // Searching is reading, not reasoning: one rung less thinking leaves the budget to the table.
-      const collectEffort = retry ? lowerEffort(lowerEffort(effort)) : lowerEffort(effort);
+      // Searching is reading, not reasoning: two rungs less thinking leaves the budget to the table and keeps a
+      // call with eight searches and eight fetches inside the invocation.
+      const collectEffort = lowerEffort(lowerEffort(effort));
+      const where = pass === 1 ? "review sites, competitor pages" : "forums, Q&A threads, comments";
       await ctx.progress(
-        `Researching ${brief.product_name}: reviews, forums, competitors${fetchFirst.length ? `, ${plural(fetchFirst.length, "page")} from the brief` : ""}${retry ? ` (retry, at most ${verbatimCap} verbatims)` : ""}`,
+        `Researching ${brief.product_name} (${pass} of ${COLLECT_PASSES}): ${where}${pass === 1 && fetchFirst.length ? `, ${plural(fetchFirst.length, "page")} from the brief` : ""}${retry ? ` (retry, at most ${verbatimCap} verbatims)` : ""}`,
       );
       let res;
       try {
@@ -140,22 +161,28 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
           maxTokens,
           timeoutMs: remainingBudgetMs(ctx),
           system: p.system,
-          user: researchPrompt.user(ctx, { ...common, phase: "collect", verbatimCap, retry }),
+          user: researchPrompt.user(ctx, { ...common, phase: "collect", pass, prior, verbatimCap, retry }),
           schema: ResearchCollect,
           webTools: true,
-          log: log(retry ? "research.collect.retry_fewer_verbatims" : "research.collect"),
+          log: log(`research.collect${pass}${retry ? ".retry_fewer_verbatims" : ""}`),
         });
       } catch (e) {
         if (!(e instanceof TruncatedError) || retry) throw e;
-        const next: ResearchPartial = { phase: "collect", retry: true };
+        const next: ResearchPartial = { phase: "collect", pass, retry: true, ...(prior ? { collect: prior } : {}) };
         await ctx.savePartial(next);
-        return { output: next, summary: "collection ran past the output budget; retrying with fewer verbatims", continueLater: { reason: COLLECT_RETRY_REASON } };
+        return { output: next, summary: `collection pass ${pass} ran past the output budget; retrying with fewer verbatims`, continueLater: { reason: COLLECT_RETRY_REASON } };
       }
       const parsed = ResearchCollect.parse(res.output);
-      const collect: ResearchCollect = { ...parsed, sources: mergeSources(parsed.sources, res.sources) };
+      const collect = mergeCollects(prior, { ...parsed, sources: mergeSources(parsed.sources, res.sources) });
+      const got = `${plural(parsed.verbatims.length, "verbatim")} from ${plural(parsed.sources.length, "source")}`;
+      if (pass < COLLECT_PASSES) {
+        const next: ResearchPartial = { phase: "collect", pass: pass + 1, collect };
+        await ctx.savePartial(next);
+        return { output: next, model: res.model, summary: `pass ${pass}: ${got}; pass ${pass + 1} next`, continueLater: { reason: `Collected ${got} from ${where}; now ${pass === 1 ? "forums, Q&A threads and comments" : "the next pass"}` } };
+      }
       const next: ResearchPartial = { phase: "synthesize", collect };
       await ctx.savePartial(next);
-      const summary = `${plural(collect.verbatims.length, "verbatim")} and ${plural(collect.findings.length, "finding")} from ${plural(collect.sources.length, "source")}; synthesizing next`;
+      const summary = `${plural(collect.verbatims.length, "verbatim")} and ${plural(collect.findings.length, "finding")} from ${plural(collect.sources.length, "source")} over ${COLLECT_PASSES} passes; synthesizing next`;
       return { output: next, model: res.model, summary, continueLater: { reason: `Collected ${plural(collect.verbatims.length, "verbatim")} from ${plural(collect.sources.length, "source")}; building the dossier` } };
     }
 
