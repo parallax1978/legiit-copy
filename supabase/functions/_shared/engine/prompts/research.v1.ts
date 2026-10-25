@@ -8,7 +8,7 @@ import type { ResearchCollect } from "../schemas/research.ts";
 import type { OfferConfigRow, StepContext } from "../steps/types.ts";
 import { type ClaimLike, neutralizeTags, renderBrief, renderClaims, renderConfig, renderQuestionsBlock, renderSources, verbatimLine, xml } from "./intake.v1.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, LEAD_SELECTION, PROOF_PLACEMENT } from "./standard.ts";
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 
 export interface ResearchArgs {
   brief: OfferBrief;
@@ -97,6 +97,7 @@ export function researchUser(ctx: StepContext, args: ResearchArgs): string {
     xml("claims", renderClaims(args.claims), { count: args.claims.length }),
     xml("config", renderConfig(args.config)),
     renderQuestionsBlock(ctx.questions),
+    CACHE_BREAK,
   ];
   const subject = `"${args.brief.product_name}" (${args.brief.one_line}) for the reader "${args.brief.audience.who}"`;
 

@@ -2,7 +2,7 @@
  * Revise prompt v1. Changes only referenced blocks, honors DO NOT TOUCH, applies factual rewrites as given,
  * fixes Tier 0/1 tells. The step verifies all of that in code afterwards.
  */
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 import { RULES } from "./standard.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import type { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport } from "../schemas/review.ts";
@@ -59,15 +59,17 @@ export const revisePrompt: PromptModule<ReviseArgs> = {
       : "MECHANICAL REPORT: none available.";
     const cold = args.coldRead ? `COLD READ: attention dropped at "${args.coldRead.attention_drop_line ?? "never"}"; disbelieved "${args.coldRead.disbelieved_claim ?? "nothing"}"; read the promise as: ${args.coldRead.promise_one_sentence}` : "";
     return [
+      // stable per generation first, so every revision cycle reads it from the cache
       formatRulesText(ctx.format),
+      offerBlockText(ctx.variant, ctx.brief, ctx.claims),
+      ledgerText(ctx.claims),
+      voiceText(ctx.voice, ctx.config?.greeting),
+      CACHE_BREAK,
       `REVISION CYCLE ${args.cycle}.`,
       edText,
       factText,
       mechText,
       cold,
-      offerBlockText(ctx.variant, ctx.brief, ctx.claims),
-      ledgerText(ctx.claims),
-      voiceText(ctx.voice, ctx.config?.greeting),
       `THE DRAFT (block ids in brackets; return every block, changed or not):\n${sectionsWithIds(args.draft.sections)}`,
       args.retryNote ? `CORRECTION (your previous revision was rejected; fix exactly this):\n${args.retryNote}` : "",
       `Revise. Return JSON: {"sections":[{"section_id":"","title":null,"blocks":[{"id":"","type":"","text":"","items":null,"meta":null}]}],"changes":[{"block_id":"","before":"","after":"","reason":"","source":"editorial"}],"untouched_confirmed":[]}`,

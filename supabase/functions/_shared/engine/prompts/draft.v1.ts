@@ -3,7 +3,7 @@
  * decided argument, the approved offer and the claims ledger. The system text is the writer's rulebook from
  * docs/04-copy-standard.md pasted verbatim; the user text carries the material for this generation.
  */
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 import { LEAD_SELECTION, OFFER_PRESENTATION, PROOF_PLACEMENT, RULES } from "./standard.ts";
 import type { DraftCall } from "../draft/plan.ts";
 import type { Awareness, LeadType } from "../schemas/common.ts";
@@ -141,6 +141,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
       voiceText(ctx.voice, ctx.config?.greeting),
       configText(ctx.config),
       questionsText(ctx.questions),
+      CACHE_BREAK,
       args.examplesText ? `TEACHING MATERIAL (study the decisions; never reproduce the text):\n${args.examplesText}` : "",
       args.drafted.length ? `ALREADY DRAFTED (reading order; do not rewrite these; every later section states the identical deal and pays off what these set up):\n${sectionsWithIds(args.drafted)}` : "ALREADY DRAFTED: nothing yet. You are writing the first part: the offer block and close come first so the rest of the piece is written toward a deal that already exists.",
       leadsText,

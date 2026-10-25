@@ -7,7 +7,7 @@ import type { OfferBrief } from "../schemas/brief.ts";
 import type { Dossier } from "../schemas/research.ts";
 import type { OfferConfigRow, OfferQuestionRow, OfferVariantRow, StepContext } from "../steps/types.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, RULES } from "./standard.ts";
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 
 /* ------------------------------------------------------------------------------------------------
  * Shared material renderers
@@ -279,6 +279,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
       truncated: args.truncatedCount,
     }),
   );
+  parts.push(CACHE_BREAK);
   parts.push(
     xml(
       "task",

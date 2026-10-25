@@ -2,7 +2,7 @@
  * Factual and compliance review prompt v1: the ten tests of standard §8.3 in order, every flag as
  * line → rule (cited) → rewritten line, the decision left to the user. Only engine fabrications are hard failures.
  */
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW } from "./standard.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import { briefText, configText, formatRulesText, ledgerText, offerBlockText, sectionsWithIds } from "../draft/prompt_text.ts";
@@ -46,6 +46,7 @@ export const factualPrompt: PromptModule<FactualArgs> = {
       offerBlockText(ctx.variant, ctx.brief, ctx.claims),
       briefText(ctx.brief, ctx.offer.name),
       ledgerText(ctx.claims, { includeDropped: true }),
+      CACHE_BREAK,
       `THE DRAFT (block ids in brackets; ledger tags as written; ${args.draft.word_count} words):\n${sectionsWithIds(args.draft.sections)}`,
       args.draft.needs_source.length ? `The writer marked these as NEEDS SOURCE:\n${args.draft.needs_source.map((n) => `- ${n}`).join("\n")}` : "The writer marked nothing as NEEDS SOURCE.",
       args.retryNote ? `CORRECTION (your previous review broke the reviewer's rules; fix exactly this and return the full review again):\n${args.retryNote}` : "",

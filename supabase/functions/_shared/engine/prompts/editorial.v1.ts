@@ -2,7 +2,7 @@
  * Editorial review prompt v1: the copy chief rubric (standard §6) verbatim, gates in order, stop at the first
  * failure, predict against a control, never average.
  */
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 import { AI_TELL_CHECKLIST, COPY_CHIEF_RUBRIC, LEAD_SELECTION, RULES } from "./standard.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import type { ColdRead, MechanicalReport } from "../schemas/review.ts";
@@ -75,6 +75,7 @@ export const editorialPrompt: PromptModule<EditorialArgs> = {
       offerBlockText(ctx.variant, ctx.brief, ctx.claims),
       ledgerText(ctx.claims, { includeDropped: true }),
       dossierText(ctx.dossier, { maxVerbatims: 60 }),
+      CACHE_BREAK,
       cold,
       mech,
       `THE DRAFT (block ids in brackets; ledger tags as written; ${args.draft.word_count} words):\n${sectionsWithIds(args.draft.sections)}`,

@@ -8,7 +8,7 @@ import type { Dossier } from "../schemas/research.ts";
 import type { OfferConfigRow, StepContext } from "../steps/types.ts";
 import { type ClaimLike, renderBrief, renderClaims, renderConfig, renderDossier, renderQuestionsBlock, xml } from "./intake.v1.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, OFFER_PRESENTATION, RULES } from "./standard.ts";
-import type { PromptModule } from "./types.ts";
+import { CACHE_BREAK, type PromptModule } from "./types.ts";
 
 export interface OfferArgs {
   brief: OfferBrief;
@@ -58,6 +58,7 @@ export function offerUser(ctx: StepContext, args: OfferArgs): string {
     xml("config", renderConfig(args.config)),
     renderQuestionsBlock(ctx.questions),
     renderDossier(args.dossier),
+    CACHE_BREAK,
     xml(
       "task",
       [

@@ -167,7 +167,10 @@ async function runMessage(body: Body): Promise<void> {
   const thisPass = history.filter((r) => r.step === step && isAfter(r.created_at, boundary));
 
   if (!forced) {
-    const done = thisPass.filter((r) => r.status === "completed").at(-1);
+    // Done only when the newest row of this pass is the completion: a failed or interrupted attempt after it
+    // means a retry was in flight (a requeue from this step, or a pause the user resumed), and this delivery is it.
+    const newest = thisPass.at(-1);
+    const done = newest?.status === "completed" ? newest : undefined;
     if (done) {
       // Completed already (ack lost, or a duplicate enqueue). Re-issue the fan-out when nothing followed it.
       const followed = history.some((r) => SUCCESSORS[step].includes(r.step as StepName) && isAfter(r.created_at, done.finished_at ?? done.created_at));

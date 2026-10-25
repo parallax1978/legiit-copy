@@ -2,6 +2,7 @@ import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { countUnionParams, jsonOnlyInstruction, MAX_UNION_PARAMS, promptJsonSchema } from "../llm.ts";
 import { ClaimRowInput, IntakeOutput } from "../schemas/brief.ts";
+import { CACHE_BREAK, splitCached } from "../prompts/types.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 
 Deno.test("intake schema exceeds the native structured-output union limit and will use the JSON fallback", () => {
@@ -38,4 +39,11 @@ Deno.test("ClaimRowInput fills omitted keys so consumers see the complete row", 
   assertEquals(row.precision, null);
   const sdk = zodOutputFormat(IntakeOutput) as unknown as { schema?: unknown };
   assert(sdk.schema, "the SDK still compiles the schema for the native path");
+});
+
+Deno.test("splitCached: the text before the marker becomes the cached block, the rest the task; degenerate cases stay one block", () => {
+  assertEquals(splitCached(`<brief>x</brief>\n\n${CACHE_BREAK}\n\n<task>y</task>`), { cached: "<brief>x</brief>", task: "<task>y</task>" });
+  assertEquals(splitCached("no marker here"), { cached: null, task: "no marker here" });
+  assertEquals(splitCached(`${CACHE_BREAK}\n<task>only</task>`), { cached: null, task: "<task>only</task>" });
+  assertEquals(splitCached(`<brief>only</brief>\n${CACHE_BREAK}`), { cached: null, task: "<brief>only</brief>" });
 });

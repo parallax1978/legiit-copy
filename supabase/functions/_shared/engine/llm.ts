@@ -11,6 +11,7 @@ import { z } from "zod";
 import type { Db } from "../supabase.ts";
 import { costUsd } from "./cost.ts";
 import { MAX_TOKENS_PER_CALL, REQUEST_TIMEOUT_MS, WEB_FETCH_MAX_USES, WEB_SEARCH_MAX_USES, type Effort } from "./config.ts";
+import { splitCached } from "./prompts/types.ts";
 
 export interface CallLog {
   db?: Db;
@@ -84,9 +85,19 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
       ]
     : undefined;
 
+  // Cache TTL: the pipeline's calls on one generation are minutes apart (a queue redelivery is 7.5 minutes), so
+  // the default 5-minute cache would rarely be hit; an hour covers a whole generation at 2x write, 0.1x read.
+  const cacheControl = { type: "ephemeral" as const, ttl: "1h" as const };
   const system: Anthropic.Beta.BetaTextBlockParam[] = [
-    { type: "text", text: opts.system, ...(opts.cacheSystem !== false ? { cache_control: { type: "ephemeral" as const } } : {}) },
+    { type: "text", text: opts.system, ...(opts.cacheSystem !== false ? { cache_control: cacheControl } : {}) },
   ];
+  // User message: [stable material, cached][this call's task]; see CACHE_BREAK in prompts/types.ts.
+  const userContent: Anthropic.Beta.BetaContentBlockParam[] = typeof opts.user === "string"
+    ? (() => {
+      const { cached, task } = splitCached(opts.user);
+      return cached ? [{ type: "text", text: cached, cache_control: cacheControl }, { type: "text", text: task }] : [{ type: "text", text: task }];
+    })()
+    : opts.user;
 
   // Structured outputs: the API compiles the schema into a grammar and rejects schemas with more than
   // MAX_UNION_PARAMS nullable/union-typed fields. Large schemas fall back to prompt-described JSON that we
@@ -107,7 +118,7 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       system: systemBlocks,
-      messages: [{ role: "user", content: typeof opts.user === "string" ? [{ type: "text", text: opts.user }] : opts.user }],
+      messages: [{ role: "user", content: userContent }],
       output_config: { effort: opts.effort, ...(useNative && fmt ? { format: fmt } : {}) },
       ...(tools ? { tools } : {}),
     };
