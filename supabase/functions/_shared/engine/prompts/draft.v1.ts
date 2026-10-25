@@ -10,7 +10,7 @@ import type { Awareness, LeadType } from "../schemas/common.ts";
 import type { Section } from "../schemas/draft.ts";
 import type { LeadVariantT } from "../draft/assemble.ts";
 import { LEAD_IDS, LEAD_RULES_BY_AWARENESS } from "../draft/leads.ts";
-import { briefText, configText, dossierText, formatRulesText, ledgerText, offerBlockText, sectionSpecText, sectionsWithIds, voiceText } from "../draft/prompt_text.ts";
+import { briefText, configText, dossierText, formatRulesText, ledgerText, offerBlockText, questionsText, sectionSpecText, sectionsWithIds, voiceText } from "../draft/prompt_text.ts";
 import { parseOptions } from "../draft/options.ts";
 
 export interface DraftArgs {
@@ -140,6 +140,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
       dossierText(ctx.dossier),
       voiceText(ctx.voice, ctx.config?.greeting),
       configText(ctx.config),
+      questionsText(ctx.questions),
       args.examplesText ? `TEACHING MATERIAL (study the decisions; never reproduce the text):\n${args.examplesText}` : "",
       args.drafted.length ? `ALREADY DRAFTED (reading order; do not rewrite these; every later section states the identical deal and pays off what these set up):\n${sectionsWithIds(args.drafted)}` : "ALREADY DRAFTED: nothing yet. You are writing the first part: the offer block and close come first so the rest of the piece is written toward a deal that already exists.",
       leadsText,

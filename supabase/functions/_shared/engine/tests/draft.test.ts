@@ -369,6 +369,7 @@ function fakeCtx(over: Partial<StepContext> = {}): StepContext & { saves: unknow
     brief: null,
     claims: [{ id: A, claim_text: "212 audits", claim_type: "statistic", role: "proof", evidence_grade: "B", user_decision: null, status: "verified" } as unknown as StepContext["claims"][number]],
     config: null,
+    questions: [],
     variant: null,
     dossier: null,
     voice: null,

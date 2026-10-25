@@ -194,6 +194,19 @@ export function sectionsPlain(sections: Section[]): string {
   return sections.map((s) => s.blocks.map((b) => readerText(renderBlock(b, { stripLedger: true }))).filter(Boolean).join("\n\n")).filter(Boolean).join("\n\n");
 }
 
+export function questionsText(questions: { question: string; why: string | null; answer: string | null }[]): string {
+  const answered = questions.filter((q) => (q.answer ?? "").trim());
+  const open = questions.filter((q) => !(q.answer ?? "").trim());
+  if (!answered.length && !open.length) return "";
+  return [
+    "USER ANSWERS AND OPEN QUESTIONS",
+    answered.length ? "Answered by the user (facts you may use; cite the ledger row intake made from each, or mark [[NEEDS SOURCE]] if none exists):" : "",
+    ...answered.map((q) => `- Q: ${q.question}\n  A: ${q.answer!.trim()}`),
+    open.length ? "Still open (unknown: never fill, round, or imply these):" : "",
+    ...open.map((q) => `- ${q.question}`),
+  ].filter(Boolean).join("\n");
+}
+
 export function configText(c: { vertical: string | null; business_opportunity: boolean; notice_recipient: boolean; humor_policy: unknown; greeting: string | null; edge_tolerance: string | null; refund_window_days: number | null; first_week_experience: string | null } | null): string {
   if (!c) return "OFFER CONFIG: none (vertical unknown; treat as consumer; no business-opportunity rules assumed).";
   return [

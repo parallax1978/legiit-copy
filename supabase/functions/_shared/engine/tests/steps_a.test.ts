@@ -75,6 +75,7 @@ function fakeCtx(over: Partial<StepContext> = {}): Ctx {
     brief: null,
     claims: [],
     config: null,
+    questions: [],
     variant: null,
     dossier: null,
     voice: null,
@@ -333,6 +334,28 @@ Deno.test("intake step: sources wrapped as data, output validated, effects and p
   assertStringIncludes(res.summary, "2 ledger rows (1 flagged)");
   assertEquals(ctx.messages.length, 2);
   assertStringIncludes(ctx.messages[1], "2 sources");
+});
+
+Deno.test("questions reach the prompts: answers as the user's facts, open ones as unknowns", async () => {
+  const q = (id: string, question: string, answer: string | null): StepContext["questions"][number] => ({
+    id, offer_id: "offer-1", workspace_id: "ws-1", question, why: "it matters", answer, answered_at: answer ? "2026-10-25T00:00:00Z" : null, created_at: "2026-10-25T00:00:00Z",
+  });
+  const questions = [q("q1", "Which plan should copy lead with?", "The $1 Pro trial."), q("q2", "What does the accuracy report show?", null)];
+  const { call, calls } = fakeCall(() => INTAKE_OUTPUT);
+  await makeIntakeStep({ call, loadSources: () => Promise.resolve([]) })(fakeCtx({ questions }));
+  assertStringIncludes(calls[0].user, '<questions answered="1" open="1">');
+  assertStringIncludes(calls[0].user, "A: The $1 Pro trial.");
+  assertStringIncludes(calls[0].user, "Still open (unanswered; these facts are unknown: never fill them, never imply them):\n- What does the accuracy report show? (it matters)");
+  assertStringIncludes(calls[0].user, 'evidence.source_ref "user_answer"');
+
+  const research = fakeCall(() => DOSSIER);
+  await makeResearchStep({ call: research.call })(fakeCtx({ brief: BRIEF, questions }));
+  assertStringIncludes(research.calls[0].user, '<questions answered="1" open="1">');
+
+  const none = fakeCall(() => INTAKE_OUTPUT);
+  await makeIntakeStep({ call: none.call, loadSources: () => Promise.resolve([]) })(fakeCtx());
+  assert(!none.calls[0].user.includes("<questions"));
+  assert(!none.calls[0].user.includes("user_answer"));
 });
 
 Deno.test("intake step: a truncated output is retried once with a capped ledger and one rung less thinking", async () => {

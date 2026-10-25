@@ -5,7 +5,7 @@
  */
 import type { OfferBrief } from "../schemas/brief.ts";
 import type { OfferConfigRow, StepContext } from "../steps/types.ts";
-import { type ClaimLike, renderBrief, renderClaims, renderConfig, xml } from "./intake.v1.ts";
+import { type ClaimLike, renderBrief, renderClaims, renderConfig, renderQuestionsBlock, xml } from "./intake.v1.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, LEAD_SELECTION, PROOF_PLACEMENT } from "./standard.ts";
 import type { PromptModule } from "./types.ts";
 
@@ -65,11 +65,12 @@ Output only the JSON object in the requested structure, within the output budget
 
 export const RESEARCH_SYSTEM = [ROLE, LEAD_SELECTION, PROOF_PLACEMENT, CLAIMS_AND_FACTUAL_REVIEW].join("\n\n---\n\n");
 
-export function researchUser(_ctx: StepContext, args: ResearchArgs): string {
+export function researchUser(ctx: StepContext, args: ResearchArgs): string {
   const parts = [
     xml("brief", renderBrief(args.brief)),
     xml("claims", renderClaims(args.claims), { count: args.claims.length }),
     xml("config", renderConfig(args.config)),
+    renderQuestionsBlock(ctx.questions),
     xml("fetch_first", args.fetchFirst.length ? args.fetchFirst.map((u) => `- ${u}`).join("\n") : "(no URLs in the brief; search for the product and its competitors by name)"),
   ];
   if (args.retry) {

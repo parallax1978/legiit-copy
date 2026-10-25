@@ -5,7 +5,7 @@
  */
 import type { OfferBrief } from "../schemas/brief.ts";
 import type { Dossier } from "../schemas/research.ts";
-import type { OfferConfigRow, OfferVariantRow, StepContext } from "../steps/types.ts";
+import type { OfferConfigRow, OfferQuestionRow, OfferVariantRow, StepContext } from "../steps/types.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW, RULES } from "./standard.ts";
 import type { PromptModule } from "./types.ts";
 
@@ -117,6 +117,31 @@ export function renderClaims(claims: ClaimLike[]): string {
       return lines.join("\n");
     });
   return rows.length ? rows.join("\n") : "(the ledger is empty)";
+}
+
+/** The question rows a model is shown: what the user answered (their own facts) and what is still open (unknown). */
+export type QuestionLike = Pick<OfferQuestionRow, "question" | "why" | "answer">;
+
+export function renderQuestions(questions: QuestionLike[]): string {
+  const answered = questions.filter((q) => (q.answer ?? "").trim());
+  const open = questions.filter((q) => !(q.answer ?? "").trim());
+  const lines: string[] = [];
+  if (answered.length) {
+    lines.push("Answered by the user (the user's own material: facts to use, never to re-ask or second-guess):");
+    for (const q of answered) lines.push(`- Q: ${neutralizeTags(q.question)}\n  A: ${neutralizeTags(q.answer!.trim())}`);
+  }
+  if (open.length) {
+    lines.push(`${answered.length ? "\n" : ""}Still open (unanswered; these facts are unknown: never fill them, never imply them):`);
+    for (const q of open) lines.push(`- ${neutralizeTags(q.question)}${q.why ? ` (${neutralizeTags(q.why)})` : ""}`);
+  }
+  return lines.join("\n");
+}
+
+/** The <questions> block the research, offer, argument and intake prompts share; empty string when there are none. */
+export function renderQuestionsBlock(questions: QuestionLike[]): string {
+  if (!questions.length) return "";
+  const answered = questions.filter((q) => (q.answer ?? "").trim()).length;
+  return xml("questions", renderQuestions(questions), { answered, open: questions.length - answered });
 }
 
 export function renderConfig(config: OfferConfigRow | Record<string, unknown> | null): string {
@@ -242,6 +267,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
     xml("offer", xml("user_brief", Object.keys(userBrief).length ? neutralizeTags(json(userBrief)) : "(the user entered no notes)"), { id: ctx.offer.id, name: ctx.offer.name }),
   ];
   if (ctx.claims.length) parts.push(xml("existing_ledger", renderClaims(ctx.claims), { count: ctx.claims.length }));
+  if (ctx.questions.length) parts.push(renderQuestionsBlock(ctx.questions));
   parts.push(
     xml("sources", args.sources.length ? args.sources.map(renderSource).join("\n") : "(no extracted sources; work from the offer name and the user's notes, and ask for what is missing)", {
       count: args.sources.length,
@@ -255,6 +281,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
         `Produce the intake output for "${ctx.offer.name}": brief, claims (one row per fact, typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened), config, questions (blocking only when drafting cannot proceed).`,
         args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
+        ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified; never re-ask an answered question." : null,
         args.compact ? compactNote(args.compact) : null,
       ]
         .filter(Boolean)

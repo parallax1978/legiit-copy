@@ -9,6 +9,7 @@ export type GenerationRow = Database["public"]["Tables"]["generations"]["Row"];
 export type OfferRow = Database["public"]["Tables"]["offers"]["Row"];
 export type ClaimRow = Database["public"]["Tables"]["offer_claims"]["Row"];
 export type OfferConfigRow = Database["public"]["Tables"]["offer_config"]["Row"];
+export type OfferQuestionRow = Database["public"]["Tables"]["offer_questions"]["Row"];
 export type OfferVariantRow = Database["public"]["Tables"]["offer_variants"]["Row"];
 export type VoiceProfileRow = Database["public"]["Tables"]["voice_profiles"]["Row"];
 export type DraftRow = Database["public"]["Tables"]["drafts"]["Row"];
@@ -23,6 +24,8 @@ export interface StepContext {
   brief: OfferBrief | null;
   claims: ClaimRow[];
   config: OfferConfigRow | null;
+  /** Intake's open questions with the user's answers; answers are the user's own facts, open ones stay unknown. */
+  questions: OfferQuestionRow[];
   variant: OfferVariantRow | null;          // approved offer construction, if any
   dossier: Dossier | null;                  // active research
   voice: VoiceProfileRow | null;

@@ -8,7 +8,7 @@ import type { Dossier } from "../schemas/research.ts";
 import type { OfferVariantRow, StepContext } from "../steps/types.ts";
 import type { CandidateT, Exclusions } from "../argument/candidates.ts";
 import type { GatedCandidate } from "../argument/assemble.ts";
-import { type ClaimLike, renderBrief, renderClaims, renderDossier, renderVariant, xml } from "./intake.v1.ts";
+import { type ClaimLike, renderBrief, renderClaims, renderDossier, renderQuestionsBlock, renderVariant, xml } from "./intake.v1.ts";
 import { ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, RULES } from "./standard.ts";
 import type { PromptModule } from "./types.ts";
 
@@ -84,9 +84,9 @@ function renderSurvivor(g: GatedCandidate): string {
   });
 }
 
-export function argumentUser(_ctx: StepContext, args: ArgumentArgs): string {
+export function argumentUser(ctx: StepContext, args: ArgumentArgs): string {
   if (args.phase === "candidates") {
-    const parts = [xml("phase", "candidates"), ...common(args)];
+    const parts = [xml("phase", "candidates"), ...common(args), renderQuestionsBlock(ctx.questions)];
     if (args.examples.trim()) parts.push(xml("examples", args.examples));
     if (args.exclusions.promises.length) {
       parts.push(xml("excluded", args.exclusions.promises.map((p) => `- ${p}`).join("\n"), { count: args.exclusions.promises.length }));
@@ -106,7 +106,7 @@ export function argumentUser(_ctx: StepContext, args: ArgumentArgs): string {
     );
     return parts.join("\n\n");
   }
-  const parts = [xml("phase", "scoring"), ...common(args)];
+  const parts = [xml("phase", "scoring"), ...common(args), renderQuestionsBlock(ctx.questions)];
   parts.push(xml("survivors", args.survivors.map(renderSurvivor).join("\n"), { count: args.survivors.length }));
   parts.push(
     xml(

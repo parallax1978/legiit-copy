@@ -62,6 +62,9 @@ export async function buildContext(db: Db, generationId: string, attempt: number
     if (s.step === "revise") revisionCycles += 1;
   }
 
+  const questions = await db.from("offer_questions").select("*").eq("offer_id", offer.id).order("created_at", { ascending: true });
+  if (questions.error) fail("offer_questions", questions.error);
+
   const promptVersions: StepContext["promptVersions"] = {};
   for (const p of prompts.data ?? []) promptVersions[p.step] = { id: p.id, version: p.version, template: p.template, model: p.model, effort: p.effort, max_tokens: p.max_tokens };
 
@@ -76,6 +79,7 @@ export async function buildContext(db: Db, generationId: string, attempt: number
     brief,
     claims: claims.data ?? [],
     config: config.data ?? null,
+    questions: questions.data ?? [],
     variant,
     dossier: research,
     voice,

@@ -65,7 +65,7 @@ All tenant tables carry `workspace_id` and are protected by RLS (`exists (select
 | `offer_config` | Per-offer: vertical; business-opportunity and FTC Notice-recipient booleans; humor policy per format; greeting and edge tolerance; refund window; first-week experience |
 | `offer_variants` | The offer options sheet and the chosen variant with reasons (step 2 output) |
 | `offer_research` | Research dossier (jsonb) with sources; versioned, one active |
-| `offer_questions` | Missing-info questions and answers |
+| `offer_questions` | Missing-info questions from intake and the user's answers. Every step context carries them: answers are shown to intake (re-extraction), research, offer, argument and draft as the user's own facts; open ones as unknowns the copy never fills |
 | `voice_profiles` | Samples and derived style guide |
 | `generations` | One job: offer_id, format, purpose, options, status, current_step, progress_message, selected_angle_id, cost, token totals, prompt_version_set |
 | `generation_steps` | One row per step attempt: step, attempt, status, input_hash, output (jsonb), model, tokens, cost, duration, error |

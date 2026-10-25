@@ -188,15 +188,16 @@ export async function loadOfferContext(db: Db, offerId: string, purpose: string,
   if (error) throw new HttpError(500, error.message);
   if (!offer) throw new HttpError(404, "offer not found");
 
-  const [claimsRes, configRes, researchRes, variantRes, voiceRes, promptVersions] = await Promise.all([
+  const [claimsRes, configRes, questionsRes, researchRes, variantRes, voiceRes, promptVersions] = await Promise.all([
     db.from("offer_claims").select("*").eq("offer_id", offerId).order("created_at", { ascending: true }),
     db.from("offer_config").select("*").eq("offer_id", offerId).maybeSingle(),
+    db.from("offer_questions").select("*").eq("offer_id", offerId).order("created_at", { ascending: true }),
     db.from("offer_research").select("*").eq("offer_id", offerId).eq("active", true).maybeSingle(),
     db.from("offer_variants").select("*").eq("offer_id", offerId).eq("status", "approved").order("created_at", { ascending: false }).limit(1).maybeSingle(),
     db.from("voice_profiles").select("*").eq("offer_id", offerId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
     loadPromptVersions(db),
   ]);
-  for (const r of [claimsRes, configRes, researchRes, variantRes, voiceRes]) if (r.error) throw new HttpError(500, r.error.message);
+  for (const r of [claimsRes, configRes, questionsRes, researchRes, variantRes, voiceRes]) if (r.error) throw new HttpError(500, r.error.message);
 
   const brief = OfferBrief.safeParse(offer.brief);
   const dossier = researchRes.data ? Dossier.safeParse(researchRes.data.dossier) : null;
@@ -209,6 +210,7 @@ export async function loadOfferContext(db: Db, offerId: string, purpose: string,
     brief: brief.success ? brief.data : null,
     claims: claimsRes.data ?? [],
     config: configRes.data ?? null,
+    questions: questionsRes.data ?? [],
     variant: variantRes.data ?? null,
     dossier: dossier?.success ? dossier.data : null,
     voice: voiceRes.data ?? null,
