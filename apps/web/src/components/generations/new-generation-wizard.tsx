@@ -19,23 +19,25 @@ interface Props {
   voiceProfiles: { id: string; name: string; offer_id: string | null }[];
   initialOfferId: string | null;
   initialFormat: string | null;
+  /** Settings of a previous piece to start from (Write another). */
+  initial?: CreateGenerationInput | null;
 }
 
 const STEPS = ["Offer and format", "Purpose and options", "Confirm"];
 
-export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, initialFormat }: Props) {
-  const [step, setStep] = useState(0);
+export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, initialFormat, initial = null }: Props) {
+  const [step, setStep] = useState(initial && initialOfferId && initialFormat ? 1 : 0);
   const [offerId, setOfferId] = useState<string | null>(initialOfferId && offers.some((o) => o.id === initialOfferId) ? initialOfferId : offers.length === 1 ? offers[0].id : null);
   const [format, setFormat] = useState<FormatId | null>(initialFormat && isFormatId(initialFormat) ? initialFormat : null);
-  const [purpose, setPurpose] = useState("");
-  const [length, setLength] = useState<"shorter" | "standard" | "longer">("standard");
-  const [cta, setCta] = useState("");
-  const [deadline, setDeadline] = useState("");
-  const [instructions, setInstructions] = useState("");
-  const [sequenceType, setSequenceType] = useState("launch");
-  const [voiceProfileId, setVoiceProfileId] = useState<string>("none");
-  const [controlText, setControlText] = useState("");
-  const [skipOffer, setSkipOffer] = useState(false);
+  const [purpose, setPurpose] = useState(initial?.purpose ?? "");
+  const [length, setLength] = useState<"shorter" | "standard" | "longer">(initial?.length ?? "standard");
+  const [cta, setCta] = useState(initial?.cta ?? "");
+  const [deadline, setDeadline] = useState(initial?.deadline ?? "");
+  const [instructions, setInstructions] = useState(initial?.instructions ?? "");
+  const [sequenceType, setSequenceType] = useState(initial?.sequence_type || "launch");
+  const [voiceProfileId, setVoiceProfileId] = useState<string>(initial?.voice_profile_id ?? "none");
+  const [controlText, setControlText] = useState(initial?.control_text ?? "");
+  const [skipOffer, setSkipOffer] = useState(!!initial?.skip_offer);
   const [pending, start] = useTransition();
 
   const groups = useMemo(() => formatCardsByFamily(), []);

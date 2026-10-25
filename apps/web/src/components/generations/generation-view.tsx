@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { GenerationDetail } from "@/lib/data/generations";
 import { formatName } from "@/lib/formats";
-import { cancelGeneration, retryGeneration, continueGeneration, draftWithOfferAsWritten } from "@/lib/actions/generations";
+import { cancelGeneration, retryGeneration, continueGeneration, draftWithOfferAsWritten, rewriteGeneration } from "@/lib/actions/generations";
 import { useLiveRefresh } from "./use-live-refresh";
 import { StatusBadge } from "./status-badge";
 import { StepTimeline } from "./step-timeline";
@@ -60,9 +60,14 @@ export function GenerationView({ detail, canEdit }: { detail: GenerationDetail; 
                 {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />} {status === "failed" ? "Retry" : "Resume"}
               </Button>
             )}
+            {canEdit && offer && (status === "completed" || status === "failed" || status === "cancelled" || status === "needs_input") && (
+              <Button variant="outline" size="sm" disabled={pending} onClick={() => act(() => rewriteGeneration(generation.id), "Writing it again with the same settings")} title="Run this piece again with the same offer, purpose and options">
+                {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RotateCcw className="h-3.5 w-3.5" />} Rewrite
+              </Button>
+            )}
             {canEdit && offer && (
               <Button variant="ghost" size="sm" asChild>
-                <Link href={`/app/generations/new?offer=${offer.id}&format=${generation.format}`}>Write another</Link>
+                <Link href={`/app/generations/new?from=${generation.id}`}>Write another</Link>
               </Button>
             )}
           </div>

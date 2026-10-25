@@ -166,3 +166,19 @@ export async function getGenerationDetail(generationId: string, workspaceId: str
     hasApprovedOffer: (variants.data ?? []).length > 0,
   };
 }
+
+/** The settings a piece was written with, so another piece can start from them (Rewrite, Write another). */
+export interface GenerationSettings {
+  offer_id: string;
+  format: string;
+  purpose: string;
+  options: GenerationOptions;
+  voice_profile_id: string | null;
+}
+
+export async function getGenerationSettings(generationId: string, workspaceId: string): Promise<GenerationSettings | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("generations").select("offer_id, format, purpose, options, voice_profile_id").eq("id", generationId).eq("workspace_id", workspaceId).maybeSingle();
+  if (!data) return null;
+  return { offer_id: data.offer_id, format: data.format, purpose: data.purpose ?? "", options: (data.options as GenerationOptions | null) ?? {}, voice_profile_id: data.voice_profile_id ?? null };
+}
