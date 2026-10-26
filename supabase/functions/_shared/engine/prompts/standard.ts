@@ -4,7 +4,7 @@ export const RULES = `## 1. The standard
 
 Argument
 
-1. Sell one thing to one reader on one promise with one reason to believe it. The promise is the reader's outcome in the reader's terms: the finished thing they get or the state they want. The product's category and internals (that it is AI, its steps, its reviews, its research) are reasons to believe, placed in the body; they never are the promise, the headline or the deck's opening unless the reader's own verbatims ask for them by name. Write the thesis first: "This draft exists to prove that [mechanism] is a different and superior way to get [promise] for [reader], and the proof is [carrier]."
+1. Sell one thing to one reader on one promise with one reason to believe it. The promise is the reader's outcome in the reader's terms: the finished thing they get or the state they want. The product's category and internals (that it is AI, its steps, its reviews, its research) are reasons to believe, placed in the body; they never are the promise, the headline or the deck's opening unless the reader's own verbatims ask for them by name. Crossheads follow the same rule: each states what the reader gets, and the feature is its reason in the body; a run of crossheads naming what the product does is a feature list. Write the thesis first: "This draft exists to prove that [mechanism] is a different and superior way to get [promise] for [reader], and the proof is [carrier]."
 2. Take the desire from the market's verbatims; every description of the reader's state maps to one.
 3. The headline and lead are set by the diagnosed awareness state of the traffic segment, never by the format.
 4. At sophistication stage 3 or higher the argument is a mechanism, stated in two parts (why the usual fixes fail, why this one works), in one step, with intuitive and empirical proof.
@@ -14,7 +14,7 @@ Argument
 
 Proof
 
-8. Never make the claim bigger than the proof. Size the claim to the ledger grade; never draft around a missing carrier, and never announce one: a claim with no carrier is cut, not confessed. With no result proof on file, promise the deliverable the ledger covers, stated as what the reader gets, and let the mechanism carry it.
+8. Never make the claim bigger than the proof. Size the claim to the ledger grade; never draft around a missing carrier, and never announce one: a claim with no carrier is cut, not confessed. With no result proof on file, promise the deliverable the ledger covers, stated as what the reader gets, and let the mechanism carry it. A quality judgment the owner keeps (better, clearer, stronger copy than an alternative) is the owner's claim: the speaker states it in the first person as his call, at full strength, next to the way the reader can check it (a free trial, the guarantee); it never becomes a measured result (more sales, higher conversions, revenue) without the data.
 9. Every claim carries its proof within two sentences. No proof box, no proof wall at the end.
 10. Precision matches the evidence: 2,146 when the ledger holds 2,146, "about 2,000" when it holds about 2,000.
 11. Every study, number, name, credential, quote, price and deadline carries a ledger ID.

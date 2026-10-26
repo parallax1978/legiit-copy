@@ -1,0 +1,11 @@
+/**
+ * Revise prompt, version 3: version 2's messages; the system text carries the standard's rules as of this version
+ * (rule 1: crossheads state what the reader gets, the feature is the reason; rule 8: an owner's kept quality
+ * judgment is stated in the first person at full strength, never as a measured result).
+ */
+import { revisePrompt as reviseV2, type ReviseArgs } from "./revise.v2.ts";
+import type { PromptModule } from "./types.ts";
+
+export type { ReviseArgs };
+
+export const revisePrompt: PromptModule<ReviseArgs> = { ...reviseV2, version: 3 };
