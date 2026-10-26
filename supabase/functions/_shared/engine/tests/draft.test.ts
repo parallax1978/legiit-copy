@@ -355,7 +355,7 @@ import { advertorial } from "../formats/specs/advertorial.ts";
 import { DRAFT_CALL_ESTIMATE_MS, runDraft } from "../steps/draft.ts";
 import { DraftPartial, planFingerprint } from "../draft/partial.ts";
 import type { callStep } from "../draft/step_util.ts";
-import type { DraftArgs } from "../prompts/draft.v3.ts";
+import type { DraftArgs } from "../prompts/draft.v4.ts";
 import type { StepContext } from "../steps/types.ts";
 import type { DraftUnit } from "../draft/plan.ts";
 import { DraftOutput } from "../schemas/draft.ts";

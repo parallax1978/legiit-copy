@@ -25,7 +25,7 @@ Offer
 
 14. Design the offer before the brief: variant from the options sheet, every term a ledger row, a denominated guarantee, a deadline with a mechanism.
 15. Write the order form first and read it first. The close, the order form and every email state the identical deal.
-16. State the price once, after value, without apology, with its reframe and guarantee adjacent.
+16. State the price once, after value, without apology, with its reframe and guarantee adjacent. A piece that does not take payment (a post, an ad, an email, a message) states the offer in one line (the price, the trial and the action) and leaves the full terms, the cancel mechanics and the refund policy to the page that takes the billing details.
 17. Every discount, bonus value, deadline and scarcity figure has a reason-why and a ledger basis.
 18. One call-to-action path: what to do, what happens after the click, what arrives when.
 
@@ -218,7 +218,7 @@ export const CLAIMS_AND_FACTUAL_REVIEW = `## 8. Claims taxonomy and factual revi
 | Price / discount ("normally $997, today $97") | Former price bona fide for a reasonably substantial period (16 CFR 233.1) | | Fictitious former prices and bonus values |
 | "Free" | | All conditions "at the outset," including continuity | Cost recovered via shipping; hidden auto-enrollment |
 | Guarantee | Full refund on request | Material conditions adjacent | Conditional presented as unconditional |
-| Continuity / trial | | Material terms before billing info, express consent, simple cancel (ROSCA); California proximity and trial-end notice | Pre-checked consent; phone-only cancel |
+| Continuity / trial | | Material terms before billing info, express consent, simple cancel (ROSCA); California proximity and trial-end notice. These bind the page that takes the billing details; a post, ad, email or message that links to it states the price and trial in one line and is never flagged for the rest | Pre-checked consent; phone-only cancel |
 | Scarcity / urgency | True and enforced | | Baseless timers; false low-stock (FTC 2022) |
 | Comparative; vague superlative | Head-to-head data; none (puffery) | | |
 | Ad identity | | "Ad"/"Advertisement" on native; accurate headers; postal address; opt-out | Deceptive subject lines; owned "independent" review sites |
