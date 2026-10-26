@@ -173,6 +173,7 @@ export function syntheticGeneration(offer: OfferRow, format: FormatId, purpose: 
     variant_id: null,
     voice_profile_id: null,
     selected_angle_id: null,
+    requeued_at: null,
     prompt_version_set: {},
     model_set: {},
     cost_usd: 0,

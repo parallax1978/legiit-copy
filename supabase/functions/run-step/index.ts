@@ -154,7 +154,8 @@ async function runMessage(body: Body): Promise<void> {
   // 2. history and idempotency
   const history = await loadHistory(db, generationId);
   const forced = gen.status === "queued" && gen.current_step === step; // requeue_generation targets this step on purpose
-  const boundary = predecessorBoundary(step, history);
+  // a Retry or Try another angle starts a new pass: attempts before the restart are not counted, not resumed
+  const boundary = later(predecessorBoundary(step, history), gen.requeued_at ?? null);
   const thisPass = history.filter((r) => r.step === step && isAfter(r.created_at, boundary));
 
   if (!forced) {

@@ -3,9 +3,11 @@
  * premiums aimed at quoted worries, first visible win, promise/delivery gap note, and a ledger row per new term.
  * The pipeline pauses here: the offer changes what is sold, so the user approves it before drafting.
  */
-import { MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
-import { callModel } from "../llm.ts";
-import offerPrompt from "../prompts/offer.v1.ts";
+import { type Effort, lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
+import { callModel, TruncatedError } from "../llm.ts";
+import offerPrompt from "../prompts/offer.v3.ts";
+import { RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
+import { remainingBudgetMs } from "./budget.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import type { ClaimRowInput } from "../schemas/brief.ts";
 import { OfferConstruction } from "../schemas/offer.ts";
@@ -95,23 +97,37 @@ export function makeOfferStep(deps: Partial<OfferDeps> = {}): StepFn {
     const d = STEP_DEFAULTS.offer;
 
     await ctx.progress(`Designing the offer for ${brief.product_name}: options sheet, guarantee, deadline, premiums`);
-    const res = await call({
-      model: p.model ?? d.model,
-      effort: p.effort ?? d.effort,
-      maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
-      system: p.system,
-      user: offerPrompt.user(ctx, { brief, claims, dossier, config: ctx.config }),
-      schema: OfferConstruction,
-      log: {
-        db: ctx.db,
-        workspaceId: ctx.generation.workspace_id,
-        generationId: ctx.generation.id,
-        step: "offer",
-        attempt: ctx.attempt,
-        purpose: "offer.construction",
-        promptVersionId: p.promptVersionId,
-      },
-    });
+    const effort = (p.effort ?? d.effort) as Effort;
+    const user = offerPrompt.user(ctx, { brief, claims, dossier, config: ctx.config });
+    const run = (eff: Effort, retry: boolean) =>
+      call({
+        model: p.model ?? d.model,
+        effort: eff,
+        maxTokens: Math.min(p.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL),
+        timeoutMs: remainingBudgetMs(ctx),
+        system: p.system,
+        user,
+        schema: OfferConstruction,
+        log: {
+          db: ctx.db,
+          workspaceId: ctx.generation.workspace_id,
+          generationId: ctx.generation.id,
+          step: "offer",
+          attempt: ctx.attempt,
+          purpose: retry ? "offer.construction.retry_less_thinking" : "offer.construction",
+          promptVersionId: p.promptVersionId,
+        },
+      });
+    let res;
+    try {
+      res = await run(effort, false);
+    } catch (e) {
+      // Thinking and the answer share max_tokens: when the thinking eats the budget, run once more with one rung
+      // less thinking in this invocation, as the review steps do. Three identical truncations was the old failure.
+      if (!(e instanceof TruncatedError) || effort === "low" || remainingBudgetMs(ctx) < RETRY_MIN_BUDGET_MS) throw e;
+      await ctx.progress("The offer ran past its output budget; designing it again with less thinking");
+      res = await run(lowerEffort(effort), true);
+    }
     const output = ensureOfferLedgerRows(OfferConstruction.parse(res.output));
 
     const result: StepResult<OfferConstruction> = {

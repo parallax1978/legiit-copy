@@ -40,7 +40,7 @@ export type StepName = (typeof STEP_NAMES)[number];
 export const STEP_DEFAULTS: Record<StepName, { model: string; effort: Effort; maxTokens: number }> = {
   intake: { model: DEFAULT_MODEL, effort: "medium", maxTokens: 12000 }, // extraction, not reasoning; thinking shares max_tokens with the ledger
   research: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
-  offer: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 8000 },
+  offer: { model: DEFAULT_MODEL, effort: "medium", maxTokens: 12000 },
   argument: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 12000 },
   draft: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
   cold_read: { model: COLD_READ_MODEL, effort: "medium", maxTokens: 4000 },

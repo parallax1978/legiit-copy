@@ -8,7 +8,7 @@ import { type callModel, TruncatedError } from "../llm.ts";
 import argumentPrompt from "../prompts/argument.v4.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
 import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v1.ts";
-import offerPrompt from "../prompts/offer.v1.ts";
+import offerPrompt from "../prompts/offer.v3.ts";
 import researchPrompt from "../prompts/research.v1.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";
@@ -629,12 +629,33 @@ Deno.test("ensureOfferLedgerRows: guarantee, deadline and premium rows are added
   assertEquals(noDeadline.ledger_rows_to_add.map((r) => r.claim_type), ["guarantee"]);
 });
 
+Deno.test("offer step: a truncated answer is designed again once with less thinking, in the same invocation", async () => {
+  let n = 0;
+  const { call, calls } = fakeCall(() => {
+    n += 1;
+    if (n === 1) throw new TruncatedError("{partial");
+    return OFFER_OUTPUT;
+  });
+  const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER });
+  const res = await makeOfferStep({ call })(ctx);
+  assertEquals(calls.map((c) => [c.effort, c.purpose]), [["medium", "offer.construction"], ["low", "offer.construction.retry_less_thinking"]]);
+  assertEquals(res.pause, { reason: OFFER_PAUSE_REASON });
+  // with too little time left for a second call, the truncation surfaces so the runner retries the step
+  let m = 0;
+  const twice = fakeCall(() => {
+    m += 1;
+    throw new TruncatedError("{partial");
+  });
+  await assertRejects(() => makeOfferStep({ call: twice.call })(fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, timeBudgetMs: 60_000 })));
+  assertEquals(m, 1);
+});
+
 Deno.test("offer step: pauses for approval with the variant and the ledger rows as effects", async () => {
   const { call, calls } = fakeCall(() => OFFER_OUTPUT);
   const ctx = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER });
   const res = await makeOfferStep({ call })(ctx);
   assertEquals(calls.length, 1);
-  assertEquals([calls[0].effort, calls[0].maxTokens, calls[0].purpose], ["xhigh", 8000, "offer.construction"]);
+  assertEquals([calls[0].effort, calls[0].maxTokens, calls[0].purpose], ["medium", 12000, "offer.construction"]);
   assertEquals(calls[0].system, offerPrompt.system);
   assertStringIncludes(calls[0].system, "## 5. Offer presentation");
   assertStringIncludes(calls[0].user, "<dossier>");
