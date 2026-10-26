@@ -5,7 +5,7 @@
 import { assert, assertEquals, assertRejects, assertStringIncludes } from "@std/assert";
 import { getFormat } from "../formats/index.ts";
 import { type callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v4.ts";
+import argumentPrompt from "../prompts/argument.v5.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
 import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v1.ts";
 import offerPrompt from "../prompts/offer.v3.ts";

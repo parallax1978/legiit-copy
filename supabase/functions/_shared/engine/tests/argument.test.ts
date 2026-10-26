@@ -509,6 +509,28 @@ Deno.test("purpose steering: a candidate that serves the stated purpose passes t
   assertEquals(plain.output.winner_id, "A01");
 });
 
+Deno.test("purpose steering: among candidates on the named desire, research counts do not decide; the judged fit does", () => {
+  const table = computeClusterTable(toVerbatims(FIXTURE.corpora.AG1.rows), { useModelMarkers: false, countFloors: false });
+  const cands = [
+    // loud cluster (routine: C1-C3 = 3, 3, 1), weaker judged fit to the piece
+    candidate("A01", { cluster: "routine", proof_ledger_refs: ["guar"], promise: "a routine that holds", serves_purpose: true, purpose_fit: "named" }),
+    // quiet cluster (taste: 0, 0, 1), the purpose's own terms
+    candidate("A02", { cluster: "taste", proof_ledger_refs: ["guar"], promise: "greens that taste fine", serves_purpose: true, purpose_fit: "named" }),
+  ];
+  const gated = gateCandidates(cands, table, LEDGER, { purposeGiven: true });
+  const judged = indexJudged(ScoringOutput.parse({ scored: [
+    { id: "A01", scores: { ...allThrees, C5: 1, C11: 1, C9: 3 }, rationale: "r" },
+    { id: "A02", scores: { ...allThrees, C9: 3 }, rationale: "r" },
+  ] }));
+  const asm = assembleArgument({ gated, judged, reader: "a reader", purposeGiven: true });
+  const total = (id: string) => asm.output.candidates.find((c) => c.id === id)!.weighted_total;
+  assert(total("A01") > total("A02")); // A01 leads on the full total, carried by C1-C3
+  assertEquals(asm.output.winner_id, "A02"); // and still loses: the user named the desire, the judged fit decides
+  assertStringIncludes(asm.output.tie_break_note ?? "", "the research counts (C1-C3) do not separate them");
+  // without a purpose the full total decides, C1-C3 included
+  assertEquals(assembleArgument({ gated: gateCandidates(cands, table, LEDGER), judged, reader: "a reader" }).output.winner_id, "A01");
+});
+
 Deno.test("assembly: the exact ranking in the mixed case", () => {
   const cands = [
     candidate("A01", { cluster: "energy", proof_ledger_refs: ["stat-b"] }),

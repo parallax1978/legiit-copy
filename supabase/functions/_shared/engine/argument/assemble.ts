@@ -4,7 +4,7 @@
  * Pure: the step feeds it the model outputs; tests feed it fixtures.
  */
 import { z } from "zod";
-import { ArgumentOutput } from "../schemas/argument.ts";
+import { ArgumentOutput, WEIGHTS } from "../schemas/argument.ts";
 import type { StepEffects } from "../steps/types.ts";
 import type { CandidateT } from "./candidates.ts";
 import { desireGate, type DesireGateResult, type LedgerClaimLike, PROOF_GATE, proofGate, type ProofGateResult } from "./gates.ts";
@@ -132,7 +132,13 @@ export function assembleArgument(input: {
       ? " | set aside: eligible, but the stated purpose names another desire, and candidates on that desire passed both gates"
       : " | set aside: eligible, but it does not serve the stated purpose of this piece";
   }
-  const ranked = rankCandidates(pool);
+  // The user named the desire, so how loudly the research speaks about each cluster (C1-C3) does not rank one
+  // named candidate over another (Section 2, rule 7): they are ranked on C4-C14, the judged fit to this piece.
+  const rankByJudged = !!input.purposeGiven && named.length > 0 && pool === named;
+  const judgedTotal = (r: Row) => r.weighted_total - WEIGHTS.C1 * r.scores.C1 - WEIGHTS.C2 * r.scores.C2 - WEIGHTS.C3 * r.scores.C3;
+  const ranked = rankByJudged
+    ? rankCandidates(pool.map((r) => ({ ...r, weighted_total: judgedTotal(r) }))).map((x) => pool.find((r) => r.id === x.id)!)
+    : rankCandidates(pool);
   const rest = [...rankCandidates(setAside), ...rows
     .filter((r) => !r.eligible)
     .sort((a, b) => b.gates.desire_magnitude + b.gates.c9 - (a.gates.desire_magnitude + a.gates.c9) || a.id.localeCompare(b.id))];
@@ -150,8 +156,9 @@ export function assembleArgument(input: {
   });
 
   const notes: string[] = [];
-  const tie = describeTieBreak(ranked);
+  const tie = rankByJudged ? null : describeTieBreak(ranked);
   if (tie) notes.push(tie);
+  if (rankByJudged && ranked.length > 1) notes.push(`Ranked on C4-C14 among the candidates on the desire the purpose names (${ranked.map((r) => `${r.id} ${judgedTotal(r)}`).join(", ")}): the purpose chose the desire, so the research counts (C1-C3) do not separate them.`);
   if (setAside.length) {
     notes.push(pool === named && named.length
       ? `${setAside.length} candidate${setAside.length === 1 ? "" : "s"} passed both gates but ${setAside.length === 1 ? "was" : "were"} set aside: the stated purpose names the desire ${named.map((r) => r.id).join(", ")} ${named.length === 1 ? "sits" : "sit"} on.`
