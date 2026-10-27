@@ -15,6 +15,8 @@ import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v8.ts";
 import { exemptTermsFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
+import { ChosenOffer } from "../schemas/offer.ts";
+import { ONE_LINE_OFFER_FAMILIES } from "../draft/prompt_text.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { PERSIST_RESERVE_MS, remainingBudgetMs } from "./budget.ts";
@@ -99,8 +101,13 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
   const before = ownerTellCount(source, spec, exemptTerms);
   const cadence = flatCadence(source, spec);
-  // the user's accepted wording for a ledger row ("rewrite") is used as written: the editor leaves it alone
-  const acceptedWording = ctx.claims.filter((c) => c.user_decision === "rewrite" && c.claim_text).map((c) => c.claim_text);
+  // the user's accepted wording for a ledger row ("rewrite") and, on a page that takes payment, the guarantee sentence
+  // the offer block says to repeat are used as written: the editor leaves them alone
+  const chosenOffer = ChosenOffer.safeParse(ctx.variant?.chosen);
+  const acceptedWording = [
+    ...ctx.claims.filter((c) => c.user_decision === "rewrite" && c.claim_text).map((c) => c.claim_text),
+    ...(chosenOffer.success && !ONE_LINE_OFFER_FAMILIES.has(spec.family) ? [chosenOffer.data.guarantee.denominated_text] : []),
+  ];
   const auditOpts = { short: REPEAT_FAMILIES.has(spec.family), accepted: acceptedWording };
 
   const original = editableUnits(source, spec);

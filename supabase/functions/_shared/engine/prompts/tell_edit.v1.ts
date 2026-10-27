@@ -87,7 +87,7 @@ export const tellEditPrompt: PromptModule<TellEditArgs> = {
       args.groupTotal > 1 ? `This is part ${args.groupIndex + 1} of ${args.groupTotal} of the piece; edit only the texts shown.` : "",
       found,
       args.cadence ? `CADENCE: the sentences run close to one length (variation ${args.cadence.cv} against the format's floor of ${args.cadence.floor}). Break one or two long sentences in two and let one run long; never add words to do it.` : "",
-      args.acceptedWording?.length ? `THE USER'S ACCEPTED WORDING (ledger rows the user approved word for word; where the copy uses them, leave them as written):\n${args.acceptedWording.map((w) => `- ${w}`).join("\n")}` : "",
+      args.acceptedWording?.length ? `WORDING THAT STAYS AS WRITTEN (ledger rows the user approved word for word, and the lines the offer block says to repeat; where the copy uses them, leave them as written):\n${args.acceptedWording.map((w) => `- ${w}`).join("\n")}` : "",
       `THE COPY:\n${renderUnits(args.units, args.draft)}`,
       args.retryNote ? `NOTE ON YOUR PREVIOUS ANSWER: ${args.retryNote}` : "",
     ].filter(Boolean).join("\n\n");

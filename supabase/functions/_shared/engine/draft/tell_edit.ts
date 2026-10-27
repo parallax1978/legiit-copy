@@ -285,6 +285,25 @@ function numbersKept(before: string, after: string, re: RegExp, ctx: EditContext
   return j === now.length;
 }
 
+/** Words that set a number's size or precision: "up to 40", "about 2,000", "most reports come back within 10 minutes". */
+const QUANTIFIER_RE = /\b(?:up to|about|around|roughly|nearly|almost|approximately|at least|at most|more than|less than|fewer than|over|under|within|on average|typically|usually|most|some)\b/gi;
+
+/** In a sentence that holds a number, every word that sets its size or precision is still in the replacement. */
+function quantifiersKept(before: string, after: string): boolean {
+  const need: string[] = [];
+  for (const s of strip(before).split(/(?<=[.!?…])\s+/)) {
+    if (!list(s, NUMBER_RE).length && !list(s, NUMBER_WORD_RE).length) continue;
+    need.push(...(s.match(new RegExp(QUANTIFIER_RE.source, "gi")) ?? []).map((q) => q.toLowerCase()));
+  }
+  const have = (strip(after).match(new RegExp(QUANTIFIER_RE.source, "gi")) ?? []).map((q) => q.toLowerCase());
+  for (const q of need) {
+    const i = have.indexOf(q);
+    if (i < 0) return false;
+    have.splice(i, 1);
+  }
+  return true;
+}
+
 /** Why an edit may not be applied, or null when it keeps every fact, tag, quote and link and stays close in length. */
 /**
  * A cut of whole sentences that carry no fact but their ledger tags or NEEDS SOURCE marks: a closer that says the
@@ -317,6 +336,8 @@ export function guardEdit(before: string, after: string, ctx?: EditContext): str
   // the count in a count windup ("I'd ask two things", "It takes seven steps, and") is the tell, not a fact: it may go, never change
   if (!numbersKept(before, after, NUMBER_RE, ctx)) return "a number, its unit or its currency changed, or numbers changed order";
   if (!numbersKept(before, after, NUMBER_WORD_RE, ctx)) return "a number written as a word changed";
+  // a whole-sentence cut takes its claim with it; a rewrite keeps the claim's size
+  if (after.trim() && !quantifiersKept(before, after)) return "a word that sets a number's size or precision was dropped (\"up to\", \"about\", \"most\", \"within\")";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";

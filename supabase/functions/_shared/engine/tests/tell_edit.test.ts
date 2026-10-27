@@ -712,3 +712,14 @@ Deno.test("round 4: a point the editor mapped to two lines and left gets one mor
   const text = JSON.stringify(res.effects!.newDraft!.blocks);
   assert(!text.includes("traffic estimate pick"), text);
 });
+
+Deno.test("round 4 review: a rewrite keeps the words that set a number's size; a cut takes its claim whole", () => {
+  assert(guardEdit("Each report checks up to 40 keywords against the pages ranking for them.", "Each report checks 40 of your keywords against the pages you would have to beat."));
+  assert(guardEdit("The research covers about 2,000 local shops.", "The research covers 2,000 local shops."));
+  assert(guardEdit("Most reports come back within 10 minutes.", "Your report comes back in 10 minutes."));
+  assertEquals(guardEdit("Each report checks up to 40 keywords against the pages ranking for them.", "Each report checks up to 40 of your keywords against the pages that rank."), null);
+  assert(RULES.includes("a line the offer block says to repeat (a page's guarantee sentence, a bonus name, the button), stay as written"));
+  assert(RULES.includes("keeps its condition and its remedy"));
+  assert(tellEditPrompt.system.includes("every word that sets the claim's size or precision"));
+  assert(!tellEditPrompt.system.includes("\"every credit it charged comes back to your balance\")"), "the guarantee clause is no longer the example of copied wording");
+});

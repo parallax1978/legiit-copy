@@ -16,8 +16,12 @@ const SYSTEM = amend(tellEditPrev.system, [
     `is said as the thing that happened, plainly, keeping its substance and how often it happened: "Some of the pages you built never earned back what they cost." Keep every number, name and tag; add no fact and no actor the copy did not name.`,
   ],
   [
+    `("judged against the pages you would have to beat", "every credit it charged comes back to your balance")`,
+    `("judged against the pages you would have to beat", "links to the ranking pages it read")`,
+  ],
+  [
     `is said the way the speaker would say the same fact to one reader, its numbers, names and tags kept.`,
-    `is said the way the speaker would say the same fact to one reader, its numbers, names and tags kept, unless the request lists it as the user's accepted wording: that stays as written.`,
+    `is said the way the speaker would say the same fact to one reader, its numbers, names, tags and every word that sets the claim's size or precision ("up to", "about", "most", "within") kept, unless the request lists it as the user's accepted wording or the offer block says to repeat it (a page's guarantee sentence, a bonus name, the button): those stay as written.`,
   ],
   [
     `"said_again", a point the piece already made, in any words (list the later line);`,

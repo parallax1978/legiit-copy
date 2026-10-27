@@ -50,7 +50,7 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
     if (c.flag) parts.push(`  flag: ${j(c.flag)}`);
     return parts.join("\n");
   });
-  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and precision exact and say the rest the way the speaker would to one reader, never in the row's feature or terms phrasing, unless the user decided "rewrite": rule 11):\n${lines.join("\n")}`;
+  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and every word that sets a claim's size or precision ("up to," "about," "most," "within") and say the rest the way the speaker would to one reader, never in the row's feature phrasing; a row the user decided "rewrite" and a line the offer block says to repeat stay as written: rule 11):\n${lines.join("\n")}`;
 }
 
 export function briefText(brief: OfferBrief | null, offerName: string): string {
@@ -74,7 +74,7 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
 }
 
 /** Formats that do not take payment: they state the offer in one line and leave the terms to the page that does (rule 16). */
-const ONE_LINE_OFFER_FAMILIES = new Set<FormatSpec["family"]>(["social", "ad", "email", "message", "audio"]);
+export const ONE_LINE_OFFER_FAMILIES = new Set<FormatSpec["family"]>(["social", "ad", "email", "message", "audio"]);
 
 /** The approved offer: the single source of truth for price, guarantee, deadline, bonuses and the button. */
 export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrief | null, claims: ClaimRow[], spec: FormatSpec | null = null): string {
@@ -98,7 +98,7 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
     lines.push(`price presentation: ${c.price_presentation}`);
     if (brief) lines.push(`price: ${brief.price.text}${brief.price.plan ? ` (${brief.price.plan})` : ""}`);
     lines.push(oneLine
-      ? `guarantee (said at all only as one short promise in the speaker's words, such as "or your credits back"; never its mechanics or terms, which stay on the page that takes payment): ${c.guarantee.denominated_text}`
+      ? `guarantee (said at all only as one short promise in the speaker's words that keeps its condition and its remedy, such as "your plan finishes, or your credits come back"; never its mechanics or terms, which stay on the page that takes payment): ${c.guarantee.denominated_text}`
       : `guarantee (repeat this sentence): ${c.guarantee.denominated_text}; terms: ${c.guarantee.terms}${c.guarantee.days ? `; ${c.guarantee.days} days` : ""}`);
     lines.push(c.deadline ? `deadline: ${c.deadline.date_or_rule}; mechanism: ${c.deadline.mechanism}` : "deadline: none (no urgency device; do not invent one)");
     lines.push(c.premiums.length ? `premiums: ${c.premiums.map((p) => `${p.name} (answers: ${p.answers_worry}${p.value_basis ? `; value basis: ${p.value_basis}` : "; no dollar value: none may be stated"})`).join(" | ")}` : "premiums: none");
@@ -147,7 +147,7 @@ export function dossierText(d: Dossier | null, opts: { maxVerbatims?: number; cl
     d.first_week_experience ? `first-week experience: ${d.first_week_experience}` : "first-week experience: unknown",
     d.refund_history ? `refund history: ${d.refund_history}` : "",
     `THEMES: ${d.themes.map((t) => `${t.name} [${t.tag}, n=${t.count}, ${t.confidence}] ← ${t.verbatim_ids.slice(0, 5).join(",")}`).join(" | ") || "none"}`,
-    `VERBATIMS (exact wording: what the reader lived and the words that matter to them; say that thing as something that happened, in the speaker's words, and borrow a verbatim's own words only where they are vivid and specific, never its survey wording ("poor results," "often," "for the price") and never hedged; never paraphrase into generic emotion words; a verbatim with a ledger tag beside it may be quoted and carries that tag; one with no tag is never quoted or attributed ("one buyer wrote," "a reviewer said"), rule 11):\n${verbatims.map((v) => `  ${v.id}${tagOf(v.text)} [${v.tags.join(",")}${v.desire_cluster ? `; cluster ${v.desire_cluster}` : ""}${v.date ? `; ${v.date}` : ""}] "${clip(v.text, 400)}"`).join("\n") || "  none"}`,
+    `VERBATIMS (exact wording: what the reader lived and the words that matter to them; say that thing as something that happened, in the speaker's words, with only the details a verbatim or the story inventory holds and as often and as much as the verbatims say ("some of," "most of"); borrow a verbatim's own words only where they are vivid and specific, never its survey wording ("poor results," "for the price") and never hedged; never paraphrase into generic emotion words; a verbatim with a ledger tag beside it may be quoted and carries that tag; one with no tag is never quoted or attributed ("one buyer wrote," "a reviewer said"), rule 11):\n${verbatims.map((v) => `  ${v.id}${tagOf(v.text)} [${v.tags.join(",")}${v.desire_cluster ? `; cluster ${v.desire_cluster}` : ""}${v.date ? `; ${v.date}` : ""}] "${clip(v.text, 400)}"`).join("\n") || "  none"}`,
     `OBJECTION MAP (the only objections the copy may raise or answer):\n${d.objection_map.map((o) => `  - ${o.text} ← ${o.verbatim_ids.join(",")}`).join("\n") || "  none: raise no objections"}`,
     `PROOF INVENTORY:\n${d.proof_inventory.map((p) => `  - [${p.grade}] ${p.evidence_type}: ${p.claim}${p.ledger_ref ? ` → [[L:${p.ledger_ref}]]` : " (no ledger row: not citable)"}${p.source ? ` src ${p.source}` : ""}`).join("\n") || "  none"}`,
     `STORY INVENTORY (the only stories the copy may tell):\n${d.story_inventory.map((s) => `  - ${s.event}${s.date ? ` (${s.date})` : ""}${s.numbers ? `; numbers: ${s.numbers}` : ""}${s.people ? `; people: ${s.people}` : ""}${s.source ? `; src ${s.source}` : ""}`).join("\n") || "  none: no story lead is possible"}`,
