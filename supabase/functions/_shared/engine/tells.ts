@@ -93,6 +93,8 @@ export const DENSITY_FLOOR_WORDS = 500;
 export const OWNER_STACK = 2;
 
 const A = "['’]?"; // optional straight or curly apostrophe
+/** Negated sentence openers of the "It's not X. It's not Y. It's Z." three-beat. */
+const NEG_OPEN = `(?:It${A}s not|It is not|It isn${A}t|It was not|It wasn${A}t|This is not|This isn${A}t|This was not|This wasn${A}t|That${A}s not|That is not|That isn${A}t)`;
 
 /**
  * The owner's never-rules (§7.1, tells 11-13), defined once: the detector counts with these and the tell edit's
@@ -103,8 +105,8 @@ const A = "['’]?"; // optional straight or curly apostrophe
  * and ™ are typography, not emoji.
  */
 export const EMOJI_SOURCE = String.raw`(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F|[✓✔☑❤♥])(?:\uFE0F|\u200D(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})\uFE0F?|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}])*|[\u{1F1E6}-\u{1F1FF}]{1,2}|[0-9#*]\uFE0F?\u20E3`;
-/** A hashtag: "#" then a letter, not inside a word, an entity, a URL, a markdown anchor or a quote, and not a hex colour with a digit. */
-export const HASHTAG_SOURCE = String.raw`(?<![\p{L}\p{N}_&#/=?.\-("'“‘\[])#(?!(?=[0-9a-fA-F]*\d)[0-9a-fA-F]{3,8}\b)(\p{L}[\p{L}\p{N}_]*)`;
+/** A hashtag: "#" then a tag holding a letter ("#SEO", "#100DaysOfCode"; "#1" is not one), not inside a word, an entity, a URL, a markdown anchor or a quote, and not a hex colour with a digit. */
+export const HASHTAG_SOURCE = String.raw`(?<![\p{L}\p{N}_&#/=?.\-("'“‘\[])#(?!(?=[0-9a-fA-F]*\d)[0-9a-fA-F]{3,8}\b)((?=[\p{N}_]*\p{L})[\p{L}\p{N}_]+)`;
 /** An em dash, a spaced en dash or a double hyphen used as one. Links are blanked before scanning. */
 export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)`;
 /** Links in copy, blanked before the em dash scan (a URL may hold "--") and kept whole by the backstop. */
@@ -216,7 +218,7 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 1, name: "summary_closer", weight: 4, scope: "all", owner: { words: true },
-    regex: /(?:^|[.!?]\s+)(?:In (?:short|summary|conclusion)|To (?:sum up|summarize|recap|wrap (?:it |things )?up)|So,? to recap|All in all|In a nutshell)\b/gm,
+    regex: /(?:^|[.!?]\s+)(?:In (?:short|summary|conclusion)|To (?:sum up|summarize|recap|wrap (?:it |things )?up)|So,? to recap|All in all|In a nutshell)\b/gim,
     example: "In short, X gives you A, B and C.",
     fix: "The CTA and what happens after the click.",
   },
@@ -251,13 +253,14 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "three_beat_deep_third", weight: 4, scope: "all", owner: { tell: 2 },
     regex: new RegExp(
-      `(?:^|[.!?]\\s+)(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+(?:Not|No|Never|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+)?(?:It${A}s|It is|It|This is|This|That${A}s|Just|Only|But|Instead|What|The)\\b` +
+      `(?:^|[.!?:]\\s+)(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+(?:Not|No|Never|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+)?(?!(?:Not|No|Never|Nor)\\b)[A-Z0-9$]` +
+        `|(?:^|[.!?:]\\s+)${NEG_OPEN}\\s[^.?!\\n]{1,40}[.!]\\s+(?:${NEG_OPEN}|Not|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:It${A}s|It is|It was|This is|This was|That${A}s|It|This)\\b` +
         `|\\b[Nn]ot [^,.?!\\n]{1,30}, not [^,.?!\\n]{1,30}, (?:but|just|only)\\b`,
       "gm",
     ),
     example: "Not a tool. Not a course. It's a system.",
     fix: "State the claim once: \"It's a system.\"",
-    note: "Absorbs the old Tier 2 \"No X. No Y. Just Z.\" rule; no social exemption.",
+    note: "Two negated beats, then a third that turns: \"Not a tool. Not a course. A system.\", \"No fluff. No theory. Real results.\", \"It's not about the money. It's not about the fame. It's about the freedom.\" A plain list of negations (\"No ads. No spam. No tracking.\") does not turn and is not counted. Absorbs the old Tier 2 \"No X. No Y. Just Z.\" rule; no social exemption.",
   },
   {
     tier: 1, name: "self_answered_question", weight: 4, scope: "structural", owner: { tell: 3 },
@@ -270,29 +273,45 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "heres_the_windup", weight: 4, scope: "all", owner: { tell: 4 },
     regex: new RegExp(
       `\\bhere(?:${A}s| is) (?:the|my|our|one|a|another) (?:real |big |best |worst |crazy |funny |scary |sad |ugly |simple |short |honest |hard |important |interesting |surprising |wild |weird |tricky |good |bad )?(?:kicker|thing|part|catch|deal|truth|secret|twist|problem|rub|key|reason|question|answer|point|difference|bottom line|takeaway|lesson|rule|bit|news|math|trick|kick|story|idea|tip|hint|thought|confession|warning|reminder)\\b` +
-        `|\\bhere(?:${A}s| is) (?:what|why|how|where|who|when)\\b[^.?!\\n:]{0,60}(?::|\\.(?=\\s|$))` +
+        `|\\bhere(?:${A}s| is) (?:the|my|our|a|one|another) (?:[\\w'’-]+ ){0,3}[\\w'’-]+:` +
+        `|\\bhere(?:${A}s| is) (?:what|why|how|where|who|when)\\b[^.?!\\n:]{0,60}(?::|\\.(?=\\s|$)|$)` +
         `|\\b(?:the part|what) (?:nobody|no one|few people|most people (?:don${A}t|never)) (?:talks? about|tells? you|mentions?|wants? to (?:hear|admit|say))\\b` +
         `|(?:^|[.!?]\\s+)[A-Z][^.!?\\n:]{0,40}\\b(?:this|these)\\s*:`,
       "gim",
     ),
     example: "Here's the part the score hides:",
     fix: "Make the point directly.",
-    note: "\"Here's the ___\" and its near-variants \"Here's what / why / how ...:\" and a short clause ending in \"this:\" (\"The score hides this:\", \"Do this:\") announce the point instead of making it.",
+    note: "\"Here's the ___\" (\"Here's the one number that matters:\") and its near-variants \"Here's what / why / how ...\" (a crosshead or subject line included) and a short clause ending in \"this:\" (\"The score hides this:\", \"Do this:\") announce the point instead of making it.",
+  },
+  {
+    tier: 1, name: "label_windup", weight: 4, scope: "all", owner: { tell: 4 },
+    regex: new RegExp(
+      `(?:^|[.!?]\\s+)(?:(?:So|And|But|Then|Now),? )?(?:(?:My|Our|The|Your|One) )?(?:rule|fix|bottom line|upshot|takeaway|lesson|point|kicker|catch|twist|good news|bad news|short version|long story short|translation|real talk|pro tip|secret|trick|move|play|verdict|irony|reality|punchline|math)\\s*:` +
+        `|\\b(?:I${A}d|I would|I${A}ll|I) (?:ask|check|look at|want to know) (?:two|three|four|five|a few|one) (?:things|questions)\\b` +
+        `|\\b(?:two|three|four|five|a few) (?:questions|things|checks|tests|rules) (?:decide|matter|settle|separate)\\b` +
+        `|\\b(?:it|this|everything|that) (?:all )?(?:comes|boils) down to (?:one|two|three|four|a few) (?:things|questions)\\b` +
+        `|\\bone more (?:check|thing|question|test|step|rule)\\b[^.?!\\n:]{0,40}:`,
+      "gim",
+    ),
+    example: "My rule: never pay for a keyword tool you open once a month.",
+    fix: "Drop the label or the count and make the point: \"Never pay for a keyword tool you open once a month.\"",
+    note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\") or a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\") announces the point instead of making it (§7.1 tell 4).",
   },
   {
     tier: 1, name: "worth_noting", weight: 4, scope: "all", owner: { tell: 5 },
     regex: new RegExp(
-      `\\bworth (?:noting|remembering|keeping in mind|mentioning|pointing out|repeating|highlighting|emphasizing|emphasising|a mention)\\b|\\b(?:keep|bear) in mind\\b|\\bit bears (?:repeating|mentioning)\\b|(?:^|[.!?]\\s+)(?:Please )?[Nn]ote that\\b`,
+      `\\bworth (?:noting|remembering|keeping in mind|bearing in mind|mentioning|pointing out|repeating|highlighting|emphasizing|emphasising|a mention)\\b|\\b(?:keep|bear) in mind\\b|\\bit bears (?:repeating|mentioning|noting)\\b|\\bimportant to (?:note|remember|mention|point out|keep in mind)\\b|\\bshould be noted\\b|(?:^|[.!?]\\s+)(?:Please )?[Nn]ote that\\b`,
       "gim",
     ),
     example: "It's worth noting that the trial is free.",
     fix: "State the point: \"The trial is free.\"",
   },
   {
-    tier: 1, name: "buzzword_pile", weight: 4, scope: "all", owner: { tell: 6 },
+    tier: 1, name: "buzzword_pile", weight: 4, scope: "all", owner: { tell: 6 }, free_hits: 1,
     regex: /\bdoubl(?:e|es|ed|ing) down\b|\bat scale\b|\bbest[- ]in[- ]class\b|\bmov(?:e|es|ing) fast\b|\bmoved fast\b/gi,
     example: "double down, at scale, best in class, move fast",
     fix: "Keep one precise term, cut the rest.",
+    note: "A pile is two or more: the first buzzword in a piece is free.",
   },
   {
     tier: 1, name: "genuinely_meaningfully", weight: 4, scope: "all", owner: { tell: 7 },
@@ -316,7 +335,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
       `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]\\s+)The truth is\\b`,
-      "gm",
+      "gim",
     ),
     example: "The hard truth: most pages never rank.",
     fix: "Drop the signpost; a plain \"honestly\" once is fine.",
@@ -336,12 +355,12 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "corporate_filler", weight: 4, scope: "all", owner: { words: true },
     regex: new RegExp(
-      `\\bparadigm shifts?\\b|\\bcutting[- ]edge\\b|\\bgame[- ]chang(?:ing|er|ers)\\b|\\btransformative\\b|\\bgroundbreaking\\b|\\brevolutionar(?:y|ies)\\b|\\brevolutioni[sz](?:e|es|ed|ing)\\b|\\bsynerg(?:y|ies|istic)\\b|\\becosystems?\\b|\\bscalab(?:le|ility)\\b|\\bdisruptive\\b|\\bmov(?:e|es|ing) the needle\\b|\\bmoved the needle\\b|\\bcircl(?:e|es|ed|ing) back\\b|\\bat the end of the day\\b|\\bwhen it comes to\\b|\\bthe world of\\b|\\bnot only\\b|\\bnot (?:just|merely|simply)\\b[^.?!\\n]{1,70}?\\bbut\\b|\\bnext[- ]level\\b|\\boptimi[sz]ed\\b|\\bvalue[- ]adds?\\b|\\bleverag(?:e|es|ed|ing)\\b`,
+      `\\bparadigm shifts?\\b|\\bcutting[- ]edge\\b|\\bgame[- ]chang(?:ing|er|ers)\\b|\\btransformative\\b|\\bgroundbreaking\\b|\\brevolutionar(?:y|ies)\\b|\\brevolutioni[sz](?:e|es|ed|ing)\\b|\\bsynerg(?:y|ies|istic)\\b|\\becosystems?\\b|\\bscalab(?:le|ility)\\b|\\bdisruptive\\b|\\bmov(?:e|es|ing) the needle\\b|\\bmoved the needle\\b|\\bcircl(?:e|es|ed|ing) back\\b|\\bat the end of the day\\b|\\bwhen it comes to\\b|\\bthe world of\\b|\\bnot only\\b|\\bnot (?:just|merely|simply)\\b[^.?!\\n]{1,70}?\\b(?:but|it${A}s|it is|they${A}re)\\b|\\bnext[- ]level\\b|\\boptimi[sz]ed\\b|\\bvalue[- ]adds?\\b|\\bleverag(?:e|es|ed|ing)\\b`,
       "gi",
     ),
     example: "a game-changing, scalable ecosystem that moves the needle",
     fix: "The plainest word that keeps the meaning, or cut it.",
-    note: "\"not just X but Y\" is the near-variant of \"not only\" and counts here.",
+    note: "\"not just X but Y\" and \"not just X, it's Y\" are the near-variants of \"not only\" and count here.",
   },
   {
     tier: 1, name: "guru_speak", weight: 4, scope: "all", owner: { words: true },
@@ -351,13 +370,13 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 1, name: "empty_hedge", weight: 4, scope: "all", owner: { words: true },
-    regex: new RegExp(`\\b(?:just )?my two cents\\b|\\bfor what it${A}s worth\\b|\\bfor what it is worth\\b|\\bFWIW\\b|\\bin my humble opinion\\b|\\bIMHO\\b|\\bwith a grain of salt\\b|\\byour mileage may vary\\b|\\bYMMV\\b`, "gi"),
+    regex: new RegExp(`\\b(?:just )?my two cents\\b|\\bfor what it${A}s worth\\b|\\bfor what it is worth\\b|\\bFWIW\\b|\\bin my humble opinion\\b|\\bIMHO\\b|\\bin my (?:honest |personal )?(?:opinion|view)\\b|\\bif you ask me\\b|\\bwith a grain of salt\\b|\\byour mileage may vary\\b|\\bYMMV\\b`, "gi"),
     example: "Just my two cents, but your mileage may vary.",
     fix: "Cut it and state the point.",
   },
   {
     tier: 1, name: "formal_words", weight: 4, scope: "all", owner: { words: true },
-    regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gm,
+    regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gim,
     example: "Furthermore, you can utilize the report.",
     fix: "\"Use\", \"try\"; a new sentence or paragraph instead of the connective.",
   },
@@ -365,7 +384,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "empty_teaser", weight: 4, scope: "all", owner: { words: true },
     regex: new RegExp(
       `\\b(?:earlier|sooner|bigger|worse|deeper|closer|simpler|faster|harder) than you (?:think|might think|realize|realise|expect)\\b|\\bwhere (?:the )?(?:real )?(?:trouble|problem|mess|damage|rot|bad [a-z]+) (?:starts|begins|gets made|comes from)\\b|\\bthat${A}s where (?:it gets|things get) (?:interesting|tricky|ugly|good)\\b|(?:^|[.!?]\\s+)(?:But )?[Ff]irst,? though\\b|\\bmore on (?:that|this) (?:in a (?:second|minute|moment)|later|below)\\b|\\bthe real question is\\b|\\bbut there${A}s a catch\\b|\\bstay tuned\\b`,
-      "gm",
+      "gim",
     ),
     example: "And the guess starts one step earlier than you think.",
     fix: "End on the point: name the specific, or cut the line.",
@@ -375,7 +394,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "windup_opener", weight: 4, scope: "all", owner: { words: true },
     regex: new RegExp(
       `(?:^|[.!?]\\s+)(?:In today${A}s (?:world|market|economy|landscape|digital (?:age|world)|fast[- ]paced (?:world|market))|In (?:a|this) (?:world|day and age) where|Today,? (?:I|we)(?: want| wanted|${A}m going| am going|${A}d like| would like) to (?:talk|share|discuss|show|cover|chat)|Let${A}s (?:talk|chat) about|In this (?:post|article|email|guide|blog),? (?:I|we)\\b)`,
-      "gm",
+      "gim",
     ),
     example: "In today's world, content is everything.",
     fix: "Open on the point.",
@@ -442,8 +461,8 @@ export const TELLS: TellRule[] = [
     tier: 2, name: "unanswered_opener", weight: 2, scope: "structural", density_per_1000: 0,
     regex: null,
     example: "Imagine never worrying about dinner again.",
-    fix: "Answer it with a specific on the next line, or cut it.",
-    note: "An \"Imagine...\" or question opener whose next line carries no number, name, price or quote.",
+    fix: "Open on the specific instead: the scene, the number or the name from the research.",
+    note: "An \"Imagine...\" or \"What if...\" opener whose next line carries no number, name, price or quote. A lone question is left alone: rule 22 wants a question the reader answers about their own situation, with no answer on the next line.",
   },
   {
     tier: 2, name: "its_not_x_its_y", weight: 2, scope: "all", density_per_1000: 1,
@@ -578,6 +597,8 @@ interface Unit {
   type: Block["type"];
   sectionId: string;
   item: number;
+  /** an FAQ section or item: the buyer's questions, answered */
+  faq: boolean;
 }
 
 const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
@@ -595,16 +616,20 @@ function clean(text: string): string {
     .trim();
 }
 
+const FAQ_RE = /\bfaqs?\b|frequently asked/i;
+
 function unitsOf(sections: Section[]): Unit[] {
   const out: Unit[] = [];
   for (const s of sections) {
     const item = sectionItemIndex(s.section_id);
+    const faqSection = FAQ_RE.test(sectionBaseId(s.section_id).replace(/_/g, " ")) || FAQ_RE.test(s.title ?? "");
     for (const b of s.blocks) {
+      const faq = faqSection || FAQ_RE.test((b.meta?.role ?? "").replace(/_/g, " "));
       const t = clean(b.text);
-      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item });
+      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item, faq });
       for (const i of b.items ?? []) {
         const it = clean(i);
-        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item });
+        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item, faq });
       }
     }
   }
@@ -694,7 +719,7 @@ function hasSpecific(text: string): boolean {
   return false;
 }
 
-/** "Imagine..." / "What if..." / a lone short question, with no specific on the next line. */
+/** "Imagine..." / "What if..." with no specific on the next line. A lone question is the reader's to answer (rule 22). */
 function unansweredOpeners(bodyUnits: Unit[]): string[] {
   const out: string[] = [];
   for (let i = 0; i < bodyUnits.length; i++) {
@@ -703,9 +728,7 @@ function unansweredOpeners(bodyUnits: Unit[]): string[] {
     const sents = sentences(u.text);
     if (!sents.length) continue;
     const s0 = sents[0];
-    const staged = /^(?:imagine|picture this|what if|wouldn['’]?t it be)\b/i.test(s0);
-    const loneQuestion = sents.length === 1 && s0.endsWith("?") && countWords(s0) <= 15;
-    if (!staged && !loneQuestion) continue;
+    if (!/^(?:imagine|picture this|what if|wouldn['’]?t it be)\b/i.test(s0)) continue;
     const answer = sents.length > 1 ? sents.slice(1).join(" ") : (bodyUnits[i + 1]?.text ?? "");
     if (!answer || !hasSpecific(answer)) out.push(s0);
   }
@@ -719,68 +742,215 @@ const EMOJI_LINE_RE = /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_
 // The owner's list (§7.1): quotations, testimonials, proper nouns and the offer's own words are exempt
 // ---------------------------------------------------------------------------------------------------------------
 
-const QUOTED_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”/g;
+/** A quotation; a straight quote after a digit is an inch mark (6") and never opens one. */
+const QUOTED_RE = /(?<!\d)"[^"\n]{1,600}"|“[^”\n]{1,600}”/g;
 
-/** Quotations blanked to spaces (same length, so snippets stay aligned): a verbatim or quoted source keeps its words. */
+/**
+ * Quotations of three words or more blanked to spaces (same length, so snippets stay aligned): a verbatim or quoted
+ * source keeps its words. A quotation that ends a sentence leaves a period, so the next sentence still opens one.
+ * Scare quotes and quoted labels ("free", "SEO expert") are the copy's own words and are scanned.
+ */
 export function blankQuotes(text: string): string {
-  return text.replace(QUOTED_RE, (m) => " ".repeat(m.length));
+  return text.replace(QUOTED_RE, (m) => {
+    const inner = m.slice(1, -1);
+    if (countWords(inner) < 3) return m;
+    const blank = " ".repeat(m.length);
+    const end = /[.!?](?=\s*$)/.exec(inner);
+    return end ? blank.slice(0, 1 + end.index) + "." + blank.slice(2 + end.index) : blank;
+  });
 }
 
-/** Words of four letters or more from the offer's own name and product name, lowercased: the literal words of what it sells. */
+/** Function words: never an offer term, and never enough on their own to exempt a match. */
+const STOP_WORDS = new Set(
+  "a an and are as at be been but by for from has have here how in into is it its it's just more my no not of on only or our so than that the their them then there these they this those to too up very was we were what when where which who why will with you your yours".split(" "),
+);
+
+/** A crude stem, so "veneers" matches "veneer": a final "s" goes (not "ss"), and a final "'s". */
+function stem(word: string): string {
+  const w = word.toLowerCase().replace(/['’]s$/, "");
+  return w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w;
+}
+
+/** Words of four letters or more from the offer's own name and product name, hyphenated parts included, function words left out: the literal words of what it sells. */
 export function exemptTermsFrom(...names: (string | null | undefined)[]): string[] {
   const out = new Set<string>();
-  for (const n of names) for (const w of (n ?? "").toLowerCase().match(/[a-z][a-z'-]{3,}/g) ?? []) out.add(w);
+  for (const n of names) {
+    for (const w of (n ?? "").toLowerCase().match(/[a-z][a-z'’-]{2,}/g) ?? []) {
+      for (const part of [w, ...w.split("-")]) if (part.length >= 4 && !STOP_WORDS.has(part)) out.add(part);
+    }
+  }
   return Array.from(out);
 }
 
-/** A capitalised match that does not open a sentence is a proper noun ("the Realm app"), not the word. */
-function isProperNoun(text: string, index: number, match: string): boolean {
-  if (!/^[A-Z]/.test(match)) return false;
-  const before = text.slice(0, index).replace(/\s+$/, "");
-  return before.length > 0 && !/[.!?:\n"“]$/.test(before);
+/** A match made only of the offer's own words ("landscape lighting" for a landscaper): one content word or more, every one an offer term. */
+function offerWordsOnly(match: string, exempt: Set<string>): boolean {
+  if (!exempt.size) return false;
+  const words = (match.toLowerCase().match(/[a-z][a-z'’]*/g) ?? []).filter((w) => !STOP_WORDS.has(w));
+  return words.length > 0 && words.every((w) => exempt.has(stem(w)));
 }
+
+/** A line set in Title Case (a headline, a subject line, an RSA asset): three in four of its longer words after the first are capitalised. */
+export function isTitleCaseLine(line: string): boolean {
+  const words = (line.match(/[A-Za-z][A-Za-z'’-]*/g) ?? []).slice(1).filter((w) => w.length >= 4);
+  if (words.length < 2) return false;
+  return words.filter((w) => /^[A-Z]/.test(w)).length / words.length >= 0.75;
+}
+
+function lineAt(text: string, index: number): { start: number; line: string } {
+  const start = text.lastIndexOf("\n", index - 1) + 1;
+  const end = text.indexOf("\n", index);
+  return { start, line: text.slice(start, end < 0 ? text.length : end) };
+}
+
+/** Before index there is a sentence end (a period, question or exclamation mark, an ellipsis or a colon, maybe closed by a quote mark or bracket), or only list markers and punctuation on the line. */
+function opensSentence(text: string, index: number): boolean {
+  const { start } = lineAt(text, index);
+  const prefix = text.slice(start, index).replace(/^\s*(?:[-*•–]|\d+[.)])\s*/, "");
+  if (!/[\p{L}\p{N}]/u.test(prefix)) return true;
+  return /[.!?…:]["”’)\]]*$/.test(text.slice(0, index).replace(/\s+$/, ""));
+}
+
+const PRONOUN_I = /^I(?:['’](?:m|d|ll|ve|re))?$/;
+
+/**
+ * A capitalised word inside a match that does not open a sentence makes the match a proper noun ("the Realm app",
+ * "Masters of the Universe"), not the word. Capitals say nothing about names in a Title Case or all-caps line, and an
+ * all-caps word ("ROBUST", "IMHO") is never a name here.
+ */
+function isProperNoun(text: string, index: number, match: string): boolean {
+  const { line } = lineAt(text, index);
+  if (isTitleCaseLine(line) || line === line.toUpperCase()) return false;
+  for (const w of match.matchAll(/[A-Za-z][A-Za-z'’]*/g)) {
+    const word = w[0];
+    if (!/^[A-Z]/.test(word) || PRONOUN_I.test(word) || (word.length > 1 && word === word.toUpperCase())) continue;
+    if (!opensSentence(text, index + (w.index ?? 0))) return true;
+  }
+  return false;
+}
+
+/** The sentence holding a match, and the part of it before the match. */
+function sentenceAround(text: string, start: number, end: number): { sentence: string; before: string } {
+  let s = 0;
+  for (const p of ["\n", ".", "!", "?"]) s = Math.max(s, text.lastIndexOf(p, start - 1) + 1);
+  let e = text.length;
+  for (const p of ["\n", ".", "!", "?"]) {
+    const i = text.indexOf(p, end);
+    if (i >= 0 && i < e) e = i;
+  }
+  return { sentence: text.slice(s, e), before: text.slice(s, start) };
+}
+
+const SOUND_RE = /\b\d+(?:\.\d+)?\s?(?:dB|dBA|decibels?)\b|\b(?:noise|noisy|loud|louder|silent|silence|sound|hear|heard|whisper(?:s|ing)?|hum(?:s|ming)?|decibels?|rattles?|squeak(?:s|y)?)\b/i;
+const PERSON_BEFORE_RE = /\b(?:kids?|child(?:ren)?|boys?|girls?|bab(?:y|ies)|toddlers?|guests?|people|staff|everyone|anyone|someone|he|she|they|we|you|I|dogs?|cats?|pets?|actors?|dancers?|models?|students?|fans?|members?|attendees?|men|women|man|woman|players?|cast|crew|volunteers?|customers?|visitors?)\s+(?:[a-z]+\s+){0,2}$/i;
+const MATERIAL_RE = /\b(?:porcelain|ceramic|composite|wood(?:en)?|oak|walnut|maple|cherry|teak|vinyl|leather|silicone|rubber|plastic|foil|paper|tissue|stone|marble|granite|quartz|metal|steel|alumini?um|brass|copper|glass|resin|laminate|acrylic|chocolate|sugar|pastry|gift|ribbon|bubble wrap)\b/i;
+
+/** Matches in the literal sense, not the tell: "runs quietly at 24 dB" is about sound; "kids dressed as superheroes" and "a porcelain veneer" are what they say. */
+const LITERAL_SENSE: Record<string, (sentence: string, match: string, before: string) => boolean> = {
+  quietly: (sentence) => SOUND_RE.test(sentence),
+  disguise_frame: (sentence, match, before) =>
+    (/\b(?:costumes?|dress(?:ed|es|ing)|wear(?:ing|s)?|wore)\b/i.test(match) && PERSON_BEFORE_RE.test(before)) ||
+    (/\b(?:veneer|skin|wrapper|wrapped)\b/i.test(match) && MATERIAL_RE.test(sentence)),
+};
 
 /** Owner rules other than tells 11-13 (em dash, emoji, hashtag) leave quotations and testimonials alone. */
 function quoteExempt(rule: TellRule): boolean {
   return !!rule.owner && !((rule.owner.tell ?? 0) >= 11);
 }
 
-function scanOwner(rule: TellRule, texts: string[], exempt: Set<string>, originals: string[] = texts): Hit {
-  const hit: Hit = { rule, count: 0, examples: [] };
-  if (!rule.regex) return hit;
-  for (let ti = 0; ti < texts.length; ti++) {
-    const t = texts[ti];
-    const re = new RegExp(rule.regex.source, rule.regex.flags.includes("g") ? rule.regex.flags : rule.regex.flags + "g");
-    for (const m of t.matchAll(re)) {
-      const word = m[0].trim();
-      const lead = word.replace(/^[.!?\s]+/, "");
-      if (rule.owner?.words && isProperNoun(t, (m.index ?? 0) + (m[0].length - m[0].trimStart().length), lead)) continue;
-      if (rule.owner?.words && lead.toLowerCase().split(/[\s-]+/).some((w) => exempt.has(w))) continue;
-      hit.count += 1;
-      if (hit.examples.length < 3) hit.examples.push(snippet(originals[ti] ?? t, m.index ?? 0, m[0].length));
-    }
-  }
-  return hit;
+interface OwnerHits {
+  hit: Hit;
+  /** hits per scanned text, for the per-piece stack */
+  perText: number[];
 }
 
-const INSTRUCTION_START = /^(?:click|tap|call|read|open|get|grab|try|go|watch|see|join|book|reply|comment|hit|start|check|look|sign|download|scroll|send|text|e-?mail|visit|order|claim|pick|choose|write|count|ask|tell|keep|stop|take|use|put|find|add|make|do|don['’]t|let|please|contact|follow|subscribe|register|as always)\b|^\(/i;
-/** "..., okay?" and "..., right?" check in with the reader; they are not a question the copy then answers. */
-const TAG_QUESTION = /,\s*(?:okay|ok|right|huh|eh|yes|no|yeah|see|got it)\?+$/i;
-
-/** "The result? More sales." A question of seven words or fewer answered by the next short statement in the same block. */
-function selfAnsweredQuestions(texts: string[]): string[] {
-  const out: string[] = [];
-  for (const t of texts) {
-    const sents = t.replace(/\n+/g, " ").match(/[^.?!]+[.?!]+/g) ?? [];
-    for (let i = 0; i + 1 < sents.length; i++) {
-      const q = sents[i].trim(), a = sents[i + 1].trim();
-      if (!q.endsWith("?") || a.endsWith("?")) continue;
-      if (countWords(q) > 7 || countWords(a) > 20 || countWords(a) === 0) continue;
-      if (INSTRUCTION_START.test(a) || TAG_QUESTION.test(q)) continue;
-      out.push(`${q} ${a}`);
-    }
+/**
+ * Scan the owner's regex rules in table order. A span one rule has counted is not counted again by a later rule, so
+ * "Here's the hard truth:" is one tell, not two. Words skip proper nouns; every rule skips matches made only of the
+ * offer's own words and matches in their literal sense.
+ */
+function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[]): Map<string, OwnerHits> {
+  const claimed: [number, number][][] = texts.map(() => []);
+  const out = new Map<string, OwnerHits>();
+  for (const rule of rules) {
+    const hit: Hit = { rule, count: 0, examples: [] };
+    const perText = texts.map(() => 0);
+    const re = new RegExp(rule.regex!.source, rule.regex!.flags.includes("g") ? rule.regex!.flags : rule.regex!.flags + "g");
+    texts.forEach((t, ti) => {
+      for (const m of t.matchAll(re)) {
+        const lead = m[0].replace(/^[\s.!?:]+/, "").trimEnd();
+        if (!lead) continue;
+        const at = (m.index ?? 0) + m[0].indexOf(lead);
+        const end = at + lead.length;
+        if (rule.owner?.words && isProperNoun(t, at, lead)) continue;
+        if (offerWordsOnly(lead, exempt)) continue;
+        const literal = LITERAL_SENSE[rule.name];
+        if (literal) {
+          const { sentence, before } = sentenceAround(t, at, end);
+          if (literal(sentence, lead, before)) continue;
+        }
+        if (claimed[ti].some(([s, e]) => at < e && s < end)) continue;
+        claimed[ti].push([at, end]);
+        perText[ti] += 1;
+        hit.count += 1;
+        if (hit.examples.length < 3) hit.examples.push(snippet(originals[ti] ?? t, at, lead.length));
+      }
+    });
+    out.set(rule.name, { hit, perText });
   }
   return out;
+}
+
+const INSTRUCTION_START = /^(?:click|tap|call|read|open|get|grab|try|go|watch|see|join|book|reply|comment|hit|start|check|look|sign|download|scroll|send|text|e-?mail|visit|order|claim|pick|choose|write|count|ask|tell|keep|stop|take|use|put|find|add|make|do|don['’]t|let|please|contact|follow|subscribe|register|reach out|learn|discover|explore|as always)\b/i;
+/** "..., okay?" and "..., right?" check in with the reader; they are not a question the copy then answers. */
+const TAG_QUESTION = /,\s*(?:okay|ok|right|huh|eh|yes|no|yeah|see|got it)\?+$/i;
+/** The buyer's own question in the first person ("Can I cancel?", "What if I hate it?"): objection handling, not the tell. */
+const BUYER_FIRST_PERSON = /\b(?:I|I['’](?:m|d|ll|ve)|my|me|mine)\b/;
+/** A question put to the reader ("Ready?", "Want the list?", "How many of your posts rank?"). */
+const READER_DIRECTED = /\byou(?:r|rs|['’](?:re|ve|d|ll))?\b|^(?:ready|interested|curious|need|prefer|new to|looking for|still (?:here|with me|reading)|want|sound (?:good|fair)|make sense|deal|agreed|questions)\b/i;
+
+/** The copy asks and answers itself: "The result? More sales." "Why? Because..." "The fix? Use the score as a filter." */
+function selfAnswered(q: string, a: string): boolean {
+  if (!q.endsWith("?") || a.endsWith("?") || countWords(a) === 0 || a.startsWith("(")) return false;
+  const qWords = countWords(q);
+  if (qWords > 7 || TAG_QUESTION.test(q) || BUYER_FIRST_PERSON.test(q)) return false;
+  // a question to the reader followed by what to do is a call to action ("Ready? Click below.")
+  if (READER_DIRECTED.test(q) && INSTRUCTION_START.test(a)) return false;
+  if (qWords <= 4 || /^because\b/i.test(a)) return true;
+  return countWords(a) <= 20;
+}
+
+/** Sentences of a text, linear on runs with no sentence punctuation. */
+function sentencesOf(text: string): string[] {
+  return (text.replace(/\n+/g, " ").match(/[^.?!]+(?:[.?!]+|$)/g) ?? []).map((x) => x.trim()).filter(Boolean);
+}
+
+/**
+ * Self-answered questions, per unit: a question of seven words or fewer answered by the next statement in the same
+ * text, or a question that is a whole paragraph answered by the next paragraph of its section. FAQ sections and
+ * roles are the buyer's questions and are skipped.
+ */
+function selfAnsweredQuestions(units: { text: string; kind: UnitKind; sectionId: string; faq: boolean }[]): { found: string[]; perText: number[] } {
+  const found: string[] = [];
+  const perText = units.map(() => 0);
+  units.forEach((u, i) => {
+    if (u.faq) return;
+    const sents = sentencesOf(u.text);
+    for (let k = 0; k + 1 < sents.length; k++) {
+      if (selfAnswered(sents[k], sents[k + 1])) {
+        found.push(`${sents[k]} ${sents[k + 1]}`);
+        perText[i] += 1;
+      }
+    }
+    const next = units[i + 1];
+    if (sents.length === 1 && u.kind !== "display" && next && next.kind !== "display" && !next.faq && next.sectionId === u.sectionId) {
+      const a = sentencesOf(next.text)[0] ?? "";
+      if (selfAnswered(sents[0], a)) {
+        found.push(`${sents[0]} ${a}`);
+        perText[i] += 1;
+      }
+    }
+  });
+  return { found, perText };
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -829,16 +999,28 @@ export interface TellFlagOut {
   fix: string;
 }
 
+/**
+ * The piece a unit belongs to, for the owner's stack: the whole draft, or in a multi-item format one item (an email
+ * of a sequence) or one fixed asset (an RSA headline).
+ */
+function pieceOf(u: Unit, spec: FormatSpec): string {
+  if (!spec.multi_item) return "piece";
+  return u.item > 0 ? `item:${u.item}` : `section:${u.sectionId}`;
+}
+
 /** Run every rule over the units; returns flags (with allowances and density thresholds applied) and the score. */
-function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = []): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerTier1: number } {
+function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = []): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
   // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
   const ownerUnits = units.filter((u) => u.type !== "testimonial");
   const ownerTexts = ownerUnits.map((u) => blankQuotes(u.text));
   const ownerOriginals = ownerUnits.map((u) => u.text);
-  const ownerBodyTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial").map((u) => blankQuotes(u.text));
-  const exempt = new Set(exemptTerms.map((w) => w.toLowerCase()));
+  const exempt = new Set(exemptTerms.map(stem));
+  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals);
+  const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText]]);
+  const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -858,11 +1040,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
         hit = scanRegex(rule, allTexts.map((t) => t.replace(link, (m) => " ".repeat(m.length))));
         break;
       }
-      case "self_answered_question": {
-        const found = selfAnsweredQuestions(ownerBodyTexts);
-        hit = { rule, count: found.length, examples: trimExamples(found) };
+      case "self_answered_question":
+        hit = { rule, count: questions.found.length, examples: trimExamples(questions.found) };
         break;
-      }
       case "self_posed_question_header": {
         hit = scanRegex(rule, bodyTexts);
         const qHeads = units.filter((u) => (u.type === "crosshead" || u.type === "deck") && /\?\s*$/.test(u.text)).map((u) => u.text);
@@ -899,8 +1079,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
         break;
       }
       default:
-        if (quoteExempt(rule)) hit = scanOwner(rule, ownerTexts, exempt, ownerOriginals);
-        else hit = scanRegex(rule, rule.scope === "paragraph" ? paragraphTexts : rule.scope === "body" ? bodyTexts : allTexts);
+        hit = ownerScan.get(rule.name)?.hit ?? scanRegex(rule, rule.scope === "paragraph" ? paragraphTexts : rule.scope === "body" ? bodyTexts : allTexts);
     }
     hits.push(hit);
   }
@@ -908,16 +1087,15 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const flags: TellFlagOut[] = [];
   const tier0: TellFlagOut[] = [];
   const weightByTier: Record<Tier, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-  let owner = 0, ownerTier1 = 0;
+  let owner = 0;
   const ownerNames = new Set(TELLS.filter((t) => t.owner).map((t) => t.name));
+  // the owner's Tier 1 hits per piece: two or more in one piece are the stack
+  const stackByPiece = new Map<string, number>();
   const push = (f: TellFlagOut) => {
     flags.push(f);
     weightByTier[f.tier] += f.weight * f.count;
     if (f.tier === 0) tier0.push(f);
-    if (ownerNames.has(f.tell)) {
-      owner += f.count;
-      if (f.tier === 1) ownerTier1 += f.count;
-    }
+    if (ownerNames.has(f.tell)) owner += f.count;
   };
 
   for (const h of hits) {
@@ -926,6 +1104,23 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
     if (count === 0) continue;
     if (ov.exempt?.includes(r.name)) continue;
     if (r.name === "markdown_heading" && spec.allow_markdown_headings) continue;
+
+    const perText = r.tier === 1 ? ownerPerText.get(r.name) : undefined;
+    if (perText) {
+      // free hits are per piece ("one buzzword is not a pile" holds for each email of a sequence)
+      const byPiece = new Map<string, number>();
+      perText.forEach((n, i) => n && byPiece.set(pieces[i], (byPiece.get(pieces[i]) ?? 0) + n));
+      count = 0;
+      for (const [piece, n] of byPiece) {
+        const excess = n - (r.free_hits ?? 0);
+        if (excess <= 0) continue;
+        count += excess;
+        stackByPiece.set(piece, (stackByPiece.get(piece) ?? 0) + excess);
+      }
+      if (count <= 0) continue;
+      push({ tier: r.tier, tell: r.name, weight: r.weight, count, examples: h.examples, fix: r.fix });
+      continue;
+    }
 
     if (r.name === "bold_leadin_bullet" && ov.bold_leadins) count -= ov.bold_leadins;
     if (r.name === "stay_with_me" && ov.keep_watching) count -= ov.keep_watching;
@@ -942,7 +1137,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const raw = weightByTier[0] + weightByTier[1] + weightByTier[2] + (weightByTier[1] + weightByTier[2] > 0 ? weightByTier[3] : 0);
   const score = Math.round((raw * 300 / Math.max(words, SCORE_FLOOR_WORDS)) * 100) / 100;
   flags.sort((a, b) => a.tier - b.tier || b.weight * b.count - a.weight * a.count || a.tell.localeCompare(b.tell));
-  return { flags, score, tier0, owner, ownerTier1 };
+  return { flags, score, tier0, owner, ownerStack: Math.max(0, ...stackByPiece.values()) };
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -1191,7 +1386,7 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
   const words = countWords(allText);
   const proseText = units.filter((u) => u.kind !== "display").map((u) => u.text).join("\n\n");
 
-  const { flags, score, tier0, owner, ownerTier1 } = detectTells(units, spec, words, opts.exemptTerms ?? []);
+  const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? []);
   const gates = evaluateGates(sections, spec, opts);
 
   const cadence_cv = sentenceLengthCV(proseText);
@@ -1200,8 +1395,8 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
 
   const hard_fail_reasons: string[] = [];
   for (const t of tier0) hard_fail_reasons.push(`tier0:${t.tell} x${t.count}`);
-  // Tier 0 owner tells already fail on their own; the stack is about the Tier 1 patterns and words
-  if (ownerTier1 >= OWNER_STACK) hard_fail_reasons.push(`owner_stack: ${ownerTier1} of the owner's tells or words in one piece (§7.1)`);
+  // Tier 0 owner tells already fail on their own; the stack is about the Tier 1 patterns and words, per piece
+  if (ownerStack >= OWNER_STACK) hard_fail_reasons.push(`owner_stack: ${ownerStack} of the owner's tells or words in one piece (§7.1)`);
   if (score >= TELL_THRESHOLDS.hard_fail) hard_fail_reasons.push(`tell_score ${score} >= ${TELL_THRESHOLDS.hard_fail} per 300 words`);
   for (const g of gates.failures) hard_fail_reasons.push(`gate:${g}`);
 

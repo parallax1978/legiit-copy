@@ -383,3 +383,22 @@ Deno.test("tell edit step: an edit naming a text outside the part is refused wit
   assert(out.rejected.length >= 2 && out.rejected.every((x) => x.reason.startsWith("no text in this part has the reference")), JSON.stringify(out.rejected));
   assert(!out.what_changed.includes("Swapped unlock"), "a summary line whose edits all failed is not reported as a change");
 });
+
+Deno.test("applyEdits: a Title Case line can lose its owner words; a name the piece uses stays protected there; a crosshead may go", () => {
+  const unit = (ref: string, text: string, type: Block["type"] = "paragraph"): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type, text });
+  const units = [
+    unit("h-1", "Unlock Seamless SEO Rankings For Every Local Shop", "headline"),
+    unit("h-2", "How Legiit Writes Pages That Rank Every Week", "headline"),
+    unit("p-1", "Legiit writes the page and Sam Ortiz checks it before it ships."),
+    unit("c-1", "The Plan", "crosshead"),
+  ];
+  const r = applyEdits(units, [
+    { ref: "h-1", before: "Unlock Seamless SEO Rankings", after: "Get SEO Rankings", tell: "ai words" },
+    { ref: "h-2", before: "How Legiit Writes", after: "How We Write", tell: "test: a known name dropped" },
+    { ref: "c-1", before: "The Plan", after: "", tell: "formatting the text does not need" },
+  ], ["Legiit"]);
+  assertEquals(r.units[0].text, "Get SEO Rankings For Every Local Shop");
+  assertEquals(r.rejected.map((x) => x.ref), ["h-2"]);
+  assert(/name/.test(r.rejected[0].reason), r.rejected[0].reason);
+  assertEquals(r.units[3].text, "");
+});

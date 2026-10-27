@@ -46,6 +46,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const source = syncChosenLead(latestDraftOutput(ctx), spec);
   const version = ctx.latestDraft!.version;
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
+  const names = [ctx.offer.name, ctx.brief?.product_name, ...(ctx.dossier?.competitor_table ?? []).map((c) => c.name)];
   const before = ownerTellCount(source, spec, exemptTerms);
 
   const original = editableUnits(source, spec);
@@ -96,7 +97,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     };
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
-    let r = applyInGroup(units, res.output.edits, refs);
+    let r = applyInGroup(units, res.output.edits, refs, names);
     // the model's summary lines count only when one of its edits landed
     if (r.applied.length) whatChanged.push(...res.output.what_changed);
     // edits the guards refused get one more ask, with the reasons, when they were more than a stray and time allows
@@ -106,7 +107,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         const current = r.units.filter((u) => refs.has(u.ref));
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: unitFindings(current, spec, exemptTerms), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
-        const again = applyInGroup(r.units, retry.output.edits, refs);
+        const again = applyInGroup(r.units, retry.output.edits, refs, names);
         if (again.applied.length) whatChanged.push(...retry.output.what_changed);
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
       } catch (e) {
@@ -155,9 +156,9 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
 }
 
 /** applyEdits for one group: an edit naming a text outside the group is refused with its reason, never dropped silently. */
-function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>): ReturnType<typeof applyEdits> {
+function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, names: (string | null | undefined)[]): ReturnType<typeof applyEdits> {
   const outside = edits.filter((e) => !refs.has(e.ref.trim().replace(/^\[|\]$/g, "")));
-  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)));
+  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), names);
   return { ...r, rejected: [...outside.map((e) => ({ ...e, reason: `no text in this part has the reference ${e.ref}` })), ...r.rejected] };
 }
 

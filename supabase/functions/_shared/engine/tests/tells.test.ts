@@ -701,3 +701,147 @@ Deno.test("near-variants: a reworded windup, an empty teaser and the 'X was neve
     assertEquals(r.flags.filter((f) => ["disguise_frame", "empty_teaser", "heres_the_windup"].includes(f.tell)).map((f) => f.tell), [], ok);
   }
 });
+
+// ---------------------------------------------------------------------------------------------------------------
+// The owner's list: review fixes (sentence starts, Title Case, overlaps, offer words, FAQ, per-piece stack)
+// ---------------------------------------------------------------------------------------------------------------
+
+Deno.test("a word that opens a later sentence of a block is counted, not taken for a proper noun", () => {
+  const cases: [string, string][] = [
+    ["formal_words", "The report is fast. Furthermore, it is cheap."],
+    ["summary_closer", "You get six numbers every Monday. In conclusion, the report saves a week."],
+    ["windup_opener", "Hi Sam. In today's world, content is everything."],
+    ["empty_teaser", "The fix is simple. First, though, look at the page."],
+    ["formal_words", "One buyer said \"it is the best arm I own.\" Furthermore, it ships free."],
+    ["ai_words", "Three things:\n- Unlock the full list\n- See the rest"],
+    ["formal_words", "Utilize the report."],
+  ];
+  for (const [name, text] of cases) {
+    const r = analyzeText(text, { format: FORMATS.email_single });
+    assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
+  }
+});
+
+Deno.test("capitals in a Title Case or all-caps line say nothing about names; a capitalised word mid-sentence still does", () => {
+  const subject = analyzeDraft([section("email", [block("subject", "How to Navigate the Landscape and Elevate Your Results")])], FORMATS.email_single);
+  assertEquals(tells(subject, "ai_words")?.count, 3);
+  const headline = analyzeText("Unlock Seamless, Robust Rankings With a Bespoke, Game-Changing Plan", { format: FORMATS.landing_page_short });
+  assertEquals(headline.owner_tells, 5);
+  assertEquals(analyzeText("This is a ROBUST, SEAMLESS plan.", { format: FORMATS.email_single }).owner_tells, 2);
+  assertEquals(analyzeText("Ship it, IMHO.", { format: FORMATS.email_single }).owner_tells, 1);
+  assertEquals(analyzeText("I log into the Realm app and the Harness dashboard every day.", { format: FORMATS.email_single }).owner_tells, 0);
+  assertEquals(analyzeText("We watched Masters of the Universe again.", { format: FORMATS.email_single }).owner_tells, 0);
+});
+
+Deno.test("one phrase is one tell: overlapping owner matches count once", () => {
+  for (const t of ["Here's the hard truth: most pages never rank.", "In today's landscape, content is everything.", "Not just a tool, not just a course, but a system."]) {
+    const r = analyzeText(t, { format: FORMATS.email_single });
+    assertEquals(r.owner_tells, 1, `${t}: ${r.flags.map((f) => `${f.tell}x${f.count}`).join(",")}`);
+    assertEquals(r.hard_fail_reasons.some((x) => x.startsWith("owner_stack")), false, t);
+  }
+});
+
+Deno.test("literal product language is not a pattern tell; the offer's own words are exempt from patterns too", () => {
+  const veneer = analyzeText("We bond a chipped tooth with a porcelain veneer in one visit. A smile with a porcelain veneer lasts 15 years.", { format: FORMATS.landing_page_short, exemptTerms: exemptTermsFrom("Porcelain Veneers in One Visit") });
+  assertEquals(veneer.owner_tells, 0);
+  assertEquals(analyzeText("Every kid in a dinosaur costume gets a free photo. Kids dressed as superheroes get in free.", { format: FORMATS.landing_page_short }).owner_tells, 0);
+  assertEquals(analyzeText("It runs quietly at 24 dB on low, so you can sleep through the noise.", { format: FORMATS.product_description }).owner_tells, 0);
+  assertEquals(tells(analyzeText("It is a sales pitch dressed as a tutorial.", { format: FORMATS.email_single }), "disguise_frame")?.count, 1);
+  assertEquals(tells(analyzeText("Legiit quietly passed a million orders.", { format: FORMATS.email_single }), "quietly")?.count, 1);
+  // one buzzword is not a pile
+  assertEquals(analyzeText("We grow content at scale for local shops.", { format: FORMATS.email_single }).owner_tells, 0);
+  assertEquals(tells(analyzeText("We grow content at scale and we double down on what ranks.", { format: FORMATS.email_single }), "buzzword_pile")?.count, 1);
+});
+
+Deno.test("offer terms split on hyphens and leave out function words", () => {
+  assertEquals(exemptTermsFrom("Cutting-Edge Dental"), ["cutting-edge", "cutting", "edge", "dental"]);
+  assertEquals(exemptTermsFrom("Fix Your Funnel"), ["funnel"]);
+  assertEquals(analyzeText("Cutting-edge dental care in one visit. Book a cutting-edge cleaning today.", { format: FORMATS.landing_page_short, exemptTerms: exemptTermsFrom("Cutting-Edge Dental") }).owner_tells, 0);
+  assertEquals(analyzeText("Speak your truth.", { format: FORMATS.email_single, exemptTerms: exemptTermsFrom("Fix Your Funnel") }).owner_tells, 1);
+});
+
+Deno.test("hashtags that start with a digit are hashtags; #1 is not", () => {
+  const r = analyzeText("Day 12 of the sprint. #100DaysOfCode #30DayChallenge", { format: FORMATS.organic_social });
+  assertEquals(tells(r, "hashtag")?.count, 2);
+  assertEquals(tells(analyzeText("We're #1 in town.", { format: FORMATS.organic_social }), "hashtag"), undefined);
+});
+
+Deno.test("self-answered questions: the owner's forms are caught; FAQ answers, buyer questions and calls to action are not", () => {
+  for (const t of ["The result?\n\n37 new pages ranked in 90 days.", "Why? Because the score never looks at your site, and the pages that rank were written for one buyer with one problem on one afternoon.", "The fix? Use the score as a filter."]) {
+    assert(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), t);
+  }
+  const headline = analyzeDraft([section("hero", [block("headline", "The result? More pages that rank.")])], FORMATS.landing_page_short);
+  assert(tells(headline, "self_answered_question"), "a headline that asks and answers itself");
+  for (const t of ["Can I cancel? Yes, from the billing page.", "Ready? Click the button below."]) {
+    assertEquals(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), undefined, t);
+  }
+  const faq = analyzeDraft([section("body#7", [
+    block("paragraph", "Does it work on a new site? Yes. Two of the five case studies started under 40 pages.", null, { item: "7", role: "mid_cart_faq" }),
+    block("paragraph", "Is there a contract? No. You cancel from the billing page in one click.", null, { item: "7", role: "mid_cart_faq" }),
+  ])], FORMATS.email_sequence);
+  assertEquals(tells(faq, "self_answered_question"), undefined, "an FAQ email answers the buyer's questions");
+  const faqSection = analyzeDraft([section("faq", [block("paragraph", "Is there a contract? No. You cancel in one click.")])], FORMATS.pricing_page);
+  assertEquals(tells(faqSection, "self_answered_question"), undefined);
+});
+
+Deno.test("a lone question is the reader's to answer (rule 22), not an unanswered opener; Imagine still is", () => {
+  const r = analyzeText("How many of the posts you paid for last year rank on page one today?\n\nOpen your analytics and count them.", { format: FORMATS.email_single });
+  assertEquals(tells(r, "unanswered_opener"), undefined);
+  assertEquals(tells(analyzeText("Worth a look?", { format: FORMATS.cold_email }), "unanswered_opener"), undefined);
+  assert(tells(analyzeText("Imagine never worrying about dinner again.\n\nIt would be nice.", { format: FORMATS.email_single }), "unanswered_opener"));
+});
+
+Deno.test("quotations: inch marks never open one, scare quotes are scanned, a quote keeps the next sentence anchored", () => {
+  const knife = analyzeText("The 6\" chef knife is genuinely sharp, it quietly outlasts cheaper blades, and the 8\" model ships free.", { format: FORMATS.product_description });
+  assertEquals(knife.owner_tells, 2);
+  assertEquals(tells(analyzeText("They sell \"seamless\" reports.", { format: FORMATS.email_single }), "ai_words")?.count, 1);
+  assertEquals(blankQuotes("He said \"it is the best arm I own.\" Then").indexOf("."), "He said \"it is the best arm I own".length);
+});
+
+Deno.test("tells 2, 4, 5 and 9 catch the near-variants of the owner's own examples", () => {
+  const cases: [string, string][] = [
+    ["corporate_filler", "It's not just a tool, it's a partner."],
+    ["three_beat_deep_third", "Our promise: No fluff. No theory. Just results."],
+    ["three_beat_deep_third", "Not a tool. Not a course. A system."],
+    ["three_beat_deep_third", "No fluff. No theory. Real results."],
+    ["three_beat_deep_third", "It's not about the money. It's not about the fame. It's about the freedom."],
+    ["three_beat_deep_third", "This isn't a tool. This isn't a course. It's a system."],
+    ["hard_truth", "Hard truth: most pages never rank."],
+    ["hard_truth", "The Uncomfortable Truth About Keyword Tools"],
+    ["worth_noting", "It's important to note that the trial is free."],
+    ["worth_noting", "It should be noted that the trial is free."],
+    ["worth_noting", "It is worth bearing in mind that the trial is free."],
+    ["heres_the_windup", "Here's the one number that matters: revenue per page."],
+    ["heres_the_windup", "Here's why your pages never rank"],
+    ["label_windup", "My rule: never pay for a keyword tool you open once a month."],
+    ["label_windup", "So for any keyword, I'd ask two things. Who searches, and what do they buy?"],
+    ["label_windup", "Two questions decide it."],
+    ["label_windup", "Then one more check cuts the list again: does a page like yours rank?"],
+    ["empty_hedge", "Difficulty is a guess, in my view."],
+  ];
+  for (const [name, text] of cases) {
+    const r = analyzeText(text, { format: FORMATS.email_single });
+    assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
+  }
+  for (const ok of ["The two plans cost $49 and $99.", "Price: $49 a month.", "Bonus: the audit template."]) {
+    assertEquals(analyzeText(ok, { format: FORMATS.email_single }).owner_tells, 0, ok);
+  }
+});
+
+Deno.test("the stack is per piece: one owner word in each email of a sequence is not a stack; two in one email are", () => {
+  const seq = (texts: string[][]) => analyzeDraft(texts.map((ps, i) => section(`body#${i + 1}`, ps.map((p) => block("paragraph", p, null, { item: String(i + 1) })))), FORMATS.email_sequence);
+  const spread = seq([["The report is genuinely short."], ["We built a robust export."], ["When it comes to pages, ship one a week."]]);
+  assertEquals(spread.owner_tells, 3);
+  assertEquals(spread.hard_fail_reasons.some((x) => x.startsWith("owner_stack")), false, spread.hard_fail_reasons.join("; "));
+  const stacked = seq([["The report is genuinely short. We built a robust export."], ["Ship one page a week."]]);
+  assert(stacked.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")), stacked.hard_fail_reasons.join("; "));
+  // a single-piece format still counts the whole draft
+  const page = analyzeDraft([section("hero", [block("headline", "A robust plan")]), section("body", [block("paragraph", "It is genuinely short.")])], FORMATS.landing_page_short);
+  assert(page.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")));
+});
+
+Deno.test("the self-answered question scan is linear on text with no sentence punctuation", () => {
+  const t0 = performance.now();
+  analyzeText("keyword, ".repeat(5000), { format: FORMATS.email_single });
+  assert(performance.now() - t0 < 500, `took ${performance.now() - t0} ms`);
+});

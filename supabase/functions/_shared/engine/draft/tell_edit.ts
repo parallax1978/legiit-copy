@@ -11,7 +11,7 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, EMOJI_SOURCE, HASHTAG_SOURCE, LINK_SOURCE, TELLS } from "../tells.ts";
+import { analyzeDraft, countWords, EMOJI_SOURCE, HASHTAG_SOURCE, isTitleCaseLine, LINK_SOURCE, TELLS } from "../tells.ts";
 import { assembleDraft, provisionalLeadSection } from "./assemble.ts";
 import { normalizeQuote, sectionsText } from "./ledger.ts";
 import { leadSectionId } from "./plan.ts";
@@ -168,16 +168,33 @@ function anchoredMarks(t: string): string[] {
 const ABBREVIATION = /\b(?:Dr|Mr|Mrs|Ms|Mx|St|Jr|Sr|Prof|Inc|Ltd|Co|Corp|vs|etc|e\.g|i\.e|No|Vol|Fig)\.$/;
 const PRONOUN_I = /^I(?:['’](?:m|d|ve|ll|re))?$/;
 
+/** A word whose capitals mark a name wherever it stands: an acronym ("SEO") or an inner capital ("HubSpot"). */
+const MARKED_NAME = /^[\p{Lu}\d]{2,}$|\p{Ll}\p{Lu}/u;
+
 /**
  * Names, brands and places: capitalised words that do not open a sentence (a title like "Dr." does not end one),
- * and a sentence's first word when the next word is capitalised too ("Sarah Chen runs"). "I" is not a name.
+ * and a sentence's first word when the next word is capitalised too ("Sarah Chen runs"). "I" is not a name. In a
+ * Title Case line every word is capitalised, so a word there is a name only when it is marked as one or is in
+ * `known` (the names the piece uses in its sentence-case lines); without `known` the line gives no names.
  */
-function namesOf(t: string): string[] {
+function namesOf(t: string, known: Set<string> | null = null): string[] {
   const text = strip(t);
+  const titleLines: [number, number][] = [];
+  let at = 0;
+  for (const line of text.split("\n")) {
+    if (isTitleCaseLine(line)) titleLines.push([at, at + line.length]);
+    at += line.length + 1;
+  }
   const tokens = Array.from(text.matchAll(/[\p{Lu}][\p{L}'’.-]*/gu));
   const out: string[] = [];
   tokens.forEach((m, k) => {
     if (PRONOUN_I.test(m[0])) return;
+    const i = m.index ?? 0;
+    if (titleLines.some(([s, e]) => i >= s && i < e)) {
+      const word = m[0].replace(/[.'’]+$/, "");
+      if (MARKED_NAME.test(word) || known?.has(word)) out.push(word);
+      return;
+    }
     const before = text.slice(0, m.index).replace(/\s+$/, "");
     const opens = !before || (/[.!?:;\n"“(]$/.test(before) && !ABBREVIATION.test(before));
     const next = tokens[k + 1];
@@ -218,13 +235,16 @@ export function guardEdit(before: string, after: string): string | null {
 }
 
 /** Names in a whole text survive an edit, and none is invented; an owner's word in a title-cased line may go. */
-function namesIntact(before: string, after: string): string | null {
-  const lost = namesOf(before).filter((n) => !after.includes(n) && !OWNER_WORD_RES.some((re) => re.test(n)));
+function namesIntact(before: string, after: string, known: Set<string> | null = null): string | null {
+  const lost = namesOf(before, known).filter((n) => !after.includes(n) && !OWNER_WORD_RES.some((re) => re.test(n)));
   if (lost.length) return `a name was dropped or changed: ${lost[0]}`;
-  const added = namesOf(after).filter((n) => !before.includes(n));
+  const added = namesOf(after, known).filter((n) => !before.includes(n));
   if (added.length) return `a name was added: ${added[0]}`;
   return null;
 }
+
+/** Display text the owner's "flatten formatting the text does not need" fix may delete outright. */
+const DELETABLE_DISPLAY = new Set<Block["type"]>(["crosshead", "preheadline"]);
 
 /** Every quotation in a whole text keeps its words through an edit (only an em dash, emoji or hashtag may go). */
 function quotationsIntact(before: string, after: string): string | null {
@@ -280,9 +300,11 @@ export function splice(text: string, index: number, length: number, after: strin
 }
 
 /** Apply the editor's edits in order; each must find its span, pass the guards and leave the text changed. */
-export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
+export function applyEdits(units: EditUnit[], edits: TellEdit[], names: (string | null | undefined)[] = []): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
   const out = units.map((u) => ({ ...u }));
   const byRef = new Map(out.map((u) => [u.ref, u]));
+  // in a Title Case line only these are names (with acronyms): the brand, product and competitor names, and the names the texts use mid-sentence
+  const known = new Set([...units.flatMap((u) => namesOf(u.text)), ...names.flatMap((n) => (n ?? "").match(/[\p{Lu}][\p{L}'’.-]*/gu) ?? []).map((w) => w.replace(/[.'’]+$/, ""))]);
   const applied: TellEdit[] = [];
   const rejected: RejectedEdit[] = [];
   for (const e of edits) {
@@ -312,7 +334,9 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditU
       continue;
     }
     const next = splice(u.text, at.index, at.length, e.after);
-    const whole = multiset(anchoredMarks(u.text)) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : namesIntact(u.text, next) ?? quotationsIntact(u.text, next);
+    // a crosshead the text does not need may go whole (a ledger tag or a number in it still may not)
+    const dropsHeader = !next.trim() && u.item === null && DELETABLE_DISPLAY.has(u.type);
+    const whole = multiset(anchoredMarks(u.text)) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, known)) ?? quotationsIntact(u.text, next);
     if (whole) {
       rejected.push({ ...e, reason: whole });
       continue;
