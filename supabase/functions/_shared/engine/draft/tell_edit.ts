@@ -234,9 +234,32 @@ function countsKept(before: string, after: string): boolean {
 }
 
 /** Why an edit may not be applied, or null when it keeps every fact, tag, quote and link and stays close in length. */
+/**
+ * A cut of whole sentences that carry no fact but their ledger tags or NEEDS SOURCE marks: a closer that says the
+ * hook again, a slogan, a leftover. The tags go with the claim they cite. A sentence with a number, a date, an email,
+ * a link or a quotation is never cut this way (names are checked on the whole text).
+ */
+export function factFreeSentenceCut(before: string, after: string): boolean {
+  if (after.trim()) return false;
+  const plain = strip(before).replace(/\s+/g, " ").trim();
+  if (!/^["“(]?\p{Lu}/u.test(plain) || !/[.!?]["”’)]?$/.test(plain)) return false;
+  return !list(before, NUMBER_RE).length && !list(before, NUMBER_WORD_RE).length && !list(before, DATE_WORD_RE).length &&
+    !list(before, EMAIL_RE).length && !list(before, LINK_RE).length && !list(before, HOST_RE).length && !(before.match(QUOTE_RE) ?? []).length;
+}
+
+/** Remove one occurrence of each of `drop` from `xs`. */
+function minus(xs: string[], drop: string[]): string[] {
+  const out = xs.slice();
+  for (const d of drop) {
+    const i = out.indexOf(d);
+    if (i >= 0) out.splice(i, 1);
+  }
+  return out;
+}
+
 export function guardEdit(before: string, after: string): string | null {
   if (!before.trim()) return "empty before";
-  if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after))) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
+  if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after)) && !factFreeSentenceCut(before, after)) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
   if (!same(list(before, NUMBER_RE), list(after, NUMBER_RE))) return "a number, its unit or its currency changed, or numbers changed order";
   // the count in a count windup ("I'd ask two things", "Two questions decide it") is the tell, not a fact: it may go, never change
@@ -322,6 +345,8 @@ export function splice(text: string, index: number, length: number, after: strin
   if (!mid) {
     if (/[ \t]$/.test(left) && /^[ \t]/.test(right)) right = right.replace(/^[ \t]+/, "");
     if (/[ \t]$/.test(left) && /^[.,;:!?)]/.test(right)) left = left.replace(/[ \t]+$/, "");
+    // a cut at the end of a text or a line leaves no trailing space
+    if (!right || /^\n/.test(right)) left = left.replace(/[ \t]+$/, "");
     if (!left.trim()) {
       left = left.replace(/[ \t]+$/, "");
       right = right.replace(/^[ \t]+/, "");
@@ -372,7 +397,9 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditU
     const next = splice(u.text, at.index, at.length, e.after);
     // a crosshead the text does not need may go whole (a ledger tag or a number in it still may not)
     const dropsHeader = !next.trim() && u.item === null && DELETABLE_DISPLAY.has(u.type);
-    const whole = multiset(anchoredMarks(u.text)) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, u.item === null && TITLE_CASE_TYPES.has(u.type))) ?? quotationsIntact(u.text, next);
+    // a whole-sentence cut takes its own tags with it; every other mark stays with its fact
+    const expected = factFreeSentenceCut(found, e.after) ? minus(anchoredMarks(u.text), anchoredMarks(found)) : anchoredMarks(u.text);
+    const whole = multiset(expected) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, u.item === null && TITLE_CASE_TYPES.has(u.type))) ?? quotationsIntact(u.text, next);
     if (whole) {
       rejected.push({ ...e, reason: whole });
       continue;
@@ -449,6 +476,13 @@ export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms
   ];
   const r = analyzeDraft(sections, spec, { exemptTerms });
   return r.flags.filter((f) => OWNER.has(f.tell)).reduce((n, f) => n + f.count, 0);
+}
+
+/** The piece's sentence-length variation when it runs flat against the format's floor (§7.1 "vary sentence length"), else null. */
+export function flatCadence(draft: DraftOutput, spec: FormatSpec): { cv: number; floor: number } | null {
+  // the piece as the reader sees it: the lead section carries the chosen (or provisional) lead
+  const r = analyzeDraft(draft.sections, spec);
+  return r.cadence_flag && r.cadence_cv !== null ? { cv: r.cadence_cv, floor: spec.cadence_floor_cv } : null;
 }
 
 /** Per text, the owner's tells the checker sees in it: the editor's starting list, never the whole of its job. */

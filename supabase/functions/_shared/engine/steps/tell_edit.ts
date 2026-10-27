@@ -10,9 +10,9 @@
  */
 import type { StepContext, StepResult } from "./types.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v2.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v3.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, groupUnits, ownerTellCount, rebuildDraft, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { PERSIST_RESERVE_MS, remainingBudgetMs } from "./budget.ts";
@@ -47,6 +47,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const version = ctx.latestDraft!.version;
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
   const before = ownerTellCount(source, spec, exemptTerms);
+  const cadence = flatCadence(source, spec);
 
   const original = editableUnits(source, spec);
   const groups = groupUnits(original);
@@ -93,6 +94,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
       groupIndex: gi,
       groupTotal: groups.length,
       retryNote: null,
+      cadence,
     };
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;

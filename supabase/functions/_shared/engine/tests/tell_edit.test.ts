@@ -6,10 +6,10 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v2.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v3.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -333,7 +333,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [7, 6, 7, 5, 2, 6, 4]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [7, 6, 7, 5, 3, 6, 4]);
 });
 
 Deno.test("applyEdits: testimonials, quotations and names keep their words; seams only; sentence starts get their capital", () => {
@@ -484,4 +484,29 @@ Deno.test("second review: names in a Title Case headline and in a name-heavy sen
   assert(guardEdit("We check three things on every site: speed, links and content.", "We check five things on every site: speed, links and content."));
   assert(guardEdit("You get answers to five questions in the audit call.", "You get answers to two questions in the audit call."));
   assertEquals(guardEdit("Two tests settle it. Does the page load fast?", "Check whether the page loads fast."), null);
+});
+
+Deno.test("a fact-free sentence may be cut whole with its ledger tag; a sentence with a number, date or link may not", () => {
+  const unit = (ref: string, text: string): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type: "paragraph", text });
+  const tag = "[[L:abcd1234-0000-0000-0000-000000000000]]";
+  const r = applyEdits([
+    unit("p-1", `Six pages were skipped ${tag}. Brief the next page off the export and you could pay for the wrong page ${tag}.`),
+    unit("p-2", `Of 12 groups, 6 were skipped ${tag}. It ships Monday.`),
+  ], [
+    { ref: "p-1", before: `Brief the next page off the export and you could pay for the wrong page ${tag}.`, after: "", tell: "closer restating the hook" },
+    { ref: "p-2", before: `Of 12 groups, 6 were skipped ${tag}.`, after: "", tell: "test: a fact" },
+  ]);
+  assertEquals(r.units[0].text, `Six pages were skipped ${tag}.`);
+  assertEquals(r.rejected.map((x) => x.ref), ["p-2"]);
+  assertEquals(factFreeSentenceCut("You check the call yourself.", ""), true);
+  assertEquals(factFreeSentenceCut("It ships Monday.", ""), false);
+  assertEquals(factFreeSentenceCut("half a sentence", ""), false);
+});
+
+Deno.test("prompt: the tell edit request carries the cadence note only when the piece runs flat", () => {
+  const ctx = { format: FORMATS.organic_social, voice: null, config: null } as unknown as Parameters<typeof tellEditPrompt.user>[0];
+  const base = { draft: socialDraft(null), units: [], findings: [], exemptTerms: [], groupIndex: 0, groupTotal: 1, retryNote: null };
+  assert(tellEditPrompt.user(ctx, { ...base, cadence: { cv: 0.43, floor: 0.5 } }).includes("CADENCE: the sentences run close to one length (variation 0.43"));
+  assert(!tellEditPrompt.user(ctx, { ...base, cadence: null }).includes("CADENCE"));
+  assert(tellEditPrompt.system.includes("A slogan lands after the point"));
 });
