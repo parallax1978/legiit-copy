@@ -274,9 +274,10 @@ export function factualFlags(out: FactualOutput): Flag[] {
 /** Flags the revise step acts on: not those the user decided to keep. */
 /**
  * The factual flags the revision acts on: the engine's own errors only. A fabrication is cut; a line that misquotes
- * the ledger (test 1) or the offer block (test 8) is fixed, unless the user kept that claim. Every other flag (claim
- * strength, compliance and channel screens) is the user's decision in the Flags panel and never enters the copy on
- * its own (docs/04 §8.3).
+ * the ledger (test 1) or the offer block (test 8) is fixed, and so is a line that says more about what the product or
+ * a named competitor does than its row holds (a feature, the mechanism, a comparison; tests 1 and 10), unless the user
+ * kept that claim. Every other flag (claim strength, compliance and channel screens) is the user's decision in the
+ * Flags panel and never enters the copy on its own (docs/04 §8.3).
  */
 /** A line a misquote can be in: a figure, a quotation, a name or an offer term. A promise or a reason-why is never a misquote (§8.3). */
 const MISQUOTE_RE = /\d|[$€£%]|["“”]|\b(?:free|trial|guarantee|refund|credits?|deadline|bonus|price|plan|month|year|day|week|cancel)\b/i;
@@ -285,10 +286,14 @@ function misquoteShaped(quote: string): boolean {
   return MISQUOTE_RE.test(t) || /(?<=[a-z,;:]\s)[A-Z][a-z]/.test(t);
 }
 
+/** What the product or a named competitor does: a line that says more than its row is the engine's invention, never a claim the user makes. */
+const DESCRIBED_TYPES = new Set<string>(["comparative", "feature", "mechanism"]);
+
 export function pendingFactualFlags(out: FactualOutput | null, claims: { id: string; user_decision: string | null }[]): FactualOutput["flags"] {
   if (!out) return [];
   const keep = new Set(claims.filter((c) => c.user_decision === "keep").map((c) => c.id));
-  return out.flags.filter((f) => f.fabrication || ((f.test === 1 || f.test === 8) && misquoteShaped(f.quote) && (!f.claim_id || !keep.has(f.claim_id))));
+  const described = (f: FactualOutput["flags"][number]) => DESCRIBED_TYPES.has(f.claim_type) && (f.test === 1 || f.test === 10);
+  return out.flags.filter((f) => f.fabrication || ((((f.test === 1 || f.test === 8) && misquoteShaped(f.quote)) || described(f)) && (!f.claim_id || !keep.has(f.claim_id))));
 }
 
 // ---------------------------------------------------------------- revise

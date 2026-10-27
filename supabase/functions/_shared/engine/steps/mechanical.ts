@@ -7,6 +7,10 @@ import type { StepEffects, StepFn, StepResult } from "./types.ts";
 import { Section } from "../schemas/draft.ts";
 import { MechanicalReport } from "../schemas/review.ts";
 import { analyzeDraft, exemptTermsFrom, TELL_THRESHOLDS } from "../tells.ts";
+import { Candidate } from "../schemas/argument.ts";
+import { promiseOverlap, promiseStems, statesPromise } from "../draft/tell_edit.ts";
+import { readerText } from "../draft/ledger.ts";
+import type { FormatSpec } from "../formats/spec.ts";
 
 const DraftBlocks = z.union([z.array(Section), z.object({ sections: z.array(Section) })]);
 
@@ -22,6 +26,30 @@ export function sectionsFromBlocks(blocks: unknown): Section[] {
   const parsed = DraftBlocks.safeParse(blocks);
   if (!parsed.success) throw new Error(`mechanical: draft blocks are not Section[]: ${parsed.error.issues[0]?.message ?? "invalid"}`);
   return Array.isArray(parsed.data) ? parsed.data : parsed.data.sections;
+}
+
+/** Blocks that carry the offer, the button or the terms: never where the promise has to be said. */
+const OFFER_BLOCK_TYPES = new Set(["cta", "button", "price", "guarantee", "disclosure", "terms"]);
+
+/**
+ * The argument's promise said in the piece (docs/04 rule 8): one sentence holds its head and half its words. Returns
+ * the gate failure, naming the promise and the line that comes closest to it, or null when a sentence says it or the
+ * format has no sentence of its own to say it in (an ad set, a sequence, an SMS).
+ */
+export function promiseGap(sections: Section[], spec: FormatSpec, promise: string | null | undefined): string | null {
+  if (!promise?.trim() || spec.multi_item || spec.family === "message") return null;
+  const stems = promiseStems(promise);
+  if (!stems.size) return null;
+  const lines = sections.flatMap((s) => s.blocks.flatMap((b) => [b.text, ...(b.items ?? [])].map((t) => ({ type: b.type, text: readerText(t) })))).filter((l) => l.text);
+  if (lines.some((l) => statesPromise(l.text, stems))) return null;
+  let closest: string | null = null;
+  let best = 0;
+  for (const l of lines) {
+    if (OFFER_BLOCK_TYPES.has(l.type)) continue;
+    const n = promiseOverlap(l.text, stems);
+    if (n > best) [closest, best] = [l.text, n];
+  }
+  return `promise: no sentence says the argument's promise ("${promise.trim()}") with the reader as its subject; say it as a sentence of its own, early (in a short piece by the rehook), with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}`;
 }
 
 export function flagsFromReport(report: MechanicalReport): Flag[] {
@@ -60,6 +88,15 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
   const sections = sectionsFromBlocks(draft.blocks);
   // the offer's own words are exempt here exactly as in the tell edit, or the stack would loop revisions on them
   const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms: exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name) }));
+  // the piece says the argument's promise (rule 8): a draft that only describes the product, or says half a promise of
+  // two results, goes back to the revision with the line to rewrite
+  const angle = Candidate.safeParse(ctx.winningAngle?.candidate);
+  const gap = promiseGap(sections, ctx.format, angle.success ? angle.data.promise : null);
+  if (gap) {
+    report.format_gate_failures.push(gap);
+    report.hard_fail_reasons.push(`gate:${gap}`);
+    report.hard_fail = true;
+  }
   const flags = flagsFromReport(report);
 
   const verdict = report.hard_fail ? "HARD FAIL" : report.tell_score_per_300 >= TELL_THRESHOLDS.flag ? "FLAG" : "CLEAN";

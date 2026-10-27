@@ -52,7 +52,7 @@ export const revisePrompt: PromptModule<ReviseArgs> = {
         ].filter(Boolean).join("\n")
       : "COPY CHIEF VERDICT: none available.";
     const factText = args.factual.length
-      ? `FACTUAL FLAGS (the engine's own errors: cut each fabrication, and fix each line that misquotes the ledger or the offer by correcting only the misquoted number, name or term, never taking a hedge, a weakening detail or a smaller promise from its rewrite; every other factual flag is the user's decision and is not shown here):\n${args.factual.map((f, i) => `  ${i + 1}. [test ${f.test}, ${f.severity}${f.fabrication ? ", FABRICATION: cut the invented item" : ""}] quote: "${f.quote}"\n     rule: ${f.rule}\n     issue: ${f.issue}\n     rewrite: ${f.suggested_rewrite ?? "(cut)"}`).join("\n")}`
+      ? `FACTUAL FLAGS (the engine's own errors: cut each fabrication, and fix each line that misquotes the ledger or the offer by correcting only the misquoted number, name or term, and each line that says more about what the product or a named tool does than its row holds by saying what the row says, at full strength, never taking a hedge, a weakening detail or a smaller promise from its rewrite; every other factual flag is the user's decision and is not shown here):\n${args.factual.map((f, i) => `  ${i + 1}. [test ${f.test}, ${f.severity}${f.fabrication ? ", FABRICATION: cut the invented item" : ""}] quote: "${f.quote}"\n     rule: ${f.rule}\n     issue: ${f.issue}\n     rewrite: ${f.suggested_rewrite ?? "(cut)"}`).join("\n")}`
       : "FACTUAL FLAGS: none pending.";
     const m = args.mechanical;
     const mechText = m

@@ -53,7 +53,7 @@ Deno.test("prompts: every step that writes, reviews or plans copy carries the se
   assert(draftPrompt.system.includes("The promise of the result, reason-why logic the market accepts, the reader's situation and how the product works as the brief describes it need no row and never take the mark."));
   assert(!draftPrompt.system.includes("The one damaging admission is true, minor"), "an admission is never presumed");
   assert(revisePrompt.system.includes("never sizes a promise down"));
-  assert(editorialPrompt.system.includes("fail Gate A and point the do at what the reader's tool does not do"));
+  assert(editorialPrompt.system.includes("fail Gate A and point the do at what this product does with it that the reader's tool does not"));
   assert(editorialPrompt.system.includes("A note on a promise strengthens its carrier from what is on file"));
   assert(factualPrompt.system.includes("- Not flags (§8.1, §8.3 test 2): the promise of the result the product produces"));
   assert(factualPrompt.system.includes("you may not size an outcome promise down"));
@@ -281,4 +281,52 @@ Deno.test("the writer sees a ledger row's fact without the engine's memo", () =>
   assertEquals(rowFacts("Premium: The posted price list, with credits that roll over, answering \"'Credit billing feels sneaky' (V3, V13)\""), "The posted price list, with credits that roll over");
   assertEquals(rowFacts("Premium: the evidence behind every call. It answers 'The data cannot be trusted' (V1) and 'Recommendations are wrong' (V10). No dollar value: no ledger basis."), "the evidence behind every call.");
   assertEquals(rowFacts("Every keyword carries Google's cost per click and an intent."), "Every keyword carries Google's cost per click and an intent.");
+});
+
+// ---------------------------------------------------------------- round 6: the whole promise, said; what a tool does, as its row says
+
+import { promiseGap } from "../steps/mechanical.ts";
+
+Deno.test("mechanical: a piece that never says its promise, or says half of a promise of two results, fails a gate naming the closest line", () => {
+  const promise = "rankings on keywords that bring paying customers";
+  const social = FORMATS.organic_social;
+  // the round-5 clean run's shipped post: the rehook says the rankings, and no sentence says the customers they bring
+  const shipped = [
+    s("lead_in", [b("lead-b-1", "You paid a writer for a page because the difficulty score said it was easy, and it never cracked page one."), b("lead-b-3", "You rank for the keywords your buyers search, and the pages you can't win never reach a writer.")]),
+    s("main", [b("main-2", "Another page ranks, pulls traffic, and sells nothing, because the people typing that phrase wanted a free answer and left.")]),
+    s("cta", [{ ...b("cta-1", "Grab the link in the first comment to find the pages your site can rank with and sell from."), type: "cta" }]),
+  ];
+  const gap = promiseGap(shipped, social, promise);
+  assert(gap?.includes(`"${promise}"`), gap ?? "no gap");
+  assert(gap?.includes(`the closest line is "You rank for the keywords your buyers search, and the pages you can't win never reach a writer."`), gap ?? "");
+  // the interim post said it inside a longer sentence: no gap; a ledger tag never hides it
+  assertEquals(promiseGap([s("main", [b("main-1", "You find the pages your site can rank for that bring paying customers by reading the pages on top.")])], social, promise), null);
+  assertEquals(promiseGap([s("main", [b("main-1", `You rank on keywords that bring paying customers [[L:${ROW}]].`)])], social, promise), null);
+  // no promise, an ad set or an SMS: nothing to check
+  assertEquals(promiseGap(shipped, social, null), null);
+  assertEquals(promiseGap(shipped, FORMATS.google_rsa, promise), null);
+  assertEquals(promiseGap(shipped, FORMATS.sms, promise), null);
+});
+
+Deno.test("fact check: a line that says more about what the product or a named tool does than its row is fixed like a misquoted figure", () => {
+  const ahrefs = fl({ quote: "A difficulty score doesn't look at the pages ranking on page one, and it doesn't look at your backlinks.", test: 1, claim_type: "comparative", suggested_rewrite: "A difficulty score doesn't tell you what the pages ranking on page one say, or whether your backlinks can beat theirs." });
+  const filter = fl({ quote: "You get only the keywords advertisers pay Google to show up for.", test: 10, claim_type: "feature", suggested_rewrite: "You keep the searches that buy, each one showing what advertisers pay Google per click." });
+  const promise = fl({ quote: "You rank for the keywords that bring paying customers.", test: 1, claim_type: "benefit" });
+  const compliance = fl({ quote: "Cancel anytime.", test: 9, claim_type: "continuity_trial" });
+  const kept = fl({ quote: "It makes the call for you.", test: 1, claim_type: "feature", claim_id: ROW });
+  const pending = pendingFactualFlags(out([ahrefs, filter, promise, compliance, kept]), [{ id: ROW, user_decision: "keep" }]);
+  assertEquals(pending.map((f) => f.quote), [ahrefs.quote, filter.quote]);
+});
+
+Deno.test("standard: a common column stays as the reason-why, a named tool is described as its row says, and a promise of two results says both", () => {
+  assert(RULES.includes("never drops that reason because the column is common"));
+  assert(RULES.includes("never what it fails to measure"));
+  assert(RULES.includes("a promise of two results says both in that sentence"));
+  assert(COPY_CHIEF_RUBRIC.includes("never by cutting the reason-why it carries"));
+  assert(COPY_CHIEF_RUBRIC.includes("a direction never cuts the piece's only carrier for part of the promise"));
+  assert(CLAIMS_AND_FACTUAL_REVIEW.includes("an invented filter, a wrong detail about the reader's tool"));
+  assert(editorialPrompt.system.includes("no note cuts the only line that carries part of the promise"));
+  assert(!editorialPrompt.system.includes("is no reason: fail Gate A and point the do at what the reader's tool does not do."));
+  const social = FORMATS.organic_social.sections.find((x) => x.id === "main")!;
+  assert(social.must_not.includes("a second call to action"));
 });

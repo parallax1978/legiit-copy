@@ -626,6 +626,18 @@ export function statesPromise(text: string, promise: Set<string>, opts: { loose?
   return false;
 }
 
+/** The most of the promise's stems one sentence of the text holds: how close a line comes to stating it. */
+export function promiseOverlap(text: string, promise: Set<string>): number {
+  let best = 0;
+  for (const sentence of text.replace(MARK_RE, " ").split(/(?<=[.!?…]["”’)]?)\s+|\n+/)) {
+    const stems = new Set((sentence.toLowerCase().match(/[a-z][a-z'’]*/g) ?? []).map(promiseStem));
+    let hits = 0;
+    for (const p of promise) if (stems.has(p)) hits++;
+    best = Math.max(best, hits);
+  }
+  return best;
+}
+
 /** Each way the piece is read: the sections with one opening, or the sections alone when there are no openings. */
 function readings(units: EditUnit[]): EditUnit[][] {
   const sections = units.filter((u) => u.owner === "section");
