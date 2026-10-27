@@ -12,6 +12,18 @@ type Args = Parameters<typeof offerV11.user>[1];
 
 const SYSTEM = amend(offerV11.system, [
   [
+    `habit-dominant markets need the current solution made untenable first.`,
+    `habit-dominant markets need the current solution made untenable first. The reasons are about the deal; they never say what the copy may promise, which is the reader's result (the rankings, the customers, the sales, the money), never the deliverable (rule 8).`,
+  ],
+  [
+    `the first visible win when it is stated as a promise (benefit, graded by the evidence the ledger holds),`,
+    `the first visible win (feature, role offer_term, no grade, when it is what the product delivers or shows the buyer and when it arrives, such as the first report; benefit, graded by the evidence the ledger holds, only when it states a result the buyer gets from the market, such as a ranking),`,
+  ],
+  [
+    `Every word the buyer will read (the guarantee sentence, bonus and premium names, flag rewrites) follows that list: none of its tells or words, no em dash, emoji or hashtag.`,
+    `Every word the buyer will read (the guarantee sentence, bonus and premium names, flag rewrites) follows that list: none of its tells or words, no em dash, emoji or hashtag. A premium's name says what the buyer gets from it in the buyer's terms (the result it brings closer or the worry it ends), never the bare noun for the deliverable ("Report", "Checklist", "Bonus 2") and never a number the ledger does not hold.`,
+  ],
+  [
     `Where the promise outruns the first week, say so in promise_delivery_gap_note and either size the promise down or add a component that closes the gap.`,
     `Where the buyer would expect something sooner than it arrives, say what arrives when in promise_delivery_gap_note, or add a component that closes the gap. The note is about timing only: it never tells the copy to leave out or size down the result the product produces (the rankings, the customers, the sales, the money), which the copy sells (rule 8).`,
   ],

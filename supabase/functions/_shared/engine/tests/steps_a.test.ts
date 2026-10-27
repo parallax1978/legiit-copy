@@ -7,7 +7,7 @@ import { getFormat } from "../formats/index.ts";
 import { type callModel, TruncatedError } from "../llm.ts";
 import argumentPrompt from "../prompts/argument.v14.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
-import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v5.ts";
+import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v10.ts";
 import offerPrompt from "../prompts/offer.v12.ts";
 import researchPrompt from "../prompts/research.v8.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
@@ -372,7 +372,7 @@ Deno.test("questions reach the prompts: answers as the user's facts, open ones a
   await makeIntakeStep({ call, loadSources: () => Promise.resolve([]) })(fakeCtx({ questions }));
   assertStringIncludes(calls[0].user, '<questions answered="1" open="1">');
   assertStringIncludes(calls[0].user, "A: The $1 Pro trial.");
-  assertStringIncludes(calls[0].user, "Still open (unanswered; these facts are unknown: never fill them, never imply them):\n- What does the accuracy report show? (it matters)");
+  assertStringIncludes(calls[0].user, "Still open (unanswered: never state an answer to these as a number, a name, a quote or a result someone got; an open question about results never stops the promise of the result the product produces, rule 8):\n- What does the accuracy report show? (it matters)");
   assertStringIncludes(calls[1].user, 'evidence.source_ref "user_answer"');
 
   const research = fakeCall(() => COLLECT);

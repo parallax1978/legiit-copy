@@ -9,6 +9,10 @@ export type { ReviseArgs };
 
 const SYSTEM = amend(revisePrev.system, [
   [
+    `never adds a fact the ledger lacks, never adds a ledger id the ledger does not show,`,
+    `never adds a number, name, quote, study, credential or result the ledger lacks (reason-why logic the market accepts, the reader's situation and how the product works as the brief describes it are not ledger facts and may carry a promise), never adds a ledger id the ledger does not show,`,
+  ],
+  [
     `fix each line that misquotes the ledger or the offer block with its rewrite, ledger tags kept;`,
     `fix each line that misquotes the ledger or the offer block with its rewrite, ledger tags kept (a fix corrects the number, name or term it names; where a rewrite also brings in a hedge or a weakening detail such as "planned" or "not yet", fix only the misquoted item and keep the rest of the line at full strength);`,
   ],

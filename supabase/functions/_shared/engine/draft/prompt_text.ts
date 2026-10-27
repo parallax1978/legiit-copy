@@ -69,7 +69,7 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
     brief.positioning ? `positioning: ${brief.positioning}` : "",
     brief.proof_available.length ? `proof available: ${brief.proof_available.map((p) => `${p.claim}: ${p.evidence}${p.source ? ` (${p.source})` : ""}`).join(" | ")}` : "",
     brief.competitors.length ? `competitors: ${brief.competitors.join(", ")}` : "",
-    brief.unknowns.length ? `unknowns (never fill these in): ${brief.unknowns.join("; ")}` : "",
+    brief.unknowns.length ? `unknowns (never fill one in with a number, a name, a quote or a result someone got; an unknown about whether the product gets results never stops the promise of the result it produces, rule 8): ${brief.unknowns.join("; ")}` : "",
   ].filter(Boolean).join("\n");
 }
 
@@ -265,7 +265,7 @@ export function questionsText(questions: { question: string; why: string | null;
     "USER ANSWERS AND OPEN QUESTIONS",
     answered.length ? "Answered by the user (facts you may use; cite the ledger row intake made from each, or mark [[NEEDS SOURCE]] if none exists):" : "",
     ...answered.map((q) => `- Q: ${q.question}\n  A: ${q.answer!.trim()}`),
-    open.length ? "Still open (unknown: never fill, round, or imply these):" : "",
+    open.length ? "Still open (unknown: never state an answer to these as a number, a name, a quote or a result someone got; an open question about results never stops the promise of the result the product produces, rule 8):" : "",
     ...open.map((q) => `- ${q.question}`),
   ].filter(Boolean).join("\n");
 }

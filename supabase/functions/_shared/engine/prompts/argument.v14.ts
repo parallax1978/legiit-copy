@@ -17,6 +17,10 @@ type Args = Parameters<typeof argumentV13.user>[1];
 
 const SYSTEM = amend(argumentV13.system, [
   [
+    `Return 3 only when the claim and the proof are the same object (the promise is itself an offer term, a demonstration or the fact).`,
+    `Return 3 only when the reader proves the promise to themselves or the ledger holds it: a demonstration they run on their own numbers before paying (a trial, a free plan, a live check) shows the result the promise names, or a row holds that result; the promise stays the reader's result, never the offer term.`,
+  ],
+  [
     `promise: a noun phrase that completes "a different and superior way to get [promise]";`,
     `promise: the reader's result in the purpose's terms (the rankings, the customers, the sales, the money they buy the product for), as a noun phrase that completes "a different and superior way to get [promise]", never the product's deliverable, output or a feature, whether or not results are on file;`,
   ],

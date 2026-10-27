@@ -114,7 +114,7 @@ export function argumentUser(ctx: StepContext, args: ArgumentArgs): string {
         [
           `Produce exactly ${args.count} candidates for "${args.brief.product_name}", to be written as ${args.formatName} for "${args.brief.audience.who}".`,
           `Use the cluster tokens and k values from <cluster_table> exactly. Cite proof_ledger_refs only from <claims>, each as the bare id (for [[L:abc]] write "abc").`,
-          args.piece?.purpose?.trim() ? `The piece has a stated purpose in <piece>: every candidate's promise must be one this piece can deliver toward that purpose, and at least half the candidates must sit on the desire the purpose names (search its cluster first, even when k is low; the gates will say what the evidence supports). A candidate that cannot serve the purpose is not a candidate.` : null,
+          args.piece?.purpose?.trim() ? `The piece has a stated purpose in <piece>: every candidate's promise is the reader's result (the rankings, the customers, the sales, the money they buy the product for), chosen so that this piece moves the reader to the purpose's action, never the action itself or what the piece hands over, and at least half the candidates must sit on the desire the purpose names (search its cluster first, even when k is low; the gates will say what the evidence supports). A candidate that cannot serve the purpose is not a candidate.` : null,
           args.exclusions.promises.length ? `The user rejected the ${args.exclusions.promises.length} promise(s) in <excluded>: propose none of them and no close variant.` : null,
           `Return cluster_vocabulary_used and candidates.`,
         ]

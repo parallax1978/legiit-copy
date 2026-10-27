@@ -11,6 +11,18 @@ export type { FactualArgs };
 
 const SYSTEM = amend(factualPrev.system, [
   [
+    `Every flag is a decision for the user: the exact line, the rule it meets, and the rewrite that keeps the most the evidence allows.`,
+    `Every flag is a decision for the user: the exact line, the rule it meets, and the rewrite that fixes only what that rule names and keeps the line selling at full strength.`,
+  ],
+  [
+    `- issue: one sentence: what the line asserts, what the ledger holds, the gap.`,
+    `- issue: one sentence: what the line asserts and how it breaks the cited rule (a number past its row's precision, an item no row holds, a term that differs from the offer block, a missing disclosure). A promise of the result, reason-why logic or the reader's situation with no row behind it is not an issue.`,
+  ],
+  [
+    `A line that cites an existing ledger row is the user's claim, never a fabrication, however strong.`,
+    `A line whose number, name, quote or result is held by the row it cites is the user's claim, never a fabrication, however strong; a number, name, quote, study or result that the cited row does not hold is a fabrication, whatever id sits beside it.`,
+  ],
+  [
     `You may add an evidence-state sentence from §8.2 ("We did not run our own trial."); you may not add`,
     `You add an evidence-state sentence only to a health claim whose cited rule requires one (§8.2), never to any other claim; you may not add`,
   ],
@@ -20,7 +32,7 @@ const SYSTEM = amend(factualPrev.system, [
   ],
   [
     `- severity: fatal only for fabrication;`,
-    `- Not flags (§8.1, §8.3 test 2): the promise of the result the product produces (the rankings, the customers, the sales, the money) with no number on it; reason-why logic the market accepts; the reader's situation and its cost; what the product does; the founder's call. Never flag them for lacking a ledger row or a result. A delivery timing note in the offer block says what arrives when; it is not a rule, and a line that names the result the product produces never breaks it.\n- severity: fatal only for fabrication;`,
+    `- Not flags (§8.1, §8.3 test 2): the promise of the result the product produces (the rankings, the customers, the sales, the money) with no number on it; reason-why logic the market accepts; the reader's situation and its cost; what the product does as the brief and ledger describe it; the founder's call when the speaker is on file. Never flag them for lacking a result. A feature, step, output or founder statement the brief and ledger do not hold is a fabrication (test 10). A delivery timing note in the offer block says what arrives when; it is not a rule, and a line that names the result the product produces never breaks it.\n- severity: fatal only for fabrication;`,
   ],
 ]);
 

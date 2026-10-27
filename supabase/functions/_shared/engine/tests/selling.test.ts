@@ -50,9 +50,11 @@ Deno.test("prompts: every step that writes, reviews or plans copy carries the se
   assert(draftPrompt.system.includes("5. Sell the result (rule 8)."));
   assert(!draftPrompt.system.includes("An unsupported claim is not hedged into existence; it is cut."));
   assert(!draftPrompt.system.includes("A claim the ledger cannot carry is sized down to what it can carry, or cut."));
+  assert(draftPrompt.system.includes("The promise of the result, reason-why logic the market accepts, the reader's situation and how the product works as the brief describes it need no row and never take the mark."));
+  assert(!draftPrompt.system.includes("The one damaging admission is true, minor"), "an admission is never presumed");
   assert(revisePrompt.system.includes("never sizes a promise down"));
   assert(editorialPrompt.system.includes("fail Gate A and point the do at what the reader's tool does not do"));
-  assert(editorialPrompt.system.includes("A note on a promise strengthens its carrier and never sizes the promise down"));
+  assert(editorialPrompt.system.includes("A note on a promise strengthens its carrier from what is on file"));
   assert(factualPrompt.system.includes("- Not flags (§8.1, §8.3 test 2): the promise of the result the product produces"));
   assert(factualPrompt.system.includes("you may not size an outcome promise down"));
   assert(offerPrompt.system.includes("The note is about timing only"));

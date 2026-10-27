@@ -10,11 +10,15 @@ import { PROOF_PLACEMENT } from "./standard.ts";
 export type { EditorialArgs };
 
 const SYSTEM = amend(editorialPrev.system, [
+  [
+    `check each against the ledger rows for existence, precision and grade. [[NEEDS SOURCE]] marks a fact the ledger lacks: a Gate C failure when the fact is load-bearing.`,
+    `check each against the ledger rows for existence and precision, and a health claim also for its grade; a promise of the result that cites a feature, mechanism, process or offer row is carried at any grade (§8.2). [[NEEDS SOURCE]] marks a fact the ledger lacks: a Gate C failure when it marks a load-bearing number, name, study, quote, credential, price or date. On a promise of the result, reason-why logic, the reader's situation or what the product does, the mark is the writer's error: the note says to drop the mark and keep the line at full strength.`,
+  ],
   // the proof standard (strength order, the no-results carriers, the obvious demonstration) is the copy chief's too
   [`## 7. AI tell checklist`, `${PROOF_PLACEMENT}\n## 7. AI tell checklist`],
   [
     `- one_thing and secondary_notes: quote exact lines; fails names the gate or rule in one sentence; do gives direction and at most one rewritten line.`,
-    `- At Gate A, a reason to believe built only from what the reader's current tool already shows them (the competitor table's columns, scores and filters) is no reason: fail Gate A and point the do at what the reader's tool does not do. At Gate C, a piece that describes the product and never says what the reader ends up with (the rankings, the customers, the money) fails.\n- one_thing and secondary_notes: quote exact lines; fails names the gate or rule in one sentence; do gives direction and at most one rewritten line. A note on a promise strengthens its carrier and never sizes the promise down or adds a hedge ("some", "could").`,
+    `- At Gate A, a reason to believe built only from what the reader's current tool already shows them (the competitor table's columns, scores and filters) is no reason: fail Gate A and point the do at what the reader's tool does not do. At Gate C, a piece that describes the product and never says what the reader ends up with (the rankings, the customers, the money) fails.\n- one_thing and secondary_notes: quote exact lines; fails names the gate or rule in one sentence; do gives direction and at most one rewritten line. A note on a promise strengthens its carrier from what is on file (a ledger row, the demonstration, the mechanism, reason-why logic the market accepts, the founder's call) and never with a number, name, quote or result the ledger lacks; it never sizes the promise down or adds a hedge ("some", "could").`,
   ],
 ]);
 

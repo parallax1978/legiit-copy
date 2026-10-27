@@ -131,7 +131,7 @@ export function renderQuestions(questions: QuestionLike[]): string {
     for (const q of answered) lines.push(`- Q: ${neutralizeTags(q.question)}\n  A: ${neutralizeTags(q.answer!.trim())}`);
   }
   if (open.length) {
-    lines.push(`${answered.length ? "\n" : ""}Still open (unanswered; these facts are unknown: never fill them, never imply them):`);
+    lines.push(`${answered.length ? "\n" : ""}Still open (unanswered: never state an answer to these as a number, a name, a quote or a result someone got; an open question about results never stops the promise of the result the product produces, rule 8):`);
     for (const q of open) lines.push(`- ${neutralizeTags(q.question)}${q.why ? ` (${neutralizeTags(q.why)})` : ""}`);
   }
   return lines.join("\n");
@@ -152,7 +152,10 @@ export function renderConfig(config: OfferConfigRow | Record<string, unknown> | 
 
 export function renderVariant(variant: OfferVariantRow | null): string {
   if (!variant) return "(no approved offer construction; the brief's own terms stand)";
-  return json({ status: variant.status, chosen: variant.chosen, guarantee: variant.guarantee, deadline: variant.deadline, reasons: variant.reasons, gap_note: variant.gap_note });
+  return [
+    "The approved deal (price, trial, guarantee, terms) and what arrives when. Nothing in it limits the promise: the promise is the reader's result, the rankings, the customers, the sales and the money included, whether or not results are on file (rule 8), and any note or reason here that says to leave them out or to promise the deliverable instead is overruled.",
+    json({ status: variant.status, chosen: variant.chosen, guarantee: variant.guarantee, deadline: variant.deadline, reasons: variant.reasons, delivery_timing_note: variant.gap_note }),
+  ].join("\n");
 }
 
 /** The dossier with verbatims as one line each (id | tags | cluster | source | date | markers | text | url) and the rest as JSON sections. */
