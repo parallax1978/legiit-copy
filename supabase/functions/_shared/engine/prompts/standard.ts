@@ -305,7 +305,7 @@ Sections in order, length band, musts and must-nots. Bands are starting values; 
 
 Long-form sales letter. Headline and deck; lead; credibility lines; problem mechanism; solution mechanism and turn; build-up and reveal; proof block; offer and stack; price; guarantee; urgency; close with CTA three times; P.S. 3,000-8,000 words. Musts: benefits as claim, reason, proof, picture; the skim path sells alone; close at 15-25% of length. Must-nots: bio before the reader cares; proof wall at the end; mechanism explained in the lead; summary close.
 
-Short landing page, product-aware. Headline matched to the ad; subhead with who and differentiator; CTA with the action in the button; three to five argued benefits with proof in line; proof strip; two objections with guarantee; repeated CTA. 150-600 words. Must-nots: problem education; story lead. B2B demo variant adds "here's what you'll get" and an indicated price; 300-750 words.
+Short landing page, product-aware. Headline matched to the ad; subhead with who and differentiator; CTA with the action in the button; three to five argued benefits with proof in line; proof strip; two objections with guarantee; repeated CTA. 150-600 words. Must-nots: problem education; story lead. B2B demo variant adds what the call covers, said as the things the reader gets (not a "here's what you'll get" windup), and an indicated price; 300-750 words.
 
 Opt-in page. Headline with number, timeframe or mechanism; three to six incomplete bullets; email-only form; button completing "I want..."; one proof line. 60-250 words. Must-nots: headline describing the artifact; "Submit"; "we will never spam you."
 

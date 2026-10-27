@@ -12,7 +12,7 @@ import type { StepContext, StepResult } from "./types.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v1.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, groupUnits, ownerTellCount, rebuildDraft, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, groupUnits, ownerTellCount, rebuildDraft, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { PERSIST_RESERVE_MS, remainingBudgetMs } from "./budget.ts";
@@ -32,9 +32,10 @@ function restore(ctx: StepContext, version: number, units: EditUnit[]): TellEdit
   return same ? p.data : null;
 }
 
+/** The "what changed" lines are shown to the user: deduplicated, and held to the owner's never-rules like any copy. */
 function dedupe(lines: string[]): string[] {
   const out: string[] = [];
-  for (const l of lines.map((x) => x.trim()).filter(Boolean)) if (!out.some((o) => o.toLowerCase() === l.toLowerCase())) out.push(l);
+  for (const l of lines.map((x) => stripNeverTells(x.trim())).filter(Boolean)) if (!out.some((o) => o.toLowerCase() === l.toLowerCase())) out.push(l);
   return out;
 }
 
