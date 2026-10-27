@@ -3,7 +3,7 @@ import { Eraser, Eye, Gavel, Gauge, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { GenerationDetail } from "@/lib/data/generations";
 import type { TellEditOutput } from "@engine/schemas/mod.ts";
-import { getColdRead, getEditorial, getMechanical, getShip, getTellEdits } from "./outputs";
+import { getColdRead, getEditorial, getMechanical, getShip, getTellEdits, tellEditNote } from "./outputs";
 import { PredictionBadge } from "./status-badge";
 import { Empty } from "./panel-argument";
 import { LedgerText } from "@/components/editor/ledger-chip";
@@ -195,7 +195,7 @@ function TellEditSection({ runs }: { runs: TellEditOutput[] }) {
     <section className="space-y-3 border-t border-line pt-5">
       <Heading icon={<Eraser className="h-3.5 w-3.5" />}>AI tell cleanup <span className="font-normal normal-case tracking-normal text-ink-soft">· your editing rules, on every draft</span></Heading>
       {edits.length === 0 ? (
-        <p className="text-sm text-ink-muted">No AI tells found. The copy was left as written.</p>
+        <p className="text-sm text-ink-muted">{tellEditNote(runs)}</p>
       ) : (
         <>
           {lines.length > 0 && <ul className="list-disc space-y-1 pl-4 text-sm text-ink">{lines.slice(0, 6).map((l, i) => <li key={i}>{l}</li>)}</ul>}

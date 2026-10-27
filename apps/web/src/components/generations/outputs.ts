@@ -45,12 +45,21 @@ export function stepOrder(generation: GenerationRow, steps: Pick<StepRow, "step"
   return base;
 }
 
-/** Latest completed output for a step, as a loosely typed value. */
-export function latestOutput<T>(steps: StepRow[], step: StepName): T | null {
+/** When a step row finished (when it was created, if it never did): the order the latest run is picked by. */
+const finishedAt = (s: StepRow) => s.finished_at ?? s.created_at;
+
+/** Latest completed row for a step that stored an output. */
+function latestRow(steps: StepRow[], step: StepName): StepRow | null {
   const rows = steps.filter((s) => s.step === step && s.status === "completed" && s.output != null);
   if (!rows.length) return null;
-  rows.sort((a, b) => (a.finished_at ?? a.created_at).localeCompare(b.finished_at ?? b.created_at));
-  return rows[rows.length - 1].output as unknown as T;
+  rows.sort((a, b) => finishedAt(a).localeCompare(finishedAt(b)));
+  return rows[rows.length - 1];
+}
+
+/** Latest completed output for a step, as a loosely typed value. */
+export function latestOutput<T>(steps: StepRow[], step: StepName): T | null {
+  const row = latestRow(steps, step);
+  return row ? (row.output as unknown as T) : null;
 }
 
 export const getArgument = (steps: StepRow[]) => latestOutput<ArgumentOutput>(steps, "argument");
@@ -62,12 +71,28 @@ export const getShip = (steps: StepRow[]) => latestOutput<ShipOutput>(steps, "sh
 export const getOffer = (steps: StepRow[]) => latestOutput<OfferConstruction>(steps, "offer");
 export const getTellEdit = (steps: StepRow[]) => latestOutput<TellEditOutput>(steps, "tell_edit");
 
-/** Every completed tell edit of the generation, oldest first: one runs after the draft and after each revision. */
+/**
+ * The completed tell edits of the current piece, oldest first: one runs after the draft and after each revision.
+ * A Retry or Try another angle drafts again and keeps the old rows, so only the runs after the latest draft count.
+ */
 export function getTellEdits(steps: StepRow[]): TellEditOutput[] {
+  const draft = latestRow(steps, "draft");
   return steps
     .filter((s) => s.step === "tell_edit" && s.status === "completed" && s.output != null && typeof s.output === "object" && "what_changed" in (s.output as object))
-    .sort((a, b) => (a.finished_at ?? a.created_at).localeCompare(b.finished_at ?? b.created_at))
+    .filter((s) => !draft || finishedAt(s).localeCompare(finishedAt(draft)) > 0)
+    .sort((a, b) => finishedAt(a).localeCompare(finishedAt(b)))
     .map((s) => s.output as unknown as TellEditOutput);
+}
+
+/**
+ * The Review panel's line when no tell edit of the piece changed a line. It says no tells were found only when the
+ * checker counted none in every run; the count it gives is the latest run's that found any.
+ */
+export function tellEditNote(runs: Pick<TellEditOutput, "owner_tells_before" | "new_version">[]): string {
+  const found = runs.reduce((n, r) => (r.owner_tells_before > 0 ? r.owner_tells_before : n), 0);
+  const tells = found ? `${found} AI tell${found === 1 ? "" : "s"} found, but none could be removed safely.` : "No AI tells found.";
+  // a new version with no line edits means the rebuild only tidied the layout
+  return `${tells} ${runs.some((r) => r.new_version) ? "Only the layout was tidied." : "The copy was left as written."}`;
 }
 
 export type TimelineStatus = "completed" | "running" | "pending" | "failed" | "queued" | "skipped" | "interrupted" | "paused";
@@ -178,9 +203,14 @@ export function summarize(step: StepName, output: unknown): string | null {
     }
     case "tell_edit": {
       const t = o as Partial<TellEditOutput>;
-      if (t.new_version === false) return "No AI tells found; the copy is unchanged";
+      // "no tells" only when the checker counted none; otherwise how many it found that could not be removed
+      const found = num(t.owner_tells_before) ?? 0;
+      const tells = found ? `${found} AI tell${found === 1 ? "" : "s"} found; none could be removed safely` : "No AI tells found";
+      if (t.new_version === false) return `${tells}; the copy is unchanged`;
       const n = arr(t.edits).length;
       if (n) return `${n} change${n === 1 ? "" : "s"}${num(t.owner_tells_before) != null ? `; AI tells ${t.owner_tells_before} to ${t.owner_tells_after}` : ""}`;
+      // a new version with no line edits: the rebuild only tidied the layout
+      if (t.new_version === true) return `${tells}; the layout was tidied`;
       break;
     }
     case "cold_read": {

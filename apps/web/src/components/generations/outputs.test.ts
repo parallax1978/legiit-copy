@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { GenerationRow, StepRow } from "@/lib/data/generations";
-import { buildTimeline, summarize, timelineStatus } from "./outputs";
+import type { TellEditOutput } from "@engine/schemas/mod.ts";
+import { buildTimeline, getTellEdits, summarize, tellEditNote, timelineStatus } from "./outputs";
 
 const T0 = "2026-10-24T10:00:00.000Z";
 const T1 = "2026-10-24T10:05:00.000Z";
 const T2 = "2026-10-24T10:10:00.000Z";
+const T3 = "2026-10-24T10:15:00.000Z";
+const T4 = "2026-10-24T10:20:00.000Z";
+const T5 = "2026-10-24T10:25:00.000Z";
+const T6 = "2026-10-24T10:30:00.000Z";
 
 function generation(over: Partial<GenerationRow>): GenerationRow {
   return {
@@ -56,6 +61,10 @@ function step(over: Partial<StepRow> & Pick<StepRow, "step" | "status" | "create
     finished_at: over.created_at,
     ...over,
   };
+}
+
+function tellEdit(over: Partial<TellEditOutput>): TellEditOutput {
+  return { what_changed: [], edits: [], rejected: [], owner_tells_before: 0, owner_tells_after: 0, already_clean: true, new_version: false, ...over };
 }
 
 describe("timeline statuses from generation_steps rows", () => {
@@ -117,5 +126,50 @@ describe("the tell edit on the timeline", () => {
 
   it("reads an unchanged tell edit in plain words", () => {
     expect(summarize("tell_edit", { what_changed: [], edits: [], rejected: [], owner_tells_before: 0, owner_tells_after: 0, already_clean: true, new_version: false })).toBe("No AI tells found; the copy is unchanged");
+  });
+
+  it("says how many tells it found when none could be removed, never that there were none", () => {
+    expect(summarize("tell_edit", tellEdit({ owner_tells_before: 2, owner_tells_after: 2, already_clean: false }))).toBe("2 AI tells found; none could be removed safely; the copy is unchanged");
+    expect(summarize("tell_edit", tellEdit({ owner_tells_before: 1, owner_tells_after: 1, already_clean: false }))).toBe("1 AI tell found; none could be removed safely; the copy is unchanged");
+  });
+
+  it("reads a new version with no line edits as a tidied layout, not raw JSON", () => {
+    expect(summarize("tell_edit", tellEdit({ already_clean: false, new_version: true }))).toBe("No AI tells found; the layout was tidied");
+    expect(summarize("tell_edit", tellEdit({ owner_tells_before: 2, owner_tells_after: 2, already_clean: false, new_version: true }))).toBe("2 AI tells found; none could be removed safely; the layout was tidied");
+  });
+});
+
+describe("the tell edit in the Review panel", () => {
+  const edit = (ref: string) => ({ ref, before: "x", after: "y", tell: "windup", by: "editor" as const });
+
+  it("keeps only the runs after the latest draft, so an earlier pass never mixes into the piece", () => {
+    const first = tellEdit({ edits: [edit("old")], owner_tells_before: 4, owner_tells_after: 1, already_clean: false, new_version: true });
+    const afterDraft = tellEdit({ edits: [edit("new-1")], owner_tells_before: 2, owner_tells_after: 0, already_clean: false, new_version: true });
+    const afterRevision = tellEdit({ edits: [edit("new-2")], owner_tells_before: 1, owner_tells_after: 0, already_clean: false, new_version: true });
+    // a Retry from the draft re-runs it (checkpointing once) and keeps the first pass's rows; until the new draft
+    // completes, the piece on screen is still the first pass's
+    const retried = [
+      step({ step: "draft", status: "completed", created_at: T0, output: { word_count: 900 } }),
+      step({ step: "tell_edit", status: "completed", created_at: T1, output: first }),
+      step({ step: "draft", status: "continued", created_at: T2, attempt: 2, output: { partial: { kind: "draft_partial" } } }),
+      step({ step: "draft", status: "completed", created_at: T3, attempt: 3, output: { word_count: 1000 } }),
+    ];
+    expect(getTellEdits(retried.slice(0, 3))).toEqual([first]);
+    expect(getTellEdits(retried)).toEqual([]);
+    const steps = [
+      ...retried,
+      step({ step: "tell_edit", status: "completed", created_at: T4, attempt: 2, output: afterDraft }),
+      step({ step: "revise", status: "completed", created_at: T5, output: { changes: [] } }),
+      step({ step: "tell_edit", status: "completed", created_at: T6, attempt: 3, output: afterRevision }),
+    ];
+    expect(getTellEdits(steps)).toEqual([afterDraft, afterRevision]);
+  });
+
+  it("says no tells were found only when no run found one or wrote a new version", () => {
+    expect(tellEditNote([tellEdit({}), tellEdit({})])).toBe("No AI tells found. The copy was left as written.");
+    expect(tellEditNote([tellEdit({ owner_tells_before: 2, owner_tells_after: 2, already_clean: false })])).toBe("2 AI tells found, but none could be removed safely. The copy was left as written.");
+    expect(tellEditNote([tellEdit({ owner_tells_before: 2, owner_tells_after: 2, already_clean: false }), tellEdit({})])).toBe("2 AI tells found, but none could be removed safely. The copy was left as written.");
+    expect(tellEditNote([tellEdit({ already_clean: false, new_version: true })])).toBe("No AI tells found. Only the layout was tidied.");
+    expect(tellEditNote([tellEdit({ owner_tells_before: 3, owner_tells_after: 3, already_clean: false }), tellEdit({ owner_tells_before: 1, owner_tells_after: 1, already_clean: false, new_version: true })])).toBe("1 AI tell found, but none could be removed safely. Only the layout was tidied.");
   });
 });
