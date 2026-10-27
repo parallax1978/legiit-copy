@@ -9,7 +9,7 @@ export const metadata = { title: "Create your workspace" };
 
 const STEPS = [
   { icon: Package, title: "Save the offer", text: "Paste a URL or upload what you have. The brief is extracted and every fact gets a line in a claims ledger with its evidence and grade." },
-  { icon: ListChecks, title: "Approve the ledger", text: "You decide what the copy may say. Risky claims are flagged with the rule and a rewrite, never quietly softened." },
+  { icon: ListChecks, title: "Approve the ledger", text: "You decide which facts the copy cites: every number, name, quote and price comes from here. Compliance questions are flagged with the rule and a rewrite for you to decide, never softened behind your back." },
   { icon: PenLine, title: "Write and review", text: "The argument is chosen before any prose. Drafts get a cold read on a second model and a copy chief's gates before you see them." },
 ];
 

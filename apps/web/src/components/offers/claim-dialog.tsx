@@ -112,7 +112,7 @@ export function ClaimDialog({ offerId, claim, open, onOpenChange }: { offerId: s
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Evidence grade" hint="The grade fixes the strongest permitted wording. See the standard, §8.2.">
+          <Field label="Evidence grade" hint="For a health claim the grade sets the strongest wording allowed (the standard, §8.2). Any other product promises its result at full strength at every grade; a number or a result someone got is said as the evidence states it.">
             <Select value={v.evidence_grade ?? NONE} onValueChange={(t) => setV({ ...v, evidence_grade: t === NONE ? null : (t as EvidenceGradeId) })}>
               <SelectTrigger className="w-full">
                 <SelectValue />

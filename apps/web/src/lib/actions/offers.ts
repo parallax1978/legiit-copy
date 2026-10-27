@@ -505,7 +505,8 @@ export async function skipOfferConstruction(offerId: string): Promise<ActionResu
       reasons: chosen.reasons as string,
       guarantee: chosen.guarantee,
       deadline: null,
-      gap_note: "Offer construction skipped: the offer is used as written in the brief.",
+      // the note says what arrives when; a skipped construction has none (the reasons above already say it was skipped)
+      gap_note: null,
       status: "approved",
       approved_by: userId,
       approved_at: new Date().toISOString(),

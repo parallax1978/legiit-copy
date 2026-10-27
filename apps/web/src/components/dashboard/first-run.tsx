@@ -45,7 +45,7 @@ export function FirstRunChecklist({ checklist, canEdit }: { checklist: { hasOffe
           <h2 className="mt-1 text-lg font-bold text-ink">Three steps to your first piece</h2>
         </div>
         <p className="max-w-md text-xs text-ink-muted">
-          Copy here is argued from the offer&apos;s own evidence. Every number, name and promise in a draft traces back to a line in its claims ledger, so the ledger comes first.
+          Copy here sells the result your offer produces and argues it from the offer&apos;s own facts. Every number, name, quote and price in a draft traces back to a line in its claims ledger, so the ledger comes first.
         </p>
       </div>
       <ol className="mt-5 grid gap-3 md:grid-cols-3">

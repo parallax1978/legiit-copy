@@ -59,7 +59,10 @@ export function EditorPage({ detail, canEdit, notice }: { detail: GenerationDeta
 
   const attention = useMemo(() => collectAttention(detail, current), [detail, current]);
   const nAttention = attentionCount(attention);
-  const pendingFlags = flagsForDraft(detail.flags, drafts, current).flags.filter((f) => f.decision === "pending").length;
+  const openFlags = flagsForDraft(detail.flags, drafts, current).flags.filter((f) => f.decision === "pending");
+  const pendingFlags = openFlags.length;
+  // only an engine fabrication counts in red; every other flag is the user's call, not a defect
+  const pendingFab = openFlags.some((f) => f.kind === "fabrication");
   const [tab, setTab] = useState<string>(nAttention > 0 ? "attention" : "argument");
   const prediction = detail.predictions[detail.predictions.length - 1] ?? null;
 
@@ -206,7 +209,7 @@ export function EditorPage({ detail, canEdit, notice }: { detail: GenerationDeta
                 <PanelTab value="attention" count={nAttention} tone="warn">Attention</PanelTab>
                 <PanelTab value="argument">Argument</PanelTab>
                 <PanelTab value="review">Review</PanelTab>
-                <PanelTab value="flags" count={pendingFlags} tone="bad">Flags</PanelTab>
+                <PanelTab value="flags" count={pendingFlags} tone={pendingFab ? "bad" : undefined}>Flags</PanelTab>
                 <PanelTab value="sources">Sources</PanelTab>
                 <PanelTab value="versions" count={drafts.length}>Versions</PanelTab>
                 <PanelTab value="run">Run</PanelTab>

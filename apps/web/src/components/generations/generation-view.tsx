@@ -151,7 +151,7 @@ function NeedsInputCard({ detail, canEdit, pending, onContinue, onSkip }: { deta
             {proposal.chosen?.guarantee?.denominated_text ? <> with the guarantee <q>{proposal.chosen.guarantee.denominated_text}</q></> : null}
             {proposal.chosen?.deadline?.date_or_rule ? <> and a deadline ({proposal.chosen.deadline.date_or_rule})</> : null}. That changes what is sold, not just how, so it waits for you.
           </p>
-          {proposal.promise_delivery_gap_note && <p className="text-ink-muted">{proposal.promise_delivery_gap_note}</p>}
+          {proposal.promise_delivery_gap_note && <p className="text-ink-muted"><span className="font-medium text-ink">What arrives when:</span> {proposal.promise_delivery_gap_note}</p>}
           {proposal.ledger_rows_to_add?.length ? <p className="text-xs text-ink-muted">{proposal.ledger_rows_to_add.length} ledger row{proposal.ledger_rows_to_add.length === 1 ? "" : "s"} would be added on approval.</p> : null}
         </div>
       ) : (

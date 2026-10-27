@@ -29,7 +29,7 @@ export const STEP_BLURBS: Record<StepName, string> = {
   cold_read: "A different model reads the skim path cold and reports what it believes it was sold.",
   editorial: "The copy chief runs the gates in order and predicts beat, lose or unsure.",
   mechanical: "Tell detector, readability, cadence and format gates. Code, not a model.",
-  factual: "Every claim checked against the ledger: line, rule, rewritten line.",
+  factual: "Every number, name, quote, price and deadline checked against the ledger; anything the engine invented is cut. Compliance notes come to you as line, rule and rewritten line, and you decide.",
   revise: "Changes only the referenced lines and honours the do-not-touch list.",
   ship: "The verdict and a short list of what to check before you use it.",
 };

@@ -184,7 +184,7 @@ export function OfferVariants({ offerId, variants, waiting, editable, briefEmpty
 
               {v.gap_note && (
                 <div className="rounded-md bg-surface-alt px-3 py-2 text-sm">
-                  <p className="text-xs font-medium uppercase tracking-wide text-ink-soft">Promise / delivery gap</p>
+                  <p className="text-xs font-medium uppercase tracking-wide text-ink-soft">What arrives when</p>
                   <p className="mt-0.5 text-ink">{v.gap_note}</p>
                 </div>
               )}

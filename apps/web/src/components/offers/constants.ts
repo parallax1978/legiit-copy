@@ -53,7 +53,7 @@ export const EVIDENCE_GRADE_LABELS: Record<EvidenceGradeId, string> = {
   C: "C · Observational",
   D: "D · Mechanistic, in vitro, animal",
   E: "E · Anecdote, testimonial, traditional use",
-  F: "F · None",
+  F: "F · No outside evidence of results",
 };
 
 export const CLAIM_STATUSES = ["verified", "unverified", "flagged"] as const;

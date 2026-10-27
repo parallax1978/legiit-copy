@@ -38,7 +38,7 @@ export function SetupFields({ value, onChange, disabled }: { value: SetupValues;
       <Field label="Refund or guarantee" htmlFor="setup-refund" hint="Only if it is not already on your site. The copy never promises one you do not offer." className="md:col-span-2">
         <TextInput id="setup-refund" value={value.refund_policy} onChange={set("refund_policy")} placeholder="None, or: 30-day money back on the first month" disabled={disabled} />
       </Field>
-      <Field label="Proof you can show" htmlFor="setup-proof" hint="Real customer results, testimonials with names, numbers you can stand behind. The copy uses only these; it never invents a testimonial." className="md:col-span-2">
+      <Field label="Proof you can show" htmlFor="setup-proof" hint="Real customer results, testimonials with names, numbers you can stand behind. The copy cites only these and never invents one. None yet is fine: the copy still promises the result your product produces, carried by how it works and what the reader can try for themselves." className="md:col-span-2">
         <TextArea id="setup-proof" rows={3} value={value.proof_on_hand} onChange={set("proof_on_hand")} placeholder="Jane Doe of Acme ranked 6 pages in 90 days (screenshot on file). 1,200 paying users. None yet." disabled={disabled} />
       </Field>
     </div>

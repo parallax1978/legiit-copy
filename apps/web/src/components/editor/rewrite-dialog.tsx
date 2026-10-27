@@ -15,7 +15,7 @@ export interface RewriteTarget {
   blockId: string | null;
 }
 
-const SUGGESTIONS = ["Tighter, fewest words", "Make the proof carry the claim", "Plainer, shorter sentences", "Match the voice of the paragraph above", "Cut the hedge, keep the claim within the evidence"];
+const SUGGESTIONS = ["Tighter, fewest words", "Make the proof carry the claim", "Plainer, shorter sentences", "Match the voice of the paragraph above", "Cut the hedge, promise the result plainly"];
 
 export function RewriteDialog({ target, onClose, onDone }: { target: RewriteTarget | null; onClose: () => void; onDone?: (version: number | null) => void }) {
   const [instruction, setInstruction] = useState("");

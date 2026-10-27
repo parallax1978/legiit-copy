@@ -39,7 +39,8 @@ export function GradeBadge({ grade, className }: { grade: string | null; classNa
     C: "bg-brand-faint text-brand-strong",
     D: "bg-warn-soft text-warn",
     E: "bg-warn-soft text-warn",
-    F: "bg-bad-soft text-bad",
+    // F is no outside evidence of results, not a defect: the product's own features and process carry the promise (§8.2)
+    F: "bg-surface-sunken text-ink-muted",
   };
   return (
     <span title={EVIDENCE_GRADE_LABELS[grade as EvidenceGradeId] ?? grade} className={cn("inline-flex size-6 items-center justify-center rounded-md text-xs font-bold", tone[grade] ?? "bg-surface-sunken text-ink-muted", className)}>

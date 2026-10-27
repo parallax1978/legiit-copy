@@ -277,6 +277,8 @@ export async function decideFlag(flagId: string, decision: "keep" | "drop" | "re
   const { supabase } = ctx;
   const { data: flag } = await supabase.from("draft_flags").select("*").eq("id", flagId).maybeSingle();
   if (!flag) return { ok: false, error: "Flag not found." };
+  // an engine fabrication (an invented number, name, quote or testimonial) is the one hard stop: fixed or dropped, never kept (docs/04 §8.3, test 10)
+  if (decision === "keep" && flag.kind === "fabrication") return { ok: false, error: "This line holds a fact the engine invented, so it cannot be kept. Apply the fix or drop it." };
   const { data: user } = await supabase.auth.getUser();
   let version: number | undefined;
   let replaced: number | undefined;

@@ -87,7 +87,7 @@ export function LedgerText({ text, className }: { text: string; className?: stri
         ) : p.kind === "ledger" ? (
           <LedgerChip key={i} id={p.value} />
         ) : (
-          <span key={i} className="mx-0.5 rounded bg-warn-soft px-1 text-[0.7rem] font-semibold text-warn" title="The ledger has no evidence for this line. Add a source or remove the claim.">
+          <span key={i} className="mx-0.5 rounded bg-warn-soft px-1 text-[0.7rem] font-semibold text-warn" title="The claims ledger does not hold this figure, name or date. Add it to the ledger, or cut it; the line's promise stands without it.">
             NEEDS SOURCE
           </span>
         ),

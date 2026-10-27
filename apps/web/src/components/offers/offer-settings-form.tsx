@@ -81,7 +81,7 @@ export function OfferSettingsForm({ offerId, config, editable }: { offerId: stri
           <Field label="Refund window (days)" htmlFor="refund_days" hint="Drives the guarantee sentence and the trial screen.">
             <Input id="refund_days" type="number" inputMode="numeric" min={0} value={v.refund_window_days ?? ""} disabled={ro} onChange={(e) => patch({ refund_window_days: e.target.value === "" ? null : Number(e.target.value) })} />
           </Field>
-          <ToggleRow label="Business opportunity" hint="The offer promises income, savings or a way to make money. Every earnings claim then needs dates, cohort, percentage achieving, time and effort, expenses." checked={v.business_opportunity} disabled={ro} onChange={(c) => patch({ business_opportunity: c })} />
+          <ToggleRow label="Business opportunity" hint="The buyer pays to start an income stream of their own, such as a work-from-home program or a reseller kit (16 CFR 437). Leave it off for a tool or service that helps a business win customers: its promise of rankings, customers or money is the outcome promise. A stated income figure is screened either way." checked={v.business_opportunity} disabled={ro} onChange={(c) => patch({ business_opportunity: c })} />
           <ToggleRow label="FTC Notice of Penalty Offenses recipient" hint="Your company received the 2021 Notice on earnings claims. Civil penalties apply to undocumented figures." checked={v.notice_recipient} disabled={ro} onChange={(c) => patch({ notice_recipient: c })} />
         </div>
       </SectionCard>
@@ -113,7 +113,7 @@ export function OfferSettingsForm({ offerId, config, editable }: { offerId: stri
         </div>
       </SectionCard>
 
-      <SectionCard title="First week" description="What actually happens after purchase. The copy promises the first visible win from this, not from the hope." actions={saveButton}>
+      <SectionCard title="First week" description="What actually happens after purchase. The copy uses it to say what arrives first and when. It never caps the promise, which is the result the product produces (the rankings, the customers, the money)." actions={saveButton}>
         <Field label="First-week experience" htmlFor="first_week" hint="Delivery, onboarding, the first thing they do, the first result they can see and when.">
           <TextArea id="first_week" rows={4} value={v.first_week_experience} disabled={ro} onChange={(t) => patch({ first_week_experience: t || null })} />
         </Field>

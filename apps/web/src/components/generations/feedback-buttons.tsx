@@ -11,7 +11,7 @@ import { submitFeedback } from "@/lib/actions/generations";
 
 const REASONS: Record<1 | -1, string[]> = {
   1: ["Argument is right", "Proof placed well", "Sounds like us", "Would run it as is"],
-  [-1]: ["Wrong argument", "Claims too big for the proof", "Reads like AI", "Wrong voice", "Too long", "Offer wrong"],
+  [-1]: ["Wrong argument", "Promise too weak", "Invented a fact", "Reads like AI", "Wrong voice", "Too long", "Offer wrong"],
 };
 
 export function FeedbackButtons({ draftId, existing, canEdit }: { draftId: string; existing: FeedbackRow[]; canEdit: boolean }) {

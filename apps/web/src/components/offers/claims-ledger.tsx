@@ -274,7 +274,7 @@ function FlagPanel({ flag, decision, editable, busy, onDecide }: { flag: ClaimFl
         <dt className="text-xs font-medium uppercase tracking-wide text-ink-soft sm:pt-0.5">Issue</dt>
         <dd className="text-ink">{flag.issue || "—"}</dd>
         <dt className="text-xs font-medium uppercase tracking-wide text-ink-soft sm:pt-0.5">Suggested rewrite</dt>
-        <dd className={cn("text-ink", flag.suggested_rewrite && "rounded-md bg-surface px-2 py-1.5 ring-1 ring-line")}>{flag.suggested_rewrite ?? "No rewrite offered. Edit the claim or drop it."}</dd>
+        <dd className={cn("text-ink", flag.suggested_rewrite && "rounded-md bg-surface px-2 py-1.5 ring-1 ring-line")}>{flag.suggested_rewrite ?? "No rewrite offered. Keep it as written, edit it or drop it."}</dd>
       </dl>
       {editable && (
         <div className="mt-3 flex flex-wrap gap-2">

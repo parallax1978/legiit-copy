@@ -135,7 +135,7 @@ export default function Landing() {
       <div className="border-b border-line bg-surface">
         <div className="mx-auto max-w-5xl px-4 py-4">
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-ink">
-            {["Sales pages, emails and ads for your offer", "Written from what your buyers say", "Every claim tied to its source", "Free during early access"].map((t) => (
+            {["Sales pages, emails and ads for your offer", "Written from what your buyers say", "Every number, name and quote tied to its source", "Free during early access"].map((t) => (
               <li key={t} className="flex items-center gap-2"><Check className="h-4 w-4 text-brand" />{t}</li>
             ))}
           </ul>
@@ -320,7 +320,7 @@ function HeroVisual() {
           <ol className="min-w-0 flex-1 divide-y divide-line">
             <MiniRow label="Research" sub="what buyers want, in their words" chip={`${review.sources} sources`} tone="good" />
             <MiniRow label="Argument" sub="chosen before a word was written" chip="Chosen first" tone="good" />
-            <MiniRow label="Evidence" sub="every claim tied to its source" chip="Nothing invented" tone="good" />
+            <MiniRow label="Evidence" sub="every number, name and quote tied to its source" chip="Nothing invented" tone="good" />
           </ol>
         </div>
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-3">

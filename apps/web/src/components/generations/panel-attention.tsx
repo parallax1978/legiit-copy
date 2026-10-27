@@ -50,8 +50,8 @@ export function AttentionPanel({ items, offerId }: { items: AttentionItems; offe
       )}
       {items.needsSource.length > 0 && (
         <section>
-          <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-bad"><FileQuestion className="h-3 w-3" /> Facts that need a source</h3>
-          <p className="mb-2 text-xs text-ink-muted">The writer needed these facts and your offer has no evidence for them yet. Add the evidence on the offer page and write the piece again, or cut the line.</p>
+          <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted"><FileQuestion className="h-3 w-3" /> Figures to add or cut</h3>
+          <p className="mb-2 text-xs text-ink-muted">Each line below holds a figure, name or date the claims ledger does not have. The line&apos;s promise stands without it. If you have the fact, add it to the claims ledger and write the piece again; if not, cut that figure, name or date and keep the rest of the line.</p>
           <ul className="space-y-1.5">
             {items.needsSource.map((s, i) => (
               <li key={i} className="rounded-lg border border-line px-3 py-2 text-sm text-ink"><LedgerText text={s} /></li>

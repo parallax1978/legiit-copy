@@ -172,7 +172,9 @@ export function chosenFromBrief(brief: OfferBrief): Record<string, Json> & { var
     premiums: [],
     guarantee: {
       denominated_text: brief.guarantee.text ?? "",
-      terms: brief.terms ?? "",
+      // the guarantee carries only its own sentence and days; the brief's billing, renewal and cancel terms reach the
+      // writer through the brief, for the page that takes payment (rule 16), never as the guarantee's terms
+      terms: "",
       days: brief.guarantee.days,
       costs_seller: brief.guarantee.denominated,
     },

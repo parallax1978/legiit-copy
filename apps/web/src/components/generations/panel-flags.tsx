@@ -62,6 +62,9 @@ export function FlagsPanel({ detail, current, canEdit, onApplied }: { detail: Ge
 function FlagCard({ flag, canEdit, onApplied }: { flag: FlagRow; canEdit: boolean; onApplied?: () => void }) {
   const [pending, start] = useTransition();
   const decided = flag.decision !== "pending";
+  // an engine fabrication is the one hard stop: it is fixed or dropped, never kept. Every other flag is the user's call,
+  // and keeping the line as written is the default (docs/04 §8.3)
+  const fab = flag.kind === "fabrication";
   const act = (decision: "keep" | "drop" | "rewrite") =>
     start(async () => {
       const res = await decideFlag(flag.id, decision);
@@ -70,7 +73,7 @@ function FlagCard({ flag, canEdit, onApplied }: { flag: FlagRow; canEdit: boolea
         return;
       }
       if (decision === "rewrite") {
-        toast.success(`Rewrite applied as version ${res.version}${res.replaced && res.replaced > 1 ? ` (${res.replaced} places)` : ""}`);
+        toast.success(`${fab ? "Fix" : "Rewrite"} applied as version ${res.version}${res.replaced && res.replaced > 1 ? ` (${res.replaced} places)` : ""}`);
         onApplied?.();
       } else toast.success(decision === "keep" ? "Kept as written" : "Marked to drop");
     });
@@ -87,15 +90,15 @@ function FlagCard({ flag, canEdit, onApplied }: { flag: FlagRow; canEdit: boolea
       {flag.rule && <p className="mt-1.5 text-xs text-ink-muted"><span className="font-medium text-ink">Rule:</span> <LedgerText text={flag.rule} /></p>}
       {flag.issue && <p className="mt-1 text-xs text-ink-muted"><span className="font-medium text-ink">Issue:</span> <LedgerText text={flag.issue} /></p>}
       {flag.suggested_rewrite && (
-        <div className="mt-2 rounded bg-good-soft/50 px-2.5 py-1.5 text-xs">
-          <span className="font-medium text-good">Rewritten line:</span> <LedgerText text={flag.suggested_rewrite} className="text-ink" />
+        <div className={cn("mt-2 rounded px-2.5 py-1.5 text-xs", fab ? "bg-good-soft/50" : "bg-surface-alt")}>
+          {fab ? <span className="font-medium text-good">Rewritten line:</span> : <span className="font-medium text-ink-muted">Suggested line:</span>} <LedgerText text={flag.suggested_rewrite} className="text-ink" />
         </div>
       )}
       {canEdit && !decided && (
         <div className="mt-2.5 flex flex-wrap gap-1.5">
-          <Button size="xs" variant="outline" disabled={pending} onClick={() => act("keep")}><Check className="h-3 w-3" /> Keep</Button>
+          {!fab && <Button size="xs" variant="default" disabled={pending} onClick={() => act("keep")}><Check className="h-3 w-3" /> Keep</Button>}
           {flag.suggested_rewrite && flag.quote && (
-            <Button size="xs" disabled={pending} onClick={() => act("rewrite")}>{pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Replace className="h-3 w-3" />} Apply rewrite</Button>
+            <Button size="xs" variant={fab ? "default" : "outline"} disabled={pending} onClick={() => act("rewrite")}>{pending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Replace className="h-3 w-3" />} {fab ? "Apply the fix" : "Use this rewrite"}</Button>
           )}
           <Button size="xs" variant="ghost" disabled={pending} onClick={() => act("drop")}><Trash2 className="h-3 w-3" /> Drop</Button>
         </div>
