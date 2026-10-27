@@ -14,7 +14,7 @@ import { z } from "zod";
 import { serviceClient, type Db } from "../../supabase/functions/_shared/supabase.ts";
 import type { Json } from "../../supabase/functions/_shared/database.types.ts";
 import { STEPS } from "../../supabase/functions/_shared/engine/steps/index.ts";
-import type { StepResult } from "../../supabase/functions/_shared/engine/steps/types.ts";
+import type { StepContext, StepResult } from "../../supabase/functions/_shared/engine/steps/types.ts";
 import { applyEffects, buildContext } from "../../supabase/functions/_shared/engine/context.ts";
 import { initialSteps, nextSteps, type PipelineState } from "../../supabase/functions/_shared/engine/pipeline.ts";
 import { MAX_STEP_ATTEMPTS, STEP_DEFAULTS, STEP_NAMES, type StepName } from "../../supabase/functions/_shared/engine/config.ts";
@@ -178,12 +178,22 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
   return { offerId: offer.id, hasActiveResearch, hasApprovedOffer: !!variantId, variantId, voiceId };
 }
 
+/**
+ * --module-prompts: the prompt modules' system text in place of the published rows, keeping each row's tuned model,
+ * effort and token budget (the worker runs with those); the version recorded is the module's.
+ */
+function useModulePrompts(ctx: StepContext): void {
+  ctx.promptVersions = Object.fromEntries(
+    Object.entries(ctx.promptVersions).map(([step, pv]) => [step, pv ? { ...pv, id: null, version: null, template: null } : pv]),
+  ) as unknown as StepContext["promptVersions"];
+}
+
 // ---------------------------------------------------------------- the runner (mirrors run-step)
 
 interface RunOpts {
   out: string;
   autoApprove: boolean;
-  /** run on the prompt modules in this checkout instead of the published prompt_versions rows (unpublished versions) */
+  /** run on the prompt modules in this checkout (unpublished versions) with the published rows' model, effort and budget */
   modulePrompts: boolean;
 }
 
@@ -197,7 +207,7 @@ async function runStepOnce(db: Db, generationId: string, step: StepName, opts: R
     await db.from("generations").update({ progress_message: m, current_step: step }).eq("id", generationId);
   };
   const ctx = await buildContext(db, generationId, attempt, progress);
-  if (opts.modulePrompts) ctx.promptVersions = {};
+  if (opts.modulePrompts) useModulePrompts(ctx);
   const row = must(
     await db.from("generation_steps").insert({ generation_id: generationId, workspace_id: ctx.generation.workspace_id, step, attempt, status: "running", started_at: new Date().toISOString() }).select("id").single(),
     "generation_steps insert",
@@ -216,7 +226,7 @@ async function runStepOnce(db: Db, generationId: string, step: StepName, opts: R
       log(`  [${step}] continues: ${result.continueLater.reason}`);
       const partial = saved ?? result.output;
       run = await buildContext(db, generationId, attempt, progress);
-      if (opts.modulePrompts) run.promptVersions = {};
+      if (opts.modulePrompts) useModulePrompts(run);
       run.partial = partial;
       saved = null;
       run.savePartial = async (p: unknown) => { saved = p; };
@@ -314,7 +324,7 @@ async function cmdRun(args: ReturnType<typeof parseArgs>) {
   requireEnv(["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "ANTHROPIC_API_KEY"]);
   const db = serviceClient();
   const opts: RunOpts = { out: String(args.out ?? `engine-out/${new Date().toISOString().replace(/[:.]/g, "-")}`), autoApprove: !!args["auto-approve"], modulePrompts: !!args["module-prompts"] };
-  if (opts.modulePrompts) log("prompts: the modules in this checkout, not the published prompt_versions rows");
+  if (opts.modulePrompts) log("prompts: the system text of the modules in this checkout, with the published rows' model, effort and token budget");
 
   let generationId: string;
   let first: StepName[];

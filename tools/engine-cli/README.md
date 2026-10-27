@@ -21,7 +21,7 @@ Once that lands, `deno task -c supabase/functions/deno.json engine <command>` is
 |---|---|
 | `run --brief <file.json> --format <id> [--out dir] [--workspace id] [--auto-approve] [--skip-offer]` | Creates an offer (brief, claims, config, optional dossier / approved offer / voice) and a generation in the workspace, then runs the pipeline step by step in the order `pipeline.ts` dictates, applying effects after each step exactly as the runner does. Writes every step output to the out dir. |
 | `run --generation <id> [--from <step>]` | Resumes an existing generation from a step (after a pause for offer approval, a failure, or to re-run reviews). |
-| `run ... --module-prompts` | Runs every step on the prompt modules in this checkout instead of the published `prompt_versions` rows, to test a version before it is published. The worker always uses the published rows. |
+| `run ... --module-prompts` | Runs every step on the system text of the prompt modules in this checkout instead of the published `prompt_versions` rows, keeping each row's tuned model, effort and token budget, to test a version before it is published. The worker always uses the published rows. |
 | `baseline --brief <file.json> --format <id> [--out dir] [--model id]` | One plain prompt ("write a <format> for this offer") on the drafter model, no pipeline, no ledger. Writes `baseline.md` for a blind comparison against `final.md`. |
 | `plan --format <id> [--items n] [--sequence type]` | Prints the draft call plan for a format (offline, no keys needed). `--sequence` picks the email-sequence roles (welcome, launch, abandoned_cart, post_purchase, win_back). |
 | `formats` | Lists the format specs the engine knows. |
