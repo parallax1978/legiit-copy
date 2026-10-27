@@ -505,7 +505,9 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
 
   const completedRows = history.filter((r) => r.status === "completed");
   const latestDraft = completedRows.filter((r) => r.step === "draft").at(-1);
-  const cycleStart = completedRows.filter((r) => r.step === "draft" || r.step === "revise").reduce<string | null>((m, r) => later(m, r.finished_at ?? r.created_at), null);
+  // a review cycle starts at the last draft, revision, tell edit or cold read: the reviews of this cycle come after
+  // all of them, so a retry from the tell edit or the cold read never counts the previous cycle's reviews
+  const cycleStart = completedRows.filter((r) => r.step === "draft" || r.step === "revise" || r.step === "tell_edit" || r.step === "cold_read").reduce<string | null>((m, r) => later(m, r.finished_at ?? r.created_at), null);
   const thisCycle = completedRows.filter((r) => isAfter(r.finished_at ?? r.created_at, cycleStart));
   const completed = Array.from(new Set(thisCycle.map((r) => r.step))) as StepName[];
   const revisionCycles = completedRows.filter((r) => r.step === "revise" && isAfter(r.finished_at ?? r.created_at, latestDraft?.finished_at ?? null)).length;
