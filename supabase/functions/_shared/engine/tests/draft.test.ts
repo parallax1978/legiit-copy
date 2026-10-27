@@ -8,6 +8,7 @@ import { meta_ad } from "../formats/specs/meta_ad.ts";
 import { google_rsa } from "../formats/specs/google_rsa.ts";
 import { webinar_package } from "../formats/specs/webinar_package.ts";
 import { vsl_long } from "../formats/specs/vsl_long.ts";
+import { organic_social } from "../formats/specs/organic_social.ts";
 import { DIRECT_LEADS, INDIRECT_LEADS, LEAD_IDS, leadTypesForAwareness, runnerUpLead } from "../draft/leads.ts";
 import { collectLedgerRefs, droppedClaimIds, droppedLedgerRefs, interrogate, needsSourceLines, normalizeQuote, quoteAppears, readerText, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { applyLeadPick, assembleDraft, orderSections, provisionalLeadSection, parseStoredDraft, toDraftEffect } from "../draft/assemble.ts";
@@ -25,6 +26,16 @@ const blk = (id: string, text: string, type: Block["type"] = "paragraph", items:
 const sec = (section_id: string, blocks: Block[], title: string | null = null): Section => ({ section_id, title, blocks });
 
 // ---------------------------------------------------------------- planning
+
+Deno.test("social post plan: the body first, then three hooks in their own call, no headline call", () => {
+  const plan = planDraft(organic_social);
+  assertEquals(plan.leadSectionId, "lead_in");
+  assertEquals(plan.headlineSectionId, null);
+  const last = plan.calls.at(-1)!;
+  assertEquals([last.kind, last.units.map((u) => u.id), last.maxWords], ["leads", ["lead_in"], 70 * 3]);
+  const ids = plan.calls.flatMap((c) => c.units.map((u) => u.id));
+  assertEquals(new Set(ids), new Set(organic_social.sections.map((s) => s.id)), "every section planned once");
+});
 
 Deno.test("sales letter plan: offer block first, grouped small sections, leads then headline last", () => {
   const plan = planDraft(sales_letter);
@@ -355,7 +366,7 @@ import { advertorial } from "../formats/specs/advertorial.ts";
 import { DRAFT_CALL_ESTIMATE_MS, runDraft } from "../steps/draft.ts";
 import { DraftPartial, planFingerprint } from "../draft/partial.ts";
 import type { callStep } from "../draft/step_util.ts";
-import type { DraftArgs } from "../prompts/draft.v4.ts";
+import { draftPrompt, type DraftArgs } from "../prompts/draft.v5.ts";
 import type { StepContext } from "../steps/types.ts";
 import type { DraftUnit } from "../draft/plan.ts";
 import { DraftOutput } from "../schemas/draft.ts";
@@ -414,6 +425,25 @@ function fakeCaller(made: string[], tick: () => void = () => {}): typeof callSte
     return Promise.resolve({ output: schema.parse(output), text: "", model: "fake-model", usage: { input_tokens: 0, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0, web_searches: 0 }, costUsd: 0, latencyMs: 0, stopReason: "end_turn", requestId: null, sources: [] });
   }) as typeof callStep;
 }
+
+Deno.test("draft step: a social post's three hooks get the hook instructions, not the long-lead speaker rule", async () => {
+  const made: string[] = [];
+  let leadsArgs: DraftArgs | null = null;
+  const base = fakeCaller(made);
+  const capture = ((c, step, mod, args, schema, purpose, over) => {
+    const a = args as unknown as DraftArgs;
+    if (a.call.kind === "leads") leadsArgs = a;
+    return base(c, step, mod, args, schema, purpose, over);
+  }) as typeof callStep;
+  const ctx = fakeCtx({ format: organic_social });
+  const result = await runDraft(ctx, { call: capture });
+  assertEquals(made.at(-1), "leads:lead_in");
+  assertEquals(DraftOutput.parse(result.output).leads?.length, 3);
+  const text = draftPrompt.user(ctx, leadsArgs!);
+  assert(text.includes("Each lead is a hook"), "hook instructions");
+  assert(!text.includes("the speaker identified by word 150"), "no long-lead speaker rule in a hook");
+  assert(text.includes("a number about the product's own output is proof for the next line, never the hook"));
+});
 
 Deno.test("draft step: a full run makes one call per group, saves a partial after every group, assembles the draft", async () => {
   const made: string[] = [];

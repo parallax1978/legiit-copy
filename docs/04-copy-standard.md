@@ -99,6 +99,8 @@ Diagnose the state per traffic segment. If the verbatims never contain the categ
 
 Direct leads: Offer, Promise, Problem-Solution. Indirect: Story, Proclamation, Secret; an indirect lead must be interesting on its own. Skeptical readers get an indirect lead even when aware. The lead is 300-600 words in long copy, ends on an open loop, names the mechanism at most, and identifies the speaker by word 150. Draft three leads of different type; cut from the top; cold-read; pick one and rewrite it.
 
+Hooks. Where the opening line is the whole lead (an organic social post, a TikTok or Reels script, a YouTube ad, a short VSL), write three hooks the same way: three reader hypotheses, three lead types, cold-read, pick one. The hook names the reader's need, or the belief the piece displaces, in the reader's own words, with a concrete specific from the reader's world. A number about the product's own output is the proof in the next line, never the hook. The speaker and the product wait for the body.
+
 ---
 
 ## 4. Proof placement
@@ -293,7 +295,7 @@ Google responsive search ads. 15 headlines of 30 characters: 3-4 keyword, 3-4 be
 
 Advertorial and native landing page. FTC label above the headline ("Ad," "Advertisement," "Paid Advertisement"); editorial headline; byline and date; scene or surprising fact with no pitch for 150-300 words; the usual fixes widened; mechanism; proof; the turn in the same voice; offer and links repeated in the last third. 800-1,800 words cold; 400-700 retargeting. Listicle variant: number matching the items, reasons escalating problem, mechanism, proof, offer. Musts: label on both pages; narrator exists. Must-nots: brand before word 250; "Promoted" or no label; "stuns," "reveals," "you won't believe"; synthetic before/after.
 
-Organic social. Five lines to earn "see more"; lead-in, main points, CTA; one idea; link in a comment; hook then rehook. Musts: a sales intent inside the story or opinion; CTA as verb, object, location. Must-nots: three ideas; "Thoughts?"; emoji bullets.
+Organic social. Five lines to earn "see more"; lead-in, main points, CTA; one idea; link in a comment; hook then rehook; three hooks, one picked (Section 3). Musts: a sales intent inside the story or opinion; CTA as verb, object, location. Must-nots: three ideas; "Thoughts?"; emoji bullets.
 
 Product description. Name plus benefit tag; a lead in the buyer's words; three to five bullets translating features to situations; proof line; specs in a separate block. 60-150 words for consumables; 150-400 for considered purchases. Musts: phrases checked against the review corpus. Must-nots: "Elevate your [category] experience"; "crafted with care"; superlatives without the proof line.
 

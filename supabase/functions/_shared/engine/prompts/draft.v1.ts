@@ -75,6 +75,12 @@ const SYSTEM = [
   `- Draft the sections in the order the request lists them; later sections may read the earlier ones.`,
 ].join("\n");
 
+/** A lead section shorter than the speaker rule's 150 words is a hook: the opening line does the lead's whole job. */
+function hookBand(args: DraftArgs): boolean {
+  const max = args.call.kind === "leads" ? args.call.units[0]?.maxWords ?? 0 : 0;
+  return max > 0 && max < 150;
+}
+
 function leadAssignment(args: DraftArgs): string {
   const rule = LEAD_RULES_BY_AWARENESS[args.awareness];
   const types = args.leadTypes ?? [];
@@ -82,7 +88,9 @@ function leadAssignment(args: DraftArgs): string {
     `Write THREE leads for this section, each a complete alternative, each on a different reader hypothesis and of a different lead type. The cold read on another model picks one; the runner-up becomes the split-test challenger.`,
     `Diagnosed awareness: ${args.awareness}${args.segment ? ` (segment: ${args.segment})` : ""}. Opening move for this state: ${rule.opening_move}. Product named: ${rule.product_named}. Do not: ${rule.do_not}.`,
     ...types.map((t, i) => `Lead ${LEAD_IDS[i]}: lead_type "${t}". Reader hypothesis: a specific reader from this segment, one sentence, built from the verbatims (who they are, what they have tried, what they believe now). The three hypotheses differ.`),
-    `Each lead: inside the section's band; cut from the top (the first sentence is already inside the story or the claim); the speaker identified by word 150; one claim a skeptic would doubt; the mechanism named at most, never explained; ends on an open loop that the body pays off; ledger tags on every fact.`,
+    hookBand(args)
+      ? `Each lead is a hook: inside the section's band; line one names the reader's need, or the belief the piece displaces, in the reader's own words, with a concrete specific from the reader's world (a number about the product's own output is proof for the next line, never the hook); one claim a skeptic would doubt; ends on an open loop that the body pays off; the speaker and the product wait for the body; ledger tags on every fact.`
+      : `Each lead: inside the section's band; cut from the top (the first sentence is already inside the story or the claim); the speaker identified by word 150; one claim a skeptic would doubt; the mechanism named at most, never explained; ends on an open loop that the body pays off; ledger tags on every fact.`,
     `Return {"leads":[{"id":"${LEAD_IDS[0]}","lead_type":"...","reader_hypothesis":"...","blocks":[...]}, ...three in total...],"ledger_refs_used":[...],"needs_source":[...]}. Block ids "${LEAD_IDS[0]}-1", "${LEAD_IDS[0]}-2", ... per lead.`,
   ].join("\n");
 }

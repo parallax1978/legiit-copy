@@ -5,6 +5,7 @@ import type { DraftRow, GenerationDetail } from "@/lib/data/generations";
 import { getFactual, getShip } from "./outputs";
 import { readDraftOutput } from "@/components/editor/markdown-blocks";
 import { Empty } from "./panel-argument";
+import { LedgerText } from "@/components/editor/ledger-chip";
 
 export interface AttentionItems {
   attention: string[];
@@ -42,7 +43,7 @@ export function AttentionPanel({ items, offerId }: { items: AttentionItems; offe
           <h3 className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-warn"><AlertTriangle className="h-3 w-3" /> Look at these before you use the copy</h3>
           <ul className="space-y-1.5">
             {items.attention.map((a, i) => (
-              <li key={i} className="rounded-lg border border-warn/30 bg-warn-soft/40 px-3 py-2 text-sm text-ink">{a}</li>
+              <li key={i} className="rounded-lg border border-warn/30 bg-warn-soft/40 px-3 py-2 text-sm text-ink"><LedgerText text={a} /></li>
             ))}
           </ul>
         </section>
@@ -53,7 +54,7 @@ export function AttentionPanel({ items, offerId }: { items: AttentionItems; offe
           <p className="mb-2 text-xs text-ink-muted">The writer needed these facts and your offer has no evidence for them yet. Add the evidence on the offer page and write the piece again, or cut the line.</p>
           <ul className="space-y-1.5">
             {items.needsSource.map((s, i) => (
-              <li key={i} className="rounded-lg border border-line px-3 py-2 text-sm text-ink">{s}</li>
+              <li key={i} className="rounded-lg border border-line px-3 py-2 text-sm text-ink"><LedgerText text={s} /></li>
             ))}
           </ul>
           {offerId && <Link href={`/app/offers/${offerId}?tab=ledger`} className="mt-2 inline-block text-xs font-medium text-brand-strong hover:underline">Open the claims ledger</Link>}

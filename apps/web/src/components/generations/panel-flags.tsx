@@ -8,7 +8,7 @@ import type { DraftRow, FlagRow, GenerationDetail } from "@/lib/data/generations
 import { decideFlag } from "@/lib/actions/generations";
 import { SeverityBadge } from "./status-badge";
 import { Empty } from "./panel-argument";
-import { LedgerChip } from "@/components/editor/ledger-chip";
+import { LedgerChip, LedgerText } from "@/components/editor/ledger-chip";
 
 const SOURCE_LABEL: Record<string, string> = { factual: "Factual and compliance", editorial: "Editorial", mechanical: "Mechanical", cold_read: "Cold read" };
 const SOURCE_ORDER = ["factual", "editorial", "mechanical", "cold_read"];
@@ -83,12 +83,12 @@ function FlagCard({ flag, canEdit, onApplied }: { flag: FlagRow; canEdit: boolea
         {flag.claim_id && <LedgerChip id={flag.claim_id} />}
         {decided && <span className="ml-auto rounded-full bg-surface-sunken px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-ink-muted">{flag.decision}</span>}
       </div>
-      {flag.quote && <q className="mt-2 block text-ink">{flag.quote}</q>}
-      {flag.rule && <p className="mt-1.5 text-xs text-ink-muted"><span className="font-medium text-ink">Rule:</span> {flag.rule}</p>}
-      {flag.issue && <p className="mt-1 text-xs text-ink-muted"><span className="font-medium text-ink">Issue:</span> {flag.issue}</p>}
+      {flag.quote && <q className="mt-2 block text-ink"><LedgerText text={flag.quote} /></q>}
+      {flag.rule && <p className="mt-1.5 text-xs text-ink-muted"><span className="font-medium text-ink">Rule:</span> <LedgerText text={flag.rule} /></p>}
+      {flag.issue && <p className="mt-1 text-xs text-ink-muted"><span className="font-medium text-ink">Issue:</span> <LedgerText text={flag.issue} /></p>}
       {flag.suggested_rewrite && (
         <div className="mt-2 rounded bg-good-soft/50 px-2.5 py-1.5 text-xs">
-          <span className="font-medium text-good">Rewritten line:</span> <span className="text-ink">{flag.suggested_rewrite}</span>
+          <span className="font-medium text-good">Rewritten line:</span> <LedgerText text={flag.suggested_rewrite} className="text-ink" />
         </div>
       )}
       {canEdit && !decided && (

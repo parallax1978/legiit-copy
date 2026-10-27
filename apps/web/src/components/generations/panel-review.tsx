@@ -5,6 +5,7 @@ import type { GenerationDetail } from "@/lib/data/generations";
 import { getColdRead, getEditorial, getMechanical, getShip } from "./outputs";
 import { PredictionBadge } from "./status-badge";
 import { Empty } from "./panel-argument";
+import { LedgerText } from "@/components/editor/ledger-chip";
 
 export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
   const editorial = getEditorial(detail.steps);
@@ -35,7 +36,7 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
           {editorial && !hasControl && (
             <p className="text-xs text-ink-soft">To get a head-to-head call, paste the copy you use today as &quot;Your current copy&quot; when you start a piece.</p>
           )}
-          {hasControl && (ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason) && <p className="text-sm text-ink-muted">{ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason}</p>}
+          {hasControl && (ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason) && <p className="text-sm text-ink-muted"><LedgerText text={ship?.prediction_reason ?? prediction?.reason ?? editorial?.prediction_reason ?? ""} /></p>}
           {prediction?.reported_result ? (
             <p className="rounded-lg bg-surface-alt px-3 py-2 text-xs text-ink-muted">
               <span className="font-medium text-ink">What actually happened:</span> {describeResult(prediction.reported_result)}
@@ -65,7 +66,7 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
                   <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-good">What works</div>
                   <ul className="space-y-1.5">
                     {editorial.what_works.map((w, i) => (
-                      <li key={i} className="text-sm"><q className="text-ink">{w.quote}</q> <span className="text-ink-muted">— {w.why}</span></li>
+                      <li key={i} className="text-sm"><q className="text-ink"><LedgerText text={w.quote} /></q> <span className="text-ink-muted">— <LedgerText text={w.why} /></span></li>
                     ))}
                   </ul>
                 </div>
@@ -74,7 +75,7 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
                 <div>
                   <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-muted">Do not touch</div>
                   <ul className="space-y-1 text-sm">
-                    {editorial.do_not_touch.map((d, i) => <li key={i} className="border-l-2 border-good pl-2 text-ink">{d}</li>)}
+                    {editorial.do_not_touch.map((d, i) => <li key={i} className="border-l-2 border-good pl-2 text-ink"><LedgerText text={d} /></li>)}
                   </ul>
                 </div>
               )}
@@ -93,7 +94,7 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
               {editorial.testable_disputes?.length > 0 && (
                 <details>
                   <summary className="cursor-pointer text-xs font-medium text-ink-muted hover:text-ink">{editorial.testable_disputes.length} testable dispute{editorial.testable_disputes.length === 1 ? "" : "s"}</summary>
-                  <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-ink-muted">{editorial.testable_disputes.map((d, i) => <li key={i}>{d}</li>)}</ul>
+                  <ul className="mt-2 list-disc space-y-1 pl-4 text-xs text-ink-muted">{editorial.testable_disputes.map((d, i) => <li key={i}><LedgerText text={d} /></li>)}</ul>
                 </details>
               )}
               {editorial.calibration && (
@@ -125,12 +126,12 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
             <KV k="The promise, one sentence" v={cold.promise_one_sentence} />
           </dl>
           {cold.attention_drop_line && (
-            <p className="rounded-lg bg-warn-soft/60 px-3 py-2 text-sm"><span className="text-[11px] font-semibold uppercase tracking-wide text-warn">Attention dropped at</span><br /><q className="text-ink">{cold.attention_drop_line}</q></p>
+            <p className="rounded-lg bg-warn-soft/60 px-3 py-2 text-sm"><span className="text-[11px] font-semibold uppercase tracking-wide text-warn">Attention dropped at</span><br /><q className="text-ink"><LedgerText text={cold.attention_drop_line} /></q></p>
           )}
           {cold.disbelieved_claim && (
-            <p className="rounded-lg bg-bad-soft/50 px-3 py-2 text-sm"><span className="text-[11px] font-semibold uppercase tracking-wide text-bad">Did not believe</span><br /><q className="text-ink">{cold.disbelieved_claim}</q></p>
+            <p className="rounded-lg bg-bad-soft/50 px-3 py-2 text-sm"><span className="text-[11px] font-semibold uppercase tracking-wide text-bad">Did not believe</span><br /><q className="text-ink"><LedgerText text={cold.disbelieved_claim} /></q></p>
           )}
-          {cold.lead_pick && <p className="text-xs text-ink-muted"><span className="font-medium text-ink">Lead pick:</span> {cold.lead_pick.chosen_lead_id} — {cold.lead_pick.reason}</p>}
+          {cold.lead_pick && <p className="text-xs text-ink-muted"><span className="font-medium text-ink">Lead pick:</span> {cold.lead_pick.chosen_lead_id} — <LedgerText text={cold.lead_pick.reason} /></p>}
         </section>
       )}
 
@@ -166,8 +167,8 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
                       <span className="font-medium text-ink">{f.tell}</span>
                       <span className="shrink-0 text-xs text-ink-muted">tier {f.tier} · ×{f.count}</span>
                     </div>
-                    {f.examples?.length > 0 && <p className="mt-1 text-xs text-ink-muted"><q>{f.examples[0]}</q>{f.examples.length > 1 ? ` and ${f.examples.length - 1} more` : ""}</p>}
-                    {f.fix && <p className="mt-1 text-xs text-ink"><span className="text-ink-muted">Fix:</span> {f.fix}</p>}
+                    {f.examples?.length > 0 && <p className="mt-1 text-xs text-ink-muted"><q><LedgerText text={f.examples[0]} /></q>{f.examples.length > 1 ? ` and ${f.examples.length - 1} more` : ""}</p>}
+                    {f.fix && <p className="mt-1 text-xs text-ink"><span className="text-ink-muted">Fix:</span> <LedgerText text={f.fix} /></p>}
                   </li>
                 ))}
               </ul>
@@ -197,9 +198,9 @@ function Heading({ icon, children }: { icon: React.ReactNode; children: React.Re
 function Note({ note }: { note: { quote: string; fails: string; do: string } }) {
   return (
     <div className="space-y-1 text-sm">
-      <q className="block text-ink">{note.quote}</q>
-      <p className="text-ink-muted"><span className="font-medium text-ink">Fails:</span> {note.fails}</p>
-      <p className="text-ink-muted"><span className="font-medium text-ink">Do:</span> {note.do}</p>
+      <q className="block text-ink"><LedgerText text={note.quote} /></q>
+      <p className="text-ink-muted"><span className="font-medium text-ink">Fails:</span> <LedgerText text={note.fails} /></p>
+      <p className="text-ink-muted"><span className="font-medium text-ink">Do:</span> <LedgerText text={note.do} /></p>
     </div>
   );
 }
@@ -209,7 +210,7 @@ function KV({ k, v }: { k: string; v: string | null | undefined }) {
   return (
     <div>
       <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">{k}</dt>
-      <dd className="text-ink">{v}</dd>
+      <dd className="text-ink"><LedgerText text={v} /></dd>
     </div>
   );
 }

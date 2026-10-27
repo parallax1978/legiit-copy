@@ -51,8 +51,8 @@ Deno.test("section bands and length bands are ordered and block types are valid"
   }
 });
 
-Deno.test("lead variants are 3 only for the four long formats", () => {
-  const three = new Set(["sales_letter", "vsl_long", "advertorial", "webinar_package"]);
+Deno.test("lead variants are 3 for the four long formats and the four hook formats", () => {
+  const three = new Set(["sales_letter", "vsl_long", "advertorial", "webinar_package", "organic_social", "tiktok_reels", "youtube_ad", "vsl_short"]);
   for (const spec of specs) assertEquals(spec.lead_variants, three.has(spec.id) ? 3 : 0, spec.id);
 });
 
@@ -68,6 +68,7 @@ Deno.test("every spec with three lead variants has a lead section, and lead_sect
   }
   assertEquals(FORMATS.webinar_package.lead_section_id, "presentation_open");
   assertEquals(FORMATS.vsl_long.lead_section_id, "lead");
+  assertEquals([FORMATS.organic_social.lead_section_id, FORMATS.tiktok_reels.lead_section_id, FORMATS.youtube_ad.lead_section_id, FORMATS.vsl_short.lead_section_id], ["lead_in", "line_one", "callout", "interrupt"]);
 });
 
 Deno.test("cadence floor is 0.50 for email, message and social formats and 0.70 elsewhere (human calibration)", () => {
