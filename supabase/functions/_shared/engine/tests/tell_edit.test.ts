@@ -406,3 +406,10 @@ Deno.test("applyEdits: a Title Case line can lose its owner words; a name the pi
   assert(/name/.test(r.rejected[0].reason), r.rejected[0].reason);
   assertEquals(r.units[3].text, "");
 });
+
+Deno.test("guardEdit: the count of a count windup may go; a counted fact may not", () => {
+  assertEquals(guardEdit("So for any keyword, I'd ask two things. Can my site beat these pages, and is the searcher a buyer?", "So for any keyword, I'd check whether my site can beat these pages and whether the searcher is a buyer."), null);
+  assertEquals(guardEdit("Two questions decide it.", ""), null);
+  assert(guardEdit("Setup takes three steps.", "Setup is quick."));
+  assert(guardEdit("We audited two sites.", "We audited the sites."));
+});

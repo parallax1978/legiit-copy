@@ -142,6 +142,7 @@ const QUOTE_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”|‘[^’\n]{1,600}’/g;
 const NUMBER_RE = /[$€£¥]?\d[\d,.:]*(?:%|\s?(?:x|k|m|bn|am|pm|a\.m\.|p\.m\.|days?|hours?|hrs?|minutes?|mins?|seconds?|weeks?|months?|years?|yrs?)\b)?/gi;
 /** Cardinal number words; "one", "half", "double" and ordinals are left out, they are mostly turns of phrase ("one thing", "double down"). */
 const NUMBER_WORD_RE = /\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|dozen)\b/gi;
+const COUNT_WINDUP_RE = /\b(?:two|three|four|five)\s+(?:things|questions|checks)\b/gi;
 const DATE_WORD_RE = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|May|June|July|August|September|October|November|December)\b/g;
 const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 const HOST_RE = /\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi;
@@ -223,7 +224,8 @@ export function guardEdit(before: string, after: string): string | null {
   if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after))) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
   if (!same(list(before, NUMBER_RE), list(after, NUMBER_RE))) return "a number, its unit or its currency changed, or numbers changed order";
-  if (!same(list(before, NUMBER_WORD_RE), list(after, NUMBER_WORD_RE))) return "a number written as a word changed";
+  // the count in a count windup ("I'd ask two things", "Two questions decide it") is the tell, not a fact, and may go
+  if (!same(list(before.replace(COUNT_WINDUP_RE, " "), NUMBER_WORD_RE), list(after.replace(COUNT_WINDUP_RE, " "), NUMBER_WORD_RE))) return "a number written as a word changed";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";
