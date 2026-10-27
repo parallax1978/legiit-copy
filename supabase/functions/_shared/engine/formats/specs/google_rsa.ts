@@ -9,10 +9,10 @@ export const google_rsa: FormatSpec = {
   id: "google_rsa",
   name: "Google responsive search ad",
   family: "ad",
-  description: "15 headlines of 30 characters in five shapes (3-4 keyword, 3-4 benefit with number, 2-3 proof, 2 offer or risk reversal, 2 CTA) and 4 descriptions of 90 characters, each a complete argument with a CTA. No two headlines share a shape and wording.",
+  description: "15 headlines of 30 characters in five shapes (3-4 keyword, 3-4 benefit naming the reader's result, 2-3 proof from the ledger or the reader's own test, 2 offer or risk reversal, 2 CTA) and 4 descriptions of 90 characters, each a complete argument with a CTA. No two headlines share a shape and wording.",
   length_band_words: [80, 160],
   sections: [
-    { id: "headlines", name: "15 headlines", job: "Fifteen 30-character assets Google can combine in any order: 3-4 keyword, 3-4 benefit with a number, 2-3 proof, 2 offer or risk reversal, 2 CTA", band_words: [45, 90], must: ["exactly 15", "each 30 characters or fewer", "3-4 keyword headlines", "3-4 benefit headlines with a number", "2-3 proof headlines with a ledger ID", "2 offer or risk-reversal headlines", "2 CTA headlines", "each stands alone in any position"], must_not: ["one headline shape", "repetition across headlines", "ALL CAPS", "exclamation marks (policy)"], block_types: ["headline"] },
+    { id: "headlines", name: "15 headlines", job: "Fifteen 30-character assets Google can combine in any order: 3-4 keyword, 3-4 benefit (the reader's result, with a number only when the ledger holds one), 2-3 proof (from the ledger, or the reader testing it on their own case), 2 offer or risk reversal, 2 CTA", band_words: [45, 90], must: ["exactly 15", "each 30 characters or fewer", "3-4 keyword headlines", "3-4 benefit headlines (the reader's result; a number only when the ledger holds one on the result, never a count of the product's parts)", "2-3 proof headlines (ledger proof with its ID, or the demonstration: \"Test It On Your Own Site\")", "2 offer or risk-reversal headlines", "2 CTA headlines", "each stands alone in any position"], must_not: ["one headline shape", "repetition across headlines", "ALL CAPS", "exclamation marks (policy)"], block_types: ["headline"] },
     { id: "descriptions", name: "4 descriptions", job: "Four 90-character complete arguments, each with its own CTA", band_words: [30, 70], must: ["exactly 4", "each 90 characters or fewer", "each a complete argument: claim, proof, CTA"], must_not: ["repetition", "a description that depends on a specific headline", "\"Click here\""], block_types: ["paragraph"] },
   ],
   draft_order: ["descriptions", "headlines"],
@@ -24,5 +24,5 @@ export const google_rsa: FormatSpec = {
   allow_caps: false,
   platform_limits: { headline_chars: 30, description_chars: 90, headlines: 15, descriptions: 4, path_chars: 15 },
   standard_section: "Google responsive search ads",
-  multi_item: { item_name: "asset", min: 19, max: 19, item_roles: ["headline_keyword", "headline_benefit_number", "headline_proof", "headline_offer_or_risk_reversal", "headline_cta", "description"] },
+  multi_item: { item_name: "asset", min: 19, max: 19, item_roles: ["headline_keyword", "headline_benefit", "headline_proof", "headline_offer_or_risk_reversal", "headline_cta", "description"] },
 };
