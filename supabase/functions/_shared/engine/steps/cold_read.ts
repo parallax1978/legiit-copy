@@ -10,7 +10,7 @@ import type { StepFn } from "./types.ts";
 import { ColdRead } from "../schemas/review.ts";
 import { STEP_DEFAULTS } from "../config.ts";
 import { coldReadPrompt, type ColdReadArgs } from "../prompts/cold_read.v1.ts";
-import { draftPrompt } from "../prompts/draft.v6.ts";
+import { draftPrompt } from "../prompts/draft.v7.ts";
 import { leadSectionId } from "../draft/plan.ts";
 import { readerText } from "../draft/ledger.ts";
 import { sectionsPlain } from "../draft/prompt_text.ts";

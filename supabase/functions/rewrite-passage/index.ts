@@ -43,7 +43,7 @@ Rules for the replacement:
 - Keep the thesis. If the instruction would break the thesis, make the smallest change that honors the instruction and set kept_thesis to false.
 - Every number, name, study, credential, quote, price, deadline or result must come from the ledger and carry its id inline as [[L:<claim-id>]] at the ledger's precision. Never invent any of these. If the instruction asks for a claim the ledger cannot support, write [[NEEDS SOURCE]] in its place and list it in needs_source.
 - Claim never bigger than its proof; proof within two sentences of the claim; no hedges on supported claims; no "may", "results vary" or generic disclaimers.
-- Keep the passage's job, tense, person and roughly its length unless the instruction says otherwise. Match the voice parameters when given. Write in plain, concrete, read-aloud English. No assistant register, no bold-label-colon bullets, no placeholders.
+- Keep the passage's job, tense, person and roughly its length unless the instruction says otherwise. Match the voice parameters when given. Write in plain, concrete, read-aloud words, in the passage's own language. No assistant register, no bold-label-colon bullets, no placeholders.
 - Fragments, caps, exclamation marks and ellipses are allowed at the rates the surrounding copy uses.
 - Follow the owner's tells and words below, as patterns: no em dash, emoji or hashtag, none of the tells or words. If removing one would make the sentence worse, rewrite the sentence so it reads well and still loses the tell.
 
