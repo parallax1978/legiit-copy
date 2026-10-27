@@ -9,6 +9,7 @@ import { parseStoredDraft } from "../draft/assemble.ts";
 import { runnerUpLead } from "../draft/leads.ts";
 import { userAttention } from "../draft/review.ts";
 import { stepOutput } from "../draft/step_util.ts";
+import { MAX_REVISION_CYCLES } from "../config.ts";
 
 export const shipStep: StepFn = async (ctx) => {
   const latest = ctx.latestDraft;
@@ -41,7 +42,7 @@ export const shipStep: StepFn = async (ctx) => {
     test_variable: challenger ? "lead" : null,
     prediction: editorial?.prediction ?? "unsure",
     prediction_reason: editorial?.prediction_reason ?? "no editorial verdict was recorded for this generation",
-    user_attention: userAttention({ editorial, factual, mechanical, pendingFlags, needsSource: draft?.needs_source ?? [], openQuestions }),
+    user_attention: userAttention({ editorial, factual, mechanical, pendingFlags, needsSource: draft?.needs_source ?? [], openQuestions, finalPass: ctx.revisionCycles > MAX_REVISION_CYCLES }),
   });
 
   const n = out.user_attention.length;

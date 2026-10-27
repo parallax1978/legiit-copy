@@ -622,6 +622,49 @@ export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: Form
   return out;
 }
 
+/** Ledger rows whose wording the copy keeps as written: prices, the trial, the deadline, a free tier and the market's verbatims. */
+const EXACT_WORDING_TYPES = new Set(["price_discount", "continuity_trial", "scarcity_urgency", "free", "audience_language"]);
+/** Words in a row copied from a ledger row before it is the row's wording, not the speaker's. */
+const LEDGER_RUN = 7;
+
+function longestCommonRun(a: string[], b: string[]): string[] {
+  let best = 0, end = 0;
+  let prev = new Array<number>(b.length + 1).fill(0);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = new Array<number>(b.length + 1).fill(0);
+    for (let j = 1; j <= b.length; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        cur[j] = prev[j - 1] + 1;
+        if (cur[j] > best) [best, end] = [cur[j], i];
+      }
+    }
+    prev = cur;
+  }
+  return a.slice(end - best, end);
+}
+
+/**
+ * Lines that copy a ledger row's wording, seven words or more in a row (rule 11: a row is the fact, not the wording),
+ * as findings for the editor on the text that copies. Prices, the trial, the deadline, verbatims and the user's
+ * accepted wording ("rewrite") stay as written; so does a guarantee outside a short piece (a page repeats its sentence).
+ */
+export function ledgerWordingFindings(units: EditUnit[], claims: { id: string; claim_type: string; claim_text: string; user_decision: string | null }[], spec: FormatSpec): { ref: string; tell: string; example: string }[] {
+  const exact = (c: { claim_type: string }) => EXACT_WORDING_TYPES.has(c.claim_type) || (c.claim_type === "guarantee" && !REPEAT_FAMILIES.has(spec.family));
+  const rows = claims.filter((c) => c.claim_text && c.user_decision !== "drop" && c.user_decision !== "rewrite" && !exact(c)).map((c) => ({ id: c.id, words: runWords(c.claim_text) }));
+  const out: { ref: string; tell: string; example: string }[] = [];
+  for (const u of units) {
+    if (u.type === "testimonial") continue;
+    const w = runWords(u.text);
+    let longest: string[] = [];
+    for (const r of rows) {
+      const run = longestCommonRun(w, r.words);
+      if (run.length > longest.length) longest = run;
+    }
+    if (longest.length >= LEDGER_RUN) out.push({ ref: u.ref, tell: "ledger_wording", example: `"${longest.join(" ")}" copies a ledger row's wording; say the fact the way you would to one reader, its numbers and tag kept` });
+  }
+  return out;
+}
+
 /** The piece's sentence-length variation when it runs flat against the format's floor (§7.1 "vary sentence length"), else null. */
 export function flatCadence(draft: DraftOutput, spec: FormatSpec): { cv: number; floor: number } | null {
   // the piece as the reader sees it: the lead section carries the chosen (or provisional) lead

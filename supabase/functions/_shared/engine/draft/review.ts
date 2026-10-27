@@ -300,6 +300,8 @@ export interface AttentionInput {
   pendingFlags: { source: string; severity: string; quote: string | null; issue: string | null }[];
   needsSource: string[];
   openQuestions: string[];
+  /** the copy shipped after a final revision that applied the last review's notes and was checked, not reviewed again */
+  finalPass?: boolean;
 }
 
 /** What the user must look at before shipping: unresolved fatal/high flags, NEEDS SOURCE lines, open questions. */
@@ -323,9 +325,14 @@ export function userAttention(input: AttentionInput): string[] {
   }
   if (input.pendingFlags.length === 0) {
     if (input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
-      // A rejection at a gate blocks; a "revise" note after the last revision pass is advice, not a blocker.
-      const label = input.editorial.verdict === "REJECT" ? "Fix first" : "Worth fixing";
-      push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} (line: "${input.editorial.one_thing.quote}")`);
+      if (input.finalPass) {
+        // the last review's main note went into the final revision, which no reviewer read again: worth a look
+        push(`Check this (copy chief): the last revision worked on this note, and nobody reviewed it again: ${input.editorial.one_thing.fails}`);
+      } else {
+        // A rejection at a gate blocks; a "revise" note after the last revision pass is advice, not a blocker.
+        const label = input.editorial.verdict === "REJECT" ? "Fix first" : "Worth fixing";
+        push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} (line: "${input.editorial.one_thing.quote}")`);
+      }
     }
     for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} (line: "${f.quote}")`);
     for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`Fix first (tell check): ${r}`);

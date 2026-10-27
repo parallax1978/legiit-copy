@@ -375,6 +375,27 @@ export const TELLS: TellRule[] = [
     note: "The \"was never\" reveal the owner rejected (\"The keyword was never your competition.\"): the reader's belief recast as a mistake in a line built to be quoted (§7.1 tell 8 and structure). Under 1% of human sales pages, none of the human posts or emails.",
   },
   {
+    tier: 1, name: "aphorism_reframe", weight: 4, scope: "all", owner: { tell: 8 },
+    regex: /\b(?:every|each) (?:one|\w+) (?:is|was) (?:a|an|one) (?:\w+ ){0,2}(?:you|that|nobody|no one) (?:don['’]t|didn['’]t|never|won['’]t|can['’]t|will never)\b/gi,
+    example: "Every skip is a page you don't pay a writer for.",
+    fix: "Say what happens plainly: \"A skip means no writer gets paid for that page.\"",
+    note: "A reframe written as an aphorism (§7.1 tell 8 and structure): each X recast as a Y the reader does not lose. None of 895 human posts, emails and pages.",
+  },
+  {
+    tier: 1, name: "bare_credential", weight: 4, scope: "paragraph", owner: {},
+    regex: /^(?:I['’]m|I am) (?:the |a |an )?(?:[A-Z][\w'’]+['’]s )?(?:co-?)?(?:founder|ceo|owner|creator|president|director)(?: of [A-Z][\w'’ ]{0,30})?\s*\.$|^I (?:founded|started|built|run|own) [A-Z][\w'’]+(?: [A-Z][\w'’]+)?\s*\.$/g,
+    example: "I'm Legiit's founder.",
+    fix: "Put the credential in the sentence that says why it matters: \"I founded Legiit, and I stopped letting volume pick pages.\"",
+    note: "A credential as a paragraph of its own (§7.1 structure, the feed's AI cadence): it says who is talking and never why to listen. None of 895 human posts, emails and pages.",
+  },
+  {
+    tier: 1, name: "slogan_couplet", weight: 4, scope: "structural", owner: {},
+    regex: null,
+    example: "A keyword tool settles neither. … Legiit Keywords settles both.",
+    fix: "Say what the product does that the other does not, plainly, once.",
+    note: "§7.1 structure (a slogan couplet): a line with \"neither\", \"nothing\" or \"none\" answered a few lines later by the same verb with \"both\", \"everything\" or \"all\". Scanned across the paragraphs of one piece. None of 895 human posts, emails and pages.",
+  },
+  {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
       `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]["”’)]?\\s+)The truth is\\b`,
@@ -1116,6 +1137,35 @@ function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] 
   return Array.from(best.entries()).sort(([a], [b]) => a - b).map(([, p]) => ({ later: p.later, first: p.first, run: p.run }));
 }
 
+/** "A keyword tool settles neither. … Legiit Keywords settles both.": the same verb answered across a few lines of one piece. */
+const SLOGAN_COUPLET_RE = /\b(\w{3,}) (?:neither|nothing|none)\b[\s\S]{0,320}?\b\1 (?:both|everything|all)\b/gi;
+
+function sloganCouplets(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[]): { found: string[]; perText: number[] } {
+  const perText = units.map(() => 0);
+  const found: string[] = [];
+  const byPiece = new Map<string, number[]>();
+  units.forEach((u, i) => {
+    if (u.kind === "display" || REPEAT_SKIP.has(u.type)) return;
+    byPiece.set(pieces[i], [...(byPiece.get(pieces[i]) ?? []), i]);
+  });
+  for (const idx of byPiece.values()) {
+    // the piece's prose joined, with where each text starts, so a hit lands on the text that answers the first line
+    let joined = "";
+    const starts: number[] = [];
+    for (const i of idx) {
+      starts.push(joined.length);
+      joined += blankQuotes(units[i].text) + "\n\n";
+    }
+    for (const m of joined.matchAll(new RegExp(SLOGAN_COUPLET_RE.source, SLOGAN_COUPLET_RE.flags))) {
+      const end = (m.index ?? 0) + m[0].length;
+      const k = starts.findLastIndex((st) => st < end);
+      perText[idx[Math.max(0, k)]] += 1;
+      found.push(m[0].replace(/\s+/g, " ").slice(0, 120));
+    }
+  }
+  return { found, perText };
+}
+
 /** Sentences of a text: split after terminal punctuation followed by a space, so "$19.99" and "legiit.com" stay whole. */
 function sentencesOf(text: string): string[] {
   return text.replace(/\n+/g, " ").split(/(?<=[.!?…]["”’)]?)\s+/).map((x) => x.trim()).filter(Boolean);
@@ -1233,7 +1283,8 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
-  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText]]);
+  const couplets = sloganCouplets(ownerUnits, pieces);
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText]]);
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -1258,6 +1309,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
         break;
       case "repeated_phrase":
         hit = { rule, count: repeats.perText.reduce((a, b) => a + b, 0), examples: trimExamples(repeats.found) };
+        break;
+      case "slogan_couplet":
+        hit = { rule, count: couplets.perText.reduce((a, b) => a + b, 0), examples: trimExamples(couplets.found) };
         break;
       case "self_posed_question_header": {
         hit = scanRegex(rule, bodyTexts);

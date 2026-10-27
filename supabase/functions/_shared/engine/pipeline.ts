@@ -39,17 +39,24 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
     case "draft":
       return ["tell_edit"];
     case "tell_edit":
-      // every draft and revision passes the owner's tell edit before the cold read (docs/04 §7.1)
-      return ["cold_read"];
+      // every draft and revision passes the owner's tell edit before the cold read (docs/04 §7.1); the final revision,
+      // which applies the last review's notes, is checked for facts and tells instead of reviewed again
+      return s.revisionCycles > MAX_REVISION_CYCLES ? ["mechanical", "factual"] : ["cold_read"];
     case "cold_read":
       return ["editorial", "mechanical", "factual"];
     case "editorial":
     case "mechanical":
     case "factual": {
+      if (s.revisionCycles > MAX_REVISION_CYCLES) {
+        // the final pass: the last review's notes are in; it ships once the facts and the mechanics are checked
+        return (["mechanical", "factual"] as StepName[]).every((x) => s.completed.includes(x)) ? ["ship"] : [];
+      }
       const all = (["editorial", "mechanical", "factual"] as StepName[]).every((x) => s.completed.includes(x));
       if (!all) return [];
       const clean = s.editorialVerdict === "APPROVE" && !s.mechanicalHardFail && !s.factualFatal;
-      if (clean || s.revisionCycles >= MAX_REVISION_CYCLES) return ["ship"];
+      if (clean) return ["ship"];
+      // up to three revisions are reviewed again; after the last review one more revision applies its notes, so the
+      // copy chief's last objection is never shipped unaddressed
       return ["revise"];
     }
     case "revise":

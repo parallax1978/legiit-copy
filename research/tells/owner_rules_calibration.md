@@ -102,3 +102,12 @@ The step and reason counts moved out of label_windup into count_windup, which co
 secrets, a VSL's plan and a listicle's numbered reasons are the structure those formats ask for. Its colon must be
 a label's (not a clock's, a ratio's or a link's), and a digit count only counts after a determiner or at a sentence
 start. The round-2 post (8253478d, v9) now scores 3 owner tells and fails the first-comment length gate (63 words).
+
+## Round 4: aphorism_reframe, bare_credential, slogan_couplet (2026-10-27)
+
+None of the 895 human posts, emails, sales pages, opt-ins and letters has any of the three:
+"every skip is a page you don't pay a writer for" (a reframe written as an aphorism), "I'm Legiit's founder." as a
+paragraph of its own, and a "settles neither" line answered by "settles both" within a few lines of one piece. The
+round-3 post (9e7df31c, v9) has all three and now fails the stack; its two lines lifted from ledger rows ("links to the
+ranking pages it read and the backlink check behind it", "two thousand keywords with scores, a difficulty number to
+interpret") are handed to the tell edit as ledger_wording findings (seven or more words in a row from a row).

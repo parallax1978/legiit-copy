@@ -10,10 +10,10 @@
  */
 import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v7.ts";
+import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v8.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
@@ -74,6 +74,22 @@ function dedupe(lines: string[]): string[] {
   return out;
 }
 
+/**
+ * The points of a short piece still made by two or more lines that stand word for word: the editor mapped them and
+ * left them. A line in a text with a ledger tag is the proof and may stay; the others are the ones to change.
+ */
+function pointsLeft(points: TellEditPoint[], after: EditUnit[], short: boolean): TellEditPoint[] {
+  if (!short) return [];
+  return points.filter((p) => {
+    const standing = p.lines.filter((l) => {
+      const u = after.find((x) => x.ref === refOf(l.ref));
+      return !!u && u.type !== "testimonial" && has(u.text, l.line);
+    });
+    const untagged = standing.filter((l) => !/\[\[(?:L:|NEEDS SOURCE)/.test(after.find((x) => x.ref === refOf(l.ref))?.text ?? ""));
+    return standing.length >= 2 && untagged.length >= 1;
+  });
+}
+
 export async function runTellEdit(ctx: StepContext, deps: { call: typeof callStep; now?: () => number }): Promise<StepResult<TellEditOutput | TellEditPartial>> {
   const now = deps.now ?? Date.now;
   const spec = ctx.format;
@@ -129,7 +145,10 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const refs = new Set(groups[gi].map((u) => u.ref));
     const mine = () => units.filter((u) => refs.has(u.ref));
     // the checker's list for this group: each text's own tells, and what the whole piece says twice
-    const findingsFor = (all: EditUnit[]) => [...unitFindings(all.filter((u) => refs.has(u.ref)), spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref))];
+    const findingsFor = (all: EditUnit[]) => {
+      const mine = all.filter((u) => refs.has(u.ref));
+      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
+    };
     const args: TellEditArgs = {
       draft: source,
       units: mine(),
@@ -152,8 +171,10 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     // one more ask, when time allows, for edits the guards refused (more than a stray) and for lines the editor listed
     // as tells and left without an edit that landed
     let left = leftUnedited(listed, unitsBefore, r.units, auditOpts);
+    const mapped = (res.output.points ?? []).map((p) => ({ ...p, lines: p.lines.filter((l) => refs.has(refOf(l.ref))) })).filter((p) => p.lines.length > 1);
+    let pointsOpen = pointsLeft(mapped, r.units, auditOpts.short);
     const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
-    if ((refusedMany || left.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
+    if ((refusedMany || left.length || pointsOpen.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = [
         refusedMany ? `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}` : "",
         left.length ? `You listed these lines and left them as they were; give each one its edit (say the plain specific thing, or cut it where a cut is allowed), or keep it only if it carries a fact the piece needs:\n${left.slice(0, 12).map((x) => {
@@ -161,6 +182,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
           const opening = units.find((u) => u.ref === refOf(x.ref))?.owner === "lead";
           return `- [${refOf(x.ref)}] (${x.kind}) "${x.line}"${opening ? " (an opening: rephrase it, never cut it whole)" : ""}${refused.length ? `; refused before: ${Array.from(new Set(refused)).join("; ")}` : ""}`;
         }).join("\n")}` : "",
+        pointsOpen.length ? `These points are still made by more than one line; keep the strongest line of each (a line with a ledger tag is the proof) and cut the others, or rewrite each so it adds something the first did not:\n${pointsOpen.slice(0, 8).map((p) => `- ${p.point}: ${p.lines.map((l) => `[${refOf(l.ref)}] "${l.line}"`).join("; ")}`).join("\n")}` : "",
         `Return edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`,
       ].filter(Boolean).join("\n");
       try {
@@ -173,13 +195,14 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         // a line the retry kept on purpose is kept; one it left again is reported
         const keptNow = (retry.output.audit ?? []).filter((x) => x.keep);
         left = leftUnedited(left, unitsBefore, again.units, auditOpts).filter((x) => !keptNow.some((k) => refOf(k.ref) === refOf(x.ref) && (has(k.line, x.line) || has(x.line, k.line))));
+        pointsOpen = pointsLeft(pointsOpen, again.units, auditOpts.short);
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
         console.warn("tell edit retry failed:", e instanceof Error ? e.message : e);
       }
     }
     units = r.units;
-    auditLeft.push(...left);
+    auditLeft.push(...left, ...pointsOpen.flatMap((p) => p.lines.map((l) => ({ ref: refOf(l.ref), line: l.line, kind: "said_again" as const, keep: false }))));
     applied.push(...r.applied.map((e) => ({ ...e, by: "editor" as const })));
     rejected.push(...r.rejected);
     alreadyClean = alreadyClean && res.output.already_clean && r.applied.length === 0;

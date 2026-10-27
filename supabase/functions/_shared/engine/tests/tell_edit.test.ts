@@ -7,10 +7,10 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v7.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v8.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -313,7 +313,7 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 import { draftPrompt } from "../prompts/draft.v11.ts";
 import { revisePrompt } from "../prompts/revise.v10.ts";
 import { editorialPrompt } from "../prompts/editorial.v11.ts";
-import { factualPrompt } from "../prompts/factual.v8.ts";
+import { factualPrompt } from "../prompts/factual.v9.ts";
 import offerPrompt from "../prompts/offer.v10.ts";
 import intakePrompt from "../prompts/intake.v8.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
@@ -334,13 +334,13 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 8, 7, 10, 8]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 9, 8, 10, 8]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
   assert(editorialPrompt.system.includes("a direction never asks for the product's steps to be listed or counted"));
   for (const t of ["say each point once", "It takes seven steps."]) assert(OWNER_TELLS.includes(t), t);
-  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece", "\"audit\" comes first", "In a short piece (organic social", "a code and URL said twice"]) assert(tellEditPrompt.system.includes(t), t);
+  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece", "\"points\" comes first", "\"audit\" comes next", "In a short piece (organic social", "a code and URL said twice", "settles both", "goes into the sentence that says why it matters"]) assert(tellEditPrompt.system.includes(t), t);
   // round 3: a ledger row is the fact, a verbatim the substance; the proof in the promise's terms
   assert(RULES.includes("A ledger row is the fact, not the wording"));
   assert(RULES.includes("never uses its survey wording"));
@@ -674,4 +674,41 @@ Deno.test("round 3 review: a listed line is reached when its words changed; a ta
   });
   assertEquals(calls, 1, "no retry: every listed line changed, and the tagged proof is not asked about");
   assertEquals(TellEditOutput.parse(res.output).audit_left, []);
+});
+
+Deno.test("round 4: a line that copies a ledger row's wording is handed to the editor; prices and accepted wording stay", () => {
+  const unit = (ref: string, text: string): EditUnit => ({ ref, owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text });
+  const claims = [
+    { id: A, claim_type: "feature", claim_text: "Every build, improve or skip decision links to the ranking pages it read and the backlink check behind it.", user_decision: null },
+    { id: B, claim_type: "price_discount", claim_text: "$1 today for 7 days, one site plan included. Then Pro is $59 a month.", user_decision: null },
+  ];
+  const units = [unit("m-1", `Each call links to the ranking pages it read and the backlink check behind it [[L:${A}]].`), unit("m-2", `$1 today for 7 days, one site plan included. Then Pro is $59 a month [[L:${B}]].`)];
+  const found = ledgerWordingFindings(units, claims, FORMATS.organic_social);
+  assertEquals(found.map((f) => f.ref), ["m-1"]);
+  assertEquals(ledgerWordingFindings(units, [{ ...claims[0], user_decision: "rewrite" }], FORMATS.organic_social), []);
+});
+
+Deno.test("round 4: a point the editor mapped to two lines and left gets one more ask", async () => {
+  const spec = FORMATS.organic_social;
+  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page because it had the biggest volume.", "hook"), blk("lead_in-2", "Both happen when you let a traffic estimate pick the page.")]), sec("main", [blk("main-1", "Volume picked the page, and the page never ranked.")]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  let calls = 0;
+  const res = await runTellEdit(ctxFor(draft), {
+    call: editor((args) => {
+      calls++;
+      if (calls === 1) {
+        return {
+          points: [{ point: "volume picks the wrong page", lines: [{ ref: "lead_in-2", line: "Both happen when you let a traffic estimate pick the page." }, { ref: "main-1", line: "Volume picked the page, and the page never ranked." }] }],
+          audit: [],
+          edits: [],
+          what_changed: [],
+          already_clean: false,
+        };
+      }
+      assert(args.retryNote?.includes("These points are still made by more than one line") && args.retryNote.includes("volume picks the wrong page"), args.retryNote ?? "");
+      return { points: [], audit: [], edits: [{ ref: "lead_in-2", before: "Both happen when you let a traffic estimate pick the page.", after: "", tell: "said again" }], what_changed: ["Cut a line that said the hook again"], already_clean: false };
+    }),
+  });
+  assertEquals(calls, 2);
+  const text = JSON.stringify(res.effects!.newDraft!.blocks);
+  assert(!text.includes("traffic estimate pick"), text);
 });

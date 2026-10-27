@@ -26,7 +26,12 @@ describe("engine modules used by the web app", () => {
     const done = { hasActiveResearch: true, hasApprovedOffer: true, completed: ["editorial", "mechanical", "factual"] as const, revisionCycles: 0 };
     expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "APPROVE" })).toEqual(["ship"]);
     expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE" })).toEqual(["revise"]);
-    expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE", revisionCycles: MAX_REVISION_CYCLES })).toEqual(["ship"]);
+    // after the last reviewed revision, one more applies the last review's notes; it is checked, not reviewed, then ships
+    expect(nextSteps("factual", { ...done, completed: [...done.completed], editorialVerdict: "REVISE", revisionCycles: MAX_REVISION_CYCLES })).toEqual(["revise"]);
+    const final = { ...done, completed: [] as ("mechanical" | "factual")[], revisionCycles: MAX_REVISION_CYCLES + 1 };
+    expect(nextSteps("tell_edit", final)).toEqual(["mechanical", "factual"]);
+    expect(nextSteps("mechanical", { ...final, completed: ["mechanical"] })).toEqual([]);
+    expect(nextSteps("factual", { ...final, completed: ["mechanical", "factual"], editorialVerdict: "REJECT" })).toEqual(["ship"]);
   });
   it("renders blocks to markdown and strips ledger tags", () => {
     const md = renderMarkdown({ sections: [{ section_id: "s", title: null, blocks: [{ id: "1", type: "headline", text: "Hello [[L:abc12345]]", items: null, meta: null }] }] });

@@ -19,8 +19,17 @@ export const TellEditAuditItem = z.object({
 });
 export type TellEditAuditItem = z.infer<typeof TellEditAuditItem>;
 
-/** What one tell edit call returns: the audit first, then the edits that answer it. */
+/** One point a short piece makes, with every line that makes it (tell edit v8): a point made twice keeps one line. */
+export const TellEditPoint = z.object({
+  point: z.string().describe("the point, in a few words"),
+  lines: z.array(z.object({ ref: z.string(), line: z.string().describe("the line, copied from that text") })),
+});
+export type TellEditPoint = z.infer<typeof TellEditPoint>;
+
+/** What one tell edit call returns: the point map and the audit first, then the edits that answer them. */
 export const TellEditCall = z.object({
+  // a short piece's points, each with the lines that make it; empty for a long piece
+  points: z.array(TellEditPoint).default([]),
   // the native structured output marks it required; the default keeps a reply without one (an older version) valid
   audit: z.array(TellEditAuditItem).default([]),
   edits: z.array(TellEditEdit),

@@ -1057,3 +1057,17 @@ Deno.test("round 3 review: a cold email's follow-up is its own email; the first 
   ], FORMATS.organic_social);
   assertEquals(social.hard_fail_reasons.filter((r) => r.includes("first_comment_words")), []);
 });
+
+Deno.test("round 4: the aphorism reframe, the bare credential and the slogan couplet", () => {
+  const post = (paras: string[]) => analyzeDraft([section("main", paras.map((p) => block("paragraph", p))), section("cta", [block("cta", "Comment PLAN and I'll send the link.")])], FORMATS.organic_social);
+  const r = post([
+    "A keyword tool settles neither. Ahrefs and Semrush hand you the list and leave that call to you.",
+    "Legiit Keywords settles both. For each group it checks whether your backlinks can pass the pages ranking now.",
+    `I'm Legiit's founder [[L:${"0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e"}]].`,
+    "That's the call I care about most, because every skip is a page you don't pay a writer for.",
+  ]);
+  for (const t of ["slogan_couplet", "bare_credential", "aphorism_reframe"]) assert(tells(r, t), `${t}: ${r.flags.map((f) => f.tell).join(",")}`);
+  // a credential inside a sentence that says why it matters, and plain counts of what something is, pass
+  const ok = post(["I founded Legiit, and I stopped letting volume pick pages.", "Each page is a brief you can hand to a writer.", "Neither tool shows you the pages that rank. Both show volume."]);
+  for (const t of ["slogan_couplet", "bare_credential", "aphorism_reframe"]) assertEquals(tells(ok, t), undefined, t);
+});

@@ -305,3 +305,12 @@ Deno.test("offer block: a post states the offer in one line and leaves the guara
   const page = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.sales_letter);
   assert(page.includes("guarantee (repeat this sentence)") && page.includes("plan payments are not refundable"));
 });
+
+Deno.test("ship after the final revision: the last review's note is listed as applied and not reviewed again", () => {
+  const editorial = { verdict: "REVISE", reject_gate: null, one_thing: { quote: "two of its first three pages are espresso bean subscription pages", fails: "Rules 1 and 9: the proof is search volume.", do: "Cut the volume figures." } } as unknown as Parameters<typeof userAttention>[0]["editorial"];
+  const base = { editorial, factual: null, mechanical: null, pendingFlags: [], needsSource: [], openQuestions: [] };
+  assert(userAttention(base)[0].startsWith("Worth fixing (copy chief)"));
+  const after = userAttention({ ...base, finalPass: true });
+  assert(after[0].startsWith("Check this (copy chief): the last revision worked on this note, and nobody reviewed it again"), after[0]);
+  assert(!after[0].includes("(line:"), "the quoted line may be gone after the final revision");
+});
