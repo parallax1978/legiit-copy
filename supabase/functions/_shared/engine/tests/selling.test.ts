@@ -129,12 +129,18 @@ Deno.test("promise guard: the head is the result noun; a feature line never stan
     ["a full calendar of paying clients", "calendar"],
     ["pages that rank and pay for themselves", "page"],
     ["more customers", "custom"],
+    // a relative clause with no "that" ends the head phrase too (the round-6 promise)
+    ["rankings you can actually win, on keywords that bring paying customers", "rank"],
+    ["customers your site already gets", "custom"],
+    ["first-page rankings on searches where the pages you must beat are weak", "rank"],
+    ["your site's rankings", "rank"],
   ];
   for (const [p, head] of heads) assertEquals(promiseStems(p).values().next().value, head, p);
   assert(statesPromise("Search sends you customers, week after week.", promiseStems("more paying customers from search")));
   assert(!statesPromise("The tool shows you which searches pay.", promiseStems("more paying customers from search")));
   assert(statesPromise("Your calendar stays booked.", promiseStems("a fully booked calendar")));
   assert(statesPromise("You sign new clients every month.", promiseStems("10 new clients a month")));
+  assert(statesPromise("You rank on keywords that bring paying customers.", promiseStems("rankings you can actually win, on keywords that bring paying customers")));
   // a promise of one stem is stated by its one stem
   assert(statesPromise("More customers find you.", promiseStems("more customers")));
 

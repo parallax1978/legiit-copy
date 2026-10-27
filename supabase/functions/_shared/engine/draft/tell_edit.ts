@@ -580,8 +580,11 @@ function promiseStem(word: string): string {
   return w.length > 3 && /([b-df-hj-np-tv-z])\1$/.test(w) ? w.slice(0, -1) : w;
 }
 
-/** Words that end a promise's head phrase: the result comes before them ("rankings on keywords", "customers from search"). */
-const PROMISE_PHRASE_END = new Set("on for from in at with without that which who whose to of by through via while across over under than , ;".split(" "));
+/**
+ * Words that end a promise's head phrase: the result comes before them ("rankings on keywords", "customers from
+ * search"), including a relative clause with no "that" ("rankings you can actually win", "customers your site gets").
+ */
+const PROMISE_PHRASE_END = new Set("on for from in at with without that which who whose whom where when while if because so to of by through via across over under than you your we our they their it its i , ;".split(" "));
 /** Time and quantity words a head phrase may end on ("10 new clients a month"): never the result itself. */
 const PROMISE_MEASURE = new Set("day days week weeks month months year years hour hours minute minutes time times".split(" "));
 
