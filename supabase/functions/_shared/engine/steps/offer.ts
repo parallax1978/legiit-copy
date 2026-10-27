@@ -5,7 +5,7 @@
  */
 import { type Effort, lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import offerPrompt from "../prompts/offer.v11.ts";
+import offerPrompt from "../prompts/offer.v12.ts";
 import { RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { remainingBudgetMs } from "./budget.ts";
 import { resolvePrompt } from "../prompts/types.ts";

@@ -1,0 +1,23 @@
+/**
+ * Factual review prompt, version 11: version 10's messages. A rewrite fixes only what its rule names and never sizes an
+ * outcome promise down, adds a hedge or a weakening detail, or cuts a promise; the promise of the result with no number
+ * on it, reason-why logic, the reader's situation, what the product does and the founder's call are not flags, and a
+ * delivery timing note in the offer block is not a rule. the system text carries the standard as of this version (sell the result, rule 8; precision never sizes a promise down, rule 10; a line true only with a weakening detail is rewritten, rule 12; the short-piece guarantee only when the offer leads with it, rule 16; indicative with no conditional voice, rule 20; section 2's promise, C8 and C9; section 4's no-results proof and the obvious demonstration; the first-week check, section 5; Gates A and C and the reviewer's directions, section 6; the outcome, reasoning and situation rows, grade F and the factual procedure, section 8).
+ */
+import { factualPrompt as factualPrev, type FactualArgs } from "./factual.v10.ts";
+import { amend, type PromptModule } from "./types.ts";
+
+export type { FactualArgs };
+
+const SYSTEM = amend(factualPrev.system, [
+  [
+    `you may not delete a specific the ledger supports; you may not soften a claim the ledger carries at its grade.`,
+    `you may not delete a specific the ledger supports; you may not soften a claim the ledger carries at its grade; you may not size an outcome promise down, add "some", "could" or a weakening detail ("planned", "new", "not yet"), or cut a promise. A rewrite fixes only what its rule names: when a line overstates its subject, drop the overstated words.`,
+  ],
+  [
+    `- severity: fatal only for fabrication;`,
+    `- Not flags (§8.1, §8.3 test 2): the promise of the result the product produces (the rankings, the customers, the sales, the money) with no number on it; reason-why logic the market accepts; the reader's situation and its cost; what the product does; the founder's call. Never flag them for lacking a ledger row or a result. A delivery timing note in the offer block says what arrives when; it is not a rule, and a line that names the result the product produces never breaks it.\n- severity: fatal only for fabrication;`,
+  ],
+]);
+
+export const factualPrompt: PromptModule<FactualArgs> = { ...factualPrev, version: 11, system: SYSTEM };

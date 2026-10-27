@@ -310,12 +310,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v12.ts";
-import { revisePrompt } from "../prompts/revise.v11.ts";
-import { editorialPrompt } from "../prompts/editorial.v12.ts";
-import { factualPrompt } from "../prompts/factual.v10.ts";
-import offerPrompt from "../prompts/offer.v11.ts";
-import intakePrompt from "../prompts/intake.v9.ts";
+import { draftPrompt } from "../prompts/draft.v13.ts";
+import { revisePrompt } from "../prompts/revise.v12.ts";
+import { editorialPrompt } from "../prompts/editorial.v13.ts";
+import { factualPrompt } from "../prompts/factual.v11.ts";
+import offerPrompt from "../prompts/offer.v12.ts";
+import intakePrompt from "../prompts/intake.v10.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -334,7 +334,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [12, 11, 12, 10, 9, 11, 9]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [13, 12, 13, 11, 9, 12, 10]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
@@ -719,7 +719,7 @@ Deno.test("round 4 review: a rewrite keeps the words that set a number's size; a
   assert(guardEdit("Most reports come back within 10 minutes.", "Your report comes back in 10 minutes."));
   assertEquals(guardEdit("Each report checks up to 40 keywords against the pages ranking for them.", "Each report checks up to 40 of your keywords against the pages that rank."), null);
   assert(RULES.includes("a line the offer block says to repeat (a page's guarantee sentence, a bonus name, the button), and a quotation of a documented person or source stay as written"));
-  assert(RULES.includes("keeps its condition and its remedy"));
+  assert(RULES.includes("a guarantee appears only when the offer leads with it") && RULES.includes("never its conditions, units or mechanics"));
   assert(tellEditPrompt.system.includes("every word that sets the claim's size or precision"));
   assert(!tellEditPrompt.system.includes("\"every credit it charged comes back to your balance\")"), "the guarantee clause is no longer the example of copied wording");
 });

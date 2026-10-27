@@ -183,6 +183,8 @@ async function createOffer(db: Db, ws: string, file: BriefFile): Promise<{ offer
 interface RunOpts {
   out: string;
   autoApprove: boolean;
+  /** run on the prompt modules in this checkout instead of the published prompt_versions rows (unpublished versions) */
+  modulePrompts: boolean;
 }
 
 async function runStepOnce(db: Db, generationId: string, step: StepName, opts: RunOpts, index: number): Promise<{ result: StepResult; applied: Awaited<ReturnType<typeof applyEffects>> }> {
@@ -195,6 +197,7 @@ async function runStepOnce(db: Db, generationId: string, step: StepName, opts: R
     await db.from("generations").update({ progress_message: m, current_step: step }).eq("id", generationId);
   };
   const ctx = await buildContext(db, generationId, attempt, progress);
+  if (opts.modulePrompts) ctx.promptVersions = {};
   const row = must(
     await db.from("generation_steps").insert({ generation_id: generationId, workspace_id: ctx.generation.workspace_id, step, attempt, status: "running", started_at: new Date().toISOString() }).select("id").single(),
     "generation_steps insert",
@@ -213,6 +216,7 @@ async function runStepOnce(db: Db, generationId: string, step: StepName, opts: R
       log(`  [${step}] continues: ${result.continueLater.reason}`);
       const partial = saved ?? result.output;
       run = await buildContext(db, generationId, attempt, progress);
+      if (opts.modulePrompts) run.promptVersions = {};
       run.partial = partial;
       saved = null;
       run.savePartial = async (p: unknown) => { saved = p; };
@@ -309,7 +313,8 @@ async function printCost(db: Db, generationId: string) {
 async function cmdRun(args: ReturnType<typeof parseArgs>) {
   requireEnv(["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "ANTHROPIC_API_KEY"]);
   const db = serviceClient();
-  const opts: RunOpts = { out: String(args.out ?? `engine-out/${new Date().toISOString().replace(/[:.]/g, "-")}`), autoApprove: !!args["auto-approve"] };
+  const opts: RunOpts = { out: String(args.out ?? `engine-out/${new Date().toISOString().replace(/[:.]/g, "-")}`), autoApprove: !!args["auto-approve"], modulePrompts: !!args["module-prompts"] };
+  if (opts.modulePrompts) log("prompts: the modules in this checkout, not the published prompt_versions rows");
 
   let generationId: string;
   let first: StepName[];
@@ -427,6 +432,7 @@ function usage() {
 
   run       --brief <file.json> --format <id> [--out dir] [--workspace id] [--auto-approve] [--skip-offer]
             --generation <id> [--from <step>]            resume an existing generation
+            --module-prompts                             use this checkout's prompt modules, not the published rows
   baseline  --brief <file.json> --format <id> [--out dir] [--model id]
   plan      --format <id> [--items n] [--sequence welcome|launch|abandoned_cart|post_purchase|win_back]
   formats
@@ -438,7 +444,7 @@ Env for run: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY [ENGINE_
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
     string: ["brief", "format", "out", "workspace", "generation", "from", "model", "items", "sequence"],
-    boolean: ["auto-approve", "skip-offer", "help"],
+    boolean: ["auto-approve", "skip-offer", "module-prompts", "help"],
   });
   const cmd = String(args._[0] ?? "");
   try {

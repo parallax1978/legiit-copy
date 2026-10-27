@@ -217,6 +217,11 @@ Deno.test("carrierValue: seller facts, graded facts, testimonials, nothing", () 
   assertEquals(carrierValue(claim("s", "statistic", "E")), 1);
   assertEquals(carrierValue(claim("s", "statistic", null)), 1);
   assertEquals(carrierValue(claim("s", "benefit", "F")), 0);
+  // the seller's own process carries the result it produces; lab evidence for a mechanism stays weak
+  assertEquals(carrierValue(claim("m", "mechanism", "F")), 2);
+  assertEquals(carrierValue(claim("m", "mechanism", null)), 2);
+  assertEquals(carrierValue(claim("m", "mechanism", "D")), 1);
+  assertEquals(carrierValue(claim("m", "mechanism", "B")), 2);
   assertEquals(carrierValue(claim("t", "results_testimonial", "E")), 1);
   assertEquals(carrierValue(claim("x", "expert_endorsement")), 1);
   assertEquals(carrierValue(claim("v", "vague_superlative")), 0);

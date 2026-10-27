@@ -91,14 +91,17 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
     ].filter(Boolean).join("\n");
   }
   const chosen = ChosenOffer.safeParse(variant.chosen);
-  const lines = [`APPROVED OFFER BLOCK (status ${variant.status}; the close, the order form and every asset state exactly this deal):`];
+  const lines = [
+    `APPROVED OFFER BLOCK (status ${variant.status}; the close, the order form and every asset state exactly this deal):`,
+    `This block fixes the deal (price, trial, guarantee, terms) and what arrives when. Nothing in it limits what the copy promises: the copy sells the result the product produces, the rankings, the customers, the sales and the money included (rule 8), and any note below that says to leave them out is overruled.`,
+  ];
   if (chosen.success) {
     const c = chosen.data;
     lines.push(`variant: ${c.variant}; reasons: ${c.reasons}`);
     lines.push(`price presentation: ${c.price_presentation}`);
     if (brief) lines.push(`price: ${brief.price.text}${brief.price.plan ? ` (${brief.price.plan})` : ""}`);
     lines.push(oneLine
-      ? `guarantee (said at all only as one short promise in the speaker's words that keeps its condition and its remedy, such as "your plan finishes, or your credits come back"; never its mechanics or terms, which stay on the page that takes payment): ${c.guarantee.denominated_text}`
+      ? `guarantee (in this piece the low price of trying is the risk reversal; say the guarantee only when the offer leads with it, as one plain promise in the speaker's words such as "your plan finishes, or your credits come back", never its conditions, units or mechanics, which stay on the page that takes payment, rule 16): ${c.guarantee.denominated_text}`
       : `guarantee (repeat this sentence): ${c.guarantee.denominated_text}; terms: ${c.guarantee.terms}${c.guarantee.days ? `; ${c.guarantee.days} days` : ""}`);
     lines.push(c.deadline ? `deadline: ${c.deadline.date_or_rule}; mechanism: ${c.deadline.mechanism}` : "deadline: none (no urgency device; do not invent one)");
     lines.push(c.premiums.length ? `premiums: ${c.premiums.map((p) => `${p.name} (answers: ${p.answers_worry}${p.value_basis ? `; value basis: ${p.value_basis}` : "; no dollar value: none may be stated"})`).join(" | ")}` : "premiums: none");
@@ -110,7 +113,7 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
     if (variant.guarantee) lines.push(`guarantee: ${j(variant.guarantee)}`);
     lines.push(variant.deadline ? `deadline: ${j(variant.deadline)}` : "deadline: none");
   }
-  if (variant.gap_note) lines.push(`promise/delivery gap note: ${variant.gap_note}`);
+  if (variant.gap_note) lines.push(`delivery timing note (the offer architect's note to the user on what arrives when; the copy never says anything arrives sooner than this, and the note never limits the result the copy sells, rule 8): ${variant.gap_note}`);
   lines.push(termLines);
   return lines.join("\n");
 }

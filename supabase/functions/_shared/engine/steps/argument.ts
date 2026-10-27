@@ -18,7 +18,7 @@ import { CandidatesOutput, isExcluded, normalizeCandidates, readExclusions } fro
 import { computeClusterTable, renderClusterTable } from "../argument/magnitude.ts";
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v13.ts";
+import argumentPrompt from "../prompts/argument.v14.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { formatExamplesForPrompt, retrieve } from "../retrieval.ts";
 import { ArgumentOutput, Candidate } from "../schemas/argument.ts";

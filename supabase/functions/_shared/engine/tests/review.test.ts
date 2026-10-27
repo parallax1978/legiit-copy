@@ -300,10 +300,22 @@ import { FORMATS as FORMATS_FOR_OFFER } from "../formats/index.ts";
 Deno.test("offer block: a post states the offer in one line and leaves the guarantee's terms to the page that takes payment", () => {
   const variant = { id: "v", status: "approved", chosen: { variant: "free_trial", reasons: "r", price_presentation: "$59 a month", guarantee: { denominated_text: "Your plan runs to the end or every credit comes back.", terms: "Credits, not cash; plan payments are not refundable.", days: null, costs_seller: true }, deadline: null, premiums: [], first_visible_win: { what: "a decision", interval: "20 minutes" }, biggest_failure_reason: "x", bundle_uncomparable_how: "y" } } as unknown as Parameters<typeof offerBlockText>[0];
   const post = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.organic_social);
-  assert(post.includes("said at all only as one short promise in the speaker's words") && post.includes("never its mechanics or terms"), post);
+  assert(post.includes("the low price of trying is the risk reversal") && post.includes("only when the offer leads with it") && post.includes("never its conditions, units or mechanics"), post);
   assert(!post.includes("plan payments are not refundable"), "the guarantee's terms stay off a post");
   const page = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.sales_letter);
   assert(page.includes("guarantee (repeat this sentence)") && page.includes("plan payments are not refundable"));
+});
+
+Deno.test("offer block: a note that tells the copy to leave out rankings, sales or revenue is overruled, every format", () => {
+  const variant = { id: "v", status: "approved", gap_note: "Copy promises the decision and its evidence, never rankings, sales or revenue. The first week cannot show a ranking, so no copy implies one.", chosen: { variant: "free_trial", reasons: "So the offer promises the deliverable.", price_presentation: "$59 a month", guarantee: { denominated_text: "Your plan runs to the end or every credit comes back.", terms: "t", days: null, costs_seller: true }, deadline: null, premiums: [], first_visible_win: { what: "a decision", interval: "20 minutes" }, biggest_failure_reason: "x", bundle_uncomparable_how: "y" } } as unknown as Parameters<typeof offerBlockText>[0];
+  for (const spec of [FORMATS_FOR_OFFER.organic_social, FORMATS_FOR_OFFER.sales_letter]) {
+    const text = offerBlockText(variant, null, [], spec);
+    const head = text.split("\n").slice(0, 2).join("\n");
+    // the override comes before the note it overrules, and names what the copy sells
+    assert(head.includes("Nothing in it limits what the copy promises") && head.includes("the rankings, the customers, the sales and the money included"), head);
+    assert(text.includes("delivery timing note") && !text.includes("promise/delivery gap note"), text);
+    assert(text.indexOf("is overruled") < text.indexOf("never rankings, sales or revenue"));
+  }
 });
 
 Deno.test("ship after the final revision: the last review's note is listed as applied and not reviewed again", () => {

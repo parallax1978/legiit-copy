@@ -95,13 +95,18 @@ export type CarrierValue = 0 | 1 | 2;
 
 /**
  * What one ledger row can carry for a promise, on the C9 scale, before coverage is judged:
- * 2 a verifiable fact; 1 testimonials, anecdote, mechanistic or ungraded evidence; 0 no carrier.
+ * 2 a verifiable fact (the seller's own features, terms and process included); 1 testimonials, anecdote, lab or
+ * ungraded evidence; 0 no carrier.
  * Rows the user dropped carry nothing. Status (verified/unverified/flagged) does not change the value:
  * flagged rows are usable, they carry their flag.
  */
 export function carrierValue(claim: LedgerClaimLike): CarrierValue {
   if (claim.user_decision === "drop") return 0;
   if (SELLER_FACT_TYPES.has(claim.claim_type)) return 2;
+  // A mechanism row with no outside evidence is the seller's own process ("reads the pages that rank, checks your
+  // backlinks"), verifiable by using the product, and it carries the result it produces (docs/04 rule 8). Lab or
+  // anecdotal evidence for a mechanism (D, E) stays a weaker carrier below.
+  if (claim.claim_type === "mechanism" && (claim.evidence_grade === "F" || !claim.evidence_grade)) return 2;
   if (TESTIMONIAL_TYPES.has(claim.claim_type)) return 1;
   if (GRADED_FACT_TYPES.has(claim.claim_type)) {
     const g = claim.evidence_grade;
