@@ -108,7 +108,7 @@ export const EMOJI_SOURCE = String.raw`(?:\p{Emoji_Presentation}|\p{Extended_Pic
 /** A hashtag: "#" then a tag holding a letter ("#SEO", "#100DaysOfCode"; "#1" is not one), not inside a word, an entity, a URL, a markdown anchor or a quote, and not a hex colour with a digit. */
 export const HASHTAG_SOURCE = String.raw`(?<![\p{L}\p{N}_&#/=?.\-("'“‘\[])#(?!(?=[0-9a-fA-F]*\d)[0-9a-fA-F]{3,8}\b)((?=[\p{N}_]*\p{L})[\p{L}\p{N}_]+)`;
 /** An em dash, or a spaced en dash, a double hyphen or a spaced hyphen between words used as one ("It works - fast."). Links are blanked before scanning. */
-export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)|(?<=[A-Za-zÀ-ÿ][,.!?"”’)]?) - (?=[A-Za-zÀ-ÿ"“(])`;
+export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=[a-z\d])--(?=[a-z])|(?<=[a-z])--(?=\d)|(?<=[A-Za-zÀ-ÿ][,.!?"”’)]?) - (?=[A-Za-zÀ-ÿ"“(])`;
 /** Links in copy, blanked before the em dash scan (a URL may hold "--") and kept whole by the backstop. */
 export const LINK_SOURCE = String.raw`https?:\/\/[^\s)\]]+|www\.[^\s)\]]+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|co|io|net|org|ai|app|me|us|uk|ca|de|store|shop|so|gg)\b(?:\/[^\s)\]]*)?`;
 
@@ -218,7 +218,7 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 1, name: "summary_closer", weight: 4, scope: "all", owner: { words: true },
-    regex: /(?:^|[.!?]\s+)(?:In (?:short|summary|conclusion)|To (?:sum up|summarize|recap|wrap (?:it |things )?up)|So,? to recap|All in all|In a nutshell)\b/gim,
+    regex: /(?:^|[.!?]["”’)]?\s+)(?:In (?:short|summary|conclusion)|To (?:sum up|summarize|recap|wrap (?:it |things )?up)|So,? to recap|All in all|In a nutshell)\b/gim,
     example: "In short, X gives you A, B and C.",
     fix: "The CTA and what happens after the click.",
   },
@@ -253,8 +253,8 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "three_beat_deep_third", weight: 4, scope: "all", owner: { tell: 2 },
     regex: new RegExp(
-      `(?:^|[.!?:]\\s+)(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+(?:Not|No|Never|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+)?(?!(?:Not|No|Never|Nor)\\b)[A-Z0-9$]` +
-        `|(?:^|[.!?:]\\s+)${NEG_OPEN}\\s[^.?!\\n]{1,40}[.!]\\s+(?:${NEG_OPEN}|Not|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:It${A}s|It is|It was|This is|This was|That${A}s|It|This)\\b` +
+      `(?:^|[.!?:]["”’)]?\\s+)(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+(?:Not|No|Never|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+)?(?!(?:Not|No|Never|Nor)\\b)[A-Z0-9$]` +
+        `|(?:^|[.!?:]["”’)]?\\s+)${NEG_OPEN}\\s[^.?!\\n]{1,40}[.!]\\s+(?:${NEG_OPEN}|Not|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:It${A}s|It is|It was|This is|This was|That${A}s|It|This)\\b` +
         `|\\b[Nn]ot [^,.?!\\n]{1,30}, not [^,.?!\\n]{1,30}, (?:but|just|only)\\b`,
       "gm",
     ),
@@ -276,7 +276,7 @@ export const TELLS: TellRule[] = [
         `|\\bhere(?:${A}s| is) (?:the|my|our|a|one|another) (?:[\\w'’-]+ ){0,3}[\\w'’-]+:` +
         `|\\bhere(?:${A}s| is) (?:what|why|how|where|who|when)\\b[^.?!\\n:]{0,60}(?::|\\.(?=\\s|$)|$)` +
         `|\\b(?:the part|what) (?:nobody|no one|few people|most people (?:don${A}t|never)) (?:talks? about|tells? you|mentions?|wants? to (?:hear|admit|say))\\b` +
-        `|(?:^|[.!?]\\s+)[A-Z][^.!?\\n:]{0,40}\\b(?:this|these)\\s*:`,
+        `|(?:^|[.!?]["”’)]?\\s+)[A-Z][^.!?\\n:]{0,40}\\b(?:this|these)\\s*:`,
       "gim",
     ),
     example: "Here's the part the score hides:",
@@ -286,7 +286,7 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "label_windup", weight: 4, scope: "all", owner: { tell: 4 },
     regex: new RegExp(
-      `(?:^|[.!?]\\s+)(?:(?:So|And|But|Then|Now),? )?(?:(?:My|Our|The|Your|One) )?(?:rule|fix|bottom line|upshot|takeaway|lesson|point|kicker|catch|twist|good news|bad news|short version|long story short|translation|real talk|pro tip|secret|trick|move|play|verdict|irony|reality|punchline|math)\\s*:` +
+      `(?:^|[.!?]["”’)]?\\s+)(?:(?:So|And|But|Then|Now),? )?(?:(?:My|Our|The|Your|One) )?(?:rule|fix|bottom line|upshot|takeaway|lesson|point|kicker|catch|twist|good news|bad news|short version|long story short|translation|real talk|pro tip|secret|trick|move|play|verdict|irony|reality|punchline|math)\\s*:` +
         `|\\b(?:I${A}d|I would|I${A}ll|I) (?:ask|check|look at|want to know) (?:two|three|four|five|a few|one) (?:things|questions)\\b` +
         `|\\b(?:two|three|four|five|a few) (?:questions|things|checks|tests|rules) (?:decide|matter|settle|separate)\\b` +
         `|\\b(?:it|this|everything|that) (?:all )?(?:comes|boils) down to (?:one|two|three|four|a few) (?:things|questions)\\b` +
@@ -300,7 +300,7 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "worth_noting", weight: 4, scope: "all", owner: { tell: 5 },
     regex: new RegExp(
-      `\\bworth (?:noting|remembering|keeping in mind|bearing in mind|mentioning|pointing out|repeating|highlighting|emphasizing|emphasising|a mention)\\b|\\b(?:keep|bear) in mind\\b|\\bit bears (?:repeating|mentioning|noting)\\b|\\bimportant to (?:note|remember|mention|point out|keep in mind)\\b|\\bshould be noted\\b|(?:^|[.!?]\\s+)(?:Please )?[Nn]ote that\\b`,
+      `\\bworth (?:noting|remembering|keeping in mind|bearing in mind|mentioning|pointing out|repeating|highlighting|emphasizing|emphasising|a mention)\\b|\\b(?:keep|bear) in mind\\b|\\bit bears (?:repeating|mentioning|noting)\\b|\\bimportant to (?:note|remember|mention|point out|keep in mind)\\b|\\bshould be noted\\b|(?:^|[.!?]["”’)]?\\s+)(?:Please )?[Nn]ote that\\b`,
       "gim",
     ),
     example: "It's worth noting that the trial is free.",
@@ -334,7 +334,7 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
-      `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]\\s+)The truth is\\b`,
+      `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]["”’)]?\\s+)The truth is\\b`,
       "gim",
     ),
     example: "The hard truth: most pages never rank.",
@@ -376,14 +376,14 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 1, name: "formal_words", weight: 4, scope: "all", owner: { words: true },
-    regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gim,
+    regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]["”’)]?\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gim,
     example: "Furthermore, you can utilize the report.",
     fix: "\"Use\", \"try\"; a new sentence or paragraph instead of the connective.",
   },
   {
     tier: 1, name: "empty_teaser", weight: 4, scope: "all", owner: { words: true },
     regex: new RegExp(
-      `\\b(?:earlier|sooner|bigger|worse|deeper|closer|simpler|faster|harder) than you (?:think|might think|realize|realise|expect)\\b|\\bwhere (?:the )?(?:real )?(?:trouble|problem|mess|damage|rot|bad [a-z]+) (?:starts|begins|gets made|comes from)\\b|\\bthat${A}s where (?:it gets|things get) (?:interesting|tricky|ugly|good)\\b|(?:^|[.!?]\\s+)(?:But )?[Ff]irst,? though\\b|\\bmore on (?:that|this) (?:in a (?:second|minute|moment)|later|below)\\b|\\bthe real question is\\b|\\bbut there${A}s a catch\\b|\\bstay tuned\\b`,
+      `\\b(?:earlier|sooner|bigger|worse|deeper|closer|simpler|faster|harder) than you (?:think|might think|realize|realise|expect)\\b|\\bwhere (?:the )?(?:real )?(?:trouble|problem|mess|damage|rot|bad [a-z]+) (?:starts|begins|gets made|comes from)\\b|\\bthat${A}s where (?:it gets|things get) (?:interesting|tricky|ugly|good)\\b|(?:^|[.!?]["”’)]?\\s+)(?:But )?[Ff]irst,? though\\b|\\bmore on (?:that|this) (?:in a (?:second|minute|moment)|later|below)\\b|\\bthe real question is\\b|\\bbut there${A}s a catch\\b|\\bstay tuned\\b`,
       "gim",
     ),
     example: "And the guess starts one step earlier than you think.",
@@ -393,7 +393,7 @@ export const TELLS: TellRule[] = [
   {
     tier: 1, name: "windup_opener", weight: 4, scope: "all", owner: { words: true },
     regex: new RegExp(
-      `(?:^|[.!?]\\s+)(?:In today${A}s (?:world|market|economy|landscape|digital (?:age|world)|fast[- ]paced (?:world|market))|In (?:a|this) (?:world|day and age) where|Today,? (?:I|we)(?: want| wanted|${A}m going| am going|${A}d like| would like) to (?:talk|share|discuss|show|cover|chat)|Let${A}s (?:talk|chat) about|In this (?:post|article|email|guide|blog),? (?:I|we)\\b)`,
+      `(?:^|[.!?]["”’)]?\\s+)(?:In today${A}s (?:world|market|economy|landscape|digital (?:age|world)|fast[- ]paced (?:world|market))|In (?:a|this) (?:world|day and age) where|Today,? (?:I|we)(?: want| wanted|${A}m going| am going|${A}d like| would like) to (?:talk|share|discuss|show|cover|chat)|Let${A}s (?:talk|chat) about|In this (?:post|article|email|guide|blog),? (?:I|we)\\b)`,
       "gim",
     ),
     example: "In today's world, content is everything.",
@@ -473,7 +473,7 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 2, name: "not_this_that_clip", weight: 2, scope: "all", density_per_1000: 2,
-    regex: /(?:^|[.!?]\s+)[A-Z][^.?!\n]{1,50}\. Not [^.?!\n]{1,40}\./gm,
+    regex: /(?:^|[.!?]["”’)]?\s+)[A-Z][^.?!\n]{1,50}\. Not [^.?!\n]{1,40}\./gm,
     example: "Real food. Not powder.",
     fix: "One sentence with a subject and a verb.",
     note: "Human DR uses the clip (0.06 per 1,000 against 0.17 in AI drafts), so the threshold is looser than the \"It's not X. It's Y.\" rule.",
@@ -529,7 +529,7 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 3, name: "quick_question_opener", weight: 1, scope: "all",
-    regex: /(?:^|[.!?]\s+)(?:Quick|Honest|Simple|Real) (?:question|answer|truth|talk)[:?]/gm,
+    regex: /(?:^|[.!?]["”’)]?\s+)(?:Quick|Honest|Simple|Real) (?:question|answer|truth|talk)[:?]/gm,
     example: "Quick question: when did you last trust your numbers?",
     fix: "Ask the question.",
   },
@@ -541,13 +541,13 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 3, name: "stop_verbing_opener", weight: 1, scope: "all",
-    regex: /(?:^|[.!?]\s+)Stop [a-z]+ing\b/gm,
+    regex: /(?:^|[.!?]["”’)]?\s+)Stop [a-z]+ing\b/gm,
     example: "Stop guessing.",
     fix: "State what to do instead, with the mechanism.",
   },
   {
     tier: 3, name: "most_people_opener", weight: 1, scope: "all",
-    regex: new RegExp(`(?:^|[.!?]\\s+)Most (?:people|[a-z]+s) (?:don${A}t|never|struggle|think|assume|spend|waste|fail|try|believe)\\b`, "gm"),
+    regex: new RegExp(`(?:^|[.!?]["”’)]?\\s+)Most (?:people|[a-z]+s) (?:don${A}t|never|struggle|think|assume|spend|waste|fail|try|believe)\\b`, "gm"),
     example: "Most people never launch because...",
     fix: "A number from the research, or the reader's own verbatim.",
   },
@@ -599,6 +599,8 @@ interface Unit {
   item: number;
   /** an FAQ section or item: the buyer's questions, answered */
   faq: boolean;
+  /** the block carried a ledger tag or NEEDS SOURCE mark (a quoted headline with one is a sourced quotation) */
+  tagged: boolean;
 }
 
 const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
@@ -625,11 +627,12 @@ function unitsOf(sections: Section[]): Unit[] {
     const faqSection = FAQ_RE.test(sectionBaseId(s.section_id).replace(/_/g, " ")) || FAQ_RE.test(s.title ?? "");
     for (const b of s.blocks) {
       const faq = faqSection || FAQ_RE.test((b.meta?.role ?? "").replace(/_/g, " "));
+      const tagged = (raw: string) => new RegExp(LEDGER_TAG.source).test(raw) || raw.includes(NEEDS_SOURCE_TAG);
       const t = clean(b.text);
-      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item, faq });
+      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(b.text ?? "") });
       for (const i of b.items ?? []) {
         const it = clean(i);
-        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item, faq });
+        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(i) });
       }
     }
   }
@@ -742,8 +745,11 @@ const EMOJI_LINE_RE = /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_
 // The owner's list (§7.1): quotations, testimonials, proper nouns and the offer's own words are exempt
 // ---------------------------------------------------------------------------------------------------------------
 
-/** A quotation; a straight quote after a digit is an inch mark (6") and never opens one. */
-const QUOTED_RE = /(?<!\d)"[^"\n]{1,600}"|“[^”\n]{1,600}”/g;
+/** A display line that is one quotation and nothing else (a quoted headline). */
+const WHOLE_QUOTE_RE = /^\s*(?:"[^"\n]+"|“[^”\n]+”)\s*$/;
+
+/** A quotation, in double, curly or straight single quotes; a straight quote after a digit is an inch mark (6") and never opens one. */
+const QUOTED_RE = /(?<!\d)"[^"\n]{1,600}"|“[^”\n]{1,600}”|‘[^’\n]{1,600}’|(?<![A-Za-z0-9])'(?=[^'\n]*\s[^'\n]*\s)[^'\n]{1,600}'(?![A-Za-z0-9])/g;
 
 /**
  * Quotations of three words or more blanked to spaces (same length, so snippets stay aligned): a verbatim or quoted
@@ -841,12 +847,21 @@ function sentenceAround(text: string, start: number, end: number): { sentence: s
 }
 
 const SOUND_RE = /\b\d+(?:\.\d+)?\s?(?:dB|dBA|decibels?)\b|\b(?:noise|noisy|loud|louder|silent|silence|sound|hear|heard|whisper(?:s|ing)?|hum(?:s|ming)?|decibels?|rattles?|squeak(?:s|y)?)\b/i;
+/** A machine that runs quietly is about sound: "it runs quietly all night". */
+const OPERATES_QUIETLY_RE = /\b(?:runs?|running|ran|operates?|operating|hums?|spins?|purrs?|closes?|shuts?|glides?|rolls?|idles?|cools?|heats?|blows?|vibrates?|works?)\s+(?:\w+\s+)?quietly\b/i;
+/** A cardiac or load stress test is the procedure itself, not the tell: medical words anywhere in the text, load words in the sentence. */
+const MEDICAL_TEST_RE = /\b(?:heart|cardiac|cardio|cardiologist|treadmill|ekg|ecg|blood pressure|doctor|clinic|patients?|physician)\b/i;
+const LOAD_TEST_RE = /\b(?:load|traffic|concurrent|requests?|servers?|users|uptime|bridge|beams?|pipes?|psi|welds?|steel|materials?)\b/i;
 const PERSON_BEFORE_RE = /\b(?:kids?|child(?:ren)?|boys?|girls?|bab(?:y|ies)|toddlers?|guests?|people|staff|everyone|anyone|someone|he|she|they|we|you|I|dogs?|cats?|pets?|actors?|dancers?|models?|students?|fans?|members?|attendees?|men|women|man|woman|players?|cast|crew|volunteers?|customers?|visitors?)\s+(?:[a-z]+\s+){0,2}$/i;
 const MATERIAL_RE = /\b(?:porcelain|ceramic|composite|wood(?:en)?|oak|walnut|maple|cherry|teak|vinyl|leather|silicone|rubber|plastic|foil|paper|tissue|stone|marble|granite|quartz|metal|steel|alumini?um|brass|copper|glass|resin|laminate|acrylic|chocolate|sugar|pastry|gift|ribbon|bubble wrap)\b/i;
 
-/** Matches in the literal sense, not the tell: "runs quietly at 24 dB" is about sound; "kids dressed as superheroes" and "a porcelain veneer" are what they say. */
-const LITERAL_SENSE: Record<string, (sentence: string, match: string, before: string) => boolean> = {
-  quietly: (sentence) => SOUND_RE.test(sentence),
+/**
+ * Matches in the literal sense, not the tell: "runs quietly at 24 dB" is about sound; "kids dressed as superheroes",
+ * "a porcelain veneer" and "a cardiac stress test" are what they say.
+ */
+const LITERAL_SENSE: Record<string, (sentence: string, match: string, before: string, text: string) => boolean> = {
+  quietly: (sentence) => !/\bin the background\b|\bbehind the scenes\b/i.test(sentence) && (SOUND_RE.test(sentence) || OPERATES_QUIETLY_RE.test(sentence)),
+  pressure_test: (sentence, match, _b, text) => /\bstress[- ]?test/i.test(match) && (MEDICAL_TEST_RE.test(text) || LOAD_TEST_RE.test(sentence)),
   disguise_frame: (sentence, match, before) =>
     (/\b(?:costumes?|dress(?:ed|es|ing)|wear(?:ing|s)?|wore)\b/i.test(match) && PERSON_BEFORE_RE.test(before)) ||
     (/\b(?:veneer|skin|wrapper|wrapped)\b/i.test(match) && MATERIAL_RE.test(sentence)),
@@ -877,7 +892,7 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
     const re = new RegExp(rule.regex!.source, rule.regex!.flags.includes("g") ? rule.regex!.flags : rule.regex!.flags + "g");
     texts.forEach((t, ti) => {
       for (const m of t.matchAll(re)) {
-        const lead = m[0].replace(/^[\s.!?:]+/, "").trimEnd();
+        const lead = m[0].replace(/^[\s.!?:"”’)]+/, "").trimEnd();
         if (!lead) continue;
         const at = (m.index ?? 0) + m[0].indexOf(lead);
         const end = at + lead.length;
@@ -886,7 +901,7 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
         const literal = LITERAL_SENSE[rule.name];
         if (literal) {
           const { sentence, before } = sentenceAround(t, at, end);
-          if (literal(sentence, lead, before)) continue;
+          if (literal(sentence, lead, before, t)) continue;
         }
         if (claimed[ti].some(([s, e]) => at < e && s < end)) continue;
         claimed[ti].push([at, end]);
@@ -1014,7 +1029,8 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const allTexts = units.map((u) => u.text);
   // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
   const ownerUnits = units.filter((u) => u.type !== "testimonial");
-  const ownerTexts = ownerUnits.map((u) => blankQuotes(u.text));
+  // a display line that is one quotation with no source is the copy's own words in quote marks: it is scanned
+  const ownerTexts = ownerUnits.map((u) => (u.kind === "display" && !u.tagged && WHOLE_QUOTE_RE.test(u.text) ? u.text : blankQuotes(u.text)));
   const ownerOriginals = ownerUnits.map((u) => u.text);
   const exempt = new Set(exemptTerms.map(stem));
   const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals);

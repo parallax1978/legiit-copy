@@ -852,3 +852,22 @@ Deno.test("a spaced hyphen between words used as a dash is the em dash tell", ()
     assertEquals(tells(analyzeText(ok, { format: FORMATS.email_single }), "em_dash"), undefined, ok);
   }
 });
+
+Deno.test("residuals: a sentence after a closing quote mark is still a sentence; a quoted headline with no source is scanned", () => {
+  assertEquals(tells(analyzeText("She told me, \"It worked.\" The truth is, it took six weeks.", { format: FORMATS.email_single }), "hard_truth")?.count, 1);
+  assertEquals(tells(analyzeText("He said, \"Not yet.\" Furthermore, it is free.", { format: FORMATS.email_single }), "formal_words")?.count, 1);
+  const unsourced = analyzeDraft([section("hero", [block("headline", "“Here’s the Kicker: I Unlocked a Seamless, Robust Way to Navigate Google”")])], FORMATS.landing_page_short);
+  assert((unsourced.owner_tells ?? 0) >= 3, `${unsourced.owner_tells}`);
+  const sourced = analyzeDraft([section("hero", [block("headline", "“This tool was a game-changer for our agency” [[L:abcd1234-0000-0000-0000-000000000000]]")])], FORMATS.landing_page_short);
+  assertEquals(sourced.owner_tells, 0, "a sourced quotation keeps its words");
+  assertEquals(tells(analyzeText("Mark wrote 'it is a robust tool' in his review.", { format: FORMATS.email_single }), "ai_words"), undefined);
+});
+
+Deno.test("residuals: a machine that runs quietly and a cardiac or load stress test are literal; the tells still count", () => {
+  assertEquals(analyzeText("It runs quietly all night. Even on turbo it runs quietly.", { format: FORMATS.product_description }).owner_tells, 0);
+  assertEquals(analyzeText("Book a stress test with our cardiologist this week. The stress test takes 40 minutes.", { format: FORMATS.landing_page_short }).owner_tells, 0);
+  assertEquals(analyzeText("We stress test your site with 10,000 users.", { format: FORMATS.landing_page_short }).owner_tells, 0);
+  assertEquals(tells(analyzeText("Let's stress test this plan before you pay a writer.", { format: FORMATS.email_single }), "pressure_test")?.count, 1);
+  assertEquals(tells(analyzeText("The tool quietly runs in the background.", { format: FORMATS.email_single }), "quietly")?.count, 1);
+  assertEquals(tells(analyzeText("It runs quietly in the background, checking your rankings.", { format: FORMATS.email_single }), "quietly")?.count, 1);
+});

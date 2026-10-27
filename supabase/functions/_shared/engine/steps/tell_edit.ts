@@ -98,8 +98,8 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
     let r = applyInGroup(units, res.output.edits, refs, names);
-    // the model's summary lines count only when one of its edits landed
-    if (r.applied.length) whatChanged.push(...res.output.what_changed);
+    // the model's summary lines stand only when all its edits landed; otherwise the landed edits' own labels say what changed
+    whatChanged.push(...summaryOf(res.output.what_changed, r.applied, r.rejected.length > 0));
     // edits the guards refused get one more ask, with the reasons, when they were more than a stray and time allows
     if (r.rejected.length && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3)) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}\nReturn edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`;
@@ -108,7 +108,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: unitFindings(current, spec, exemptTerms), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
         const again = applyInGroup(r.units, retry.output.edits, refs, names);
-        if (again.applied.length) whatChanged.push(...retry.output.what_changed);
+        whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
@@ -153,6 +153,13 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     : `No AI tells to remove${rejected.length ? ` (${rejected.length} edit${rejected.length === 1 ? "" : "s"} refused by the guards)` : ""}; the copy is unchanged`;
   await ctx.progress(summary);
   return { output, model, summary, effects: changed ? { newDraft: toDraftEffect(edited, "revise", "AI tells removed") } : undefined };
+}
+
+/** What a call changed: its own summary lines when every edit landed, the landed edits' labels when some were refused, nothing when none landed. */
+function summaryOf(lines: string[], landed: TellEdit[], refused: boolean): string[] {
+  if (!landed.length) return [];
+  if (!refused) return lines;
+  return Array.from(new Set(landed.map((e) => e.tell.trim()).filter(Boolean))).map((t) => `Removed: ${t}`);
 }
 
 /** applyEdits for one group: an edit naming a text outside the group is refused with its reason, never dropped silently. */

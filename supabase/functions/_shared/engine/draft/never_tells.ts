@@ -56,9 +56,9 @@ export function removeHashtags(text: string): string {
   });
 }
 
-/** One side of a range: a number with its currency or time, a weekday or a month. */
-const RANGE_ATOM = String.raw`(?:[$€£]?\d[\d,.:]*(?:\s?(?:%|k|am|pm|a\.m\.|p\.m\.))?|(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day|Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)`;
-const RANGE_RE = new RegExp(`(${RANGE_ATOM})(?:[ \\t]*(?:—|–|--)[ \\t]*|[ \\t]+-[ \\t]+)(${RANGE_ATOM})(?![\\p{L}\\p{N}])`, "gu");
+/** One side of a range: a number with its currency, unit, time or ordinal ("3x", "1st"), a quarter, a weekday or a month, in full or short. */
+const RANGE_ATOM = String.raw`(?:[$€£]?\d[\d,.:]*(?:\s?(?:%|k|x|am|pm|a\.m\.|p\.m\.)|st|nd|rd|th)?|Q[1-4]|(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day|(?:Mon|Tue|Tues|Wed|Thu|Thur|Thurs|Fri|Sat|Sun)\.?|Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t|tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)`;
+const RANGE_RE = new RegExp(`(?<![\\p{L}\\p{N}])(${RANGE_ATOM})(?:[ \\t]*(?:—|–|--)[ \\t]*|[ \\t]+-[ \\t]+)(${RANGE_ATOM})(?![\\p{L}\\p{N}])`, "gu");
 
 /**
  * Em dashes, and a spaced en dash, double hyphen or spaced hyphen used as one: a range keeps an unspaced en dash ("9 am–5 pm"),
@@ -69,11 +69,14 @@ export function replaceEmDashes(text: string): string {
   if (!/—|\s–\s|--|\s-\s/.test(text)) return text;
   return outsideLinks(text, (seg) => {
     let t = seg.replace(RANGE_RE, "$1–$2");
-    t = t.replace(/(?<=\S)[ \t]+–[ \t]+(?=\S)/g, " — ").replace(/(?<=\S)[ \t]+--[ \t]+(?=\S)/g, " — ").replace(/(?<=\w)--(?=\w)/g, "—");
+    // a double hyphen between words is a dash; inside a code ("SAVE--20") it is part of the code
+    t = t.replace(/(?<=\S)[ \t]+–[ \t]+(?=\S)/g, " — ").replace(/(?<=\S)[ \t]+--[ \t]+(?=\S)/g, " — ").replace(/(?<=[a-z\d])--(?=[a-z])|(?<=[a-z])--(?=\d)/g, "—");
     // a spaced hyphen between words is a dash typed with the hyphen key ("It works - fast.")
     t = t.replace(/(?<=[A-Za-zÀ-ÿ][,.!?"”’)]?)[ \t]+-[ \t]+(?=[A-Za-zÀ-ÿ"“(])/g, " — ");
     if (!t.includes("—")) return t;
     t = t.replace(/(^|\n)([ \t]*)—[ \t]*/g, "$1$2").replace(/[ \t]*—[ \t]*(?=\n|$)/g, "");
+    // against a quote mark: a dash that closes or opens a quotation goes with no space inside it ("wait—”", "“—and"); one between a word and a quotation leaves a space
+    t = t.replace(/[ \t]*—(?=[”"](?:\s|$|[.,;:!?)]))/g, "").replace(/(?<=(?:^|\s|\()[“"])—[ \t]*/g, "");
     t = t.replace(/[ \t]*—[ \t]*(?=["“”])|(?<=["“”])[ \t]*—[ \t]*/g, " ");
     t = t.replace(/[ \t]*—[ \t]*([^—.!?\n]{1,80}?)[ \t]*—[ \t]*(?=(.?))/g, (_m, inner: string, next: string) => ` (${inner.trim()})${/[.,;:!?)]/.test(next) ? "" : " "}`);
     t = t.replace(/[ \t]*—[ \t]*(?=(.?))/g, (_m, next: string) => (/[.,;:!?]/.test(next) ? "" : ", "));

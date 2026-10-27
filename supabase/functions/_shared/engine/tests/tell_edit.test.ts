@@ -430,3 +430,41 @@ Deno.test("a spaced hyphen between words is a dash: the backstop replaces it; a 
   assertEquals(replaceEmDashes("- Unlock the list\n- See the rest"), "- Unlock the list\n- See the rest");
   assertEquals(replaceEmDashes("A well-known, built-in check."), "A well-known, built-in check.");
 });
+
+Deno.test("residuals: a deleted windup leaves no space and gives a one-letter word its capital; iPhone keeps its i", () => {
+  const unit = (ref: string, text: string): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type: "paragraph", text });
+  const r = applyEdits([
+    unit("a-1", "Most tools guess. Here's the thing: a good report reads the pages that rank."),
+    unit("b-1", "Here's the kicker: a free trial runs 14 days."),
+    unit("c-1", "Here's the thing: iPhone buyers search differently."),
+  ], [
+    { ref: "a-1", before: "Here's the thing: ", after: "", tell: "windup" },
+    { ref: "b-1", before: "Here's the kicker:", after: "", tell: "windup" },
+    { ref: "c-1", before: "Here's the thing: ", after: "", tell: "windup" },
+  ]);
+  assertEquals(r.units.map((u) => u.text), ["Most tools guess. A good report reads the pages that rank.", "A free trial runs 14 days.", "iPhone buyers search differently."]);
+});
+
+Deno.test("residuals: a span that recurs is edited outside the quotation; a quotation in single quotes keeps its words", () => {
+  const unit = (ref: string, text: string): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type: "paragraph", text });
+  const r = applyEdits([
+    unit("q-1", "Buyers call it \"a game-changer\" and for agencies it is a game-changer."),
+    unit("q-2", "Mark wrote 'it is a robust tool' in his review."),
+  ], [
+    { ref: "q-1", before: "a game-changer", after: "a big change", tell: "corporate filler" },
+    { ref: "q-2", before: "robust", after: "strong", tell: "ai words" },
+  ]);
+  assertEquals(r.units[0].text, "Buyers call it \"a game-changer\" and for agencies it is a big change.");
+  assertEquals(r.rejected.map((x) => x.ref), ["q-2"]);
+});
+
+Deno.test("residuals: short weekday, quarter, multiplier and ordinal ranges keep an en dash; codes stay whole; a dash at a quote mark leaves no space", () => {
+  assertEquals(replaceEmDashes("Open Mon – Fri, 9 am – 5 pm."), "Open Mon–Fri, 9 am–5 pm.");
+  assertEquals(replaceEmDashes("Results land in Q1 – Q2."), "Results land in Q1–Q2.");
+  assertEquals(replaceEmDashes("Expect 3x—5x more traffic."), "Expect 3x–5x more traffic.");
+  assertEquals(replaceEmDashes("Calls run 1st – 3rd Monday."), "Calls run 1st–3rd Monday.");
+  assertEquals(replaceEmDashes("Use code SAVE--20 at checkout."), "Use code SAVE--20 at checkout.");
+  assertEquals(replaceEmDashes("He said “wait—” and left."), "He said “wait” and left.");
+  assertEquals(replaceEmDashes("“—and that was it,” she said."), "“and that was it,” she said.");
+  assertEquals(replaceEmDashes("It works--fast."), "It works, fast.");
+});

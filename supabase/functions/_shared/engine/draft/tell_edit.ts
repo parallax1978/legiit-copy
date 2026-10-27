@@ -137,7 +137,7 @@ export function groupUnits(units: EditUnit[], maxWords = 1800): EditUnit[][] {
 /** A ledger tag or NEEDS SOURCE mark, as one capture (LEDGER_TAG's own group is made non-capturing for split). */
 const MARK_RE = new RegExp(`(${LEDGER_TAG.source.replace(/\((?!\?)/g, "(?:")}|\\[\\[NEEDS SOURCE\\]\\])`, "g");
 const BROKEN_TAG_RE = /\[\[(?!L:[^\]\s]+\]\]|NEEDS SOURCE\]\])/;
-const QUOTE_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”|‘[^’\n]{1,600}’/g;
+const QUOTE_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”|‘[^’\n]{1,600}’|(?<![\p{L}\p{N}])'(?=[^'\n]*\s[^'\n]*\s)[^'\n]{1,600}'(?![\p{L}\p{N}])/gu;
 /** A number with the currency before it and the unit after it: "$1,299", "50%", "30 days", "9 am". */
 const NUMBER_RE = /[$€£¥]?\d[\d,.:]*(?:%|\s?(?:x|k|m|bn|am|pm|a\.m\.|p\.m\.|days?|hours?|hrs?|minutes?|mins?|seconds?|weeks?|months?|years?|yrs?)\b)?/gi;
 /** Cardinal number words; "one", "half", "double" and ordinals are left out, they are mostly turns of phrase ("one thing", "double down"). */
@@ -251,11 +251,14 @@ function namesIntact(before: string, after: string, known: Set<string> | null = 
 /** Display text the owner's "flatten formatting the text does not need" fix may delete outright. */
 const DELETABLE_DISPLAY = new Set<Block["type"]>(["crosshead", "preheadline"]);
 
-/** Every quotation in a whole text keeps its words through an edit (only an em dash, emoji or hashtag may go). */
+/** Every quotation in a whole text keeps its words through an edit, as a quotation (only an em dash, emoji or hashtag may go). */
 function quotationsIntact(before: string, after: string): string | null {
-  const afterWords = wordsOf(after);
+  const kept = (after.match(QUOTE_RE) ?? []).map((q) => wordsOf(stripNeverTells(q)).join(" "));
   for (const q of before.match(QUOTE_RE) ?? []) {
-    if (!containsRun(afterWords, wordsOf(stripNeverTells(q)))) return `a quotation lost its words: ${q.slice(0, 60)}`;
+    const words = wordsOf(stripNeverTells(q)).join(" ");
+    const i = kept.indexOf(words);
+    if (i < 0) return `a quotation lost its words: ${q.slice(0, 60)}`;
+    kept.splice(i, 1);
   }
   return null;
 }
@@ -277,9 +280,15 @@ function tolerant(before: string): RegExp {
 }
 
 /** Locate `before` in `text`: exact first; tolerant only for a span with a letter or digit (a lone dash is too vague). */
+/** Where `before` sits in the text: outside a quotation when it occurs both inside and out, else the first exact hit, else a tolerant match. */
 function locate(text: string, before: string): { index: number; length: number } | null {
-  const i = text.indexOf(before);
+  const quoted = Array.from(text.matchAll(QUOTE_RE), (m) => [m.index ?? 0, (m.index ?? 0) + m[0].length] as const);
+  const inQuote = (i: number) => quoted.some(([s, e]) => i >= s && i < e);
+  let i = text.indexOf(before);
+  const first = i;
+  while (i >= 0 && inQuote(i)) i = text.indexOf(before, i + 1);
   if (i >= 0) return { index: i, length: before.length };
+  if (first >= 0) return { index: first, length: before.length };
   if (!/[\p{L}\p{N}]/u.test(before)) return null;
   const hit = text.match(tolerant(before));
   return hit ? { index: hit.index ?? 0, length: hit[0].length } : null;
@@ -287,20 +296,26 @@ function locate(text: string, before: string): { index: number; length: number }
 
 const SENTENCE_START = /(?:^|[.!?]["”’)]?[ \t]+|\n[ \t]*)$/;
 /** Replace one span and tidy only its two seams: no doubled space, no space before punctuation, a capital where a sentence now starts. */
+/** The first letter of a new sentence, unless a capital follows it ("iPhone" keeps its lowercase "i"; "a" and "c'est" get theirs). */
+const CAPITALISABLE = /^([ \t"“(]*)(\p{Ll})(?!\p{Lu})/u;
+
 export function splice(text: string, index: number, length: number, after: string): string {
   let left = text.slice(0, index), mid = after, right = text.slice(index + length);
   if (!mid) {
     if (/[ \t]$/.test(left) && /^[ \t]/.test(right)) right = right.replace(/^[ \t]+/, "");
     if (/[ \t]$/.test(left) && /^[.,;:!?)]/.test(right)) left = left.replace(/[ \t]+$/, "");
-    if (!left.trim()) left = left.replace(/[ \t]+$/, "");
-    if (SENTENCE_START.test(left)) right = right.replace(/^([ \t"“(]*)(\p{Ll})(?=\p{Ll})/u, (_m, p: string, c: string) => p + c.toUpperCase());
+    if (!left.trim()) {
+      left = left.replace(/[ \t]+$/, "");
+      right = right.replace(/^[ \t]+/, "");
+    }
+    if (SENTENCE_START.test(left)) right = right.replace(CAPITALISABLE, (_m, p: string, c: string) => p + c.toUpperCase());
     return left + right;
   }
   if (/[ \t]$/.test(left) && /^[ \t]/.test(mid)) mid = mid.replace(/^[ \t]+/, "");
   if (/[ \t]$/.test(left) && /^[.,;:!?)]/.test(mid)) left = left.replace(/[ \t]+$/, "");
   if (/[ \t]$/.test(mid) && /^[ \t]/.test(right)) right = right.replace(/^[ \t]+/, "");
   if (/[ \t]$/.test(mid) && /^[.,;:!?)]/.test(right)) mid = mid.replace(/[ \t]+$/, "");
-  if (SENTENCE_START.test(left)) mid = mid.replace(/^([ \t"“(]*)(\p{Ll})(?=\p{Ll})/u, (_m, p: string, c: string) => p + c.toUpperCase());
+  if (SENTENCE_START.test(left)) mid = mid.replace(CAPITALISABLE, (_m, p: string, c: string) => p + c.toUpperCase());
   return left + mid + right;
 }
 
