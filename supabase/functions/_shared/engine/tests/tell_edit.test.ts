@@ -381,6 +381,15 @@ Deno.test("rebuild keeps the runner-up leads' NEEDS SOURCE lines and follows a r
   assertEquals(rebuilt.sections.find((s) => s.section_id === "lead_in")!.blocks[0].text, "A new opening the user wrote.", "the user's rewrite is not reverted");
 });
 
+Deno.test("rebuild: an edited runner-up lead keeps its NEEDS SOURCE line as it now reads", () => {
+  const d0 = socialDraft("lead-b");
+  const leads = d0.leads!.map((l) => (l.id === "lead-c" ? { ...l, blocks: l.blocks.map((b, i) => (i === 0 ? { ...b, text: "It quietly cuts churn by 30% [[NEEDS SOURCE]]." } : b)) } : l));
+  const d = { ...d0, leads, needs_source: ["It quietly cuts churn by 30% [[NEEDS SOURCE]]."] };
+  const units = editableUnits(d, FORMATS.organic_social).map((u) => (u.text.startsWith("It quietly cuts churn") ? { ...u, text: "It cuts churn by 30% [[NEEDS SOURCE]]." } : u));
+  const rebuilt = rebuildDraft(d, units, FORMATS.organic_social);
+  assertEquals(rebuilt.needs_source.map((n) => n.replace(/\s*\[\[NEEDS SOURCE\]\]/, "")), ["It cuts churn by 30%."]);
+});
+
 Deno.test("tell edit step: an edit naming a text outside the part is refused with its reason, not dropped", async () => {
   const res = await runTellEdit(ctxFor(socialDraft(null)), { call: editor(() => ({ edits: [{ ref: "nowhere-9", before: "x", after: "y", tell: "x" }, { ref: "main-2::0", before: "Unlock", after: "Get", tell: "unlock" }], what_changed: ["Swapped unlock"], already_clean: false })) });
   const out = TellEditOutput.parse(res.output);
@@ -412,4 +421,12 @@ Deno.test("guardEdit: the count of a count windup may go; a counted fact may not
   assertEquals(guardEdit("Two questions decide it.", ""), null);
   assert(guardEdit("Setup takes three steps.", "Setup is quick."));
   assert(guardEdit("We audited two sites.", "We audited the sites."));
+});
+
+Deno.test("a spaced hyphen between words is a dash: the backstop replaces it; a spaced range becomes an en dash; list markers stay", () => {
+  assertEquals(replaceEmDashes("It works - fast."), "It works, fast.");
+  assertEquals(replaceEmDashes("Open 9 am - 5 pm, Monday - Friday."), "Open 9 am–5 pm, Monday–Friday.");
+  assertEquals(replaceEmDashes("It takes 15 - 25 minutes."), "It takes 15–25 minutes.");
+  assertEquals(replaceEmDashes("- Unlock the list\n- See the rest"), "- Unlock the list\n- See the rest");
+  assertEquals(replaceEmDashes("A well-known, built-in check."), "A well-known, built-in check.");
 });

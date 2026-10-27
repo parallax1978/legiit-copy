@@ -16,7 +16,7 @@ import { stripNeverTells } from "./never_tells.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
 import { assembleDraft, provisionalLeadSection } from "./assemble.ts";
-import { normalizeQuote, sectionsText } from "./ledger.ts";
+import { needsSourceLines, normalizeQuote, sectionsText } from "./ledger.ts";
 import { leadSectionId } from "./plan.ts";
 
 /** One editable string: a block's text, or one item of a bullets or numbered block. */
@@ -395,9 +395,11 @@ export function rebuildDraft(draft: DraftOutput, units: EditUnit[], spec: Format
     if (chosen) return { ...s, blocks: chosen.blocks.map((b) => ({ ...b, meta: { ...(b.meta ?? {}), lead_id: chosen.id, lead_type: chosen.lead_type as LeadType } })) };
     return provisionalLeadSection(s.section_id, s.title, leads ?? []);
   });
-  // a NEEDS SOURCE line in a runner-up lead is still in the piece: check the leads too
-  const after = normalizeQuote(sectionsText([...sections, ...(leads ?? []).map((l) => ({ section_id: l.id, title: null, blocks: l.blocks }))]));
-  const needsSource = draft.needs_source.filter((n) => after.includes(normalizeQuote(n)));
+  // a NEEDS SOURCE line in a runner-up lead is still in the piece: keep the old lines still present, and take the
+  // leads' lines as they read now (assembleDraft finds the sections' own lines itself)
+  const leadSections = (leads ?? []).map((l) => ({ section_id: l.id, title: null, blocks: l.blocks }));
+  const after = normalizeQuote(sectionsText([...sections, ...leadSections]));
+  const needsSource = [...draft.needs_source.filter((n) => after.includes(normalizeQuote(n))), ...needsSourceLines(leadSections)];
   return assembleDraft({ spec, sections, leads, chosenLeadId: draft.chosen_lead_id, needsSource, keepOrder: true });
 }
 

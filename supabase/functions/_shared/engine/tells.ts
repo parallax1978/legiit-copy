@@ -107,8 +107,8 @@ const NEG_OPEN = `(?:It${A}s not|It is not|It isn${A}t|It was not|It wasn${A}t|T
 export const EMOJI_SOURCE = String.raw`(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F|[✓✔☑❤♥])(?:\uFE0F|\u200D(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})\uFE0F?|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}])*|[\u{1F1E6}-\u{1F1FF}]{1,2}|[0-9#*]\uFE0F?\u20E3`;
 /** A hashtag: "#" then a tag holding a letter ("#SEO", "#100DaysOfCode"; "#1" is not one), not inside a word, an entity, a URL, a markdown anchor or a quote, and not a hex colour with a digit. */
 export const HASHTAG_SOURCE = String.raw`(?<![\p{L}\p{N}_&#/=?.\-("'“‘\[])#(?!(?=[0-9a-fA-F]*\d)[0-9a-fA-F]{3,8}\b)((?=[\p{N}_]*\p{L})[\p{L}\p{N}_]+)`;
-/** An em dash, a spaced en dash or a double hyphen used as one. Links are blanked before scanning. */
-export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)`;
+/** An em dash, or a spaced en dash, a double hyphen or a spaced hyphen between words used as one ("It works - fast."). Links are blanked before scanning. */
+export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)|(?<=[A-Za-zÀ-ÿ][,.!?"”’)]?) - (?=[A-Za-zÀ-ÿ"“(])`;
 /** Links in copy, blanked before the em dash scan (a URL may hold "--") and kept whole by the backstop. */
 export const LINK_SOURCE = String.raw`https?:\/\/[^\s)\]]+|www\.[^\s)\]]+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|co|io|net|org|ai|app|me|us|uk|ca|de|store|shop|so|gg)\b(?:\/[^\s)\]]*)?`;
 
@@ -150,7 +150,7 @@ export const TELLS: TellRule[] = [
     regex: new RegExp(EM_DASH_SOURCE, "g"),
     example: "It works — fast.",
     fix: "A period, a comma or parentheses.",
-    note: "The owner's rule (§7.1, tell 11), in every format, quotations included. A spaced en dash or a double hyphen used as a dash is the same tell; an unspaced en dash in a range (3–5) is not, and links are not scanned. Human direct response runs 1.57 per 1,000; the owner bans it anyway.",
+    note: "The owner's rule (§7.1, tell 11), in every format, quotations included. A spaced en dash, a double hyphen or a spaced hyphen between words used as a dash is the same tell; an unspaced en dash or hyphen in a range (3–5, 9-5) is not, and links are not scanned. Human direct response runs 1.57 per 1,000; the owner bans it anyway.",
   },
   {
     tier: 0, name: "emoji", weight: 10, scope: "all", owner: { tell: 12 },

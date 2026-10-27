@@ -845,3 +845,10 @@ Deno.test("the self-answered question scan is linear on text with no sentence pu
   analyzeText("keyword, ".repeat(5000), { format: FORMATS.email_single });
   assert(performance.now() - t0 < 500, `took ${performance.now() - t0} ms`);
 });
+
+Deno.test("a spaced hyphen between words used as a dash is the em dash tell", () => {
+  assertEquals(tells(analyzeText("It works - fast.", { format: FORMATS.email_single }), "em_dash")?.count, 1);
+  for (const ok of ["A well-known, built-in check.", "Open 9-5.", "- Unlock the list", "It costs 12 - 3 dollars less."]) {
+    assertEquals(tells(analyzeText(ok, { format: FORMATS.email_single }), "em_dash"), undefined, ok);
+  }
+});

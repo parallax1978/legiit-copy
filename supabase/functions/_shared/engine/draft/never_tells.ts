@@ -58,18 +58,20 @@ export function removeHashtags(text: string): string {
 
 /** One side of a range: a number with its currency or time, a weekday or a month. */
 const RANGE_ATOM = String.raw`(?:[$€£]?\d[\d,.:]*(?:\s?(?:%|k|am|pm|a\.m\.|p\.m\.))?|(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day|Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)`;
-const RANGE_RE = new RegExp(`(${RANGE_ATOM})[ \\t]*(?:—|–|--)[ \\t]*(${RANGE_ATOM})(?![\\p{L}\\p{N}])`, "gu");
+const RANGE_RE = new RegExp(`(${RANGE_ATOM})(?:[ \\t]*(?:—|–|--)[ \\t]*|[ \\t]+-[ \\t]+)(${RANGE_ATOM})(?![\\p{L}\\p{N}])`, "gu");
 
 /**
- * Em dashes, and a spaced en dash or double hyphen used as one: a range keeps an unspaced en dash ("9 am–5 pm"),
+ * Em dashes, and a spaced en dash, double hyphen or spaced hyphen used as one: a range keeps an unspaced en dash ("9 am–5 pm"),
  * a dash at a line's start or end or against a quote mark goes, a pair in one sentence becomes parentheses, a
  * single one a comma. Links are left whole. Only the seams around each dash change.
  */
 export function replaceEmDashes(text: string): string {
-  if (!/—|\s–\s|--/.test(text)) return text;
+  if (!/—|\s–\s|--|\s-\s/.test(text)) return text;
   return outsideLinks(text, (seg) => {
     let t = seg.replace(RANGE_RE, "$1–$2");
     t = t.replace(/(?<=\S)[ \t]+–[ \t]+(?=\S)/g, " — ").replace(/(?<=\S)[ \t]+--[ \t]+(?=\S)/g, " — ").replace(/(?<=\w)--(?=\w)/g, "—");
+    // a spaced hyphen between words is a dash typed with the hyphen key ("It works - fast.")
+    t = t.replace(/(?<=[A-Za-zÀ-ÿ][,.!?"”’)]?)[ \t]+-[ \t]+(?=[A-Za-zÀ-ÿ"“(])/g, " — ");
     if (!t.includes("—")) return t;
     t = t.replace(/(^|\n)([ \t]*)—[ \t]*/g, "$1$2").replace(/[ \t]*—[ \t]*(?=\n|$)/g, "");
     t = t.replace(/[ \t]*—[ \t]*(?=["“”])|(?<=["“”])[ \t]*—[ \t]*/g, " ");

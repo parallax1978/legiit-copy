@@ -137,22 +137,35 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
   }
 }
 
-// ---- default prompt versions (v1 from the engine's prompt modules), active if none active ----
+// ---- prompt versions: the version each step's code imports, active when none is or the active one is older ----
+// (the live row's template is what runs, so a project seeded with v1 rows would never run the newer prompts)
 try {
   const steps = ["intake", "research", "offer", "argument", "draft", "tell_edit", "cold_read", "editorial", "factual", "revise"];
   for (const step of steps) {
     try {
-      const mod = await import(`${root}supabase/functions/_shared/engine/prompts/${step}.v1.ts`);
+      const src = await Deno.readTextFile(`${root}supabase/functions/_shared/engine/steps/${step}.ts`);
+      const file = new RegExp(`from "\\.\\./prompts/(${step}\\.v\\d+)\\.ts"`).exec(src)?.[1] ?? `${step}.v1`;
+      const mod = await import(`${root}supabase/functions/_shared/engine/prompts/${file}.ts`);
       // Prompt modules export either a default or a named PromptModule (e.g. draftPrompt); take the first with a string system.
       // deno-lint-ignore no-explicit-any
       const p = [mod.default, ...Object.values(mod)].find((m: any) => m && typeof m === "object" && typeof m.system === "string" && m.step) as any;
       if (!p) { console.warn(`no PromptModule export found for ${step}`); continue; }
-      const { data: existing } = await db.from("prompt_versions").select("id").eq("step", step).eq("version", p.version ?? 1).maybeSingle();
-      if (existing) continue;
-      const { data: anyActive } = await db.from("prompt_versions").select("id").eq("step", step).eq("active", true).maybeSingle();
+      const version = p.version ?? 1;
+      const { data: active } = await db.from("prompt_versions").select("id, version").eq("step", step).eq("active", true).maybeSingle();
+      const { data: existing } = await db.from("prompt_versions").select("id").eq("step", step).eq("version", version).maybeSingle();
+      const activate = !active || active.version < version;
+      if (existing) {
+        if (activate && active?.id !== existing.id) {
+          if (active) await db.from("prompt_versions").update({ active: false }).eq("id", active.id);
+          const { error } = await db.from("prompt_versions").update({ active: true }).eq("id", existing.id);
+          console.log(`prompt ${step} v${version} activated`, error ? `ERROR ${error.message}` : "ok");
+        }
+        continue;
+      }
+      if (activate && active) await db.from("prompt_versions").update({ active: false }).eq("id", active.id);
       const d = STEP_DEFAULTS[step as StepName];
-      const { error } = await db.from("prompt_versions").insert({ step, version: p.version ?? 1, template: p.system, model: p.model ?? d.model, effort: p.effort ?? d.effort, max_tokens: p.maxTokens ?? d.maxTokens, active: !anyActive, notes: "seeded from engine prompt module" });
-      console.log(`prompt ${step} v${p.version ?? 1}`, error ? `ERROR ${error.message}` : "ok");
+      const { error } = await db.from("prompt_versions").insert({ step, version, template: p.system, model: p.model ?? d.model, effort: p.effort ?? d.effort, max_tokens: p.maxTokens ?? d.maxTokens, active: activate, notes: `seeded from engine prompt module ${file}` });
+      console.log(`prompt ${step} v${version}`, error ? `ERROR ${error.message}` : activate ? "ok, active" : "ok");
     } catch (e) {
       console.warn(`prompt module for ${step} not found (${e instanceof Error ? e.message.split("\n")[0] : e})`);
     }
