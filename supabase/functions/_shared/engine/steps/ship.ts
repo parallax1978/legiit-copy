@@ -19,10 +19,10 @@ export const shipStep: StepFn = async (ctx) => {
   const mechanical = stepOutput(ctx, "mechanical", MechanicalReport);
 
   // Flags and questions live in tables the context does not carry; read them best-effort and fall back to step outputs.
-  let pendingFlags: { source: string; severity: string; quote: string | null; issue: string | null }[] = [];
+  let pendingFlags: { source: string; severity: string; quote: string | null; issue: string | null; kind: string | null }[] = [];
   let openQuestions: string[] = [];
   try {
-    const { data } = await ctx.db.from("draft_flags").select("source,severity,quote,issue").eq("draft_id", latest.id).eq("decision", "pending");
+    const { data } = await ctx.db.from("draft_flags").select("source,kind,severity,quote,issue").eq("draft_id", latest.id).eq("decision", "pending");
     pendingFlags = data ?? [];
   } catch (e) {
     console.warn("ship: draft_flags unavailable", e instanceof Error ? e.message : e);

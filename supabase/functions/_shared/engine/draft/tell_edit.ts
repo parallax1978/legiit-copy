@@ -248,6 +248,8 @@ export interface EditContext {
   text: string;
   at: number;
   family?: FormatSpec["family"];
+  /** a ledger row's claim text and precision by id: a share word ("some", "most") is precision only when a cited row holds it */
+  rowText?: (id: string) => string | undefined;
 }
 
 const blankMarks = (t: string) => t.replace(MARK_RE, (m) => " ".repeat(m.length));
@@ -298,11 +300,16 @@ const SIZE_PAIR_RE = new RegExp(`\\b(up to|at most|at least|more than|less than|
 /** Words that size a claim about many ("most reports", "usually") in a sentence that holds a number. */
 const SHARE_RE = /\b(?:most|some|many|usually|typically|often|on average)\b/gi;
 
-function sizeWords(text: string): string[] {
+function sizeWords(text: string, rowText?: (id: string) => string | undefined): string[] {
   const out: string[] = [];
-  for (const s of strip(text).split(/(?<=[.!?…]["”’)]?)\s+/)) {
+  for (const raw of text.split(/(?<=[.!?…]["”’)]?)\s+/)) {
+    const s = strip(raw);
     for (const m of s.matchAll(new RegExp(SIZE_PAIR_RE.source, "gi"))) out.push(`${SIZE_CLASS[m[1].toLowerCase()]}:${norm(m[2])}`);
-    if (list(s, NUMBER_RE).length || list(s, NUMBER_WORD_RE).length) out.push(...(s.match(new RegExp(SHARE_RE.source, "gi")) ?? []).map((w) => `share:${w.toLowerCase()}`));
+    if (!list(s, NUMBER_RE).length && !list(s, NUMBER_WORD_RE).length) continue;
+    // a share word is the claim's precision when a row the sentence cites holds it; with no row to read, every one counts
+    const ids = Array.from(raw.matchAll(new RegExp(LEDGER_TAG.source, "g")), (m) => m[1]);
+    const rows = rowText && ids.length ? ids.map((id) => rowText(id) ?? "").join(" ").toLowerCase() : null;
+    for (const w of s.match(new RegExp(SHARE_RE.source, "gi")) ?? []) if (rows === null || rows.includes(w.toLowerCase())) out.push(`share:${w.toLowerCase()}`);
   }
   return out.sort();
 }
@@ -325,7 +332,7 @@ function precisionKept(before: string, after: string, ctx?: EditContext): boolea
   const [s, e] = touchedSentences(ctx, before);
   const was = ctx.text.slice(s, e);
   const now = ctx.text.slice(s, ctx.at) + after + ctx.text.slice(ctx.at + before.length, e);
-  return sizeWords(was).join("|") === sizeWords(now).join("|");
+  return sizeWords(was, ctx.rowText).join("|") === sizeWords(now, ctx.rowText).join("|");
 }
 
 /** Why an edit may not be applied, or null when it keeps every fact, tag, quote and link and stays close in length. */
@@ -465,7 +472,7 @@ export function splice(text: string, index: number, length: number, after: strin
 }
 
 /** Apply the editor's edits in order; each must find its span, pass the guards and leave the text changed. */
-export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: FormatSpec["family"], promise?: Set<string>): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
+export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: FormatSpec["family"], promise?: Set<string>, rowText?: EditContext["rowText"]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
   const out = units.map((u) => ({ ...u }));
   const byRef = new Map(out.map((u) => [u.ref, u]));
   const applied: TellEdit[] = [];
@@ -491,7 +498,7 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
       continue;
     }
     const found = u.text.slice(at.index, at.index + at.length);
-    const ctx: EditContext = { text: u.text, at: at.index, family };
+    const ctx: EditContext = { text: u.text, at: at.index, family, rowText };
     const why = guardEdit(found, e.after, ctx);
     if (why) {
       rejected.push({ ...e, reason: why });
@@ -712,7 +719,7 @@ function runTagged(u: EditUnit, run: string): boolean {
  * worded as a rephrase, so an opening the user has not chosen never costs the body a line and is never cut whole.
  * The alternative openings are never read against each other.
  */
-export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): RepeatFinding[] {
+export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, exemptTerms: string[], promise?: Set<string>): RepeatFinding[] {
   if (!REPEAT_FAMILIES.has(spec.family)) return [];
   const leadId = editsLeads(draft, spec);
   const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
@@ -732,7 +739,9 @@ export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: Form
       const [later, first] = [reading[p.later], reading[p.first]];
       let target: EditUnit | null;
       if (alternative) target = later.owner === "lead" ? later : first.owner === "lead" ? first : null;
-      else target = runTagged(later, p.run) && !runTagged(first, p.run) ? first : later;
+      // the first statement stays (the hook, the promise); a tagged later line keeps its facts and tag and says the
+      // shared words another way (docs/04 §7.1: a promise and its proof are two points)
+      else target = later;
       if (!target) continue;
       const other = target === later ? first : later;
       const key = `${target.ref}\u0000${p.run}`;
@@ -767,11 +776,17 @@ export function stillStands(text: string, line: string): boolean {
  * left out. For each open point, the lines to change: every standing line but the one to keep (the line whose
  * sentence carries a ledger tag, else the first).
  */
-export function openPoints(points: { point: string; lines: { ref: string; line: string }[] }[], units: EditUnit[], draft: DraftOutput, spec: FormatSpec): { point: string; lines: { ref: string; line: string }[] }[] {
+export function openPoints(points: { point: string; lines: { ref: string; line: string }[] }[], units: EditUnit[], draft: DraftOutput, spec: FormatSpec, promise?: Set<string>): { point: string; lines: { ref: string; line: string }[] }[] {
   if (!REPEAT_FAMILIES.has(spec.family)) return [];
   const leadId = editsLeads(draft, spec);
   const out: { point: string; lines: { ref: string; line: string }[] }[] = [];
   const refOf = (r: string) => r.trim().replace(/^\[|\]$/g, "");
+  // reading order: the format's sections in order, the openings where their section sits
+  const order = new Map<EditUnit, number>();
+  for (const s of draft.sections) {
+    for (const u of s.section_id === leadId ? units.filter((x) => x.owner === "lead") : units.filter((x) => x.owner === "section" && x.ownerId === s.section_id)) order.set(u, order.size);
+  }
+  const at = (u: EditUnit) => order.get(u) ?? Number.MAX_SAFE_INTEGER;
   for (const p of points) {
     const standing = p.lines
       .map((l) => ({ l: { ref: refOf(l.ref), line: l.line }, u: units.find((x) => x.ref === refOf(l.ref)) }))
@@ -788,7 +803,9 @@ export function openPoints(points: { point: string; lines: { ref: string; line: 
       const toChange = new Map<string, { ref: string; line: string }>();
       for (const r of readings) {
         if (r.length < 2) continue;
-        const keep = r.find((s) => sentenceTagged(s.u.text, s.l.line)) ?? r[0];
+        // the point's first line in reading order stays (the promise, when it makes the point); a later tagged line keeps
+        // its fact and tag and drops only the words that restate it
+        const keep = (promise?.size ? r.find((s) => statesPromise(s.l.line, promise)) : undefined) ?? [...r].sort((a, b) => at(a.u) - at(b.u))[0];
         for (const s of r) if (s !== keep) toChange.set(`${s.l.ref}\u0000${s.l.line}`, s.l);
       }
       if (toChange.size) out.push({ point: p.point, lines: Array.from(toChange.values()) });

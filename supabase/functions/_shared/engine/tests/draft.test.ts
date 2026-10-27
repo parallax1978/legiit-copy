@@ -186,8 +186,9 @@ const candidate = (proof: string[]) => ({
 Deno.test("pre-draft interrogation pauses without an argument, without proof on the winner, or with unknown awareness", () => {
   const noWinner = interrogate({ winner: null, awareness: "problem_aware", segment: null });
   assert(!noWinner.ok && /winning argument/i.test(noWinner.reason));
-  const noProof = interrogate({ winner: { candidate: candidate([]), thesis: "t" }, awareness: "problem_aware", segment: null });
-  assert(!noProof.ok && /proof/i.test(noProof.reason));
+  // an angle that cites no row is drafted on the reason-why, the reader's own run and the founder's call (rule 8)
+  const noRows = interrogate({ winner: { candidate: candidate([]), thesis: "t" }, awareness: "problem_aware", segment: null });
+  assert(noRows.ok);
   const noThesis = interrogate({ winner: { candidate: candidate([A]), thesis: null }, awareness: "problem_aware", segment: null });
   assert(!noThesis.ok && /thesis/i.test(noThesis.reason));
   const unknown = interrogate({ winner: { candidate: candidate([A]), thesis: "t" }, awareness: "unknown", segment: "cold social" });

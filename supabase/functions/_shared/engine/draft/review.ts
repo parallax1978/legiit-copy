@@ -7,7 +7,7 @@ import type { Section } from "../schemas/draft.ts";
 import type { EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput, ColdRead } from "../schemas/review.ts";
 import type { StepEffects } from "../steps/types.ts";
 import { ClaimType, LEDGER_TAG } from "../schemas/common.ts";
-import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
+import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, readerText, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
 import { stripNeverTells } from "./never_tells.ts";
 import { admissionsAdded, admissionsIn } from "./admissions.ts";
 import { ownerTellsIn } from "../tells.ts";
@@ -25,6 +25,37 @@ export function validateEditorial(v: EditorialVerdict): string[] {
   if (!v.prediction_reason.trim()) problems.push("prediction needs its one reason");
   if (v.secondary_notes.length > 5) problems.push("at most five secondary notes");
   return problems;
+}
+
+/** A direction that sends the user for proof the piece does not have, or asks for a NEEDS SOURCE mark (docs/04 §6). */
+const ASKS_FOR_PROOF_RE = /\b(?:ask the user|the user (?:must|should|needs to)|add|collect|gather|supply)\b[^.]{0,30}\b(?:proof|customer results|results on file|testimonials?|case stud(?:y|ies)|reviews|a source)\b|\[\[NEEDS SOURCE\]\]/i;
+const QUOTED_RE = /["“]([^"”]{8,})["”]/g;
+
+/** The copy chief's notes that break the reviewer's rules: a request for proof, or an example line that weakens a promise. */
+export function noteProblems(v: EditorialVerdict): string[] {
+  const out: string[] = [];
+  for (const n of [v.one_thing, ...v.secondary_notes]) {
+    if (!n) continue;
+    if (ASKS_FOR_PROOF_RE.test(n.do)) out.push(`A direction asks for proof, results or a source the piece does not have (on "${n.quote.slice(0, 60)}"): strengthen the carrier from what the piece already has (the mechanism, the reader's own run, the reason-why, rule 8); never ask the user to add proof.`);
+    for (const m of n.do.matchAll(QUOTED_RE)) {
+      if (introducesWeakening(n.quote, m[1]) || introducesDecorativeHedge(n.quote, m[1])) {
+        out.push(`An example line sizes the promise down or hedges it ("${m[1].slice(0, 60)}"): write the example at full strength (rules 8, 10 and 20).`);
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/** After the retry, a note that still breaks those rules goes; THE ONE THING keeps its quote and failure with a plain direction. */
+export function dropNoteProblems(v: EditorialVerdict): EditorialVerdict {
+  const bad = (n: { quote: string; do: string }) => noteProblems({ ...v, one_thing: { quote: n.quote, fails: "", do: n.do }, secondary_notes: [] }).length > 0;
+  const plain = "Strengthen the carrier from what the piece already has (the mechanism, the reader's own run in the trial, the reason-why) and keep the promise at full strength (rule 8).";
+  return {
+    ...v,
+    one_thing: v.one_thing && bad(v.one_thing) ? { ...v.one_thing, do: plain } : v.one_thing,
+    secondary_notes: v.secondary_notes.filter((n) => !bad(n)),
+  };
 }
 
 /**
@@ -66,6 +97,46 @@ export function introducesDecorativeHedge(quote: string, rewrite: string | null)
   return inRewrite.some((m) => !inQuote.has(m.toLowerCase()));
 }
 
+/** Sizing, conditional voice and weakening details a rewrite may not add to a promise (docs/04 §8.3; rules 10, 12, 20). */
+export const WEAKENING_RE = /\b(?:some|a few|sometimes|in some cases|tends? to|likely|possibly|potentially|aims? to)\b|\bI['’]d\b|\b(?:would|can) (?:help|bring|get|give|win|rank|grow|land|save|make)\b/gi;
+
+/** True when the rewrite brings in sizing, a conditional or a weakening admission the quoted line did not carry. */
+export function introducesWeakening(quote: string, rewrite: string | null): boolean {
+  if (!rewrite) return false;
+  const had = new Set((quote.match(new RegExp(WEAKENING_RE.source, "gi")) ?? []).map((m) => m.toLowerCase()));
+  // on a line with a number, a share word can be the row's precision ("some of the 40"), which rule 11 keeps
+  const precision = (m: string) => /\d/.test(readerText(quote)) && /^(?:some|a few|sometimes)$/i.test(m);
+  if ((rewrite.match(new RegExp(WEAKENING_RE.source, "gi")) ?? []).some((m) => !had.has(m.toLowerCase()) && !precision(m))) return true;
+  return admissionsAdded(quote, rewrite).length > 0;
+}
+
+/** Claim types only an invention can carry without a ledger row; any other type with no figure, quote or name is the copy's own argument. */
+const INVENTION_TYPES = new Set(["statistic", "results_testimonial", "experience_testimonial", "narrative", "expert_endorsement", "credential", "establishment", "earnings", "track_record"]);
+
+/** Names in the middle of a sentence (a capitalized word after a lowercase word or a comma), the offer's own words aside. */
+function namesIn(text: string, exemptTerms: string[]): string[] {
+  const names = text.match(/(?<=[a-z,;:]\s)[A-Z][a-z][\w'’-]*(?:\s+[A-Z][a-z][\w'’-]*)*/g) ?? [];
+  return names.filter((n) => !exemptTerms.some((e) => n.toLowerCase().includes(e.toLowerCase())));
+}
+
+/** The figures and names in a quote that none of the given rows hold: an item invented beside a real tag. */
+function unbackedItems(quote: string, rows: string, exemptTerms: string[]): string[] {
+  const t = readerText(quote);
+  const flat = rows.replace(/,/g, "").toLowerCase();
+  const figures = (t.match(/\d[\d,.]*/g) ?? []).map((x) => x.replace(/[,.]+$/, "").replace(/,/g, "")).filter((x) => !flat.includes(x));
+  const names = namesIn(t, exemptTerms).filter((n) => !flat.includes(n.toLowerCase()));
+  return [...figures, ...names];
+}
+
+/** A result or a use attributed to someone ("our customers rank", "agencies using it", "trusted by"): invented when no row holds it, figure or not. */
+const ATTRIBUTED_RE = /\b(?:trusted|used|loved|chosen|relied on) by\b|\b(?:our|their|other) (?:customers|clients|users|members|students|buyers)\b|\b(?:customers|clients|users|members|students|buyers|agencies|businesses|owners|teams|brands|sites) (?:using it|who use it|that use it|who tried it|on (?:it|the plan|Pro))\b/i;
+
+/** A line that could hold an invented item: a figure, a quotation, a name, a study, survey or award, a multiple, or a result attributed to someone. */
+function inventionShaped(quote: string, exemptTerms: string[]): boolean {
+  const t = readerText(quote);
+  return /\d|[$€£%]/.test(t) || /["“”]/.test(t) || /\b(?:study|studies|survey|trial|award|certified|according to|testimonial|reviews?|double[sd]?|triple[sd]?|twice|tenfold)\b/i.test(t) || namesIn(t, exemptTerms).length > 0 || ATTRIBUTED_RE.test(t);
+}
+
 export interface FactualPostProcess {
   output: FactualOutput;
   dropped: { quote: string; why: string }[];
@@ -84,7 +155,7 @@ export interface FactualPostProcess {
  *   ledger row, or a flag mapped to one, is the user's claim, not an invention;
  * - fabrication is fatal; claim_id must point at an existing row or is nulled.
  */
-export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[], exemptTerms: string[] = [], spec?: FormatSpec): FactualPostProcess {
+export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null; claim_text?: string | null; precision?: string | null }[], exemptTerms: string[] = [], spec?: FormatSpec): FactualPostProcess {
   const known = new Map(claims.map((c) => [c.id, c]));
   const droppedIds = droppedClaimIds(claims);
   const dropped: FactualPostProcess["dropped"] = [];
@@ -100,8 +171,22 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
       f.fabrication = true;
       f.claim_id = f.claim_id ?? citedDropped[0];
       f.rule = /dropped/i.test(f.rule) ? f.rule : `${f.rule}; ledger row dropped by the user (offer_claims.user_decision = drop): unusable`;
-    } else if (f.fabrication && (citedUsable.length > 0 || f.claim_id)) f.fabrication = false;
+    } else if (f.fabrication && (citedUsable.length > 0 || f.claim_id)) {
+      // the user's claim when every figure and name in it is held by the rows it cites; an item invented beside a
+      // real tag ("Join 4,000 agencies [[L:feature-row]]") stays a fabrication
+      const ids = [...citedUsable, ...(f.claim_id ? [f.claim_id] : [])];
+      const rows = ids.map((id) => `${known.get(id)?.claim_text ?? ""} ${known.get(id)?.precision ?? ""}`).join(" ");
+      // with the rows' text unknown the citation decides, as it always did
+      const textKnown = ids.some((id) => typeof known.get(id)?.claim_text === "string");
+      // a result attributed to someone stays invented unless a cited row holds an attribution too
+      const attributed = ATTRIBUTED_RE.test(readerText(f.quote)) && !ATTRIBUTED_RE.test(rows);
+      if (!textKnown || (!unbackedItems(f.quote, rows, exemptTerms).length && !attributed)) f.fabrication = false;
+    } else if (f.fabrication && f.test !== 10 && !INVENTION_TYPES.has(f.claim_type) && !inventionShaped(f.quote, exemptTerms)) {
+      // a promise of the result, reason-why or the reader's situation with no figure, quote or name invents nothing (docs/04 §8.3 test 10)
+      f.fabrication = false;
+    }
     if (f.fabrication) f.severity = "fatal";
+    else if (f.severity === "fatal") f.severity = "high"; // only an engine fabrication is fatal; every other flag is the user's decision
     const decided = f.claim_id ? known.get(f.claim_id)?.user_decision : null;
     const keptByCitation = !f.claim_id && citedUsable.length > 0 && citedUsable.every((id) => known.get(id)?.user_decision === "keep");
     if (!f.fabrication && (decided === "keep" || keptByCitation)) {
@@ -111,6 +196,11 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
     if (introducesDecorativeHedge(f.quote, f.suggested_rewrite)) {
       violations.push(`rewrite adds a decorative hedge or disclaimer: "${f.suggested_rewrite}"`);
       dropped.push({ quote: f.quote, why: "rewrite added a decorative hedge" });
+      continue;
+    }
+    if (!f.fabrication && introducesWeakening(f.quote, f.suggested_rewrite)) {
+      violations.push(`rewrite sizes the promise down, puts it in the conditional or adds a weakening detail ("some", "I'd", "planned"); fix only what the rule names and keep the line at full strength: "${f.suggested_rewrite}"`);
+      dropped.push({ quote: f.quote, why: "rewrite weakened the promise" });
       continue;
     }
     if (!f.fabrication && (!f.suggested_rewrite || !f.suggested_rewrite.trim())) {
@@ -188,10 +278,17 @@ export function factualFlags(out: FactualOutput): Flag[] {
  * strength, compliance and channel screens) is the user's decision in the Flags panel and never enters the copy on
  * its own (docs/04 §8.3).
  */
+/** A line a misquote can be in: a figure, a quotation, a name or an offer term. A promise or a reason-why is never a misquote (§8.3). */
+const MISQUOTE_RE = /\d|[$€£%]|["“”]|\b(?:free|trial|guarantee|refund|credits?|deadline|bonus|price|plan|month|year|day|week|cancel)\b/i;
+function misquoteShaped(quote: string): boolean {
+  const t = readerText(quote);
+  return MISQUOTE_RE.test(t) || /(?<=[a-z,;:]\s)[A-Z][a-z]/.test(t);
+}
+
 export function pendingFactualFlags(out: FactualOutput | null, claims: { id: string; user_decision: string | null }[]): FactualOutput["flags"] {
   if (!out) return [];
   const keep = new Set(claims.filter((c) => c.user_decision === "keep").map((c) => c.id));
-  return out.flags.filter((f) => f.fabrication || ((f.test === 1 || f.test === 8) && (!f.claim_id || !keep.has(f.claim_id))));
+  return out.flags.filter((f) => f.fabrication || ((f.test === 1 || f.test === 8) && misquoteShaped(f.quote) && (!f.claim_id || !keep.has(f.claim_id))));
 }
 
 // ---------------------------------------------------------------- revise
@@ -226,7 +323,6 @@ export function revisionQuotes(input: { editorial: EditorialVerdict | null; fact
   for (const t of input.mechanical?.flags ?? []) if (t.tier <= 1) q.push(...t.examples);
   for (const r of input.mechanical?.hard_fail_reasons ?? []) q.push(r);
   if (input.coldRead?.attention_drop_line) q.push(input.coldRead.attention_drop_line);
-  if (input.coldRead?.disbelieved_claim) q.push(input.coldRead.disbelieved_claim);
   return q.filter((x) => normalizeQuote(x).length > 0);
 }
 
@@ -318,7 +414,7 @@ export interface AttentionInput {
   editorial: EditorialVerdict | null;
   factual: FactualOutput | null;
   mechanical: MechanicalReport | null;
-  pendingFlags: { source: string; severity: string; quote: string | null; issue: string | null }[];
+  pendingFlags: { source: string; severity: string; quote: string | null; issue: string | null; kind?: string | null }[];
   needsSource: string[];
   openQuestions: string[];
   /** the copy shipped after a final revision that applied the last review's notes and was checked, not reviewed again */
@@ -338,7 +434,9 @@ export function userAttention(input: AttentionInput): string[] {
   };
   const who: Record<string, string> = { editorial: "copy chief", factual: "fact check", mechanical: "tell check", cold_read: "blind reader" };
   const gate: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
-  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` (line: "${f.quote}")` : ""}`);
+  // the fact check's flags are the user's call (docs/04 §8.3), except an invented fact, which is the engine's to fix
+  const flagLabel = (f: { source: string; kind?: string | null }) => (f.source === "factual" && f.kind !== "fabrication" ? "Your call (fact check)" : `Fix first (${who[f.source] ?? f.source})`);
+  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`${flagLabel(f)}: ${f.issue ?? ""}${f.quote ? ` (line: "${f.quote}")` : ""}`);
   // the owner's stack is a piece-level verdict: its flags are medium one by one, so it is listed whatever else is pending
   for (const r of input.mechanical?.hard_fail_reasons ?? []) {
     const n = /^owner_stack: (\d+)/.exec(r)?.[1];
@@ -354,7 +452,7 @@ export function userAttention(input: AttentionInput): string[] {
       const label = input.editorial.verdict === "REJECT" ? "Fix first" : "Worth fixing";
       push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} (line: "${input.editorial.one_thing.quote}")`);
     }
-    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} (line: "${f.quote}")`);
+    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`${f.fabrication ? "Fix first (fact check, invented fact)" : "Your call (fact check)"}: ${f.issue} (line: "${f.quote}")`);
     for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`Fix first (tell check): ${r}`);
   }
   // Lines that need a source and the offer's open questions are shown in their own sections of the piece

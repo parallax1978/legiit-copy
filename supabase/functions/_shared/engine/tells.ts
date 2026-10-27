@@ -26,6 +26,7 @@ import type { FormatId } from "./schemas/common.ts";
 import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "./schemas/common.ts";
 import { FORMATS, sectionBaseId, sectionItemIndex } from "./formats/index.ts";
 import { draftWordCount } from "./render.ts";
+import { ADMISSION_TELL_RE } from "./draft/admissions.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rule table
@@ -185,6 +186,7 @@ export const TELLS: TellRule[] = [
         "|(?:is|are|has|have) not (?:yet )?(?:been )?proven to" +
         `|hasn${A}t been proven` +
         "|no (?:customer )?(?:results|testimonials|reviews|case studies) (?:yet|to show)" +
+        "|no (?:paying )?(?:customers|clients|users|buyers|sales) (?:yet|to show)" +
         `|(?:we|I) (?:don${A}t|do not) have (?:any )?(?:proof|results|testimonials|data) (?:yet|that))`,
       "gi",
     ),
@@ -202,7 +204,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "youre_not_alone", weight: 4, scope: "all",
     regex: new RegExp(`\\byou${A}re not alone\\b|\\bif (?:that|this) sounds (?:like you|familiar)\\b|\\bsound familiar\\?|\\bsound like you\\?`, "gi"),
     example: "If that sounds familiar, you're not alone.",
-    fix: "The concrete thing the reader lived, from the research, in the speaker's words (rule 11).",
+    fix: "The concrete thing the reader lived, from a verbatim, the story inventory or the plain facts of their work (rule 2), said at full strength in the speaker's words (rule 11).",
   },
   {
     tier: 1, name: "less_than_a_cup", weight: 4, scope: "all",
@@ -439,6 +441,28 @@ export const TELLS: TellRule[] = [
     regex: new RegExp(`\\b(?:just )?my two cents\\b|\\bfor what it${A}s worth\\b|\\bfor what it is worth\\b|\\bFWIW\\b|\\bin my humble opinion\\b|\\bIMHO\\b|\\bin my (?:honest |personal )?(?:opinion|view)\\b|\\bif you ask me\\b|\\bwith a grain of salt\\b|\\byour mileage may vary\\b|\\bYMMV\\b`, "gi"),
     example: "Just my two cents, but your mileage may vary.",
     fix: "Cut it and state the point.",
+  },
+  {
+    // §7.1 empty hedges: a hedge on the product's promise or its reason-why, and the speaker's call in the conditional
+    tier: 1, name: "promise_hedge", weight: 4, scope: "all", owner: { words: true },
+    regex: new RegExp(
+      `\\b(?:could|might|may|can) help (?:you|your)\\b|\\b(?:could|might|may) (?:bring|win|land|earn|attract|send) (?:you|your)\\b` +
+        `|\\b(?:could|might|may) (?:double|grow|boost|lift|increase) your\\b|\\byour [a-z]+ (?:could|might|may) (?:rank|win|sell|grow|bring|outrank)\\b` +
+        `|\\b(?:could|might|may) (?:bring|get|win|land|earn|attract|book)(?: in)? (?:customers|clients|buyers|sales|leads|jobs|rankings)\\b` +
+        `|\\bin some cases\\b|\\bsome (?:searchers|buyers|readers|visitors|shoppers|customers|clients) (?:do|will|might|may|can)\\b|\\bwould have (?:given|shown|saved|told) you\\b` +
+        `|\\bI${A}d (?:start|begin|pick|choose|recommend|suggest|bet)\\b|\\bI would (?:start|begin|pick|choose|recommend|suggest)\\b` +
+        `|\\bwould have had you\\b|\\bsome searchers do\\b`,
+      "gi",
+    ),
+    example: "Keywords that could bring you customers. I'd start with the ones advertisers bid on.",
+    fix: "Say it in the indicative at full strength, its carrier beside it: \"Keywords that bring you customers.\" / \"Start with the ones advertisers bid on.\" (rules 8 and 20)",
+  },
+  {
+    // rule 12: a weakening admission about the product or its example, when the claim stays true without it
+    tier: 1, name: "weakening_admission", weight: 4, scope: "all", owner: {},
+    regex: new RegExp(ADMISSION_TELL_RE.source, "gi"),
+    example: "Pull Shot Coffee, a planned espresso bean subscription with no website yet.",
+    fix: "Cut the admission and keep the claim at full strength: \"Pull Shot Coffee, an espresso bean subscription.\" (rule 12)",
   },
   {
     tier: 1, name: "legal_boilerplate", weight: 4, scope: "all", owner: { words: true }, skip_block_types: ["disclosure"],

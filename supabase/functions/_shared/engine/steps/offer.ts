@@ -80,7 +80,7 @@ export function ensureOfferLedgerRows(c: OfferConstruction): OfferConstruction {
     const name = norm(p.name);
     if (!name || has((r) => norm(r.claim_text).includes(name))) continue;
     rows.push({
-      ...blankRow(`Premium: ${p.name}, answering "${p.answers_worry}"${p.value_basis ? ` (value basis: ${p.value_basis})` : ""}`, "feature", "offer_term"),
+      ...blankRow(`${p.name}${p.value_basis ? ` (value basis: ${p.value_basis})` : ""}`, "feature", "offer_term"),
     });
   }
 

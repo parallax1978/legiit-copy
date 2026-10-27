@@ -161,10 +161,9 @@ export function interrogate(input: InterrogationInput): Interrogation {
   const cand = Candidate.safeParse(input.winner.candidate);
   const allRefs = cand.success ? cand.data.proof_ledger_refs : [];
   const proofRefs = input.usableClaimIds ? allRefs.filter((r) => input.usableClaimIds!.has(r)) : allRefs;
-  if (allRefs.length === 0) {
-    return { ok: false, reason: "The winning argument carries no proof ledger rows (proof_ledger_refs is empty). Add the carrier to the ledger or choose an angle whose claim the ledger covers; the copy would otherwise draft around a missing carrier." };
-  }
-  if (proofRefs.length === 0) {
+  // an angle that cites no row is drafted on the reason-why, the reader's own run in the trial, the founder's call and
+  // the risk reversal (rule 8); every number, name and result in it still needs its row (rule 11)
+  if (allRefs.length > 0 && proofRefs.length === 0) {
     return { ok: false, reason: `The winning argument's proof rows (${allRefs.join(", ")}) were dropped by the user, so the claim has no usable carrier. Restore a row, add another carrier, or choose a different angle.` };
   }
   const thesis = input.winner.thesis ?? input.thesisFallback ?? null;

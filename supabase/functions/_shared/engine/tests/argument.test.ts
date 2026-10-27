@@ -222,6 +222,11 @@ Deno.test("carrierValue: seller facts, graded facts, testimonials, nothing", () 
   assertEquals(carrierValue(claim("m", "mechanism", null)), 2);
   assertEquals(carrierValue(claim("m", "mechanism", "D")), 1);
   assertEquals(carrierValue(claim("m", "mechanism", "B")), 2);
+  // the seller's own rows carry by role, whatever type they were given; an argued comparison carries, a measured one is graded
+  assertEquals(carrierValue({ ...claim("b", "benefit", "F"), role: "feature" }), 2);
+  assertEquals(carrierValue({ ...claim("b", "benefit", "F"), role: "promise" }), 0);
+  assertEquals(carrierValue({ ...claim("c", "comparative", "F"), claim_text: "Ahrefs hands you a list and leaves the decision to you." }), 2);
+  assertEquals(carrierValue({ ...claim("c", "comparative", "F"), claim_text: "Twice the rankings of Ahrefs." }), 0);
   assertEquals(carrierValue(claim("t", "results_testimonial", "E")), 1);
   assertEquals(carrierValue(claim("x", "expert_endorsement")), 1);
   assertEquals(carrierValue(claim("v", "vague_superlative")), 0);

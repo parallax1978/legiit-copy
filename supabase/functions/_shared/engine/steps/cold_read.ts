@@ -58,7 +58,7 @@ export const cold_readStep: StepFn = async (ctx) => {
     flags.push({ source: "cold_read", kind: "attention_drop", severity: "medium", quote: out.attention_drop_line, rule: null, issue: "A cold reader wanted to stop reading here", suggestedRewrite: null });
   }
   if (out.disbelieved_claim) {
-    flags.push({ source: "cold_read", kind: "disbelieved_claim", severity: "medium", quote: out.disbelieved_claim, rule: null, issue: "The one claim a cold reader believed least", suggestedRewrite: null });
+    flags.push({ source: "cold_read", kind: "disbelieved_claim", severity: "medium", quote: out.disbelieved_claim, rule: null, issue: "A cold reader believed this least: put its carrier within two sentences (the mechanism, the reader's own run in the trial, the reason-why) and keep the promise at full strength (rule 8)", suggestedRewrite: null });
   }
 
   const effects: NonNullable<Awaited<ReturnType<StepFn>>["effects"]> = { flags };

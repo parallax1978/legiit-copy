@@ -27,6 +27,22 @@ export const ADMISSION_RE = new RegExp(
   "gi",
 );
 
+/**
+ * The detector's subset: the admissions that weaken a proof in any piece. A launch announcement ("pre-launch price",
+ * "before it launches", "yet to launch") is a fact of a launch campaign, so only the edit guards refuse those.
+ */
+export const ADMISSION_TELL_RE = new RegExp(
+  [
+    `\\b(?:has|have|had)n${A}t (?:yet )?(?:launched|gone live|started selling|sold anything)`,
+    `\\bplan(?:s|ning) to (?:sell|go live)\\b`,
+    `\\ba planned (?:[a-z][a-z'’-]* ){0,3}(?:subscription|business|store|shop|brand|product|company|site|website|service|line|offer)s?\\b`,
+    `\\bno (?:website|web site|online store|storefront|track record)(?: yet)?\\b`,
+    `\\bwithout (?:a )?(?:website|online store|storefront)\\b`,
+    `\\bnone (?:of them )?(?:paying|buying)(?: yet)?\\b`,
+  ].join("|"),
+  "gi",
+);
+
 /** The admissions a text holds, lowercased, in order. */
 export function admissionsIn(text: string): string[] {
   return Array.from(text.matchAll(new RegExp(ADMISSION_RE.source, "gi")), (m) => m[0].toLowerCase());

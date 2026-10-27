@@ -26,7 +26,10 @@ export const factualStep: StepFn = async (ctx) => {
 
   // any sentence citing a ledger row the user dropped is a fabrication-level flag, whether or not the reviewer caught it
   const droppedRefs = droppedReferenceFlags(draft.sections, ctx.claims, pp.output.flags);
-  const needs = [...pp.output.needs_source];
+  // only a figure, a name, a quotation or a study needs a source (rule 11); a promise of the result, reason-why and the
+  // reader's situation never do (rule 8), so the reviewer's list keeps only lines shaped like one
+  const sourceShaped = (n: string) => /\d|%|["“”]|\b(?:study|survey|trial|review|testimonial|award|certified|according to)\b/i.test(n) || /(?<=[a-z,;:]\s)[A-Z][a-z]/.test(n);
+  const needs = pp.output.needs_source.filter(sourceShaped);
   for (const n of draft.needs_source) if (!needs.some((x) => x.trim().toLowerCase() === n.trim().toLowerCase())) needs.push(n);
   // a rewritten line is new copy: the owner's never-rules hold for it too (docs/04 §8.3, §7.1)
   const flags = [...pp.output.flags, ...droppedRefs].map((f) => (f.suggested_rewrite ? { ...f, suggested_rewrite: stripNeverTells(f.suggested_rewrite) } : f));

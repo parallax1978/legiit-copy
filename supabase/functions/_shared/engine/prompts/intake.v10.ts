@@ -17,6 +17,18 @@ type Args = Parameters<typeof intakeV9.user>[1];
 
 const SYSTEM = amend(intakeV9.system, [
   [
+    `- vertical; business_opportunity true when the offer sells a way to earn money;`,
+    `- vertical; business_opportunity true only when the buyer pays to start an income stream (a franchise-style or work-from-home program, a reseller kit, 16 CFR 437), never for a tool or service that helps a business win customers, whose promise of rankings, customers or money is the outcome promise;`,
+  ],
+  [
+    `A sentence with three numbers is three rows.`,
+    `A sentence with three numbers is three rows. A row states its fact in the indicative, as the seller's sources state what the product does ("keeps the keywords with buyer intent", never "could bring customers"), and never carries a weakening stage word about the product or its example ("planned", "unlaunched", "no website yet") when the fact stays true without it: that word goes in brief.unknowns. The reader's situation and the market's logic are not ledger rows (rule 2): the copy says them from the research. The product's own published output (a public sample plan or report) is a feature row, role proof, ungraded, never a statistic graded E; what a demonstration run left out goes in brief.unknowns, never a proof row. A promise row names the result the reader gets, not the deliverable.`,
+  ],
+  [
+    `'flagged' for anything Section 8.1's last column marks for the user's decision or that 8.2 forbids at the row's grade:`,
+    `'flagged' for anything Section 8.1's last column marks for the user's decision or that 8.2 forbids at the row's grade (never a row that states what the product does or delivers and when, with no number on a result and no result attributed to anyone):`,
+  ],
+  [
     `urls found; unknowns (facts the sources do not settle).`,
     `urls found; unknowns (facts the sources do not settle: a price, a term, who signs, a number, a date; never whether the product produces the result it is sold for, which the copy promises from its mechanism and demonstration, rule 8).`,
   ],
@@ -26,7 +38,7 @@ const SYSTEM = amend(intakeV9.system, [
   ],
   [
     `- evidence_grade per Section 8.2 for every row that asserts an outcome, a result, a statistic, a mechanism or a credential: A an RCT on the finished product at the marketed dose; B an RCT on the ingredient at the same dose and form; C observational; D mechanistic, in vitro or animal; E anecdote, testimonial or traditional use; F none.`,
-    `- evidence_grade per Section 8.2 for every row that asserts a health effect, a statistic, a study, a result someone got or a credential: A an RCT on the finished product at the marketed dose; B an RCT on the ingredient at the same dose and form; C observational; D a lab, in vitro or animal study of a health claim; E anecdote, testimonial or traditional use; F no outside evidence of results. A row that says what the seller's own product does or how it produces the result (a feature, an output, a process, the mechanism of software or a service) is substantiated by the product itself (Section 8.1): grade it F, never D, and it carries the promise of the result.`,
+    `- evidence_grade per Section 8.2 for every row that asserts a health effect, a statistic, a study, a result someone got or a credential: A an RCT on the finished product at the marketed dose; B an RCT on the ingredient at the same dose and form; C observational; D a lab, in vitro or animal study of a health claim; E anecdote, testimonial or traditional use; F no outside evidence of results. A row that says what the seller's own product does or how it produces the result (a feature, an output, a process, the mechanism of software or a service) is substantiated by the product itself (Section 8.1): leave it ungraded (evidence_grade null), never D, and it carries the promise of the result.`,
   ],
   [
     `the mechanism, the proof for the core promise, who exactly is sold to and how aware they are,`,

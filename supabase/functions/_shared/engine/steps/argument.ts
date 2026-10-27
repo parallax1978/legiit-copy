@@ -51,7 +51,7 @@ export function parseArgumentPartial(p: unknown): ArgumentPartial | null {
   return r.success ? r.data : null;
 }
 export const NO_SURVIVOR_PAUSE_REASON =
-  "no candidate argument passed both gates (desire magnitude >= 4/9 with k >= 5 verbatims; a verifiable ledger fact covering the promise). Add proof rows to the ledger or verbatims to the research, then try another angle.";
+  "no candidate argument passed both gates (desire magnitude >= 4/9 with k >= 5 verbatims, or a purpose that names the desire; a carrier for the promise: a feature, process, mechanism or offer-term row, or the trial the reader runs). Pick an angle to draft it, state the piece's purpose, or refresh the research; a promise of the result never needs a customer result on file.";
 
 export interface ArgumentDeps {
   call: typeof callModel;

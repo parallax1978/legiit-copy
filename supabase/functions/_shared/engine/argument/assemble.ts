@@ -167,7 +167,7 @@ export function assembleArgument(input: {
   if (input.purposeGiven && !servers.length && eligibleRows.length) notes.push("No survivor serves the stated purpose; the winner is the best evidence-backed argument instead. Refresh the research or restate the purpose if that is not the piece you want.");
   if (noSurvivors) {
     notes.push(
-      `NO CANDIDATE PASSED BOTH GATES (desire >= ${4}/9 with k >= 5; a verifiable ledger fact covering the promise). winner_id names the best-ranked candidate for reference only; nothing is selected. Add proof rows to the ledger or verbatims to the research, then try another angle.`,
+      `NO CANDIDATE PASSED BOTH GATES (desire >= ${4}/9 with k >= 5; a verifiable ledger fact covering the promise). winner_id names the best-ranked candidate for reference only; nothing is selected. Pick an angle to draft it, state the piece's purpose, or refresh the research; a promise of the result never needs a customer result on file.`,
     );
   }
 

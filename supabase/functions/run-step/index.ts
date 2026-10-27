@@ -507,7 +507,8 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
 
   let editorialVerdict: PipelineState["editorialVerdict"] = isVerdict(editorialOut?.verdict) ? editorialOut.verdict : null;
   let mechanicalHardFail = mechanicalOut?.hard_fail === true;
-  let factualFatal = Array.isArray(factualOut?.flags) && factualOut.flags.some((f) => asRecord(f)?.fabrication === true || asRecord(f)?.severity === "fatal");
+  // only an engine fabrication is fatal (docs/04 §8.3); a strength or compliance flag is the user's decision
+  let factualFatal = Array.isArray(factualOut?.flags) && factualOut.flags.some((f) => asRecord(f)?.fabrication === true);
 
   // the step that just finished may carry the signal in its effects; those win over the stored output
   const fx = result?.effects;

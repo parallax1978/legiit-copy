@@ -13,7 +13,7 @@ import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, statesPromise, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { Candidate } from "../schemas/argument.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
@@ -48,7 +48,7 @@ const SHORT_ONLY = new Set<TellEditAuditItem["kind"]>(["said_again", "tool_tour"
  * a line in a text that carries a ledger tag when it was listed as said again (the proof keeps its line; the untagged
  * one changes), a line that is the user's accepted wording, and in a long piece a repeat or a tour of the steps.
  */
-function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: EditUnit[], opts: { short: boolean; accepted: string[] }): TellEditAuditItem[] {
+function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: EditUnit[], opts: { short: boolean; accepted: string[]; promise?: Set<string> }): TellEditAuditItem[] {
   const textOf = (units: EditUnit[], ref: string) => units.find((u) => u.ref === ref);
   return audit.filter((x) => {
     if (x.keep) return false;
@@ -58,6 +58,8 @@ function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: Edi
     if (!was || !now || was.type === "testimonial" || !has(was.text, x.line)) return false;
     if (!opts.short && SHORT_ONLY.has(x.kind)) return false;
     if (x.kind === "said_again" && sentenceTagged(was.text, x.line)) return false;
+    // the line that states the promise is never pressed to go (docs/04 rule 8): its repeat is the other line's to fix
+    if (x.kind === "said_again" && opts.promise?.size && statesPromise(x.line, opts.promise)) return false;
     // a price, the guarantee, a disclosure and an amount keep the offer's wording: never asked about as copied wording
     if (x.kind === "ledger_wording" && (["price", "guarantee", "disclosure", "cta", "button"].includes(was.type) || /[$€£¥]\s?\d/.test(x.line))) return false;
     if (opts.accepted.some((w) => has(w, x.line))) return false;
@@ -95,10 +97,13 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     ...ctx.claims.filter((c) => c.user_decision === "rewrite" && c.claim_text).map((c) => c.claim_text),
     ...(chosenOffer.success && !ONE_LINE_OFFER_FAMILIES.has(spec.family) ? [chosenOffer.data.guarantee.denominated_text] : []),
   ];
-  const auditOpts = { short: REPEAT_FAMILIES.has(spec.family), accepted: acceptedWording };
   // the argument's promise: no edit removes the piece's last line that states it (docs/04 rule 8)
   const angle = Candidate.safeParse(ctx.winningAngle?.candidate);
   const promise = promiseStems(angle.success ? angle.data.promise : null);
+  const auditOpts = { short: REPEAT_FAMILIES.has(spec.family), accepted: acceptedWording, promise };
+  // a share word ("some", "most") in a sentence with a number is precision only when the row it cites holds it
+  const rows = new Map(ctx.claims.map((c) => [c.id, `${c.claim_text ?? ""} ${c.precision ?? ""}`]));
+  const rowText = (id: string) => rows.get(id);
 
   const original = editableUnits(source, spec);
   const groups = groupUnits(original);
@@ -144,7 +149,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     // the checker's list for this group: each text's own tells, and what the whole piece says twice
     const findingsFor = (all: EditUnit[]) => {
       const mine = all.filter((u) => refs.has(u.ref));
-      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
+      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms, promise).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
     };
     const args: TellEditArgs = {
       draft: source,
@@ -160,7 +165,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
     const unitsBefore = units;
-    let r = applyInGroup(units, res.output.edits, refs, spec.family, promise);
+    let r = applyInGroup(units, res.output.edits, refs, spec.family, promise, rowText);
     const listed = (res.output.audit ?? []).filter((x) => refs.has(refOf(x.ref)));
     audit.push(...listed);
     // the model's summary lines stand only when all its edits landed; otherwise the landed edits' own labels say what changed
@@ -169,7 +174,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     // as tells and left without an edit that landed
     let left = leftUnedited(listed, unitsBefore, r.units, auditOpts);
     const mapped = (res.output.points ?? []).map((p) => ({ ...p, lines: p.lines.filter((l) => refs.has(refOf(l.ref))) })).filter((p) => p.lines.length > 1);
-    let pointsOpen = openPoints(mapped, r.units, source, spec);
+    let pointsOpen = openPoints(mapped, r.units, source, spec, promise);
     const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
     if ((refusedMany || left.length || pointsOpen.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = [
@@ -186,13 +191,13 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         const current = r.units.filter((u) => refs.has(u.ref));
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: findingsFor(r.units), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
-        const again = applyInGroup(r.units, retry.output.edits, refs, spec.family, promise);
+        const again = applyInGroup(r.units, retry.output.edits, refs, spec.family, promise, rowText);
         whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
         // a line the retry kept on purpose is kept; one it left again is reported
         const keptNow = (retry.output.audit ?? []).filter((x) => x.keep);
         left = leftUnedited(left, unitsBefore, again.units, auditOpts).filter((x) => !keptNow.some((k) => refOf(k.ref) === refOf(x.ref) && (has(k.line, x.line) || has(x.line, k.line))));
-        pointsOpen = openPoints(mapped, again.units, source, spec);
+        pointsOpen = openPoints(mapped, again.units, source, spec, promise);
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
         console.warn("tell edit retry failed:", e instanceof Error ? e.message : e);
@@ -249,9 +254,9 @@ function summaryOf(lines: string[], landed: TellEdit[], refused: boolean): strin
 }
 
 /** applyEdits for one group: an edit naming a text outside the group is refused with its reason, never dropped silently. */
-function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, family?: FormatSpec["family"], promise?: Set<string>): ReturnType<typeof applyEdits> {
+function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, family?: FormatSpec["family"], promise?: Set<string>, rowText?: (id: string) => string | undefined): ReturnType<typeof applyEdits> {
   const outside = edits.filter((e) => !refs.has(refOf(e.ref)));
-  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), family, promise);
+  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), family, promise, rowText);
   return { ...r, rejected: [...outside.map((e) => ({ ...e, reason: `no text in this part has the reference ${e.ref}` })), ...r.rejected] };
 }
 

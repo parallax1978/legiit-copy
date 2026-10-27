@@ -64,12 +64,12 @@ export const FactualFlag = z.object({
   claim_type: ClaimType,
   claim_id: z.string().nullable(),
   test: z.number().min(1).max(10).describe("which of the ten factual-review tests raised it"),
-  fabrication: z.boolean().describe("true only when the engine invented a fact absent from the ledger"),
+  fabrication: z.boolean().describe("true only when the copy states a number, statistic, study, named person or customer, testimonial, quote, credential or someone's result that no usable ledger row holds; never for a promise of the result, reason-why logic, the reader's situation or what the product does"),
 });
 export const FactualOutput = z.object({
   flags: z.array(FactualFlag),
   consistency_check: z.object({ ok: z.boolean(), mismatches: z.array(z.string()) }),
-  needs_source: z.array(z.string()),
+  needs_source: z.array(z.string()).describe("lines holding a number, name, study, quote, credential, price or date the ledger lacks; never a promise of the result, reason-why or the reader's situation"),
 });
 export type FactualOutput = z.infer<typeof FactualOutput>;
 

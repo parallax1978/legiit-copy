@@ -264,15 +264,17 @@ Deno.test("userAttention lists pending fatal/high flags, deduplicated; sources a
     pendingFlags: [
       { source: "editorial", severity: "fatal", quote: "The usual fix", issue: "Gate C" },
       { source: "factual", severity: "medium", quote: "x", issue: "ignored: medium" },
-      { source: "factual", severity: "high", quote: "73%", issue: "no ledger row" },
-      { source: "factual", severity: "high", quote: "73%", issue: "no ledger row" },
+      { source: "factual", severity: "high", quote: "73%", issue: "no ledger row", kind: "fabrication" },
+      { source: "factual", severity: "high", quote: "73%", issue: "no ledger row", kind: "fabrication" },
+      { source: "factual", severity: "high", quote: "Rank for the keywords that pay.", issue: "a strength note", kind: "test_2:benefit" },
     ],
     needsSource: ["Cuts the audit to 4 hours [[NEEDS SOURCE]]."],
     openQuestions: ["What is the refund window?"],
   });
-  assertEquals(items.length, 2);
+  assertEquals(items.length, 3);
   assert(items[0].startsWith("Fix first (copy chief)"));
-  assert(items[1].startsWith("Fix first (fact check"));
+  assert(items[1].startsWith("Fix first (fact check"), "an invented fact is the engine's to fix");
+  assert(items[2].startsWith("Your call (fact check)"), "every other fact-check flag is the user's decision");
 
   const fallback = userAttention({
     editorial: verdict({ verdict: "REJECT", reject_gate: "C" }),
@@ -312,7 +314,8 @@ Deno.test("offer block: a note that tells the copy to leave out rankings, sales 
     const text = offerBlockText(variant, null, [], spec);
     const head = text.split("\n").slice(0, 2).join("\n");
     // the override comes before the note it overrules, and names what the copy sells
-    assert(head.includes("Nothing in it limits what the copy promises") && head.includes("the rankings, the customers, the sales and the money included"), head);
+    assert(head.includes("limits what the copy promises") && head.includes("the rankings, the customers, the sales and the money included"), head);
+    assert(!text.includes("So the offer promises the deliverable"), "the variant's reasons are for the user, never the copy");
     assert(text.includes("delivery timing note") && !text.includes("promise/delivery gap note"), text);
     assert(text.indexOf("is overruled") < text.indexOf("never rankings, sales or revenue"));
   }

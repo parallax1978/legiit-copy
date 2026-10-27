@@ -28,7 +28,7 @@ export const ChosenOffer = z.object({
 export const OfferConstruction = z.object({
   options_sheet: z.array(OfferOption),
   chosen: ChosenOffer,
-  promise_delivery_gap_note: z.string(),
+  promise_delivery_gap_note: z.string().describe("what arrives when, for the user: the first thing the buyer gets and how soon, and when the result it produces shows; timing only, never a limit on the result the copy sells (the rankings, the customers, the sales, the money), rule 8"),
   ledger_rows_to_add: z.array(ClaimRowInput),
   needs_user_approval: z.literal(true),
 });

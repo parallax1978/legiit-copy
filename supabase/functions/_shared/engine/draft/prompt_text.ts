@@ -18,6 +18,20 @@ import { ownerTellsIn } from "../tells.ts";
 const clip = (s: string | null | undefined, n: number) => (s ? (s.length > n ? s.slice(0, n - 1) + "…" : s) : "");
 const j = (v: unknown) => (v === null || v === undefined ? "" : typeof v === "string" ? v : JSON.stringify(v));
 
+/**
+ * A ledger row's fact without the engine's own memo: the offer step's "Premium:" label, the worry it answers with its
+ * verbatim ids, and "No dollar value: no ledger basis." are notes for the user, never copy (the offer block still says
+ * which premium answers which worry and that no dollar value may be stated).
+ */
+export function rowFacts(text: string): string {
+  return text
+    .replace(/^Premium:\s*/i, "")
+    .replace(/,?\s*answering\s+["“'‘][\s\S]*$/i, "")
+    .replace(/\s*It answers\s+[\s\S]*?(?=No dollar value|$)/i, "")
+    .replace(/\s*No dollar value: no ledger basis\.?/gi, "")
+    .trim();
+}
+
 /** One ledger row per line with its inline tag, grade, status and the terms copy must repeat exactly. */
 export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean } = {}): string {
   const rows = claims.filter((c) => opts.includeDropped || c.user_decision !== "drop");
@@ -31,7 +45,7 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
       ? ", user decided: rewrite (this claim text is the accepted wording; use it as written)"
       : "";
     const parts = [`[[L:${c.id}]] (${c.claim_type}${c.role ? `, role ${c.role}` : ""}, grade ${c.evidence_grade ?? "none"}, ${c.status}${decision})`];
-    parts.push(`  claim: ${c.claim_text}`);
+    parts.push(`  claim: ${rowFacts(c.claim_text)}`);
     if (c.precision) parts.push(`  precision: ${c.precision}`);
     const ev = (c.evidence ?? {}) as Record<string, unknown>;
     const evParts = ["source_ref", "endpoint", "population", "dose", "duration", "effect_size"].filter((k) => ev[k]).map((k) => `${k}=${j(ev[k])}`);
@@ -47,10 +61,14 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
     if (c.material_connection) parts.push(`  material connection: yes (disclose)`);
     if (c.story_claim) parts.push(`  story claim`);
     if (c.establishment_signal) parts.push(`  establishment signal`);
-    if (c.flag) parts.push(`  flag: ${j(c.flag)}`);
+    // intake's flag is a note for the user, never an instruction to the copy: the rule and the issue, not its rewrite
+    if (c.flag && c.user_decision !== "keep") {
+      const f = c.flag as { rule?: string; issue?: string };
+      parts.push(`  intake's note for the user (the user's decision, never an instruction to the copy: the copy keeps the claim at full strength and never takes a note's rewrite on its own, docs/04 §8.3): ${f.rule ?? ""}${f.issue ? `: ${f.issue}` : ""}`);
+    }
     return parts.join("\n");
   });
-  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and every word that sets a claim's size or precision ("up to," "about," "most," "within") and say the rest the way the speaker would to one reader, never in the row's feature phrasing; a row the user decided "rewrite", a line the offer block says to repeat and a quotation of a documented person or source stay as written: rule 11):\n${lines.join("\n")}`;
+  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and every word that bounds one of its numbers ("up to 40," "about 2,000," "within ten minutes," "most of the 40") and say the rest the way the speaker would to one reader, never in the row's feature phrasing; a hedge on what the product does or brings with no number in it ("can help," "may," "could," "some") is the row's wording, not its fact, and the copy says that fact in the indicative (rules 11 and 20); a row the user decided "rewrite", a line the offer block says to repeat and a quotation of a documented person or source stay as written: rule 11):\n${lines.join("\n")}`;
 }
 
 export function briefText(brief: OfferBrief | null, offerName: string): string {
@@ -81,11 +99,12 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
   const oneLine = !!spec && ONE_LINE_OFFER_FAMILIES.has(spec.family);
   const terms = claims.filter((c) => c.user_decision !== "drop" && (c.role === "offer_term" || ["price_discount", "guarantee", "scarcity_urgency", "continuity_trial", "free"].includes(c.claim_type)));
   const termLines = terms.length
-    ? `offer-term ledger rows (cite these${oneLine ? `; this ${spec!.name} does not take payment, so it states the offer once, in one line (the price, the trial and the action), where the format puts it, and leaves the guarantee's terms, the trial's limits (what opens when), the plan's credits and allowances, the cancel mechanics and the refund policy to the page that takes payment: rule 16` : ""}):\n${terms.map((c) => `  [[L:${c.id}]] ${c.claim_text}`).join("\n")}`
+    ? `offer-term ledger rows (cite these${oneLine ? `; this ${spec!.name} does not take payment, so it states the offer once, in one line (the price, the trial and the action), where the format puts it, and leaves the guarantee's terms, the trial's limits (what opens when), the plan's credits and allowances, the cancel mechanics and the refund policy to the page that takes payment: rule 16` : ""}):\n${terms.map((c) => `  [[L:${c.id}]] ${rowFacts(c.claim_text)}`).join("\n")}`
     : "offer-term ledger rows: none; any price, guarantee or deadline figure without a row is written with [[NEEDS SOURCE]]";
+  const overrule = `Nothing in this block limits what the copy promises: the copy sells the result the product produces, the rankings, the customers, the sales and the money included (rule 8), and any note below that says to leave them out is overruled.`;
   if (!variant) {
     return [
-      `APPROVED OFFER BLOCK: no constructed variant. The offer is the brief's deliverables, price and guarantee exactly as stated there. Nothing is added: no bonus, no discount, no deadline, no stack value.`,
+      `APPROVED OFFER BLOCK: no constructed variant. The offer is the brief's deliverables, price and guarantee exactly as stated there. Nothing is added: no bonus, no discount, no deadline, no stack value. ${overrule}`,
       brief ? `price: ${brief.price.text}${brief.price.plan ? ` (${brief.price.plan})` : ""}; guarantee: ${brief.guarantee.text ?? "none"}; deliverables: ${brief.deliverables.join("; ")}` : "",
       termLines,
     ].filter(Boolean).join("\n");
@@ -93,11 +112,11 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
   const chosen = ChosenOffer.safeParse(variant.chosen);
   const lines = [
     `APPROVED OFFER BLOCK (status ${variant.status}; the close, the order form and every asset state exactly this deal):`,
-    `This block fixes the deal (price, trial, guarantee, terms) and what arrives when. Nothing in it limits what the copy promises: the copy sells the result the product produces, the rankings, the customers, the sales and the money included (rule 8), and any note below that says to leave them out is overruled.`,
+    `This block fixes the deal (price, trial, guarantee, terms) and what arrives when. ${overrule}`,
   ];
   if (chosen.success) {
     const c = chosen.data;
-    lines.push(`variant: ${c.variant}; reasons: ${c.reasons}`);
+    lines.push(`variant: ${c.variant}`);
     lines.push(`price presentation: ${c.price_presentation}`);
     if (brief) lines.push(`price: ${brief.price.text}${brief.price.plan ? ` (${brief.price.plan})` : ""}`);
     lines.push(oneLine
@@ -207,8 +226,11 @@ export function voiceText(v: VoiceProfileRow | null, configGreeting: string | nu
 /** The paragraph of §9 this format encodes, found by its standard_section title. */
 export function formatParagraph(spec: FormatSpec): string {
   const lines = FORMAT_SPECS.split("\n");
-  const hit = lines.find((l) => l.startsWith(spec.standard_section));
-  return hit ?? `${spec.name}: ${spec.description}`;
+  // section 9's opening rule holds for every format: a testimonial, case study, proof, scarcity or deadline slot with
+  // nothing on file is left out, and its space goes to the no-results carriers
+  const intro = lines.find((l) => l.startsWith("Sections in order")) ?? "";
+  const hit = lines.find((l) => l.startsWith(spec.standard_section)) ?? `${spec.name}: ${spec.description}`;
+  return [intro, hit].filter(Boolean).join("\n");
 }
 
 export function sectionSpecText(s: SectionSpec, extra: { id?: string; itemRole?: string | null } = {}): string {

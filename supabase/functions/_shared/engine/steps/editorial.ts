@@ -7,7 +7,7 @@ import { ColdRead, EditorialVerdict, MechanicalReport } from "../schemas/review.
 import { editorialPrompt, type EditorialArgs } from "../prompts/editorial.v13.ts";
 import { parseOptions } from "../draft/options.ts";
 import { targetAwareness } from "../draft/ledger.ts";
-import { editorialFlags, validateEditorial } from "../draft/review.ts";
+import { dropNoteProblems, editorialFlags, noteProblems, validateEditorial } from "../draft/review.ts";
 import { analyzeDraft, exemptTermsFrom } from "../tells.ts";
 import { callStep, describeArgument, latestDraftOutput, stepOutput, thesisOf } from "../draft/step_util.ts";
 
@@ -37,13 +37,14 @@ export const editorialStep: StepFn = async (ctx) => {
 
   await ctx.progress("Copy chief review: gates A-D in order, then the prediction");
   let res = await callStep(ctx, "editorial", editorialPrompt, args, EditorialVerdict, "editorial review");
-  let problems = validateEditorial(res.output);
+  // the verdict's shape, and the reviewer's rules on its notes (never ask for proof, never weaken a promise): one retry
+  let problems = [...validateEditorial(res.output), ...noteProblems(res.output)];
   if (problems.length) {
     res = await callStep(ctx, "editorial", editorialPrompt, { ...args, retryNote: problems.join("\n") }, EditorialVerdict, "editorial review (retry)");
     problems = validateEditorial(res.output);
     if (problems.length) throw new Error(`editorial verdict malformed twice: ${problems.join("; ")}`);
   }
-  const v = res.output;
+  const v = dropNoteProblems(res.output);
 
   const summary = `${v.verdict}${v.reject_gate ? ` at Gate ${v.reject_gate}` : ""}; predicts ${v.prediction} vs control (${v.prediction_reason}); ${v.one_thing ? `the one thing: ${v.one_thing.fails}` : "no fatal defect"}; ${v.secondary_notes.length} secondary, ${v.do_not_touch.length} DO NOT TOUCH`;
   await ctx.progress(summary);

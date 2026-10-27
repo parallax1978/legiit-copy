@@ -134,3 +134,78 @@ Deno.test("revision: a fix that writes a weakening admission into a line is reve
   assert(r.sections[0].blocks[1].text.includes("about 20 minutes"), "the clean change stays");
   assertEquals(r.admissions.sort(), ["main-6", "main-6a"]);
 });
+
+// ---------------------------------------------------------------- the one hard stop holds both ways (round 5)
+
+import { dropNoteProblems, noteProblems, pendingFactualFlags, postProcessFactual } from "../draft/review.ts";
+import { rowFacts } from "../draft/prompt_text.ts";
+import { analyzeText } from "../tells.ts";
+import { FORMATS } from "../formats/index.ts";
+import type { EditorialVerdict, FactualOutput } from "../schemas/review.ts";
+
+const ROW = "3f1c2a9e-0000-4000-8000-000000000001";
+const fl = (over: Partial<FactualOutput["flags"][number]>): FactualOutput["flags"][number] => ({ quote: "", rule: "§8.3 test 10", issue: "x", suggested_rewrite: null, severity: "medium", claim_type: "benefit", claim_id: null, test: 10, fabrication: false, ...over });
+const out = (flags: FactualOutput["flags"]): FactualOutput => ({ flags, consistency_check: { ok: true, mismatches: [] }, needs_source: [] });
+const ledger = [{ id: ROW, user_decision: null, claim_text: "Every keyword carries Google's cost per click and an intent.", precision: null }];
+
+Deno.test("fabrication: the copy's own argument is never an invention; an item invented beside a real tag still is", () => {
+  // reason-why and the reader's situation, labeled fabrications by the reviewer: not inventions, so nothing is cut;
+  // with no rewrite the flag goes, and with one it is the user's call at high, never fatal
+  const reason = postProcessFactual(out([fl({ quote: "A business that keeps bidding on a search is getting customers from it.", fabrication: true, severity: "fatal", test: 2 })]), ledger);
+  assertEquals(reason.output.flags.length, 0);
+  assert(reason.dropped.some((d) => d.why.includes("no rewrite")));
+  const pain = postProcessFactual(out([fl({ quote: "You paid a writer for a page that never earned back what it cost.", fabrication: true, severity: "fatal", test: 2, suggested_rewrite: "You paid a writer for a page that never earned back what it cost, in your own data." })]), ledger);
+  assertEquals([pain.output.flags[0].fabrication, pain.output.flags[0].severity], [false, "high"]);
+  // an invented figure next to an unrelated tag stays a fabrication
+  const figure = postProcessFactual(out([fl({ quote: `Join 4,000 agencies who see the CPC on every keyword [[L:${ROW}]].`, fabrication: true })]), ledger);
+  assertEquals(figure.output.flags[0].fabrication, true);
+  // a result attributed to someone, with no figure or name, stays a fabrication too
+  const attributed = postProcessFactual(out([fl({ quote: `Our customers rank on page one with the CPC on every keyword [[L:${ROW}]].`, fabrication: true })]), ledger);
+  assertEquals(attributed.output.flags[0].fabrication, true);
+  const bare = postProcessFactual(out([fl({ quote: "Agencies using it double their traffic.", fabrication: true, test: 2 })]), ledger);
+  assertEquals(bare.output.flags[0].fabrication, true);
+  // a test 10 catch is never cleared by its type
+  const feature = postProcessFactual(out([fl({ quote: "It writes the page for you overnight.", fabrication: true, test: 10, claim_type: "feature" })]), ledger);
+  assertEquals(feature.output.flags[0].fabrication, true);
+  // the row's own figures and names are the user's claim
+  const own = postProcessFactual(out([fl({ quote: `Google's cost per click on every keyword [[L:${ROW}]].`, fabrication: true })]), ledger);
+  assertEquals(own.output.flags.length ? own.output.flags[0].fabrication : false, false);
+});
+
+Deno.test("fact check: a rewrite that weakens a promise is dropped; only misquote-shaped lines are fixed without the user", () => {
+  const weak = postProcessFactual(out([fl({ quote: "A keyword with a price on it is one where searchers buy.", suggested_rewrite: "A keyword with a price on it is one where some searchers do.", test: 2 })]), ledger);
+  assertEquals(weak.output.flags.length, 0);
+  assert(weak.violations[0].includes("sizes the promise down"));
+  const planned = postProcessFactual(out([fl({ quote: "Pull Shot Coffee sells an espresso bean subscription.", suggested_rewrite: "Pull Shot Coffee, a planned espresso bean subscription.", test: 1 })]), ledger);
+  assertEquals(planned.output.flags.length, 0, "a weakening admission is never a fix");
+  // test 1 on a promise with no figure, quote, name or term waits for the user; a misquoted price is fixed
+  const pending = pendingFactualFlags(out([fl({ quote: "You rank for the keywords that bring paying customers.", test: 1 }), fl({ quote: "Pro is $49 a month.", test: 8 })]), []);
+  assertEquals(pending.map((f) => f.quote), ["Pro is $49 a month."]);
+});
+
+Deno.test("copy chief: a note that asks for proof or hedges its example is retried, then dropped", () => {
+  const v = { verdict: "REVISE", reject_gate: null, prediction: "beat", prediction_reason: "r", argument_readback: { sells: "", to: "", promise: "", because: "", matches_memo: true }, skim_readback: "", what_works: [], do_not_touch: [], testable_disputes: [], calibration: { argument: 0, proof: 0, pacing: 0, offer: 0, specificity: 0, reader_focus: 0, rhythm: 0 }, sentence_job_audit: { untagged: [], no_claim_no_proof: [] },
+    one_thing: { quote: "A price on a keyword means people buy.", fails: "Rule 8", do: "Size it: \"A keyword with a price on it is one where some searchers do.\"" },
+    secondary_notes: [{ quote: "You get rankings.", fails: "Gate C", do: "Ask the user to add customer results before this line." }, { quote: "Run it.", fails: "CTA", do: "Say what arrives: \"Run it and see your first decision in 20 minutes.\"" }] } as unknown as EditorialVerdict;
+  assertEquals(noteProblems(v).length, 2);
+  const kept = dropNoteProblems(v);
+  assertEquals(kept.secondary_notes.map((n) => n.quote), ["Run it."]);
+  assert(kept.one_thing!.do.includes("keep the promise at full strength"));
+});
+
+Deno.test("detector: a hedge on the promise and a weakening admission are the owner's tells; plain modal uses are not", () => {
+  const hits = (t: string) => analyzeText(t, { format: FORMATS.organic_social }).flags.map((f) => f.tell);
+  assert(hits("Keywords that could bring you customers.").includes("promise_hedge"));
+  assert(hits("Only keywords that could bring customers make the cut.").includes("promise_hedge"));
+  assert(hits("I'd start with the ones advertisers bid on.").includes("promise_hedge"));
+  assert(hits("A keyword with a price on it is one where some searchers do.").includes("promise_hedge"));
+  assert(hits("Pull Shot Coffee, a planned espresso bean subscription.").includes("weakening_admission"));
+  assert(hits("We have no customers yet.").includes("proof_confession"));
+  for (const t of ["You could be paying for pages nobody reads.", "before you knew which pages could win", "Abramovich's plan to sell Chelsea"]) assertEquals(hits(t).filter((x) => ["promise_hedge", "weakening_admission"].includes(x)), [], t);
+});
+
+Deno.test("the writer sees a ledger row's fact without the engine's memo", () => {
+  assertEquals(rowFacts("Premium: The posted price list, with credits that roll over, answering \"'Credit billing feels sneaky' (V3, V13)\""), "The posted price list, with credits that roll over");
+  assertEquals(rowFacts("Premium: the evidence behind every call. It answers 'The data cannot be trusted' (V1) and 'Recommendations are wrong' (V10). No dollar value: no ledger basis."), "the evidence behind every call.");
+  assertEquals(rowFacts("Every keyword carries Google's cost per click and an intent."), "Every keyword carries Google's cost per click and an intent.");
+});

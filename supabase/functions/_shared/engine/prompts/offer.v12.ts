@@ -12,6 +12,10 @@ type Args = Parameters<typeof offerV11.user>[1];
 
 const SYSTEM = amend(offerV11.system, [
   [
+    `the guarantee (guarantee, with guarantee_terms: text, days, conditions, approver null),`,
+    `the guarantee (guarantee, with guarantee_terms: text, days, conditions, approver null; its claim_text is the promise in one sentence, and the payment and refund terms are a separate row, claim_type other, role offer_term, that only the page taking payment states),`,
+  ],
+  [
     `habit-dominant markets need the current solution made untenable first.`,
     `habit-dominant markets need the current solution made untenable first. The reasons are about the deal; they never say what the copy may promise, which is the reader's result (the rankings, the customers, the sales, the money), never the deliverable (rule 8).`,
   ],

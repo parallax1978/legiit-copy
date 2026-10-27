@@ -52,6 +52,8 @@ export function desireGate(stats: ClusterStats | null | undefined, opts: { asser
 export interface LedgerClaimLike {
   id: string;
   claim_type: string;
+  /** the row's role in the argument (offer_claims.role): the seller's own feature, mechanism or term carries what it produces */
+  role?: string | null;
   evidence_grade: string | null;
   status?: string | null;
   user_decision?: string | null;
@@ -107,6 +109,11 @@ export function carrierValue(claim: LedgerClaimLike): CarrierValue {
   // backlinks"), verifiable by using the product, and it carries the result it produces (docs/04 rule 8). Lab or
   // anecdotal evidence for a mechanism (D, E) stays a weaker carrier below.
   if (claim.claim_type === "mechanism" && (claim.evidence_grade === "F" || !claim.evidence_grade)) return 2;
+  // the product's own output, process and terms, whatever type intake gave the row (docs/04 §2 rule 3); a promise row
+  // never carries itself
+  if (claim.role === "feature" || claim.role === "mechanism" || claim.role === "offer_term") return 2;
+  // a comparison argued from what each product does, with no measured figure in it (§8.1)
+  if (claim.claim_type === "comparative" && !/\d|%|\b(?:twice|double|triple|half|percent|times (?:more|faster|better|as))\b/i.test(claim.claim_text ?? "")) return 2;
   if (TESTIMONIAL_TYPES.has(claim.claim_type)) return 1;
   if (GRADED_FACT_TYPES.has(claim.claim_type)) {
     const g = claim.evidence_grade;

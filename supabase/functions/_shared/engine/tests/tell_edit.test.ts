@@ -396,10 +396,11 @@ Deno.test("repeats: before the pick no opening costs the body a line; a tagged p
   const draft = assembleDraft({ spec, sections: [provisionalLeadSection("lead_in", null, leads), sec("main", body), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads, chosenLeadId: null, needsSource: [], keepOrder: true });
   const before = repeatFindings(editableUnits(draft, spec), draft, spec, []);
   assert(before.length === 1 && before[0].ref === "lead-a-1" && before[0].example.includes("never cut whole"), JSON.stringify(before));
-  // after the pick the body's tagged proof keeps its line; the untagged opening says it another way
+  // after the pick the opening (the first statement) stays; the body's tagged proof keeps its facts and tag and says the
+  // shared words another way (docs/04 §7.1: a promise and its proof are two points)
   const picked = { ...draft, chosen_lead_id: "lead-a" };
   const after = repeatFindings(editableUnits(picked, spec), picked, spec, []);
-  assert(after.length === 1 && after[0].ref === "lead-a-1", JSON.stringify(after));
+  assert(after.length === 1 && after[0].ref === "main-1" && after[0].example.includes("keep this sentence's facts and ledger tag"), JSON.stringify(after));
 
   // a Meta ad set: each variation is its own ad, so a proof line every ad carries is not a repeat
   const ad = FORMATS.meta_ad;
