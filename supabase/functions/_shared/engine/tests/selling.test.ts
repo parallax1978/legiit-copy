@@ -115,6 +115,36 @@ Deno.test("promise guard: the piece's last line that states its promise is never
   assertEquals(lead.applied.length, 0);
 });
 
+Deno.test("promise guard: a feature line that shares the promise's qualifiers does not stand in for it, and a cut chained on a refused one goes too", () => {
+  // the round-5 clean run: the argument's promise, the tool's filter line, and the one sentence that said the result
+  const promise = promiseStems("rankings on keywords that bring paying customers");
+  const feature = "I founded Legiit, and I made Legiit Keywords to make that decision for your site. You get only the keywords that bring customers, and a build, improve or skip call for every group.";
+  const line = "You rank on the keywords that bring paying customers, because every page you pay for is one you can win, on a keyword buyers type. It's the best way I know to choose what to publish.";
+  assert(!statesPromise(feature, promise), "the filter is not the result");
+  assert(!statesPromise("You rank for the keywords your buyers search.", promise), "two stems are not enough");
+  assert(statesPromise(line, promise));
+  // with the head, half the stems still state it; without the head, a sentence needs one more
+  assert(statesPromise("Your pages rank on keywords that bring customers.", promise));
+  assert(statesPromise("You get the keywords that bring paying customers.", promise));
+  const units = [unit("main-5", feature), unit("main-7", line), unit("main-8", "Enter your site and your first decision shows up in about 20 minutes.")];
+  const first = "You rank on the keywords that bring paying customers, because every page you pay for is one you can win, on a keyword buyers type. It's the best way I know to choose what to publish.";
+  const r = applyEdits(units, [
+    { ref: "main-7", before: first, after: "Every page you pay for is one you can win, on a keyword buyers type.", tell: "restated promise, slogan closer" },
+    { ref: "main-7", before: "Every page you pay for is one you can win, on a keyword buyers type.", after: "", tell: "slogan restating the promise" },
+  ], "social", promise);
+  assertEquals(r.applied.length, 0);
+  assert(r.rejected[0].reason.includes("states its promise"));
+  // the second edit's words match the middle of the original sentence (the locator ignores case): it never lands there
+  assertEquals(r.rejected[1].reason, "it edits the text of an earlier edit that was refused");
+  assertEquals(r.units.find((u) => u.ref === "main-7")?.text, line);
+  // a chained edit after an applied one still works
+  const chain = applyEdits(units, [
+    { ref: "main-8", before: "Enter your site and your first decision shows up in about 20 minutes.", after: "Enter your site; your first decision shows up in about 20 minutes.", tell: "x" },
+    { ref: "main-8", before: "Enter your site; your first decision", after: "Enter your site, and your first decision", tell: "y" },
+  ], "social", promise);
+  assertEquals(chain.applied.length, 2);
+});
+
 const b = (id: string, text: string): Block => ({ id, type: "paragraph", text, items: null, meta: null });
 const s = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
 

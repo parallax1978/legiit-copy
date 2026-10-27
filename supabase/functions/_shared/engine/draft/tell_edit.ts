@@ -477,6 +477,12 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
   const byRef = new Map(out.map((u) => [u.ref, u]));
   const applied: TellEdit[] = [];
   const rejected: RejectedEdit[] = [];
+  // the replacements refused so far, by unit: a later edit of the same unit may be written against one of them
+  const refusedAfter = new Map<string, string[]>();
+  const refuse = (e: TellEdit, ref: string, reason: string) => {
+    rejected.push({ ...e, reason });
+    if (e.after.trim()) refusedAfter.set(ref, [...(refusedAfter.get(ref) ?? []), e.after]);
+  };
   for (const e of edits) {
     const ref = e.ref.trim().replace(/^\[|\]$/g, "");
     const u = byRef.get(ref);
@@ -484,8 +490,14 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
       rejected.push({ ...e, reason: `no text has the reference ${e.ref}` });
       continue;
     }
+    // an edit chained on a refused one ("cut the clause", then "cut what is left") would land on whatever part of the
+    // original its words still match, mid-sentence: it goes with the edit it builds on
+    if (!u.text.includes(e.before) && (refusedAfter.get(ref) ?? []).some((a) => a.includes(e.before.trim()))) {
+      refuse(e, ref, "it edits the text of an earlier edit that was refused");
+      continue;
+    }
     if (u.type === "testimonial") {
-      rejected.push({ ...e, reason: "a testimonial keeps the customer's words" });
+      refuse(e, ref, "a testimonial keeps the customer's words");
       continue;
     }
     if (e.before === e.after) {
@@ -494,14 +506,14 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
     }
     const at = locate(u.text, e.before);
     if (!at) {
-      rejected.push({ ...e, reason: "the span was not found in that text" });
+      refuse(e, ref, "the span was not found in that text");
       continue;
     }
     const found = u.text.slice(at.index, at.index + at.length);
     const ctx: EditContext = { text: u.text, at: at.index, family, rowText };
     const why = guardEdit(found, e.after, ctx);
     if (why) {
-      rejected.push({ ...e, reason: why });
+      refuse(e, ref, why);
       continue;
     }
     const next = splice(u.text, at.index, at.length, e.after);
@@ -511,11 +523,11 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
     const expected = factFreeSentenceCut(found, e.after, ctx) ? minus(anchoredMarks(u.text), anchoredMarks(found)) : anchoredMarks(u.text);
     const whole = multiset(expected) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, u.item === null && TITLE_CASE_TYPES.has(u.type))) ?? quotationsIntact(u.text, next);
     if (whole) {
-      rejected.push({ ...e, reason: whole });
+      refuse(e, ref, whole);
       continue;
     }
     if (promise?.size && promiseLost(out, u, next, promise)) {
-      rejected.push({ ...e, reason: "this is the piece's last line that states its promise (the result the reader gets); keep the result in it and cut the other line instead (rule 8)" });
+      refuse(e, ref, "this is the piece's last line that states its promise (the result the reader gets); keep the result in it and cut the other line instead (rule 8)");
       continue;
     }
     u.text = next;
@@ -565,21 +577,27 @@ function promiseStem(word: string): string {
   return w.length > 3 && /([b-df-hj-np-tv-z])\1$/.test(w) ? w.slice(0, -1) : w;
 }
 
-/** The content stems of the argument's promise ("rankings on keywords you can win, from searches that bring paying customers"). */
+/** The content stems of the argument's promise in order, the head first ("rankings on keywords you can win, from searches that bring paying customers"). */
 export function promiseStems(promise: string | null | undefined): Set<string> {
   const words = (promise ?? "").toLowerCase().match(/[a-z][a-z'’]*/g) ?? [];
   return new Set(words.filter((w) => !PROMISE_SKIP.has(w)).map(promiseStem).filter((w) => w.length >= 3));
 }
 
-/** True when one sentence of the text holds enough of the promise's stems to state it: half of them, between two and four. */
+/**
+ * True when one sentence of the text holds enough of the promise's stems to state it: half of them, between two and
+ * four, with the head (the result itself, "rankings" in "rankings on keywords that bring paying customers"); a
+ * sentence without the head needs one more. A feature line that shares only the qualifiers ("you get only the
+ * keywords that bring customers") does not state a promise of rankings.
+ */
 export function statesPromise(text: string, promise: Set<string>): boolean {
   if (!promise.size) return false;
   const need = Math.max(2, Math.min(4, Math.ceil(promise.size / 2)));
+  const head = promise.values().next().value;
   for (const sentence of text.replace(MARK_RE, " ").split(/(?<=[.!?…]["”’)]?)\s+|\n+/)) {
     const stems = new Set((sentence.toLowerCase().match(/[a-z][a-z'’]*/g) ?? []).map(promiseStem));
     let hits = 0;
     for (const p of promise) if (stems.has(p)) hits++;
-    if (hits >= need) return true;
+    if (hits >= (head !== undefined && stems.has(head) ? need : need + 1)) return true;
   }
   return false;
 }
