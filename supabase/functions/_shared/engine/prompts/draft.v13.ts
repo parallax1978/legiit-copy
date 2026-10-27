@@ -1,7 +1,7 @@
 /**
  * Draft prompt, version 13: version 12's messages. Ledger discipline 2 and 5 sell the result: the promise of what the
  * reader ends up with (the rankings, the customers, the money) is stated at full strength with its carrier, and only a
- * number, a rate, a name, a quote or a result someone got needs a ledger row. the system text carries the standard as of this version (sell the result, rule 8; precision never sizes a promise down, rule 10; a line true only with a weakening detail is rewritten, rule 12; the short-piece guarantee only when the offer leads with it, rule 16; indicative with no conditional voice, rule 20; section 2's promise, C8 and C9; section 4's no-results proof and the obvious demonstration; the first-week check, section 5; Gates A and C and the reviewer's directions, section 6; the outcome, reasoning and situation rows, grade F and the factual procedure, section 8).
+ * number, a rate, a name, a quote or a result someone got needs a ledger row. The system text carries the standard as of this version (sell the result, rule 8; precision never sizes a promise down, rule 10; a line true only with a weakening detail is rewritten, rule 12; the short-piece guarantee only when the offer leads with it, rule 16; indicative with no conditional voice, rule 20; section 2's promise, C8 and C9; section 4's no-results proof and the obvious demonstration; the first-week check, section 5; Gates A and C and the reviewer's directions, section 6; the outcome, reasoning and situation rows, grade F and the factual procedure, section 8).
  */
 import { draftPrompt as draftPrev, type DraftArgs } from "./draft.v12.ts";
 import { amend, type PromptModule } from "./types.ts";
