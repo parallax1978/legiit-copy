@@ -11,7 +11,7 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, TELLS } from "../tells.ts";
+import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, REPEAT_FAMILIES, repeatedRuns, TELLS } from "../tells.ts";
 import { stripNeverTells } from "./never_tells.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
@@ -475,7 +475,41 @@ export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms
     ...(leadId ? (draft.leads ?? []).map((l) => ({ section_id: l.id, title: null, blocks: l.blocks })) : []),
   ];
   const r = analyzeDraft(sections, spec, { exemptTerms });
-  return r.flags.filter((f) => OWNER.has(f.tell)).reduce((n, f) => n + f.count, 0);
+  // the alternative openings repeat each other by design: repeats are counted per reading (repeatFindings)
+  const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase").reduce((n, f) => n + f.count, 0);
+  return own + repeatFindings(editableUnits(draft, spec), draft, spec, exemptTerms).length;
+}
+
+/**
+ * What the piece says twice (tells.ts repeated_phrase), as findings on the later text in reading order. The chosen
+ * opening is read with the sections, and a repeat lands on whichever text comes second. Every other opening is read
+ * against the sections too, but its repeats land on the opening itself, so an opening the user has not chosen never
+ * costs the body a line. The alternative openings are never read against each other.
+ */
+export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): { ref: string; tell: string; example: string }[] {
+  if (!REPEAT_FAMILIES.has(spec.family)) return [];
+  const leadId = editsLeads(draft, spec);
+  const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
+  const chosen = leadIds.includes(draft.chosen_lead_id ?? "") ? draft.chosen_lead_id! : leadIds[0] ?? null;
+  const readingWith = (lead: string | null): EditUnit[] =>
+    draft.sections.flatMap((s) => (s.section_id === leadId ? units.filter((u) => u.owner === "lead" && u.ownerId === lead) : units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)));
+  const out: { ref: string; tell: string; example: string }[] = [];
+  const seen = new Set<string>();
+  for (const lead of leadIds.length ? leadIds : [null]) {
+    const reading = readingWith(lead);
+    for (const p of repeatedRuns(reading, exemptTerms)) {
+      const [later, first] = [reading[p.later], reading[p.first]];
+      // an alternative opening takes its own repeats; a repeat inside the body is the chosen reading's
+      const target = lead === chosen ? later : later.owner === "lead" ? later : first.owner === "lead" ? first : null;
+      if (!target) continue;
+      const other = target === later ? first : later;
+      const key = `${target.ref}\u0000${p.run}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ ref: target.ref, tell: "repeated_phrase", example: `"${p.run}" is also said in [${other.ref}]; say it once` });
+    }
+  }
+  return out;
 }
 
 /** The piece's sentence-length variation when it runs flat against the format's floor (§7.1 "vary sentence length"), else null. */
@@ -492,7 +526,8 @@ export function unitFindings(units: EditUnit[], spec: FormatSpec, exemptTerms: s
     if (u.type === "testimonial") continue;
     const block: Block = { id: u.ref, type: u.item === null ? u.type : "paragraph", text: u.text, items: null, meta: null };
     const r = analyzeDraft([{ section_id: "unit", title: null, blocks: [block] }], spec, { exemptTerms });
-    for (const f of r.flags) if (OWNER.has(f.tell)) out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
+    // repeats are a piece-level finding (repeatFindings)
+    for (const f of r.flags) if (OWNER.has(f.tell) && f.tell !== "repeated_phrase") out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
   }
   return out;
 }

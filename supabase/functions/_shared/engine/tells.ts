@@ -274,6 +274,13 @@ export const TELLS: TellRule[] = [
     note: "A question of seven words or fewer followed in the same block by a short statement that is not an instruction: the copy asks and answers itself.",
   },
   {
+    tier: 1, name: "repeated_phrase", weight: 4, scope: "structural", owner: {}, free_hits: 1,
+    regex: null,
+    example: "…leaves the decision to you. … Ahrefs and Semrush hand you a keyword list and leave the decision to you.",
+    fix: "Say it once. Keep the first use and cut or rephrase the later ones.",
+    note: "§7.1 structure (no line that says again what the piece already said): a run of five words or more, two of them content words, repeated in another sentence of the body. CTAs, prices, guarantees, disclosures and quotations are not scanned. Posts, ads, emails and messages only: a page or a script repeats its promise on purpose. Each repeat after the first is one hit, and one repeat per piece is free (a third of human posts have one).",
+  },
+  {
     tier: 1, name: "heres_the_windup", weight: 4, scope: "all", owner: { tell: 4 },
     regex: new RegExp(
       `\\bhere(?:${A}s| is) (?:the|my|our|one|a|another) (?:real |big |best |worst |crazy |funny |scary |sad |ugly |simple |short |honest |hard |important |interesting |surprising |wild |weird |tricky |good |bad )?(?:kicker|thing|part|catch|deal|truth|secret|twist|problem|rub|key|reason|question|answer|point|difference|bottom line|takeaway|lesson|rule|bit|news|math|trick|kick|story|idea|tip|hint|thought|confession|warning|reminder)\\b` +
@@ -294,12 +301,15 @@ export const TELLS: TellRule[] = [
         `|\\b(?:I${A}d|I would|I${A}ll|I) (?:ask|check|look at|want to know) (?:two|three|four|five|a few|one) (?:things|questions)\\b` +
         `|\\b(?:two|three|four|five|a few) (?:questions|things|checks|tests|rules) (?:decide|matter|settle|separate)\\b` +
         `|\\b(?:it|this|everything|that) (?:all )?(?:comes|boils) down to (?:one|two|three|four|a few) (?:things|questions)\\b` +
-        `|\\bone more (?:check|thing|question|test|step|rule)\\b[^.?!\\n:]{0,40}:`,
+        `|\\bone more (?:check|thing|question|test|step|rule)\\b[^.?!\\n:]{0,40}:` +
+        `|\\b(?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|ways|reasons|moves|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:` +
+        // "It takes seven steps, and...": the count of a process as the hook; "It takes three steps to set up" is a fact
+        `|\\b(?:it|this|that|the (?:read|process|plan|research)) takes (?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|moves)\\b(?! to\\b)`,
       "gim",
     ),
     example: "My rule: never pay for a keyword tool you open once a month.",
     fix: "Drop the label or the count and make the point: \"Never pay for a keyword tool you open once a month.\"",
-    note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\") or a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\") announces the point instead of making it (§7.1 tell 4).",
+    note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\") or a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\", \"It takes seven steps\", \"seven steps, in this order:\") announces the point instead of making it (§7.1 tell 4).",
   },
   {
     tier: 1, name: "worth_noting", weight: 4, scope: "all", owner: { tell: 5 },
@@ -974,6 +984,77 @@ function selfAnswered(q: string, a: string): boolean {
   return countWords(a) <= 20;
 }
 
+/** Body blocks where a repeat is the copy saying a point again; a CTA, a price, a guarantee or a disclosure may repeat the offer. */
+const REPEAT_SKIP = new Set<Block["type"]>(["cta", "button", "price", "guarantee", "disclosure", "field", "label", "testimonial"]);
+const REPEAT_RUN = 5;
+/**
+ * Formats read in one sitting, where saying a point twice reads as filler. A long letter, a page or a video script
+ * repeats its promise on purpose (calibration: 98% of human sales pages repeat a five-word run, a third of human
+ * posts do), so the check runs on these families only.
+ */
+export const REPEAT_FAMILIES = new Set<FormatSpec["family"]>(["social", "ad", "email", "message"]);
+
+/**
+ * Runs of five words or more said again in another sentence of the body: "leave the decision to you" twice, "before
+ * you spend a dollar on content" twice. Quotations are blanked first; a run needs two content words that are not
+ * the offer's own name. Each sentence that repeats an earlier one is one hit, on its own text.
+ */
+function repeatedPhrases(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[], exempt: Set<string>): { found: string[]; perText: number[] } {
+  const perText = units.map(() => 0);
+  const found: string[] = [];
+  for (const p of repeatPairs(units, pieces, exempt)) {
+    perText[p.later] += 1;
+    if (found.length < 6) found.push(`"${p.run}…" again`);
+  }
+  return { found, perText };
+}
+
+/**
+ * The repeats of a set of texts read as one piece, in reading order: each later text that says again a five-word run
+ * of an earlier one, with the run and the text it first appeared in. The tell edit cuts or rephrases the later one.
+ */
+export function repeatedRuns(texts: { text: string; type: Block["type"] }[], exemptTerms: string[] = []): { later: number; first: number; run: string }[] {
+  const units = texts.map((t) => ({ text: clean(t.text), type: t.type, kind: (DISPLAY_TYPES.has(t.type) ? "display" : "body") as UnitKind }));
+  return repeatPairs(units, units.map(() => "piece"), new Set(exemptTerms.map(stem)));
+}
+
+function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[], exempt: Set<string>): { later: number; first: number; run: string }[] {
+  // piece + run (as stems, so "leaves the decision to you" repeats "leave the decision to you") -> the sentences it
+  // occurs in, in order: [unit, sentence, the run as written there]
+  const where = new Map<string, [number, number, string][]>();
+  let sid = 0;
+  units.forEach((u, ui) => {
+    if (u.kind === "display" || REPEAT_SKIP.has(u.type)) return;
+    for (const sentence of sentencesOf(blankQuotes(u.text))) {
+      sid++;
+      const words = sentence.toLowerCase().match(/[a-z0-9][a-z0-9'’]*/g) ?? [];
+      const stems = words.map(stem);
+      for (let i = 0; i + REPEAT_RUN <= words.length; i++) {
+        const run = stems.slice(i, i + REPEAT_RUN);
+        const content = run.filter((w, k) => !STOP_WORDS.has(words[i + k]) && !exempt.has(w));
+        if (content.length < 2) continue;
+        const key = `${pieces[ui]}\u0000${run.join(" ")}`;
+        const list = where.get(key) ?? [];
+        if (!list.some(([, s]) => s === sid)) list.push([ui, sid, words.slice(i, i + REPEAT_RUN).join(" ")]);
+        where.set(key, list);
+      }
+    }
+  });
+  // one repeat per later sentence, however many five-word runs it shares with an earlier one
+  const counted = new Set<string>();
+  const pairs: { later: number; first: number; run: string }[] = [];
+  for (const occ of where.values()) {
+    if (occ.length < 2) continue;
+    for (const [ui, s, written] of occ.slice(1)) {
+      const mark = `${occ[0][1]}>${s}`;
+      if (counted.has(mark)) continue;
+      counted.add(mark);
+      pairs.push({ later: ui, first: occ[0][0], run: written });
+    }
+  }
+  return pairs;
+}
+
 /** Sentences of a text, linear on runs with no sentence punctuation. */
 function sentencesOf(text: string): string[] {
   return (text.replace(/\n+/g, " ").match(/[^.?!]+(?:[.?!]+|$)/g) ?? []).map((x) => x.trim()).filter(Boolean);
@@ -1082,8 +1163,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const exempt = new Set(exemptTerms.map(stem));
   const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type));
   const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
-  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText]]);
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
+  const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText]]);
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -1105,6 +1187,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       }
       case "self_answered_question":
         hit = { rule, count: questions.found.length, examples: trimExamples(questions.found) };
+        break;
+      case "repeated_phrase":
+        hit = { rule, count: repeats.perText.reduce((a, b) => a + b, 0), examples: trimExamples(repeats.found) };
         break;
       case "self_posed_question_header": {
         hit = scanRegex(rule, bodyTexts);

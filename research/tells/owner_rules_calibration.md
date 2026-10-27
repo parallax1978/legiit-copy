@@ -67,3 +67,22 @@ disguise_frame: 2
    [organic_social v12] …export by keyword difficulty feels like research . It's where bad content gets made.
    [organic_social v11] …export by keyword difficulty feels like research . It's where bad content gets made.
 ```
+
+## Round 2: repeated_phrase and step-count windups (2026-10-27)
+
+repeated_phrase (a run of five words or more, two content words, said again in another sentence; word stems, so
+"leaves the decision to you" repeats "leave the decision to you"; quotes, CTAs, prices, guarantees and disclosures
+skipped), counted per piece, before the one free repeat:
+
+| Family (human corpus) | Docs | 0 repeats | 1 | 2 | 3+ |
+|---|---|---|---|---|---|
+| social | 145 | 67% | 19% | 7% | 8% |
+| email | 359 | 57% | 16% | 10% | 18% |
+| sales page | 132 | 98% of pages have one (the promise is repeated on purpose) | | | |
+
+The check runs on posts, ads, emails and messages only, and the first repeat in a piece is free: 14% of human posts
+then count one or more. The fresh test post (ffc9ed71, v9) had four, all of them lines the judges named.
+
+label_windup gained the step-count forms ("It takes seven steps, and...", "seven steps, in this order:", "Three
+reasons to switch:"); "Setup takes three steps." and "It takes three steps to set up." are facts and pass. Human
+social posts with a count windup: 8%.

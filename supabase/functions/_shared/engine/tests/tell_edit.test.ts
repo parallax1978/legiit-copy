@@ -6,10 +6,10 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v4.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v5.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -309,12 +309,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v8.ts";
-import { revisePrompt } from "../prompts/revise.v7.ts";
-import { editorialPrompt } from "../prompts/editorial.v8.ts";
-import { factualPrompt } from "../prompts/factual.v6.ts";
-import offerPrompt from "../prompts/offer.v7.ts";
-import intakePrompt from "../prompts/intake.v5.ts";
+import { draftPrompt } from "../prompts/draft.v9.ts";
+import { revisePrompt } from "../prompts/revise.v8.ts";
+import { editorialPrompt } from "../prompts/editorial.v9.ts";
+import { factualPrompt } from "../prompts/factual.v7.ts";
+import offerPrompt from "../prompts/offer.v8.ts";
+import intakePrompt from "../prompts/intake.v6.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -333,7 +333,47 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [8, 7, 8, 6, 4, 7, 5]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [9, 8, 9, 7, 5, 8, 6]);
+  // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
+  assert(RULES.includes("the piece never lists or counts the product's steps"));
+  assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
+  assert(editorialPrompt.system.includes("a direction never asks for the product's steps to be listed or counted"));
+  for (const t of ["say each point once", "It takes seven steps."]) assert(OWNER_TELLS.includes(t), t);
+  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece"]) assert(tellEditPrompt.system.includes(t), t);
+});
+
+Deno.test("repeats: the chosen opening is read with the body; an unchosen opening takes its own repeats; openings never count against each other", () => {
+  const spec = FORMATS.organic_social;
+  const leads = [
+    { id: "lead-a", lead_type: "promise" as const, reader_hypothesis: "r1", blocks: [blk("lead-a-1", "Most keyword tools leave the decision to you.", "hook")] },
+    { id: "lead-b", lead_type: "secret" as const, reader_hypothesis: "r2", blocks: [blk("lead-b-1", "You paid for content before you knew which pages could win.", "hook")] },
+    { id: "lead-c", lead_type: "proclamation" as const, reader_hypothesis: "r3", blocks: [blk("lead-c-1", "Most keyword tools leave the decision to you.", "hook")] },
+  ];
+  const draft = assembleDraft({
+    spec,
+    sections: [
+      { section_id: "lead_in", title: null, blocks: leads[0].blocks.map((b) => ({ ...b, meta: { lead_id: "lead-a", lead_type: "promise" } })) },
+      sec("main", [blk("main-1", "Ahrefs hands you a list and leaves the decision to you."), blk("main-2", "Pick wrong and you paid for content before you knew which pages could win.")]),
+      sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")]),
+    ],
+    leads,
+    chosenLeadId: "lead-a",
+    needsSource: [],
+    keepOrder: true,
+  });
+  const units = editableUnits(draft, spec);
+  const found = repeatFindings(units, draft, spec, []);
+  // lead-a is chosen: its run comes first and the body's later use is the repeat (stems: "leaves" repeats "leave")
+  assert(found.some((f) => f.ref === "main-1" && f.example.includes("[lead-a-1]")), JSON.stringify(found));
+  // lead-b is not chosen: the shared run lands on the opening, never on the body
+  assert(found.some((f) => f.ref === "lead-b-1" && f.example.includes("[main-2]")), JSON.stringify(found));
+  assert(!found.some((f) => f.ref === "main-2"), "an unchosen opening never costs the body a line");
+  // lead-c says what lead-a says: alternatives are never read against each other, only against the body
+  assert(!found.some((f) => f.example.includes("[lead-a-1]") && f.ref === "lead-c-1"));
+  assert(found.every((f) => f.tell === "repeated_phrase"));
+  assert(ownerTellCount(draft, spec, []) >= found.length);
+  // a page is not checked: a long letter repeats its promise on purpose
+  assertEquals(repeatFindings(units, draft, FORMATS.sales_letter, []), []);
 });
 
 Deno.test("applyEdits: testimonials, quotations and names keep their words; seams only; sentence starts get their capital", () => {

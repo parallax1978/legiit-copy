@@ -7,7 +7,7 @@ export const sms: FormatSpec = {
   description: "[Brand]: one-idea hook in second person with a stock, scarcity or newness fact; offer with % and deadline; link; STOP wording. 75-115 characters, never above 240; sent 8 a.m. to 9 p.m. recipient time.",
   length_band_words: [12, 40],
   sections: [
-    { id: "body", name: "Brand, hook, offer, link", job: "Brand first, one idea in second person carried by a stock, scarcity or newness fact, the offer as a % with its deadline, the link", band_words: [10, 30], must: ["brand name first", "one idea in second person", "a stock, scarcity or newness fact with a ledger ID", "offer as a % with a deadline", "one link"], must_not: ["jokes", "dollar-off", "no deadline", "invented \"almost gone\"", "two ideas", "ALL CAPS whole message"], block_types: ["paragraph"] },
+    { id: "body", name: "Brand, hook, offer, link", job: "Brand first, one idea in second person carried by a stock, scarcity or newness fact, the offer as a % with its deadline, the link", band_words: [10, 30], must: ["brand name first", "one idea in second person", "a stock, scarcity or newness fact with a ledger ID", "offer as a % with a deadline", "one link"], must_not: ["a list or count of the product's steps (say what the reader gets from them)", "jokes", "dollar-off", "no deadline", "invented \"almost gone\"", "two ideas", "ALL CAPS whole message"], block_types: ["paragraph"] },
     { id: "opt_out", name: "STOP wording", job: "The opt-out instruction the carrier requires", band_words: [2, 8], must: ["contains STOP"], must_not: ["a second link"], block_types: ["disclosure", "paragraph"] },
   ],
   draft_order: ["opt_out", "body"],

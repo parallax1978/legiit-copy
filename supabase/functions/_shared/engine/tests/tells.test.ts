@@ -817,13 +817,15 @@ Deno.test("tells 2, 4, 5 and 9 catch the near-variants of the owner's own exampl
     ["label_windup", "So for any keyword, I'd ask two things. Who searches, and what do they buy?"],
     ["label_windup", "Two questions decide it."],
     ["label_windup", "Then one more check cuts the list again: does a page like yours rank?"],
+    ["label_windup", "It takes seven steps, and your keyword tool stops at the list."],
+    ["label_windup", "On your site, the decision comes at the end of seven steps, in this order:"],
     ["empty_hedge", "Difficulty is a guess, in my view."],
   ];
   for (const [name, text] of cases) {
     const r = analyzeText(text, { format: FORMATS.email_single });
     assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
   }
-  for (const ok of ["The two plans cost $49 and $99.", "Price: $49 a month.", "Bonus: the audit template."]) {
+  for (const ok of ["The two plans cost $49 and $99.", "Price: $49 a month.", "Bonus: the audit template.", "Setup takes three steps."]) {
     assertEquals(analyzeText(ok, { format: FORMATS.email_single }).owner_tells, 0, ok);
   }
 });
@@ -936,4 +938,30 @@ Deno.test("legal boilerplate in sales copy is the owner's tell; a disclosure blo
   assertEquals(tells(disclosure, "legal_boilerplate"), undefined);
   const orderForm = analyzeDraft([section("form", [block("paragraph", "Plan payments are not refundable.")])], FORMATS.order_form);
   assertEquals(tells(orderForm, "legal_boilerplate"), undefined);
+});
+
+Deno.test("repeated_phrase: a five-word run said again in a post counts from the second repeat; a page, quotes and CTAs are not scanned", () => {
+  const post = (paras: string[], cta = "Comment PLAN and I'll send the link.") =>
+    analyzeDraft([section("main", paras.map((p) => block("paragraph", p))), section("cta", [block("cta", cta)])], FORMATS.organic_social);
+  const once = post(["Ahrefs hands you a list and leaves the decision to you.", "Semrush hands you a list too, and leave the decision to you."]);
+  assertEquals(tells(once, "repeated_phrase"), undefined, "one repeat per piece is free");
+  const twice = post([
+    "Ahrefs hands you a list and leaves the decision to you.",
+    "It checks who ranks before you spend a dollar on content.",
+    "Semrush hands you a list too, and leave the decision to you.",
+    "So you know which pages win before you spend a dollar on content.",
+  ]);
+  assertEquals(tells(twice, "repeated_phrase")?.count, 1);
+  assert(tells(twice, "repeated_phrase")!.examples.some((e) => e.includes("leave the decision to")), JSON.stringify(tells(twice, "repeated_phrase")));
+  // quotations and the CTA are not the copy saying its point again
+  const quoted = post(["One line said it: \"you spend a dollar on content first\".", "Then \"you spend a dollar on content first\" again.", "And \"you spend a dollar on content first\" once more."], "Start the $1 trial at the link in the comments. Start the $1 trial at the link in the comments.");
+  assertEquals(tells(quoted, "repeated_phrase"), undefined);
+  // a sales letter repeats its promise on purpose
+  const letter = analyzeDraft([section("body", [
+    "Ahrefs hands you a list and leaves the decision to you.",
+    "It checks who ranks before you spend a dollar on content.",
+    "Semrush hands you a list too, and leave the decision to you.",
+    "So you know which pages win before you spend a dollar on content.",
+  ].map((p) => block("paragraph", p)))], FORMATS.sales_letter);
+  assertEquals(tells(letter, "repeated_phrase"), undefined);
 });

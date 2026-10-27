@@ -10,9 +10,9 @@
  */
 import type { StepContext, StepResult } from "./types.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v4.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v5.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { PERSIST_RESERVE_MS, remainingBudgetMs } from "./budget.ts";
@@ -86,10 +86,12 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
 
     const refs = new Set(groups[gi].map((u) => u.ref));
     const mine = () => units.filter((u) => refs.has(u.ref));
+    // the checker's list for this group: each text's own tells, and what the whole piece says twice
+    const findingsFor = (all: EditUnit[]) => [...unitFindings(all.filter((u) => refs.has(u.ref)), spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref))];
     const args: TellEditArgs = {
       draft: source,
       units: mine(),
-      findings: unitFindings(mine(), spec, exemptTerms),
+      findings: findingsFor(units),
       exemptTerms,
       groupIndex: gi,
       groupTotal: groups.length,
@@ -106,7 +108,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
       const note = `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}\nReturn edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`;
       try {
         const current = r.units.filter((u) => refs.has(u.ref));
-        const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: unitFindings(current, spec, exemptTerms), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
+        const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: findingsFor(r.units), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
         const again = applyInGroup(r.units, retry.output.edits, refs);
         whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
