@@ -141,7 +141,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
     return [
       formatRulesText(spec),
       options.purpose ? `PURPOSE: ${options.purpose}` : "",
-      options.length === "longer" ? "LENGTH: the user asked for a longer piece than usual. Fill each section to the upper half of its band; more proof, more specifics, more of the story, never padding." : options.length === "shorter" ? "LENGTH: the user asked for a shorter piece than usual. Stay in the lower half of each band; cut setup, keep claims and their carriers." : "",
+      options.length === "longer" ? "LENGTH: the user asked for a longer piece than usual. Take each section toward the upper half of its band with new material: more of the reader's world and what the current way costs them, the demonstration told step by step as the reader will see it, the reason-why, the exact output, the specifics. A point said again in new words is padding; when the new material runs out, the section ends." : options.length === "shorter" ? "LENGTH: the user asked for a shorter piece than usual. Stay in the lower half of each band; cut setup, keep claims and their carriers." : "",
       `TARGET SEGMENT: ${args.segment ?? "default"} → awareness ${args.awareness}; sophistication stage ${args.sophistication}. Lead type and product-naming rule for this state: ${LEAD_RULES_BY_AWARENESS[args.awareness].opening_move}; product named ${LEAD_RULES_BY_AWARENESS[args.awareness].product_named.toLowerCase()}.`,
       `THE ARGUMENT (memo; every section serves this sentence and nothing else):\nTHESIS: ${args.thesis}\n${args.argumentText}`,
       offerBlockText(ctx.variant, ctx.brief, ctx.claims, ctx.format),

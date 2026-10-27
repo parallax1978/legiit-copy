@@ -107,7 +107,7 @@ Hooks. Where the opening line is the whole lead (an organic social post, a TikTo
 
 ## 4. Proof placement
 
-1. Hunt proof before writing the lead; grade every item A-F (Section 8). A claim with no carrier is sized down.
+1. Hunt proof before writing the lead; grade every item A-F (Section 8). Each promise rides on the strongest carrier the hunt finds (rule 8); a number, a rate or a result someone got with no row behind it is not written.
 2. Place proof where the doubt arises: a hint in the headline; the first carrier at the first big promise; every later claim followed by its carrier within two sentences; the admission just before the strongest claim; the guarantee after the price.
 3. Strength order: demonstration; specific result with denominator; mechanism; reason-why logic the reader accepts; process specifics; named authority with ledger ID; documented testimonial; case history; the founder's conviction; candor; exact social-proof counts. Vague social proof, adjective stacks and generic testimonials are cut.
 4. By format: order form carries the guarantee and one buying-experience testimonial beside the button; email carries one claim and one carrier; VSL and webinar put the demonstration in the first third; in an ad the proof is the headline; upsell carries the mechanism plus one specific.
@@ -261,7 +261,7 @@ Scoring: tells 11-13 are Tier 0; every other 7.1 tell, word or windup is Tier 1 
 
 | Claim type | Substantiation | Required disclosure | Flag for the user's decision |
 |---|---|---|---|
-| Outcome promise ("close more of the jobs you quote," "rank for keywords that make you money") | The mechanism that produces it, a demonstration, or results (rule 8) | | A number, rate or time on the result, or a result attributed to anyone, without the data; for a health product, the rows below |
+| Outcome promise ("close more of the jobs you quote," "land your first ten clients") | The mechanism that produces it, a demonstration, or results (rule 8) | | A number, rate or time on the result, or a result attributed to anyone, without the data; for a health product, the rows below |
 | Reason-why and market logic ("a homeowner with a leak hires whoever calls back first") | True and accepted in the market | | A false or disputed statement only |
 | The reader's situation and its cost ("quotes you sent that nobody chased") | A verbatim (Gate C) | | |
 | What the product does: function, output, process | The product itself | | |
