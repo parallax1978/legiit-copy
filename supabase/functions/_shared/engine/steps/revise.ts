@@ -81,7 +81,7 @@ export const reviseStep: StepFn = async (ctx) => {
     changes: res.output.changes.filter((c) => changedSet.has(c.block_id)),
     untouched_confirmed: doNotTouch.filter((q) => !rec.doNotTouch.unverifiable.includes(q)),
   });
-  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} unreferenced edit(s) reverted` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
+  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} edit(s) reverted` : ""}${rec.admissions.length ? ` (${rec.admissions.length} for a weakening admission)` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
   await ctx.progress(summary);
   return { output, model: res.model, summary, effects: { newDraft: toDraftEffect(revised, "revise", `revise ${cycle}`) } };
 };

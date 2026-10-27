@@ -9,6 +9,7 @@ import type { StepEffects } from "../steps/types.ts";
 import { ClaimType, LEDGER_TAG } from "../schemas/common.ts";
 import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
 import { stripNeverTells } from "./never_tells.ts";
+import { admissionsAdded, admissionsIn } from "./admissions.ts";
 import { ownerTellsIn } from "../tells.ts";
 
 type Flag = NonNullable<StepEffects["flags"]>[number];
@@ -231,8 +232,10 @@ export function revisionQuotes(input: { editorial: EditorialVerdict | null; fact
 
 export interface Reconciled {
   sections: Section[];
-  /** blocks the model changed without any note referencing them; restored to the original */
+  /** blocks the model changed without any note referencing them, or that gained a weakening admission; restored to the original */
   reverted: string[];
+  /** blocks a revision gave a weakening admission ("a planned subscription", "hasn't launched yet"): reverted or dropped, rule 12 */
+  admissions: string[];
   added: string[];
   removed: string[];
   changed: string[];
@@ -260,7 +263,14 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
 
   const diff = diffBlocks(before, revision.sections);
   const reverted: string[] = [];
+  const admissions: string[] = [];
   const bySection = new Map(revision.sections.map((s) => [s.section_id, s]));
+  // a new block that brings a weakening admission is dropped (rule 12): an edit cuts one, never writes one
+  const keepNew = (b: Section["blocks"][number]) => {
+    if (!admissionsIn(blockText(b)).length) return true;
+    admissions.push(b.id);
+    return false;
+  };
 
   const sections: Section[] = before.map((orig) => {
     const rev = bySection.get(orig.section_id)!;
@@ -271,10 +281,18 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
     for (const ob of orig.blocks) {
       if (revIds.has(ob.id)) {
         // emit any new blocks the model inserted before this one
-        while (cursor < rev.blocks.length && rev.blocks[cursor].id !== ob.id) blocks.push(rev.blocks[cursor++]);
+        while (cursor < rev.blocks.length && rev.blocks[cursor].id !== ob.id) {
+          const nb = rev.blocks[cursor++];
+          if (keepNew(nb)) blocks.push(nb);
+        }
         const rb = rev.blocks[cursor++];
         if (diff.changed.includes(ob.id) && !referenced.has(ob.id)) {
           reverted.push(ob.id);
+          blocks.push(ob);
+        } else if (diff.changed.includes(ob.id) && admissionsAdded(blockText(ob), blockText(rb)).length) {
+          // a fix that writes "planned" or "hasn't launched yet" into the line is reverted, whatever note asked for it
+          reverted.push(ob.id);
+          admissions.push(ob.id);
           blocks.push(ob);
         } else blocks.push(rb);
       } else if (!referenced.has(ob.id)) {
@@ -282,13 +300,16 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
         blocks.push(ob);
       }
     }
-    while (cursor < rev.blocks.length) blocks.push(rev.blocks[cursor++]);
+    while (cursor < rev.blocks.length) {
+      const nb = rev.blocks[cursor++];
+      if (keepNew(nb)) blocks.push(nb);
+    }
     return { section_id: orig.section_id, title: rev.title ?? orig.title, blocks };
   });
 
   const finalDiff = diffBlocks(before, sections);
   const dnt = verifyDoNotTouch(doNotTouch, before, sections);
-  return { sections, reverted, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
+  return { sections, reverted, admissions, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
 }
 
 // ---------------------------------------------------------------- ship

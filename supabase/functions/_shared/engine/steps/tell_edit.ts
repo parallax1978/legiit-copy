@@ -13,7 +13,8 @@ import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { Candidate } from "../schemas/argument.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "../draft/prompt_text.ts";
@@ -95,6 +96,9 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     ...(chosenOffer.success && !ONE_LINE_OFFER_FAMILIES.has(spec.family) ? [chosenOffer.data.guarantee.denominated_text] : []),
   ];
   const auditOpts = { short: REPEAT_FAMILIES.has(spec.family), accepted: acceptedWording };
+  // the argument's promise: no edit removes the piece's last line that states it (docs/04 rule 8)
+  const angle = Candidate.safeParse(ctx.winningAngle?.candidate);
+  const promise = promiseStems(angle.success ? angle.data.promise : null);
 
   const original = editableUnits(source, spec);
   const groups = groupUnits(original);
@@ -156,7 +160,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
     const unitsBefore = units;
-    let r = applyInGroup(units, res.output.edits, refs, spec.family);
+    let r = applyInGroup(units, res.output.edits, refs, spec.family, promise);
     const listed = (res.output.audit ?? []).filter((x) => refs.has(refOf(x.ref)));
     audit.push(...listed);
     // the model's summary lines stand only when all its edits landed; otherwise the landed edits' own labels say what changed
@@ -182,7 +186,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         const current = r.units.filter((u) => refs.has(u.ref));
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: findingsFor(r.units), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
-        const again = applyInGroup(r.units, retry.output.edits, refs, spec.family);
+        const again = applyInGroup(r.units, retry.output.edits, refs, spec.family, promise);
         whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
         // a line the retry kept on purpose is kept; one it left again is reported
@@ -245,9 +249,9 @@ function summaryOf(lines: string[], landed: TellEdit[], refused: boolean): strin
 }
 
 /** applyEdits for one group: an edit naming a text outside the group is refused with its reason, never dropped silently. */
-function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, family?: FormatSpec["family"]): ReturnType<typeof applyEdits> {
+function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, family?: FormatSpec["family"], promise?: Set<string>): ReturnType<typeof applyEdits> {
   const outside = edits.filter((e) => !refs.has(refOf(e.ref)));
-  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), family);
+  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), family, promise);
   return { ...r, rejected: [...outside.map((e) => ({ ...e, reason: `no text in this part has the reference ${e.ref}` })), ...r.rejected] };
 }
 

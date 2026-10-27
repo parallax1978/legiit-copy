@@ -14,6 +14,7 @@ import type { FormatSpec } from "../formats/spec.ts";
 import { analyzeDraft, blankQuotes, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, sloganCoupletPairs, TELLS } from "../tells.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "./prompt_text.ts";
 import { stripNeverTells } from "./never_tells.ts";
+import { admissionsAdded } from "./admissions.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
 import { assembleDraft, provisionalLeadSection } from "./assemble.ts";
@@ -354,6 +355,10 @@ function minus(xs: string[], drop: string[]): string[] {
 
 export function guardEdit(before: string, after: string, ctx?: EditContext): string | null {
   if (!before.trim()) return "empty before";
+  // a weakening admission may be cut, never written or reworded (rule 12): "a planned subscription" never becomes
+  // "a subscription that hasn't launched yet"
+  const admitted = admissionsAdded(before, after);
+  if (admitted.length) return `a weakening admission was added ("${admitted[0]}"); rule 12 cuts one, an edit never writes one`;
   if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after)) && !factFreeSentenceCut(before, after, ctx)) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
   // the count in a count windup ("I'd ask two things", "It takes seven steps, and") is the tell, not a fact: it may go, never change
@@ -460,7 +465,7 @@ export function splice(text: string, index: number, length: number, after: strin
 }
 
 /** Apply the editor's edits in order; each must find its span, pass the guards and leave the text changed. */
-export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: FormatSpec["family"]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
+export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: FormatSpec["family"], promise?: Set<string>): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
   const out = units.map((u) => ({ ...u }));
   const byRef = new Map(out.map((u) => [u.ref, u]));
   const applied: TellEdit[] = [];
@@ -502,6 +507,10 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
       rejected.push({ ...e, reason: whole });
       continue;
     }
+    if (promise?.size && promiseLost(out, u, next, promise)) {
+      rejected.push({ ...e, reason: "this is the piece's last line that states its promise (the result the reader gets); keep the result in it and cut the other line instead (rule 8)" });
+      continue;
+    }
     u.text = next;
     applied.push({ ...e, ref, before: found });
   }
@@ -516,6 +525,72 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: Format
     applied: applied.filter((e) => !lost.has(e.ref)),
     rejected: [...rejected, ...applied.filter((e) => lost.has(e.ref)).map((e) => ({ ...e, reason: "an opening or a section is never cut whole; rephrase it instead" }))],
   };
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// The promise stays: no edit removes the piece's last line that states the argument's promise (docs/04 rule 8)
+// ---------------------------------------------------------------------------------------------------------------
+
+/** Function words and fillers: never what a promise is about. */
+const PROMISE_SKIP = new Set(
+  ("a an and are as at be been but by for from has have here how in into is it its of on or our so than that the their them then there these they this those to too up very was we were what when where which who why will with you your yours " +
+    "actually really truly genuinely exactly literally just only get gets got make makes made find finds way ways keep keeps can could would more most every each one ones never instead back also still even ever already now again")
+    .split(" "),
+);
+
+const hasVowel = (w: string) => /[aeiouy]/.test(w);
+
+/** A crude stem for finding a promise's words in a line: "rankings" and "ranking" are "rank", "customers" and "customer" one stem. */
+function promiseStem(word: string): string {
+  let w = word.toLowerCase().replace(/['’]s$/, "");
+  const cut = (n: number, add = "") => {
+    const rest = w.slice(0, -n);
+    if (rest.length >= 3 && hasVowel(rest)) w = rest + add;
+  };
+  if (w.endsWith("ings")) cut(4);
+  else if (w.endsWith("ing")) cut(3);
+  else if (w.endsWith("ied") || w.endsWith("ies")) cut(3, "y");
+  else if (w.endsWith("ed")) cut(2);
+  else if (/(?:ch|sh|ss|x|z)es$/.test(w)) cut(2);
+  else if (w.endsWith("s") && !w.endsWith("ss")) cut(1);
+  if (w.endsWith("er")) cut(2);
+  if (w.endsWith("ly")) cut(2);
+  return w.length > 3 && /([b-df-hj-np-tv-z])\1$/.test(w) ? w.slice(0, -1) : w;
+}
+
+/** The content stems of the argument's promise ("rankings on keywords you can win, from searches that bring paying customers"). */
+export function promiseStems(promise: string | null | undefined): Set<string> {
+  const words = (promise ?? "").toLowerCase().match(/[a-z][a-z'’]*/g) ?? [];
+  return new Set(words.filter((w) => !PROMISE_SKIP.has(w)).map(promiseStem).filter((w) => w.length >= 3));
+}
+
+/** True when one sentence of the text holds enough of the promise's stems to state it: half of them, between two and four. */
+export function statesPromise(text: string, promise: Set<string>): boolean {
+  if (!promise.size) return false;
+  const need = Math.max(2, Math.min(4, Math.ceil(promise.size / 2)));
+  for (const sentence of text.replace(MARK_RE, " ").split(/(?<=[.!?…]["”’)]?)\s+|\n+/)) {
+    const stems = new Set((sentence.toLowerCase().match(/[a-z][a-z'’]*/g) ?? []).map(promiseStem));
+    let hits = 0;
+    for (const p of promise) if (stems.has(p)) hits++;
+    if (hits >= need) return true;
+  }
+  return false;
+}
+
+/** Each way the piece is read: the sections with one opening, or the sections alone when there are no openings. */
+function readings(units: EditUnit[]): EditUnit[][] {
+  const sections = units.filter((u) => u.owner === "section");
+  const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
+  return leadIds.length ? leadIds.map((id) => [...units.filter((u) => u.owner === "lead" && u.ownerId === id), ...sections]) : [sections];
+}
+
+/** True when the edit would leave a reading that stated the promise with no line that states it. */
+function promiseLost(units: EditUnit[], target: EditUnit, next: string, promise: Set<string>): boolean {
+  for (const reading of readings(units)) {
+    if (!reading.includes(target) || !reading.some((u) => statesPromise(u.text, promise))) continue;
+    if (!reading.some((u) => statesPromise(u === target ? next : u.text, promise))) return true;
+  }
+  return false;
 }
 
 // ---------------------------------------------------------------------------------------------------------------

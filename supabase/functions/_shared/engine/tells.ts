@@ -189,7 +189,7 @@ export const TELLS: TellRule[] = [
       "gi",
     ),
     example: "No blind test has been run, so I won't tell you it sells better.",
-    fix: "Cut it. Make only the claims the ledger carries; the absence of proof is never copy (rules 8 and 12).",
+    fix: "Cut the confession and keep the promise at full strength, carried by the demonstration, the mechanism, reason-why and the risk reversal (rules 8 and 12); the absence of proof is never copy.",
     note: "Zero hits in 871,661 words of human direct response (900 documents); six in 2,410 words of the engine's own drafts before rule 12 was tightened.",
   },
   {
@@ -506,7 +506,7 @@ export const TELLS: TellRule[] = [
     tier: 2, name: "hedge", weight: 2, scope: "body", density_per_1000: 2,
     regex: /\b(?:[Uu]sually|[Oo]ften|may|might|[Tt]ypically|[Gg]enerally|tends? to|in many cases|can help|may help|helps? support|supports? (?:a |your )?(?:healthy|normal)|results (?:may )?vary|individual results|many (?:people|customers|users|parents|owners|agents) (?:say|report|find|notice))\b/g,
     example: "usually saves most users a few hours",
-    fix: "State the claim at the ledger grade; compliance is handled line by line in the factual review, never with \"may\".",
+    fix: "Say the promise in the indicative at full strength, its carrier beside it (rules 8 and 20); a number with no data behind it is left out, never hedged.",
     note: "Human p90 1.5-2.6 (AI 0.67). Testimonial and disclosure blocks are excluded. A bare vocabulary count; the ledger match inside claim sentences belongs to the factual review.",
   },
   {
