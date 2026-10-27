@@ -21,7 +21,6 @@ export const upsell: FormatSpec = {
   skim_path_block_types: ["preheadline", "headline", "crosshead", "recap", "price", "guarantee", "button", "cta"],
   hard_gates: ["upsell.cta_count>=1", "upsell.decline_present", "upsell.price_position_share>=0.4", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Upsell / OTO",

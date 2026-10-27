@@ -20,7 +20,6 @@ export const cold_email: FormatSpec = {
   skim_path_block_types: ["subject"],
   hard_gates: ["cold_email.words<=90", "cold_email.subject_words<=3", "cold_email.email_one_links==0", "cold_email.questions<=1"],
   cadence_floor_cv: 0.5,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Cold email",

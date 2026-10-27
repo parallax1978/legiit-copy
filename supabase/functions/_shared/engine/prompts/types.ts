@@ -35,6 +35,20 @@ export function splitCached(user: string): { cached: string | null; task: string
   return { cached, task };
 }
 
+/**
+ * A new version's system text from the previous version's: each [old, new] must occur exactly once, so an edit that
+ * no longer matches fails at import (and in the tests) instead of shipping the old text silently.
+ */
+export function amend(system: string, edits: [string, string][]): string {
+  let out = system;
+  for (const [old, next] of edits) {
+    const n = out.split(old).length - 1;
+    if (n !== 1) throw new Error(`prompt amend: expected one occurrence of ${JSON.stringify(old.slice(0, 80))}, found ${n}`);
+    out = out.replace(old, () => next);
+  }
+  return out;
+}
+
 export function resolvePrompt<A>(ctx: StepContext, mod: PromptModule<A>) {
   const pv = ctx.promptVersions[mod.step];
   return {

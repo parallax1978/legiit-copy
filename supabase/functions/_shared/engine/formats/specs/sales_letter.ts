@@ -26,7 +26,6 @@ export const sales_letter: FormatSpec = {
   skim_path_block_types: ["preheadline", "headline", "deck", "crosshead", "cta", "button", "ps", "recap", "price", "guarantee"],
   hard_gates: ["page.cta_count>=3", "page.close_share>=0.15", "page.speaker_by_word<=150", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Long-form sales letter",

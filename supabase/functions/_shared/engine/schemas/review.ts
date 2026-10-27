@@ -50,6 +50,8 @@ export const MechanicalReport = z.object({
   and_then_count: z.number(),
   format_gate_failures: z.array(z.string()),
   word_count: z.number(),
+  /** Hits of the owner's tells and words (docs/04 §7.1) in the piece; two or more Tier 1 hits are the stack. */
+  owner_tells: z.number().optional(),
 });
 export type MechanicalReport = z.infer<typeof MechanicalReport>;
 

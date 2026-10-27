@@ -38,7 +38,6 @@ export const webinar_package: FormatSpec = {
   skim_path_block_types: ["preheadline", "headline", "deck", "slide", "crosshead", "recap", "price", "guarantee", "cta", "button", "subject"],
   hard_gates: ["webinar.presentation_ctas>=20", "webinar.replay_emails>=5", "webinar.replay_emails<=7", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Webinar package",

@@ -16,7 +16,6 @@ export const thank_you: FormatSpec = {
   skim_path_block_types: ["headline", "crosshead", "cta", "button", "price"],
   hard_gates: ["thank_you.cta_count>=1", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Thank-you page",

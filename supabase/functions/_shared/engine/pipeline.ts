@@ -20,7 +20,7 @@ export function initialSteps(s: Pick<PipelineState, "hasActiveResearch" | "hasAp
   const steps: StepName[] = [];
   if (!s.hasActiveResearch) steps.push("research");
   if (!s.hasApprovedOffer && !s.skipOffer) steps.push("offer");
-  steps.push("argument", "draft", "cold_read", "editorial", "mechanical", "factual", "revise", "ship");
+  steps.push("argument", "draft", "tell_edit", "cold_read", "editorial", "mechanical", "factual", "revise", "ship");
   return steps;
 }
 
@@ -37,6 +37,9 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
     case "argument":
       return ["draft"];
     case "draft":
+      return ["tell_edit"];
+    case "tell_edit":
+      // every draft and revision passes the owner's tell edit before the cold read (docs/04 §7.1)
       return ["cold_read"];
     case "cold_read":
       return ["editorial", "mechanical", "factual"];
@@ -50,7 +53,7 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
       return ["revise"];
     }
     case "revise":
-      return ["cold_read"];
+      return ["tell_edit"];
     case "ship":
       return [];
   }

@@ -15,7 +15,6 @@ export const sms: FormatSpec = {
   skim_path_block_types: ["paragraph"],
   hard_gates: ["sms.chars<=240", "sms.stop_wording", "sms.links<=1", "sms.no_dollar_off"],
   cadence_floor_cv: 0.5,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   platform_limits: { chars: 240, chars_target_min: 75, chars_target_max: 115, segment_chars: 160, send_hour_min: 8, send_hour_max: 21 },

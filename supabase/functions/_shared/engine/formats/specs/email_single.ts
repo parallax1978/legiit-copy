@@ -18,7 +18,6 @@ export const email_single: FormatSpec = {
   skim_path_block_types: ["subject", "preview", "crosshead", "cta", "ps"],
   hard_gates: ["email.links<=1", "email.subject_chars<=70", "email.single_idea"],
   cadence_floor_cv: 0.5,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Single email",

@@ -5,6 +5,7 @@ import { researchStep } from "./research.ts";
 import { offerStep } from "./offer.ts";
 import { argumentStep } from "./argument.ts";
 import { draftStep } from "./draft.ts";
+import { tellEditStep } from "./tell_edit.ts";
 import { cold_readStep } from "./cold_read.ts";
 import { editorialStep } from "./editorial.ts";
 import { mechanicalStep } from "./mechanical.ts";
@@ -18,6 +19,7 @@ export const STEPS: Record<StepName, StepFn> = {
   offer: offerStep,
   argument: argumentStep,
   draft: draftStep,
+  tell_edit: tellEditStep,
   cold_read: cold_readStep,
   editorial: editorialStep,
   mechanical: mechanicalStep,

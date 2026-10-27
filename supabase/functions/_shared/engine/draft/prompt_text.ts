@@ -65,7 +65,7 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
     brief.speaker?.name ? `signed by: ${brief.speaker.name}${brief.speaker.role ? `, ${brief.speaker.role}` : ""}` : "",
     brief.lead_offer ? `lead offer (every asset states this one deal): ${brief.lead_offer}` : "",
     brief.positioning ? `positioning: ${brief.positioning}` : "",
-    brief.proof_available.length ? `proof available: ${brief.proof_available.map((p) => `${p.claim} — ${p.evidence}${p.source ? ` (${p.source})` : ""}`).join(" | ")}` : "",
+    brief.proof_available.length ? `proof available: ${brief.proof_available.map((p) => `${p.claim}: ${p.evidence}${p.source ? ` (${p.source})` : ""}`).join(" | ")}` : "",
     brief.competitors.length ? `competitors: ${brief.competitors.join(", ")}` : "",
     brief.unknowns.length ? `unknowns (never fill these in): ${brief.unknowns.join("; ")}` : "",
   ].filter(Boolean).join("\n");
@@ -186,12 +186,12 @@ export function sectionSpecText(s: SectionSpec, extra: { id?: string; itemRole?:
 
 export function formatRulesText(spec: FormatSpec): string {
   return [
-    `FORMAT: ${spec.name} (${spec.id}, ${spec.family}) — ${spec.description}`,
+    `FORMAT: ${spec.name} (${spec.id}, ${spec.family}): ${spec.description}`,
     `length band: ${spec.length_band_words[0]}-${spec.length_band_words[1]} words`,
     `standard: ${formatParagraph(spec)}`,
     `skim path block types: ${spec.skim_path_block_types.join(", ")}`,
     `hard gates (checked by machine): ${spec.hard_gates.join("; ") || "none"}`,
-    `formatting: ${spec.allow_markdown_headings ? "markdown headings allowed" : "no markdown headings"}; ${spec.allow_emoji_bullets ? "emoji bullets allowed" : "no emoji bullets"}; ${spec.allow_caps ? "caps allowed at human rates" : "no caps"}`,
+    `formatting: ${spec.allow_markdown_headings ? "markdown headings allowed" : "no markdown headings"}; no em dashes, emojis or hashtags (Section 7.1); ${spec.allow_caps ? "caps allowed at human rates" : "no caps"}`,
     spec.platform_limits ? `platform limits: ${Object.entries(spec.platform_limits).map(([k, v]) => `${k}=${v}`).join(", ")}` : "",
     spec.multi_item ? `items: ${spec.multi_item.min}-${spec.multi_item.max} ${spec.multi_item.item_name}s${spec.multi_item.item_roles ? `; roles in order: ${spec.multi_item.item_roles.join(", ")}` : ""}` : "",
   ].filter(Boolean).join("\n");

@@ -296,14 +296,14 @@ export function userAttention(input: AttentionInput): string[] {
   };
   const who: Record<string, string> = { editorial: "copy chief", factual: "fact check", mechanical: "tell check", cold_read: "blind reader" };
   const gate: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
-  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` — "${f.quote}"` : ""}`);
+  for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` (line: "${f.quote}")` : ""}`);
   if (input.pendingFlags.length === 0) {
     if (input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
       // A rejection at a gate blocks; a "revise" note after the last revision pass is advice, not a blocker.
       const label = input.editorial.verdict === "REJECT" ? "Fix first" : "Worth fixing";
-      push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} — "${input.editorial.one_thing.quote}"`);
+      push(`${label} (copy chief${input.editorial.reject_gate ? `, ${gate[input.editorial.reject_gate] ?? input.editorial.reject_gate}` : ""}): ${input.editorial.one_thing.fails} (line: "${input.editorial.one_thing.quote}")`);
     }
-    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} — "${f.quote}"`);
+    for (const f of input.factual?.flags ?? []) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (fact check${f.fabrication ? ", invented fact" : ""}): ${f.issue} (line: "${f.quote}")`);
     for (const r of input.mechanical?.hard_fail_reasons ?? []) push(`Fix first (tell check): ${r}`);
   }
   // Lines that need a source and the offer's open questions are shown in their own sections of the piece

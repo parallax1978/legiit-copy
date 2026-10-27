@@ -21,7 +21,6 @@ export const pricing_page: FormatSpec = {
   skim_path_block_types: ["headline", "deck", "label", "price", "crosshead", "guarantee", "button", "cta"],
   hard_gates: ["pricing_page.plans<=3", "pricing_page.cta_count>=1", "pricing_page.not_only_contact_us", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "B2B pricing page",

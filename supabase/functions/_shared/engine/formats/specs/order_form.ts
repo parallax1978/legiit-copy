@@ -24,7 +24,6 @@ export const order_form: FormatSpec = {
   skim_path_block_types: ["headline", "recap", "price", "guarantee", "button"],
   hard_gates: ["order_form.fields<=8", "order_form.no_submit_button", "order_form.no_coupon_field", "order_form.words_outside_recap<=120", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Order form and checkout",

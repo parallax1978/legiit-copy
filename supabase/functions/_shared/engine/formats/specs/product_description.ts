@@ -18,7 +18,6 @@ export const product_description: FormatSpec = {
   skim_path_block_types: ["headline", "deck", "label"],
   hard_gates: ["product.benefit_bullets>=3", "product.benefit_bullets<=5", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Product description",

@@ -6,7 +6,12 @@
  * Tier 3 weight 1 and never alone. Score = sum of weights per 300 words; review flag at 6, hard fail at 10 or any
  * Tier 0 hit. Density thresholds are the human per-document p90 from research/tells/human_calibration_report.md
  * (899 public DR documents), per format profile where the report gives one. The non-tells in §7 are never scanned:
- * exclamation marks, ellipses, ALL CAPS, fragments, "Here's what / how / why", "Dear Friend", "P.S.", em dashes.
+ * exclamation marks, ellipses, ALL CAPS, fragments, "Dear Friend", "P.S.".
+ *
+ * The owner's list (§7.1) governs where it and the calibration disagree: em dashes, emojis and hashtags are Tier 0
+ * in every format, and the owner's pattern tells and words are Tier 1 per hit, scanned outside quotations and
+ * testimonials, skipping proper nouns and the literal words of what the offer sells. Two or more owner hits in a
+ * piece are the stack: a hard fail that sends the draft back to revision.
  *
  * Two entry points:
  *  - analyzeDraft(sections, spec): block-aware. Headline, deck and crosshead blocks are legitimate display text, so
@@ -74,6 +79,8 @@ export interface TellRule {
   /** Where the rule is scanned: every block; body prose and bullet items; paragraph blocks only; or code. */
   scope: TellScope;
   note?: string;
+  /** The owner's list (§7.1), with the tell's number there when it has one. Owner rules other than 11-13 skip quotations and testimonials. */
+  owner?: { tell?: number; words?: boolean };
 }
 
 export const TIER_WEIGHT: Record<Tier, number> = { 0: 10, 1: 4, 2: 2, 3: 1 };
@@ -82,10 +89,8 @@ export const TELL_THRESHOLDS = { flag: 6, hard_fail: 10 } as const;
 export const SCORE_FLOOR_WORDS = 300;
 /** Density thresholds are per 1,000 words; copy shorter than this uses this denominator so one hit in an SMS is not a density. */
 export const DENSITY_FLOOR_WORDS = 500;
-/** §7 "not a tell": em dashes at or below this rate are never counted; above it they carry no weight either (human email p90 11.9, AI 0.70). */
-export const EM_DASH_NON_TELL_CEILING_PER_1000 = 12;
-/** Check-mark bullets on web sales and opt-in pages are human practice at low density: one per this many words. */
-export const CHECK_BULLET_WORDS_PER_ALLOWED = 300;
+/** §7.1: two or more owner tells (Tier 1 patterns and words) in one piece are the stack, a hard fail. */
+export const OWNER_STACK = 2;
 
 const A = "['’]?"; // optional straight or curly apostrophe
 
@@ -123,11 +128,25 @@ export const TELLS: TellRule[] = [
     note: "Scanned on paragraph and bullet text only; headline, deck and crosshead blocks are rendered as headings legitimately.",
   },
   {
-    tier: 0, name: "emoji_bullet", weight: 10, scope: "body",
-    regex: /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[✓✔✅☑])/gmu,
+    tier: 0, name: "em_dash", weight: 10, scope: "all", owner: { tell: 11 },
+    regex: /—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)/g,
+    example: "It works — fast.",
+    fix: "A period, a comma or parentheses.",
+    note: "The owner's rule (§7.1, tell 11), in every format, quotations included. A spaced en dash or a double hyphen used as a dash is the same tell; an en dash in a range (3–5) is not. Human direct response runs 1.57 per 1,000; the owner bans it anyway.",
+  },
+  {
+    tier: 0, name: "emoji", weight: 10, scope: "all", owner: { tell: 12 },
+    regex: /(?![©®™✝])\p{Extended_Pictographic}|[✓\u20E3\u{1F1E6}-\u{1F1FF}]/gu,
     example: "✅ Syncs your sales automatically.",
-    fix: "A plain sentence. Meta ads may keep three emoji bullets; web pages may keep one check-mark bullet per 300 words.",
-    note: "Tier 0 in email, video, message, social and audio formats (human email 0.02 per 1,000). On page and commerce formats check marks (✓ ✔ ✅ ☑) are allowed at one per 300 words and only the excess, or any other emoji, is flagged. Meta ads keep an allowance of three.",
+    fix: "Remove it; never add one.",
+    note: "The owner's rule (§7.1, tell 12), in every format and block, check marks, stars and keycaps included; ©, ®, ™ and the ✝ footnote mark are not emojis.",
+  },
+  {
+    tier: 0, name: "hashtag", weight: 10, scope: "all", owner: { tell: 13 },
+    regex: /(?<![\p{L}\p{N}_&#/=?.-])#\p{L}[\p{L}\p{N}_]*/gu,
+    example: "#SEO #marketing",
+    fix: "Remove it; never add one.",
+    note: "The owner's rule (§7.1, tell 13). \"#1\", \"C#\", HTML entities and URL fragments are not hashtags.",
   },
 
   // ---- Tier 1: weight 4 (phrases at 0.00-0.02 per 1,000 in 879k human words) ----
@@ -180,7 +199,7 @@ export const TELLS: TellRule[] = [
     fix: "An open loop with a specific. VSLs may say \"keep watching\" once.",
   },
   {
-    tier: 1, name: "summary_closer", weight: 4, scope: "all",
+    tier: 1, name: "summary_closer", weight: 4, scope: "all", owner: { words: true },
     regex: /(?:^|[.!?]\s+)(?:In (?:short|summary|conclusion)|To (?:sum up|summarize|recap|wrap (?:it |things )?up)|So,? to recap|All in all|In a nutshell)\b/gm,
     example: "In short, X gives you A, B and C.",
     fix: "The CTA and what happens after the click.",
@@ -206,10 +225,150 @@ export const TELLS: TellRule[] = [
     note: "Counted once per run of list lines inside a paragraph block, not per line.",
   },
 
+  // ---- Tier 1: the owner's list (§7.1), weight 4 per hit ----
+  {
+    tier: 1, name: "quietly", weight: 4, scope: "all", owner: { tell: 1 },
+    regex: /\bquietly\b/gi,
+    example: "Legiit quietly passed a million orders.",
+    fix: "Cut it, or say who did not know.",
+  },
+  {
+    tier: 1, name: "three_beat_deep_third", weight: 4, scope: "all", owner: { tell: 2 },
+    regex: new RegExp(
+      `(?:^|[.!?]\\s+)(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+(?:Not|No|Never|Nor)\\s[^.?!\\n]{1,40}[.!]\\s+(?:(?:Not|No|Never)\\s[^.?!\\n]{1,40}[.!]\\s+)?(?:It${A}s|It is|It|This is|This|That${A}s|Just|Only|But|Instead|What|The)\\b` +
+        `|\\b[Nn]ot [^,.?!\\n]{1,30}, not [^,.?!\\n]{1,30}, (?:but|just|only)\\b`,
+      "gm",
+    ),
+    example: "Not a tool. Not a course. It's a system.",
+    fix: "State the claim once: \"It's a system.\"",
+    note: "Absorbs the old Tier 2 \"No X. No Y. Just Z.\" rule; no social exemption.",
+  },
+  {
+    tier: 1, name: "self_answered_question", weight: 4, scope: "structural", owner: { tell: 3 },
+    regex: null,
+    example: "The result? More sales.",
+    fix: "Make the point: \"You make more sales.\"",
+    note: "A question of seven words or fewer followed in the same block by a short statement that is not an instruction: the copy asks and answers itself.",
+  },
+  {
+    tier: 1, name: "heres_the_windup", weight: 4, scope: "all", owner: { tell: 4 },
+    regex: new RegExp(
+      `\\bhere(?:${A}s| is) (?:the|my|our|one|a|another) (?:real |big |best |worst |crazy |funny |scary |sad |ugly |simple |short |honest |hard |important |interesting |surprising |wild |weird |tricky |good |bad )?(?:kicker|thing|part|catch|deal|truth|secret|twist|problem|rub|key|reason|question|answer|point|difference|bottom line|takeaway|lesson|rule|bit|news|math|trick|kick|story|idea|tip|hint|thought|confession|warning|reminder)\\b` +
+        `|\\bhere(?:${A}s| is) (?:what|why|how|where|who|when)\\b[^.?!\\n:]{0,60}(?::|\\.(?=\\s|$))` +
+        `|\\b(?:the part|what) (?:nobody|no one|few people|most people (?:don${A}t|never)) (?:talks? about|tells? you|mentions?|wants? to (?:hear|admit|say))\\b` +
+        `|(?:^|[.!?]\\s+)[A-Z][^.!?\\n:]{0,40}\\b(?:this|these)\\s*:`,
+      "gim",
+    ),
+    example: "Here's the part the score hides:",
+    fix: "Make the point directly.",
+    note: "\"Here's the ___\" and its near-variants \"Here's what / why / how ...:\" and a short clause ending in \"this:\" (\"The score hides this:\", \"Do this:\") announce the point instead of making it.",
+  },
+  {
+    tier: 1, name: "worth_noting", weight: 4, scope: "all", owner: { tell: 5 },
+    regex: new RegExp(
+      `\\bworth (?:noting|remembering|keeping in mind|mentioning|pointing out|repeating|highlighting|emphasizing|emphasising|a mention)\\b|\\b(?:keep|bear) in mind\\b|\\bit bears (?:repeating|mentioning)\\b|(?:^|[.!?]\\s+)(?:Please )?[Nn]ote that\\b`,
+      "gim",
+    ),
+    example: "It's worth noting that the trial is free.",
+    fix: "State the point: \"The trial is free.\"",
+  },
+  {
+    tier: 1, name: "buzzword_pile", weight: 4, scope: "all", owner: { tell: 6 },
+    regex: /\bdoubl(?:e|es|ed|ing) down\b|\bat scale\b|\bbest[- ]in[- ]class\b|\bmov(?:e|es|ing) fast\b|\bmoved fast\b/gi,
+    example: "double down, at scale, best in class, move fast",
+    fix: "Keep one precise term, cut the rest.",
+  },
+  {
+    tier: 1, name: "genuinely_meaningfully", weight: 4, scope: "all", owner: { tell: 7 },
+    regex: /\bgenuinely\b|\bmeaningfully\b/gi,
+    example: "a genuinely useful report",
+    fix: "Cut the word when the sentence means the same without it.",
+  },
+  {
+    tier: 1, name: "disguise_frame", weight: 4, scope: "all", owner: { tell: 8 },
+    regex: new RegExp(
+      `\\b(?:wearing|wears|wore|in) (?:a|an|the|its|their) [^.?!\\n]{1,30}?\\bcostumes?\\b|\\bcosplay(?:s|ed|ing|er|ers)?\\b|\\b(?:dressed|dresses|dressing) (?:up )?as\\b|\\bwrapped (?:up )?in (?:a |an |the )?(?:nicer|shinier|new|fancy|fancier|pretty|prettier|clever|slick|slicker|nice|better)\\b|\\bmasquerad(?:e|es|ed|ing) as\\b|\\bdisguised as\\b|\\bin disguise\\b|\\bin (?:sheep|[a-z]+${A}s) clothing\\b|\\bwith (?:a|an) [^.?!\\n]{1,30}? (?:veneer|skin|wrapper)\\b|\\b(?:posing|poses|posed) as\\b|\\bpass(?:es|ed|ing)? (?:itself|themselves|yourself|himself|herself) off as\\b` +
+        `|\\b(?:feels|looks|sounds|seems) like [^.?!\\n]{1,40}\\.\\s+(?:It${A}s|It is|That${A}s|But it${A}s|It${A}s really|It${A}s actually)\\b` +
+        `|\\b(?:was|is|were|are)(?: never|n${A}t| not)(?: really| actually)? [^.?!\\n]{1,40}\\.\\s+(?:The|Your|Their|Its|It${A}s|They|That)\\b[^.?!\\n]{1,60}\\b(?:is|are|was|were)\\.`,
+      "gi",
+    ),
+    example: "Sorting by difficulty feels like research. It's where bad content gets made.",
+    fix: "State the claim directly: \"X is really Y\" or \"X is just Y\".",
+    note: "One thing presented as another in disguise; the reframes \"X feels like Y. It's Z.\" and \"X was never Y. Z is.\" are the same pattern.",
+  },
+  {
+    tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
+    regex: new RegExp(
+      `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]\\s+)The truth is\\b`,
+      "gm",
+    ),
+    example: "The hard truth: most pages never rank.",
+    fix: "Drop the signpost; a plain \"honestly\" once is fine.",
+  },
+  {
+    tier: 1, name: "pressure_test", weight: 4, scope: "all", owner: { tell: 10 },
+    regex: /\b(?:stress|pressure)[- ]?test(?:s|ed|ing)?\b|\bsanity[- ]?check(?:s|ed|ing)?\b|\bgut[- ]?check(?:s|ed)?\b/gi,
+    example: "Let's stress test this.",
+    fix: "Say what is checked and how.",
+  },
+  {
+    tier: 1, name: "ai_words", weight: 4, scope: "all", owner: { words: true },
+    regex: /\bdelv(?:e|es|ed|ing)\b|\btapestr(?:y|ies)\b|\brealms?\b|\bnavigat(?:e|es|ed|ing|ion)\b|\bunlock(?:s|ed|ing)?\b|\bseamless(?:ly)?\b|\belevat(?:e|es|ed|ing)\b|\blandscapes?\b|\btestament\b|\bbustling\b|\bharness(?:es|ed|ing)?\b|\bever[- ]evolving\b|\bever[- ]changing\b|\bmultifaceted\b|\bmeticulous(?:ly)?\b|\bbespoke\b|\btailored\b|\bcaptivat(?:e|es|ed|ing)\b|\benthrall(?:s|ed|ing)?\b|\bbeacons?\b|\bunleash(?:es|ed|ing)?\b|\benrich(?:es|ed|ing)?\b|\bpoised\b|\btowards\b|\bunderpin(?:s|ned|ning)?\b|\bdemystif(?:y|ies|ied|ying)\b|\binsurmountable\b|\bunprecedented\b|\brobust\b/gi,
+    example: "Unlock a seamless, robust way to navigate the landscape.",
+    fix: "The plainest word that keeps the meaning, or cut it.",
+  },
+  {
+    tier: 1, name: "corporate_filler", weight: 4, scope: "all", owner: { words: true },
+    regex: new RegExp(
+      `\\bparadigm shifts?\\b|\\bcutting[- ]edge\\b|\\bgame[- ]chang(?:ing|er|ers)\\b|\\btransformative\\b|\\bgroundbreaking\\b|\\brevolutionar(?:y|ies)\\b|\\brevolutioni[sz](?:e|es|ed|ing)\\b|\\bsynerg(?:y|ies|istic)\\b|\\becosystems?\\b|\\bscalab(?:le|ility)\\b|\\bdisruptive\\b|\\bmov(?:e|es|ing) the needle\\b|\\bmoved the needle\\b|\\bcircl(?:e|es|ed|ing) back\\b|\\bat the end of the day\\b|\\bwhen it comes to\\b|\\bthe world of\\b|\\bnot only\\b|\\bnot (?:just|merely|simply)\\b[^.?!\\n]{1,70}?\\bbut\\b|\\bnext[- ]level\\b|\\boptimi[sz]ed\\b|\\bvalue[- ]adds?\\b|\\bleverag(?:e|es|ed|ing)\\b`,
+      "gi",
+    ),
+    example: "a game-changing, scalable ecosystem that moves the needle",
+    fix: "The plainest word that keeps the meaning, or cut it.",
+    note: "\"not just X but Y\" is the near-variant of \"not only\" and counts here.",
+  },
+  {
+    tier: 1, name: "guru_speak", weight: 4, scope: "all", owner: { words: true },
+    regex: /\babundance mindset\b|\bmanifest(?:s|ed|ing|ation)?\b|\bhigh[- ]vibrations?\b|\bthe universe\b|\balignment\b|\bhold(?:s|ing)? space\b|\bsit(?:ting)? with it\b|\bauthentic(?:ity|ally)?\b|\blean(?:s|ed|ing)? into\b|\byour truth\b|\bintentional(?:ly)?\b|\bmindful(?:ly|ness)?\b/gi,
+    example: "lean into your truth with an abundance mindset",
+    fix: "The plainest word that keeps the meaning, or cut it.",
+  },
+  {
+    tier: 1, name: "empty_hedge", weight: 4, scope: "all", owner: { words: true },
+    regex: new RegExp(`\\b(?:just )?my two cents\\b|\\bfor what it${A}s worth\\b|\\bfor what it is worth\\b|\\bFWIW\\b|\\bin my humble opinion\\b|\\bIMHO\\b|\\bwith a grain of salt\\b|\\byour mileage may vary\\b|\\bYMMV\\b`, "gi"),
+    example: "Just my two cents, but your mileage may vary.",
+    fix: "Cut it and state the point.",
+  },
+  {
+    tier: 1, name: "formal_words", weight: 4, scope: "all", owner: { words: true },
+    regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gm,
+    example: "Furthermore, you can utilize the report.",
+    fix: "\"Use\", \"try\"; a new sentence or paragraph instead of the connective.",
+  },
+  {
+    tier: 1, name: "empty_teaser", weight: 4, scope: "all", owner: { words: true },
+    regex: new RegExp(
+      `\\b(?:earlier|sooner|bigger|worse|deeper|closer|simpler|faster|harder) than you (?:think|might think|realize|realise|expect)\\b|\\bwhere (?:the )?(?:real )?(?:trouble|problem|mess|damage|rot|bad [a-z]+) (?:starts|begins|gets made|comes from)\\b|\\bthat${A}s where (?:it gets|things get) (?:interesting|tricky|ugly|good)\\b|(?:^|[.!?]\\s+)(?:But )?[Ff]irst,? though\\b|\\bmore on (?:that|this) (?:in a (?:second|minute|moment)|later|below)\\b|\\bthe real question is\\b|\\bbut there${A}s a catch\\b|\\bstay tuned\\b`,
+      "gm",
+    ),
+    example: "And the guess starts one step earlier than you think.",
+    fix: "End on the point: name the specific, or cut the line.",
+    note: "A teaser that withholds nothing specific is a windup at the end of a line (§3 Hooks, §7.1 structure).",
+  },
+  {
+    tier: 1, name: "windup_opener", weight: 4, scope: "all", owner: { words: true },
+    regex: new RegExp(
+      `(?:^|[.!?]\\s+)(?:In today${A}s (?:world|market|economy|landscape|digital (?:age|world)|fast[- ]paced (?:world|market))|In (?:a|this) (?:world|day and age) where|Today,? (?:I|we)(?: want| wanted|${A}m going| am going|${A}d like| would like) to (?:talk|share|discuss|show|cover|chat)|Let${A}s (?:talk|chat) about|In this (?:post|article|email|guide|blog),? (?:I|we)\\b)`,
+      "gm",
+    ),
+    example: "In today's world, content is everything.",
+    fix: "Open on the point.",
+  },
+
   // ---- Tier 2: weight 2 by density per 1,000 words (human p90 by format) ----
   {
     tier: 2, name: "designed_to", weight: 2, scope: "all", density_per_1000: 1,
-    regex: /\b(?:designed|built|crafted|engineered|tailored|curated) (?:to|for|specifically)\b/gi,
+    regex: /\b(?:designed|built|crafted|engineered|curated) (?:to|for|specifically)\b/gi,
     example: "designed to help busy founders",
     fix: "Say what it does: \"pulls the number when the client opens the report\".",
     note: "Human sales pages p90 about 1 per 1,000 (AI 1.25, 35% of drafts); per-hit weight 4 flagged a product page on its second mention, so it is a density tell.",
@@ -257,12 +416,6 @@ export const TELLS: TellRule[] = [
     note: "Three or more consecutive sentences opening with the same word. Exempt in social formats (human threads 2.74 per 1,000, list style).",
   },
   {
-    tier: 2, name: "no_no_just", weight: 2, scope: "all", density_per_1000: 0,
-    regex: /\bNo [^.?!\n]{1,30}\.\s*No [^.?!\n]{1,30}\.(?:\s*No [^.?!\n]{1,30}\.)?\s*(?:Just|Only)\b/g,
-    example: "No fluff. No theory. Just results.",
-    fix: "One plain sentence.",
-  },
-  {
     tier: 2, name: "generic_emotion", weight: 2, scope: "body", density_per_1000: 1,
     regex: /\b(?:frustrated|frustrating|overwhelmed|overwhelming|juggling|stressed out|burned out|burnt out|burnout)\b/gi,
     example: "overwhelmed by juggling it all",
@@ -291,12 +444,6 @@ export const TELLS: TellRule[] = [
     note: "Human DR uses the clip (0.06 per 1,000 against 0.17 in AI drafts), so the threshold is looser than the \"It's not X. It's Y.\" rule.",
   },
   {
-    tier: 2, name: "not_just_but", weight: 2, scope: "all", density_per_1000: 1,
-    regex: new RegExp(`\\bnot (?:just|only|merely|simply)\\b[^.?!\\n]{1,70}?\\b(?:but|it${A}s)\\b`, "gi"),
-    example: "not just a tool but a partner",
-    fix: "Fine at human rates; above one per 1,000 words, state the second thing alone.",
-  },
-  {
     tier: 2, name: "most_x_dont_because", weight: 2, scope: "all", density_per_1000: 0,
     regex: new RegExp(`\\b(?:don${A}t|doesn${A}t|didn${A}t|isn${A}t|aren${A}t|never|not) [^.?!\\n]{1,60}? because [^.?!\\n]{1,60}\\. (?:They|It|You|We|He|She) [^.?!\\n]{1,40} because\\b`, "gi"),
     example: "Most sellers don't fail because of effort. They fail because nobody checks their numbers.",
@@ -321,22 +468,22 @@ export const TELLS: TellRule[] = [
   {
     tier: 3, name: "phrase_4o_era", weight: 1, scope: "all",
     regex: new RegExp(
-      `\\bgame[- ]chang(?:er|ing)\\b|\\bpicture this\\b|\\bhere${A}s the kicker\\b|\\blet that sink in\\b|\\bno[- ]brainer\\b|\\bspoiler alert\\b|\\bfast[- ]forward\\b|\\blet${A}s dive in\\b|\\bdive in\\b|\\bthink of it (?:as|like)\\b|\\bhere${A}s the thing\\b|\\bthe best part\\?|\\bthe result\\?|\\blet${A}s (?:be honest|face it|be real)\\b|\\bsay (?:goodbye|hello) to\\b|\\blook no further\\b|\\bwithout the fluff\\b|\\bno[- ]fluff\\b|\\bno (?:gimmicks|hype)\\b`,
+      `\\bpicture this\\b|\\blet that sink in\\b|\\bno[- ]brainer\\b|\\bspoiler alert\\b|\\bfast[- ]forward\\b|\\blet${A}s dive in\\b|\\bdive in\\b|\\bthink of it (?:as|like)\\b|\\blet${A}s (?:be honest|face it|be real)\\b|\\bsay (?:goodbye|hello) to\\b|\\blook no further\\b|\\bwithout the fluff\\b|\\bno[- ]fluff\\b|\\bno (?:gimmicks|hype)\\b`,
       "gi",
     ),
-    example: "Here's the kicker: it's a game-changer.",
+    example: "Picture this: let that sink in.",
     fix: "Cut; carry the point with a specific.",
-    note: "At or near zero in both corpora; kept on prior evidence. \"It's time to\" dropped (human 0.04, AI 0.00).",
+    note: "At or near zero in both corpora; kept on prior evidence. \"It's time to\" dropped (human 0.04, AI 0.00). \"Here's the kicker\", \"Here's the thing\", \"The result?\" and \"game-changer\" moved to the owner's list.",
   },
   {
     tier: 3, name: "marketing_vocab", weight: 1, scope: "all",
     regex: new RegExp(
-      `\\bseamless(?:ly)?\\b|\\bstreamlin(?:e|es|ed|ing)\\b|\\bcutting[- ]edge\\b|\\bstate[- ]of[- ]the[- ]art\\b|\\bsupercharge[sd]?\\b|\\bdelv(?:e|es|ed|ing)\\b|\\btapestry\\b|\\btestament to\\b|\\blandscape\\b|\\bever[- ]evolving\\b|\\bunparalleled\\b|\\bin today${A}s\\b`,
+      `\\bstreamlin(?:e|es|ed|ing)\\b|\\bstate[- ]of[- ]the[- ]art\\b|\\bsupercharge[sd]?\\b|\\bunparalleled\\b`,
       "gi",
     ),
-    example: "a seamless, cutting-edge solution for today's landscape",
+    example: "a streamlined, state-of-the-art, supercharged solution",
     fix: "The mechanism, the number or the scene the word stands in for.",
-    note: "\"transform\", \"unlock\", \"elevate\", \"empower\", \"effortless\", \"journey\", \"next level\" are genre markers of human self-development and info-product pages (human 3.65 per 1,000 on sales pages, AI 0.03) and are not scanned.",
+    note: "The words the owner's list names (seamless, cutting-edge, delve, tapestry, testament, landscape, ever-evolving, \"in today's\") are Tier 1 there. \"transform\", \"empower\", \"effortless\", \"journey\" are genre markers of human self-development pages and are not scanned.",
   },
   {
     tier: 3, name: "hey_there_greeting", weight: 1, scope: "all",
@@ -377,19 +524,15 @@ export const NON_TELLS: { name: string; why: string }[] = [
   { name: "ellipses", why: "Human DR 5.9 per 1,000 (financial e-letters 11.7) against 0.47." },
   { name: "all_caps_words", why: "Human DR 11.8 per 1,000 in 70% of documents; AI caps density is higher still." },
   { name: "fragments", why: "29% of human sentences are four words or fewer, against 23% in AI drafts." },
-  { name: "heres_what_how_why", why: "Human 0.21 per 1,000 in 15% of documents." },
   { name: "dear_friend", why: "The classic salutation." },
   { name: "ps", why: "A second headline for the skimmer." },
-  { name: "not_just_x_but_y_at_human_rates", why: "Human 0.17 per 1,000; only density above 1 per 1,000 is flagged." },
-  { name: "em_dashes", why: `Human email p90 11.9 per 1,000 (AI 0.70): at or below ${EM_DASH_NON_TELL_CEILING_PER_1000} per 1,000 is never counted, and above it carries no weight either.` },
-  { name: "genre_vocabulary", why: "\"transform\", \"unlock\", \"elevate\", \"empower\", \"effortless\": human self-development pages 3.65 per 1,000, AI 0.03." },
+  { name: "genre_vocabulary", why: "\"transform\", \"empower\", \"effortless\", \"journey\": human self-development pages 3.65 per 1,000, AI 0.03. The owner's list (§7.1) scores \"unlock\", \"elevate\", \"next level\" and the rest anyway." },
   { name: "superlatives_with_proof", why: "A superlative with its carrier is a claim, not a tell." },
   { name: "readability", why: "AI drafts read one to two grades easier than human copy; the FK grade is reported, never enforced." },
 ];
 
 /** §7 overrides and calibration exemptions by format. */
-export const FORMAT_OVERRIDES: Partial<Record<FormatId, { emoji_bullets?: number; bold_leadins?: number; keep_watching?: number; exempt?: string[] }>> = {
-  meta_ad: { emoji_bullets: 3 },
+export const FORMAT_OVERRIDES: Partial<Record<FormatId, { bold_leadins?: number; keep_watching?: number; exempt?: string[] }>> = {
   optin: { bold_leadins: 5 },
   upsell: { bold_leadins: 5 },
   vsl_long: { keep_watching: 1 },
@@ -556,16 +699,71 @@ function unansweredOpeners(bodyUnits: Unit[]): string[] {
 const CHECK_LINE_RE = /^\s*(?:[-*•]\s*)?[✓✔✅☑]/u;
 const EMOJI_LINE_RE = /^\s*(?:[-*•]\s*)?(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})/u;
 
-/** Lines (bullet items or paragraph lines) that open with a check mark, and those that open with any other emoji. */
-function emojiLines(texts: string[]): { checks: string[]; others: string[] } {
-  const checks: string[] = [], others: string[] = [];
+// ---------------------------------------------------------------------------------------------------------------
+// The owner's list (§7.1): quotations, testimonials, proper nouns and the offer's own words are exempt
+// ---------------------------------------------------------------------------------------------------------------
+
+const QUOTED_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”/g;
+
+/** Quotations blanked to spaces (same length, so snippets stay aligned): a verbatim or quoted source keeps its words. */
+export function blankQuotes(text: string): string {
+  return text.replace(QUOTED_RE, (m) => " ".repeat(m.length));
+}
+
+/** Words of four letters or more from the offer's own name and product name, lowercased: the literal words of what it sells. */
+export function exemptTermsFrom(...names: (string | null | undefined)[]): string[] {
+  const out = new Set<string>();
+  for (const n of names) for (const w of (n ?? "").toLowerCase().match(/[a-z][a-z'-]{3,}/g) ?? []) out.add(w);
+  return Array.from(out);
+}
+
+/** A capitalised match that does not open a sentence is a proper noun ("the Realm app"), not the word. */
+function isProperNoun(text: string, index: number, match: string): boolean {
+  if (!/^[A-Z]/.test(match)) return false;
+  const before = text.slice(0, index).replace(/\s+$/, "");
+  return before.length > 0 && !/[.!?:\n"“]$/.test(before);
+}
+
+/** Owner rules other than tells 11-13 (em dash, emoji, hashtag) leave quotations and testimonials alone. */
+function quoteExempt(rule: TellRule): boolean {
+  return !!rule.owner && !((rule.owner.tell ?? 0) >= 11);
+}
+
+function scanOwner(rule: TellRule, texts: string[], exempt: Set<string>): Hit {
+  const hit: Hit = { rule, count: 0, examples: [] };
+  if (!rule.regex) return hit;
   for (const t of texts) {
-    for (const line of t.split("\n")) {
-      if (CHECK_LINE_RE.test(line)) checks.push(line);
-      else if (EMOJI_LINE_RE.test(line)) others.push(line);
+    const re = new RegExp(rule.regex.source, rule.regex.flags.includes("g") ? rule.regex.flags : rule.regex.flags + "g");
+    for (const m of t.matchAll(re)) {
+      const word = m[0].trim();
+      const lead = word.replace(/^[.!?\s]+/, "");
+      if (rule.owner?.words && isProperNoun(t, (m.index ?? 0) + (m[0].length - m[0].trimStart().length), lead)) continue;
+      if (rule.owner?.words && lead.toLowerCase().split(/[\s-]+/).some((w) => exempt.has(w))) continue;
+      hit.count += 1;
+      if (hit.examples.length < 3) hit.examples.push(snippet(t, m.index ?? 0, m[0].length));
     }
   }
-  return { checks, others };
+  return hit;
+}
+
+const INSTRUCTION_START = /^(?:click|tap|call|read|open|get|grab|try|go|watch|see|join|book|reply|comment|hit|start|check|look|sign|download|scroll|send|text|e-?mail|visit|order|claim|pick|choose|write|count|ask|tell|keep|stop|take|use|put|find|add|make|do|don['’]t|let|please|contact|follow|subscribe|register|as always)\b|^\(/i;
+/** "..., okay?" and "..., right?" check in with the reader; they are not a question the copy then answers. */
+const TAG_QUESTION = /,\s*(?:okay|ok|right|huh|eh|yes|no|yeah|see|got it)\?+$/i;
+
+/** "The result? More sales." A question of seven words or fewer answered by the next short statement in the same block. */
+function selfAnsweredQuestions(texts: string[]): string[] {
+  const out: string[] = [];
+  for (const t of texts) {
+    const sents = t.replace(/\n+/g, " ").match(/[^.?!]+[.?!]+/g) ?? [];
+    for (let i = 0; i + 1 < sents.length; i++) {
+      const q = sents[i].trim(), a = sents[i + 1].trim();
+      if (!q.endsWith("?") || a.endsWith("?")) continue;
+      if (countWords(q) > 7 || countWords(a) > 20 || countWords(a) === 0) continue;
+      if (INSTRUCTION_START.test(a) || TAG_QUESTION.test(q)) continue;
+      out.push(`${q} ${a}`);
+    }
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -615,9 +813,13 @@ export interface TellFlagOut {
 }
 
 /** Run every rule over the units; returns flags (with allowances and density thresholds applied) and the score. */
-function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[] } {
+function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = []): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerTier1: number } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
+  // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
+  const ownerTexts = units.filter((u) => u.type !== "testimonial").map((u) => blankQuotes(u.text));
+  const ownerBodyTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial").map((u) => blankQuotes(u.text));
+  const exempt = new Set(exemptTerms.map((w) => w.toLowerCase()));
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -632,9 +834,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
       case "hedge":
         hit = scanRegex(rule, hedgeTexts);
         break;
-      case "emoji_bullet": {
-        const g = emojiLines(bodyTexts);
-        hit = { rule, count: g.checks.length + g.others.length, examples: trimExamples([...g.others, ...g.checks]), groups: g };
+      case "self_answered_question": {
+        const found = selfAnsweredQuestions(ownerBodyTexts);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
       case "self_posed_question_header": {
@@ -673,7 +875,8 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
         break;
       }
       default:
-        hit = scanRegex(rule, rule.scope === "paragraph" ? paragraphTexts : rule.scope === "body" ? bodyTexts : allTexts);
+        if (quoteExempt(rule)) hit = scanOwner(rule, ownerTexts, exempt);
+        else hit = scanRegex(rule, rule.scope === "paragraph" ? paragraphTexts : rule.scope === "body" ? bodyTexts : allTexts);
     }
     hits.push(hit);
   }
@@ -681,10 +884,16 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
   const flags: TellFlagOut[] = [];
   const tier0: TellFlagOut[] = [];
   const weightByTier: Record<Tier, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+  let owner = 0, ownerTier1 = 0;
+  const ownerNames = new Set(TELLS.filter((t) => t.owner).map((t) => t.name));
   const push = (f: TellFlagOut) => {
     flags.push(f);
     weightByTier[f.tier] += f.weight * f.count;
     if (f.tier === 0) tier0.push(f);
+    if (ownerNames.has(f.tell)) {
+      owner += f.count;
+      if (f.tier === 1) ownerTier1 += f.count;
+    }
   };
 
   for (const h of hits) {
@@ -693,21 +902,6 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
     if (count === 0) continue;
     if (ov.exempt?.includes(r.name)) continue;
     if (r.name === "markdown_heading" && spec.allow_markdown_headings) continue;
-
-    if (r.name === "emoji_bullet") {
-      const checks = h.groups?.checks ?? [], others = h.groups?.others ?? [];
-      if (spec.allow_emoji_bullets) {
-        const allowed = ov.emoji_bullets ?? 0;
-        if (count > allowed) push({ tier: 2, tell: "emoji_bullets_over_allowance", weight: TIER_WEIGHT[2], count: count - allowed, examples: h.examples, fix: `Keep at most ${allowed} emoji bullets in this format; the rest become sentences.` });
-      } else if (spec.family === "page" || spec.family === "commerce") {
-        if (others.length) push({ tier: 0, tell: r.name, weight: r.weight, count: others.length, examples: trimExamples(others), fix: r.fix });
-        const checkAllowed = Math.max(1, Math.ceil(words / CHECK_BULLET_WORDS_PER_ALLOWED));
-        if (checks.length > checkAllowed) push({ tier: 2, tell: "check_bullets_over_allowance", weight: TIER_WEIGHT[2], count: checks.length - checkAllowed, examples: trimExamples(checks), fix: `One check-mark bullet per ${CHECK_BULLET_WORDS_PER_ALLOWED} words on a web page; the rest become sentences.` });
-      } else {
-        push({ tier: 0, tell: r.name, weight: r.weight, count, examples: h.examples, fix: r.fix });
-      }
-      continue;
-    }
 
     if (r.name === "bold_leadin_bullet" && ov.bold_leadins) count -= ov.bold_leadins;
     if (r.name === "stay_with_me" && ov.keep_watching) count -= ov.keep_watching;
@@ -724,7 +918,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number): { flags: T
   const raw = weightByTier[0] + weightByTier[1] + weightByTier[2] + (weightByTier[1] + weightByTier[2] > 0 ? weightByTier[3] : 0);
   const score = Math.round((raw * 300 / Math.max(words, SCORE_FLOOR_WORDS)) * 100) / 100;
   flags.sort((a, b) => a.tier - b.tier || b.weight * b.count - a.weight * a.count || a.tell.localeCompare(b.tell));
-  return { flags, score, tier0 };
+  return { flags, score, tier0, owner, ownerTier1 };
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -966,14 +1160,14 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
 // Entry points
 // ---------------------------------------------------------------------------------------------------------------
 
-export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean } = {}): MechanicalReport {
+export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[] } = {}): MechanicalReport {
   const units = unitsOf(sections);
   const wordCountAll = draftWordCount({ sections });
   const allText = units.map((u) => u.text).join("\n\n");
   const words = countWords(allText);
   const proseText = units.filter((u) => u.kind !== "display").map((u) => u.text).join("\n\n");
 
-  const { flags, score, tier0 } = detectTells(units, spec, words);
+  const { flags, score, tier0, owner, ownerTier1 } = detectTells(units, spec, words, opts.exemptTerms ?? []);
   const gates = evaluateGates(sections, spec, opts);
 
   const cadence_cv = sentenceLengthCV(proseText);
@@ -982,6 +1176,8 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
 
   const hard_fail_reasons: string[] = [];
   for (const t of tier0) hard_fail_reasons.push(`tier0:${t.tell} x${t.count}`);
+  // Tier 0 owner tells already fail on their own; the stack is about the Tier 1 patterns and words
+  if (ownerTier1 >= OWNER_STACK) hard_fail_reasons.push(`owner_stack: ${ownerTier1} of the owner's tells or words in one piece (§7.1)`);
   if (score >= TELL_THRESHOLDS.hard_fail) hard_fail_reasons.push(`tell_score ${score} >= ${TELL_THRESHOLDS.hard_fail} per 300 words`);
   for (const g of gates.failures) hard_fail_reasons.push(`gate:${g}`);
 
@@ -996,12 +1192,13 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
     and_then_count,
     format_gate_failures: gates.failures,
     word_count: wordCountAll,
+    owner_tells: owner,
   };
 }
 
 /** Raw text (ledger tags are stripped here) treated as a run of paragraphs; only text-computable gates are evaluated. */
-export function analyzeText(text: string, opts: { format: FormatSpec }): MechanicalReport {
-  return analyzeDraft(textToSections(text), opts.format, { textOnly: true });
+export function analyzeText(text: string, opts: { format: FormatSpec; exemptTerms?: string[] }): MechanicalReport {
+  return analyzeDraft(textToSections(text), opts.format, { textOnly: true, exemptTerms: opts.exemptTerms });
 }
 
 /** Paragraphs split on blank lines become paragraph blocks of one `body` section. */

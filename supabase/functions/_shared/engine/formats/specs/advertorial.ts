@@ -23,7 +23,6 @@ export const advertorial: FormatSpec = {
   skim_path_block_types: ["label", "headline", "deck", "crosshead", "cta", "button", "price", "guarantee"],
   hard_gates: ["advertorial.ftc_label", "advertorial.cta_count>=2", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Advertorial and native landing page",

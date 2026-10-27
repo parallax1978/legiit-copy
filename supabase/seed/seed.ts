@@ -139,7 +139,7 @@ for (const file of ["split_tests_pages", "split_tests_email_ads_sms"]) {
 
 // ---- default prompt versions (v1 from the engine's prompt modules), active if none active ----
 try {
-  const steps = ["intake", "research", "offer", "argument", "draft", "cold_read", "editorial", "factual", "revise"];
+  const steps = ["intake", "research", "offer", "argument", "draft", "tell_edit", "cold_read", "editorial", "factual", "revise"];
   for (const step of steps) {
     try {
       const mod = await import(`${root}supabase/functions/_shared/engine/prompts/${step}.v1.ts`);

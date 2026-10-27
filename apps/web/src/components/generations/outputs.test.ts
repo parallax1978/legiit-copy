@@ -100,3 +100,22 @@ describe("timeline statuses from generation_steps rows", () => {
     expect(summarize("draft", { word_count: 1200, leads: [{}, {}, {}], needs_source: [] })).toBe("1,200 words, 3 leads");
   });
 });
+
+describe("the tell edit on the timeline", () => {
+  it("appears after the draft for a generation started before it existed, once it has run", () => {
+    const before = buildTimeline(generation({ status: "completed", current_step: "ship" }), [step({ step: "draft", status: "completed", created_at: T0 })]);
+    expect(before.map((e) => e.step)).not.toContain("tell_edit");
+    const steps = [
+      step({ step: "draft", status: "completed", created_at: T0 }),
+      step({ step: "tell_edit", status: "completed", created_at: T1, output: { what_changed: ["Cut a windup"], edits: [{ ref: "a", before: "x", after: "y", tell: "windup", by: "editor" }], rejected: [], owner_tells_before: 3, owner_tells_after: 0, already_clean: false, new_version: true } }),
+    ];
+    const entries = buildTimeline(generation({ status: "running", current_step: "cold_read" }), steps);
+    const order = entries.map((e) => e.step);
+    expect(order.indexOf("tell_edit")).toBe(order.indexOf("draft") + 1);
+    expect(entries.find((e) => e.step === "tell_edit")!.summary).toBe("1 change; AI tells 3 to 0");
+  });
+
+  it("reads an unchanged tell edit in plain words", () => {
+    expect(summarize("tell_edit", { what_changed: [], edits: [], rejected: [], owner_tells_before: 0, owner_tells_after: 0, already_clean: true, new_version: false })).toBe("No AI tells found; the copy is unchanged");
+  });
+});

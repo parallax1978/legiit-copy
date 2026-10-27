@@ -33,6 +33,7 @@ export const STEP_LABELS: Record<string, string> = {
   research: "Researching the market",
   argument: "Choosing the argument",
   draft: "Drafting",
+  tell_edit: "Removing AI tells",
   cold_read: "Cold read on a second model",
   editorial: "Editorial review",
   mechanical: "Tell detector",

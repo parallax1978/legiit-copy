@@ -89,7 +89,7 @@ function leadAssignment(args: DraftArgs): string {
     `Diagnosed awareness: ${args.awareness}${args.segment ? ` (segment: ${args.segment})` : ""}. Opening move for this state: ${rule.opening_move}. Product named: ${rule.product_named}. Do not: ${rule.do_not}.`,
     ...types.map((t, i) => `Lead ${LEAD_IDS[i]}: lead_type "${t}". Reader hypothesis: a specific reader from this segment, one sentence, built from the verbatims (who they are, what they have tried, what they believe now). The three hypotheses differ.`),
     hookBand(args)
-      ? `Each lead is a hook: inside the section's band; line one names the reader's need, or the belief the piece displaces, in the reader's own words, with a concrete specific from the reader's world (a number about the product's own output is proof for the next line, never the hook); one claim a skeptic would doubt; ends on an open loop that the body pays off; the speaker and the product wait for the body; ledger tags on every fact.`
+      ? `Each lead is a hook: inside the section's band; line one says the reader's problem plainly, in words the reader would use, with a concrete thing from the reader's world (the tool, the task, the money or the hours) and what it costs them; it states the claim directly: no reframe that presents one thing as another, no "Here's the..." windup, no teaser that withholds nothing specific; read aloud, it is a sentence the speaker would say to one reader across a table, not a line for a poster; a number about the product's own output is proof for the next line, never the hook; one claim a skeptic would doubt; ends on an open loop that the body pays off; the speaker's credentials and the product's name wait for the body; ledger tags on every fact.`
       : `Each lead: inside the section's band; cut from the top (the first sentence is already inside the story or the claim); the speaker identified by word 150; one claim a skeptic would doubt; the mechanism named at most, never explained; ends on an open loop that the body pays off; ledger tags on every fact.`,
     `Return {"leads":[{"id":"${LEAD_IDS[0]}","lead_type":"...","reader_hypothesis":"...","blocks":[...]}, ...three in total...],"ledger_refs_used":[...],"needs_source":[...]}. Block ids "${LEAD_IDS[0]}-1", "${LEAD_IDS[0]}-2", ... per lead.`,
   ].join("\n");
@@ -108,7 +108,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
     let lastItem: number | null = null;
     for (const u of args.call.units) {
       if (u.item && u.item.index !== lastItem) {
-        unitLines.push(`${u.item.name.toUpperCase()} ${u.item.index} of ${u.item.count}${u.item.role ? ` — role: ${u.item.role}` : ""} (section ids carry the "#${u.item.index}" suffix; set meta {"item":"${u.item.index}"${u.item.role ? `,"role":"${u.item.role}"` : ""}} on its blocks)`);
+        unitLines.push(`${u.item.name.toUpperCase()} ${u.item.index} of ${u.item.count}${u.item.role ? `, role: ${u.item.role}` : ""} (section ids carry the "#${u.item.index}" suffix; set meta {"item":"${u.item.index}"${u.item.role ? `,"role":"${u.item.role}"` : ""}} on its blocks)`);
         lastItem = u.item.index;
       }
       unitLines.push(sectionSpecText(u.spec, { id: u.id, itemRole: u.item?.role ?? null }));

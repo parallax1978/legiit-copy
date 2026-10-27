@@ -10,10 +10,12 @@ import {
   densityAllowance,
   densityThreshold,
   DENSITY_PROFILES,
-  EM_DASH_NON_TELL_CEILING_PER_1000,
+  blankQuotes,
   evaluateGates,
+  exemptTermsFrom,
   fleschKincaidGrade,
   NON_TELLS,
+  OWNER_STACK,
   sentenceLengthCV,
   syllables,
   TELL_THRESHOLDS,
@@ -47,7 +49,7 @@ Deno.test("an AI-style email from the corpus hard-fails on Tier 0 and scores abo
   assert(r.hard_fail);
   assert(r.tell_score_per_300 > TELL_THRESHOLDS.flag, `score ${r.tell_score_per_300}`);
   const tier0 = r.flags.filter((f) => f.tier === 0).map((f) => f.tell);
-  for (const t of ["bold_label_colon", "bracket_placeholder", "assistant_residue", "emoji_bullet"]) assert(tier0.includes(t), `expected tier 0 ${t}, got ${tier0.join(",")}`);
+  for (const t of ["bold_label_colon", "bracket_placeholder", "assistant_residue", "emoji"]) assert(tier0.includes(t), `expected tier 0 ${t}, got ${tier0.join(",")}`);
   assert(tells(r, "thats_why_we_built"), "That's why we built");
   assert(r.hard_fail_reasons.some((x) => x.startsWith("tier0:")));
 });
@@ -83,11 +85,11 @@ const HUMAN = `Dear Friend,
 
 If you've ever lain awake at 3 a.m. wondering how you're going to make payroll on Friday... this letter is for you.
 
-Here's what happened to me in the spring of 1987. I was BROKE. Flat broke. I had $128.42 in my checking account and a stack of bills on the kitchen table that was taller than my coffee cup.
+In the spring of 1987, I was BROKE. Flat broke. I had $128.42 in my checking account and a stack of bills on the kitchen table that was taller than my coffee cup.
 
-Then a man named Jim Straw sent me a letter — four pages, typed on a manual typewriter — that changed everything. I still have it.
+Then a man named Jim Straw sent me a letter (four pages, typed on a manual typewriter) that changed everything. I still have it.
 
-Here's what he told me, and I want you to read this twice:
+He told me one thing, and I want you to read it twice:
 
 "The money is in the list. The LIST."
 
@@ -97,7 +99,7 @@ That was the first time I ever made money in my sleep. It was not the last.
 
 Look. I am not going to tell you this is easy. It isn't. You will mail letters that die. I have mailed letters that lost $20,000 in a week. But the ones that work... they work for YEARS!
 
-So here is what I want you to do. Get out a pen. Write down the name of the one market you know better than anyone you've ever met. Then call me at the number below.
+So do this. Get out a pen. Write down the name of the one market you know better than anyone you've ever met. Then call me at the number below.
 
 Sincerely,
 
@@ -109,7 +111,7 @@ Deno.test("human-style copy with caps, fragments, ellipses, exclamation marks, D
   assert((HUMAN.match(/!/g) ?? []).length >= 2);
   assert((HUMAN.match(/\.\.\./g) ?? []).length >= 2);
   assert(/\b[A-Z]{4,}\b/.test(HUMAN));
-  assert(/Dear Friend/.test(HUMAN) && /P\.S\./.test(HUMAN) && /Here's what/.test(HUMAN));
+  assert(/Dear Friend/.test(HUMAN) && /P\.S\./.test(HUMAN));
 
   const r = analyzeText(HUMAN, { format: FORMATS.email_single });
   MechanicalReport.parse(r);
@@ -119,21 +121,33 @@ Deno.test("human-style copy with caps, fragments, ellipses, exclamation marks, D
   assertEquals(r.flags.filter((f) => f.tier === 1).length, 0, r.flags.map((f) => f.tell).join(","));
   assertEquals(r.format_gate_failures, []);
   const names = TELLS.map((t) => t.name);
-  for (const nt of ["exclaim", "ellipsis", "caps_word", "fragment_rows", "heres_what", "dear_friend", "ps", "em_dash"]) assert(!names.includes(nt), nt);
-  assert(NON_TELLS.some((x) => x.name === "em_dashes" && x.why.includes(`${EM_DASH_NON_TELL_CEILING_PER_1000} per 1,000`)));
-  assertEquals(EM_DASH_NON_TELL_CEILING_PER_1000, 12);
+  for (const nt of ["exclaim", "ellipsis", "caps_word", "fragment_rows", "dear_friend", "ps"]) assert(!names.includes(nt), nt);
+  for (const gone of ["em_dashes", "heres_what_how_why", "not_just_x_but_y_at_human_rates"]) assert(!NON_TELLS.some((x) => x.name === gone), `${gone} is banned by the owner's list now`);
 });
 
-Deno.test("loud punctuation, em dashes, plain Label: lines and genre vocabulary alone produce no score", () => {
-  const loud = "WAIT! Don't go yet!!! Here's why... the price DOUBLES at midnight — tonight — no kidding. Really. Call NOW! Or don't... your choice!";
+Deno.test("the owner's list flags em dashes and windups even in human copy (§7.1 governs the calibration)", () => {
+  const original = "Here's what happened to me in the spring of 1987. I was BROKE.\n\nThen a man named Jim Straw sent me a letter — four pages, typed on a manual typewriter — that changed everything.\n\nHere's what he told me, and I want you to read this twice:";
+  const r = analyzeText(original, { format: FORMATS.email_single });
+  assertEquals(tells(r, "em_dash")?.count, 2);
+  assertEquals(tells(r, "em_dash")?.tier, 0);
+  assertEquals(tells(r, "heres_the_windup")?.count, 2);
+  assert(r.hard_fail);
+  assert(r.hard_fail_reasons.some((x) => x.startsWith("owner_stack:")), r.hard_fail_reasons.join("; "));
+});
+
+Deno.test("loud punctuation and plain Label: lines produce no score; em dashes and the owner's words do", () => {
+  const loud = "WAIT! Don't go yet!!! The price DOUBLES at midnight tonight, no kidding. Really. Call NOW! Or don't... your choice!";
   const r = analyzeText(loud, { format: FORMATS.email_single });
   assertEquals(r.flags, []);
   assertEquals(r.tell_score_per_300, 0);
   const dashSentences = ["The jar — the big one — ships Monday.", "Dana — our driver — leaves at six.", "Forty jars — packed in straw — fill one crate."];
   const dashes = analyzeText(Array.from({ length: 30 }, (_, i) => dashSentences[i % 3]).join(" "), { format: FORMATS.email_single });
-  assertEquals(dashes.flags, [], "em dashes at 20 per 1,000 are not counted");
+  assertEquals(tells(dashes, "em_dash")?.count, 60, "every em dash counts, at any rate");
+  assert(dashes.hard_fail);
   const genre = analyzeText("Transform your mornings. Unlock the ritual. Elevate the first hour and empower the rest of the day with an effortless journey to the next level.", { format: FORMATS.sales_letter });
-  assertEquals(genre.flags.filter((f) => f.tell === "marketing_vocab"), [], "genre vocabulary is not scanned");
+  assertEquals(tells(genre, "ai_words")?.count, 2, "unlock and elevate are on the owner's list");
+  assertEquals(tells(genre, "corporate_filler")?.count, 1, "next level is on the owner's list");
+  assertEquals(genre.flags.filter((f) => f.tell === "marketing_vocab"), [], "transform, empower, effortless and journey are not scanned");
   const labels = analyzeDraft([section("body", [block("paragraph", "Editor's note: the April batch sold out.\nSpeaker: Dana\nFAQ: does it ship abroad?")])], FORMATS.email_single);
   assertEquals(labels.flags.filter((f) => f.tier === 0), [], "plain-text Label: lines are not Tier 0");
   assertEquals(labels.tell_score_per_300, 0, "a Tier 3 label_colon_line never scores alone");
@@ -261,13 +275,13 @@ Deno.test("short copy uses the density floor so one hit is not a density", () =>
 
 Deno.test("Tier 3 never scores alone, but counts once a Tier 1 or 2 tell is present", () => {
   const base = filler(600);
-  const alone = analyzeText(`${base}\n\nIt was a game-changer for the shop.`, { format: FORMATS.sales_letter });
+  const alone = analyzeText(`${base}\n\nIt was a no-brainer for the shop.`, { format: FORMATS.sales_letter });
   assertEquals(tells(alone, "phrase_4o_era")?.count, 1);
   assertEquals(alone.tell_score_per_300, 0);
-  const withTier1 = analyzeText(`${base}\n\nIt was a game-changer for the shop. That's why we built the kit.`, { format: FORMATS.sales_letter });
+  const withTier1 = analyzeText(`${base}\n\nIt was a no-brainer for the shop. That's why we built the kit.`, { format: FORMATS.sales_letter });
   assert(withTier1.tell_score_per_300 > 0);
   // weights: 4 (tier 1) + 1 (tier 3) over the word count, per 300 words
-  assertEquals(withTier1.tell_score_per_300, Math.round((5 * 300 / Math.max(countWords(`${base}\n\nIt was a game-changer for the shop. That's why we built the kit.`), 300)) * 100) / 100);
+  assertEquals(withTier1.tell_score_per_300, Math.round((5 * 300 / Math.max(countWords(`${base}\n\nIt was a no-brainer for the shop. That's why we built the kit.`), 300)) * 100) / 100);
 });
 
 Deno.test("social formats are exempt from anaphora and label-colon lines", () => {
@@ -318,29 +332,31 @@ Deno.test("bold-label-colon bullets are Tier 0 (markdown only); plain bold lead-
   assertEquals(tells(optin, "bold_leadin_bullet"), undefined, "opt-in allows five plain bold lead-ins");
 });
 
-Deno.test("emoji bullets: Tier 0 in email, three allowed in a Meta ad, one check mark per 300 words on a web page", () => {
+Deno.test("emojis are Tier 0 in every format and block, check marks included; ©, ® and ™ are not emojis", () => {
   const items = ["✅ Syncs your sales", "✅ Sorts your expenses", "✅ Shows real profit"];
   const email = analyzeDraft([section("body", [block("bullets", "", items)])], FORMATS.email_single);
-  assertEquals(tells(email, "emoji_bullet")?.tier, 0);
-  const metaOk = analyzeDraft([section("primary_text#1", [block("paragraph", "Books done by Friday."), block("bullets", "", items)])], FORMATS.meta_ad);
-  assertEquals(tells(metaOk, "emoji_bullet"), undefined);
-  assertEquals(tells(metaOk, "emoji_bullets_over_allowance"), undefined);
-  const metaOver = analyzeDraft([section("primary_text#1", [block("bullets", "", [...items, "🚀 Ready for tax time"])])], FORMATS.meta_ad);
-  assertEquals(tells(metaOver, "emoji_bullets_over_allowance")?.count, 1);
-  assert(metaOver.format_gate_failures.some((g) => g.startsWith("meta_ad.emoji_bullets<=3")));
+  assertEquals(tells(email, "emoji")?.tier, 0);
+  assertEquals(tells(email, "emoji")?.count, 3);
+  const meta = analyzeDraft([section("primary_text#1", [block("paragraph", "Books done by Friday."), block("bullets", "", items)])], FORMATS.meta_ad);
+  assertEquals(tells(meta, "emoji")?.count, 3, "Meta ads no longer keep an emoji allowance");
+  assert(meta.hard_fail);
+  const page = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday", "✔ Packed in straw"])])], FORMATS.sales_letter);
+  assertEquals(tells(page, "emoji")?.count, 2, "check marks are emojis under the owner's rule");
+  const inline = analyzeDraft([section("headline", [block("headline", "Books done by Friday 🚀")]), section("body", [block("paragraph", "Rated ★★★★★ by the guild. Legiit® and Legiit Copy™ © 2026.")])], FORMATS.landing_page_short);
+  assertEquals(tells(inline, "emoji")?.count, 6, "the rocket in a headline and five stars; not ®, ™ or ©");
+});
 
-  const pageOne = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday"])])], FORMATS.sales_letter);
-  assertEquals(tells(pageOne, "emoji_bullet"), undefined, "one check mark in under 300 words is human practice");
-  assertEquals(tells(pageOne, "check_bullets_over_allowance"), undefined);
-  const pageThree = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday", "✔ Packed in straw", "✅ Forty jars"])])], FORMATS.sales_letter);
-  assertEquals(tells(pageThree, "emoji_bullet"), undefined);
-  assertEquals(tells(pageThree, "check_bullets_over_allowance")?.count, 2);
-  assertEquals(pageThree.hard_fail_reasons.filter((x) => x.startsWith("tier0:")), [], "excess check marks are Tier 2, not a hard reject");
-  const pageRocket = analyzeDraft([section("benefits", [block("bullets", "", ["✓ Ships Monday", "🚀 Forty jars"])])], FORMATS.sales_letter);
-  assertEquals(tells(pageRocket, "emoji_bullet")?.count, 1, "any other emoji on a page is still Tier 0");
-  assert(pageRocket.hard_fail);
-  const vsl = analyzeDraft([section("plan", [block("bullets", "", ["✓ Ships Monday"])])], FORMATS.vsl_long);
-  assertEquals(tells(vsl, "emoji_bullet")?.tier, 0, "VSL scripts keep the Tier 0 rule");
+Deno.test("hashtags are Tier 0; #1, C#, HTML entities and URL fragments are not hashtags", () => {
+  const r = analyzeText("Post it with #SEO and #marketing.\n\n#contentstrategy", { format: FORMATS.organic_social });
+  assertEquals(tells(r, "hashtag")?.count, 3);
+  assertEquals(tells(r, "hashtag")?.tier, 0);
+  const clean = analyzeText("We are the #1 marketplace. Write it in C# or Go. See example.com/#pricing and &#39;quoted&#39; text.", { format: FORMATS.organic_social });
+  assertEquals(tells(clean, "hashtag"), undefined, clean.flags.map((f) => f.examples.join(" / ")).join("; "));
+});
+
+Deno.test("em dash variants: a spaced en dash or a double hyphen counts; an en dash in a range does not", () => {
+  const r = analyzeText("It works – fast. It ships -- today. It rose--slowly. Pages 3–5 cover it.", { format: FORMATS.email_single });
+  assertEquals(tells(r, "em_dash")?.count, 3);
 });
 
 Deno.test("assistant residue and bracket placeholders are Tier 0; ledger tags and NEEDS SOURCE are not", () => {
@@ -362,10 +378,15 @@ Deno.test("an Imagine opener with no specific on the next line is flagged; one w
   assertEquals(tells(specific, "unanswered_opener"), undefined);
 });
 
-Deno.test("anaphora triads and No/No/Just are structural Tier 2 tells", () => {
+Deno.test("anaphora triads stay Tier 2; the three-beat that lands on a deep third is the owner's Tier 1 tell", () => {
   const r = analyzeDraft([section("body", [block("paragraph", "They skip it. They forget it. They regret it. No fluff. No theory. Just results.")])], FORMATS.email_single);
   assertEquals(tells(r, "anaphora_triad")?.count, 1);
-  assertEquals(tells(r, "no_no_just")?.count, 1);
+  assertEquals(tells(r, "three_beat_deep_third")?.count, 1);
+  assertEquals(tells(r, "three_beat_deep_third")?.tier, 1);
+  const deep = analyzeText("Not a tool. Not a course. It's a system.", { format: FORMATS.organic_social });
+  assertEquals(tells(deep, "three_beat_deep_third")?.count, 1, "no social exemption");
+  const comma = analyzeText("It is not a tool, not a course, but a system you run every week.", { format: FORMATS.email_single });
+  assertEquals(tells(comma, "three_beat_deep_third")?.count, 1);
 });
 
 Deno.test("hedges are counted in body copy but not inside testimonials", () => {
@@ -560,4 +581,123 @@ Deno.test("proof confession: announcing missing proof is a Tier 0 hard reject; o
   ]) assertEquals(hit(t), false, t);
   const r = analyzeText("No blind evaluation has been run yet, so I won't tell you it sells better.", { format: spec });
   assertEquals(r.hard_fail, true);
+});
+
+// ---------------------------------------------------------------------------------------------------------------
+// The owner's list (§7.1)
+// ---------------------------------------------------------------------------------------------------------------
+
+Deno.test("each of the owner's pattern tells 1-10 is caught", () => {
+  const cases: [string, string][] = [
+    ["quietly", "Legiit quietly passed a million orders last spring."],
+    ["three_beat_deep_third", "Not a tool. Not a course. It's a system."],
+    ["self_answered_question", "The result? More pages that rank."],
+    ["heres_the_windup", "Here's the kicker: the trial is free."],
+    ["heres_the_windup", "Here's the part the score hides."],
+    ["heres_the_windup", "Here's how it works: you paste a list."],
+    ["heres_the_windup", "That's the part nobody talks about."],
+    ["worth_noting", "It's worth noting that the trial is free."],
+    ["worth_noting", "Keep in mind that the trial ends Friday."],
+    ["buzzword_pile", "We double down on what works, at scale."],
+    ["genuinely_meaningfully", "A genuinely useful report that meaningfully cuts the work."],
+    ["disguise_frame", "It's a keyword list wearing a strategy costume."],
+    ["disguise_frame", "A sales pitch masquerading as advice."],
+    ["disguise_frame", "Sorting your export by keyword difficulty feels like research. It's where bad content gets made."],
+    ["hard_truth", "The hard truth: most pages never rank."],
+    ["pressure_test", "We stress test every brief and sanity check the numbers."],
+  ];
+  for (const [name, text] of cases) {
+    const r = analyzeText(text, { format: FORMATS.email_single });
+    assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
+    assertEquals(tells(r, name)?.tier, 1, name);
+  }
+});
+
+Deno.test("the owner's word lists, formal words and windups are caught", () => {
+  const cases: [string, string][] = [
+    ["ai_words", "Navigate the landscape towards a robust plan."],
+    ["corporate_filler", "When it comes to SEO, a game-changing ecosystem moves the needle."],
+    ["corporate_filler", "It is not just a list but a plan."],
+    ["guru_speak", "Lean into your truth with an abundance mindset."],
+    ["empty_hedge", "Just my two cents, and your mileage may vary."],
+    ["formal_words", "Furthermore, you can utilize the report."],
+    ["windup_opener", "In today's world, content is everything."],
+    ["summary_closer", "In conclusion, the report saves a week."],
+  ];
+  for (const [name, text] of cases) {
+    const r = analyzeText(text, { format: FORMATS.email_single });
+    assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
+  }
+  const counted = analyzeText("Navigate the landscape towards a robust plan.", { format: FORMATS.email_single });
+  assertEquals(tells(counted, "ai_words")?.count, 4);
+});
+
+Deno.test("a question the reader answers, or one followed by an instruction, is not the self-answered question", () => {
+  const ok = [
+    "How many of the posts you paid for last year rank on page one today? Open your analytics and count them.",
+    "Ready? Click the button below.",
+    "Which keyword would you build first if you had to bet your own money on the page ranking by June?",
+  ];
+  for (const t of ok) assertEquals(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), undefined, t);
+  for (const t of ["Why? Because the score never looked at your site.", "The catch? There isn't one.", "What changed? We stopped guessing."]) {
+    assert(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), t);
+  }
+});
+
+Deno.test("owner words inside quotations, testimonials, proper nouns and the offer's own words are exempt; em dashes are not", () => {
+  const quoted = analyzeText("One buyer wrote: \"It helped me navigate the whole landscape.\" Another said “it is robust”.", { format: FORMATS.email_single });
+  assertEquals(tells(quoted, "ai_words"), undefined, "a verbatim keeps its words");
+  const testimonial = analyzeDraft([section("proof", [block("testimonial", "It helped me navigate a robust plan towards launch.")])], FORMATS.sales_letter);
+  assertEquals(tells(testimonial, "ai_words"), undefined);
+  const proper = analyzeText("Our clients include Realm Health and Beacon Dental.", { format: FORMATS.email_single });
+  assertEquals(tells(proper, "ai_words"), undefined, proper.flags.map((f) => f.examples.join(" / ")).join("; "));
+  const own = analyzeText("We install landscape lighting in two days.", { format: FORMATS.email_single, exemptTerms: exemptTermsFrom("Bright Landscape Lighting") });
+  assertEquals(tells(own, "ai_words"), undefined, "landscape is the literal name of what this offer sells");
+  const other = analyzeText("We install landscape lighting in two days.", { format: FORMATS.email_single });
+  assertEquals(tells(other, "ai_words")?.count, 1);
+  const quotedDash = analyzeText("She said, \"It was slow — painfully slow.\"", { format: FORMATS.email_single });
+  assertEquals(tells(quotedDash, "em_dash")?.count, 1, "the owner's never-rules apply inside quotations too");
+  assertEquals(blankQuotes("a \"b c\" d").length, "a \"b c\" d".length);
+});
+
+Deno.test("the stack: one owner tell is not the giveaway, two in a piece are a hard fail", () => {
+  assertEquals(OWNER_STACK, 2);
+  const one = analyzeText("Our report is genuinely short. It shows six numbers and takes two minutes to read.", { format: FORMATS.email_single });
+  assertEquals(one.owner_tells, 1);
+  assertEquals(one.hard_fail, false, one.hard_fail_reasons.join("; "));
+  const two = analyzeText("Our report is genuinely short. It's worth noting that it takes two minutes to read.", { format: FORMATS.email_single });
+  assertEquals(two.owner_tells, 2);
+  assert(two.hard_fail);
+  assert(two.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")), two.hard_fail_reasons.join("; "));
+});
+
+Deno.test("the hooks the owner rejected are caught", () => {
+  for (const t of [
+    "Sorting your Ahrefs export by keyword difficulty feels like research. It's where bad content gets made.",
+    "Here's the part the score hides. The keyword was never your competition.",
+    "Here's the rule I'd put on the wall of every content team: build only the pages you can win.",
+  ]) {
+    const r = analyzeText(t, { format: FORMATS.organic_social });
+    assert(r.owner_tells && r.owner_tells >= 1, `${t}: ${r.flags.map((f) => f.tell).join(",")}`);
+  }
+});
+
+Deno.test("near-variants: a reworded windup, an empty teaser and the 'X was never Y. Z is.' reframe are caught", () => {
+  const cases: [string, string][] = [
+    ["heres_the_windup", "The score hides this: the keyword was never the problem."],
+    ["heres_the_windup", "Do this: open your analytics tonight."],
+    ["empty_teaser", "And the guess starts one step earlier than you think."],
+    ["empty_teaser", "A volume column checks neither, and that is where the trouble starts."],
+    ["empty_teaser", "First, though, look at the pages that rank."],
+    ["disguise_frame", "The keyword was never your competition. The pages ranking for it are."],
+    ["disguise_frame", "Your list isn't the problem. Your process is."],
+  ];
+  for (const [name, text] of cases) {
+    const r = analyzeText(text, { format: FORMATS.organic_social });
+    assert(tells(r, name), `${name} not caught in: ${text} (got ${r.flags.map((f) => f.tell).join(",") || "nothing"})`);
+  }
+  for (const ok of ["The price is $49. It ships Monday.", "Write it down: open rate, click rate, sales.", "The plan is not cheap. It costs $59 a month and pays for itself in one page."]) {
+    const r = analyzeText(ok, { format: FORMATS.organic_social });
+    assertEquals(r.flags.filter((f) => ["disguise_frame", "empty_teaser", "heres_the_windup"].includes(f.tell)).map((f) => f.tell), [], ok);
+  }
 });

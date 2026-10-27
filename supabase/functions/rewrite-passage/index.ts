@@ -10,7 +10,8 @@ import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts"
 import { assertEditor, type JsonValue, loadPromptVersions, parseBody, recordUsageSafe, serve } from "shared/http.ts";
 import { callModel } from "engine/llm.ts";
 import { DEFAULT_MODEL } from "engine/config.ts";
-import { PROOF_PLACEMENT, RULES } from "engine/prompts/standard.ts";
+import { OWNER_TELLS, PROOF_PLACEMENT, RULES } from "engine/prompts/standard.ts";
+import { stripNeverTells } from "engine/draft/tell_edit.ts";
 import { Block, Section } from "engine/schemas/draft.ts";
 import { OfferBrief } from "engine/schemas/brief.ts";
 import { draftWordCount, ledgerRefs, renderBlock, renderMarkdown, stripLedger, wordCount } from "engine/render.ts";
@@ -44,10 +45,13 @@ Rules for the replacement:
 - Claim never bigger than its proof; proof within two sentences of the claim; no hedges on supported claims; no "may", "results vary" or generic disclaimers.
 - Keep the passage's job, tense, person and roughly its length unless the instruction says otherwise. Match the voice parameters when given. Write in plain, concrete, read-aloud English. No assistant register, no bold-label-colon bullets, no placeholders.
 - Fragments, caps, exclamation marks and ellipses are allowed at the rates the surrounding copy uses.
+- Follow the owner's tells and words below, as patterns: no em dash, emoji or hashtag, none of the tells or words. If removing one would make the sentence worse, rewrite the sentence so it reads well and still loses the tell.
 
 ${RULES}
 
-${PROOF_PLACEMENT}`;
+${PROOF_PLACEMENT}
+
+${OWNER_TELLS}`;
 
 serve(async (req) => {
   const { user, client } = await requireUser(req);
@@ -84,14 +88,14 @@ serve(async (req) => {
 
   const usable = (claims ?? []).filter((c) => c.user_decision !== "drop");
   const ledger = usable.length
-    ? usable.map((c) => `- [[L:${c.id}]] (${c.claim_type}${c.evidence_grade ? `, grade ${c.evidence_grade}` : ""}${c.status === "flagged" && c.user_decision !== "keep" ? ", flagged" : ""}) ${c.claim_text}${c.precision ? ` — precision: ${c.precision}` : ""}`).join("\n")
+    ? usable.map((c) => `- [[L:${c.id}]] (${c.claim_type}${c.evidence_grade ? `, grade ${c.evidence_grade}` : ""}${c.status === "flagged" && c.user_decision !== "keep" ? ", flagged" : ""}) ${c.claim_text}${c.precision ? `; precision: ${c.precision}` : ""}`).join("\n")
     : "(empty: nothing may be asserted beyond what the selection already says)";
 
   const contextBlock = located ? renderBlock(located.block) : excerptAround(draft.markdown, body.selected_text);
   const voice = voiceRes.data;
   const userMsg = [
     `FORMAT: ${gen.format}`,
-    `OFFER: ${offer?.name ?? ""}${brief.success ? ` — ${brief.data.one_line}` : ""}`,
+    `OFFER: ${offer?.name ?? ""}${brief.success ? `: ${brief.data.one_line}` : ""}`,
     `THESIS (keep it): ${thesis ?? "(no argument memo on file; keep the passage's existing argument)"}`,
     `\nCLAIMS LEDGER:\n${ledger}`,
     voice ? `\nVOICE PARAMETERS (match, never imitate adjectives):\n${JSON.stringify({ parameters: voice.parameters, idiom_bank: voice.idiom_bank, dead_words: voice.dead_words })}` : "",
@@ -110,7 +114,8 @@ serve(async (req) => {
     schema: Rewrite,
     log: { db, workspaceId: gen.workspace_id, generationId: gen.id, purpose: "rewrite_passage", promptVersionId: pv?.id ?? null },
   });
-  const replacement = call.output.replacement.trim();
+  // the owner's never-rules hold for a rewritten passage too (docs/04 §7.1): no em dash, emoji or hashtag ships
+  const replacement = stripNeverTells(call.output.replacement.trim());
   if (!replacement) throw new HttpError(502, "model returned an empty replacement");
 
   // apply

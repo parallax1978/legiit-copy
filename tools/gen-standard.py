@@ -13,6 +13,16 @@ for i in range(1, len(parts), 3):
     body = body.replace('\\', '\\\\').replace('`', '\\`').replace('${', '\\${')
     out.append(f'export const {name} = `## {num}. {title}\n\n{body}`;\n')
     keys[name] = title
+# subsections a prompt needs on its own (the owner's tells go to every writer, the tell edit and passage rewrites)
+subs = {'7.1': 'OWNER_TELLS'}
+for m in re.finditer(r'^### (\d+\.\d+) (.+)$', md, flags=re.M):
+    num, title = m.group(1), m.group(2).strip()
+    if num not in subs: continue
+    rest = md[m.end():]
+    stop = re.search(r'^(?:### |## |---\s*$)', rest, flags=re.M)
+    body = (rest[:stop.start()] if stop else rest).strip()
+    body = body.replace('\\', '\\\\').replace('`', '\\`').replace('${', '\\${')
+    out.append(f'export const {subs[num]} = `### {num} {title}\n\n{body}`;\n')
 out.append('export const STANDARD = { ' + ', '.join(keys) + ' } as const;')
 out.append('export const STANDARD_TITLES: Record<string, string> = ' + json.dumps(keys, indent=2) + ';')
 (root / 'supabase/functions/_shared/engine/prompts/standard.ts').write_text('\n'.join(out) + '\n')

@@ -21,7 +21,6 @@ export const landing_page_short: FormatSpec = {
   skim_path_block_types: ["preheadline", "headline", "deck", "crosshead", "cta", "button", "guarantee", "price"],
   hard_gates: ["page.cta_count>=2", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Short landing page, product-aware",

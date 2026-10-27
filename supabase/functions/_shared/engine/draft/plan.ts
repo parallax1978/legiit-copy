@@ -1,7 +1,7 @@
 /**
  * Section planning for the draft step. Pure: a FormatSpec in, a call plan out.
  *
- * Rules encoded here (docs/04-copy-standard.md §1 rule 28, docs/01-architecture.md §4 step 4):
+ * Rules encoded here (docs/04-copy-standard.md §1 rule 29, docs/01-architecture.md §4 step 4):
  * - Sections are drafted in spec.draft_order (offer block and close first, body, leads, headline last).
  * - Each call drafts one group of consecutive units. Small units are grouped while the sum of their band maximums
  *   stays under GROUP_SOFT_LIMIT_WORDS; a group may absorb one more unit when the total stays within GROUP_OVERFLOW

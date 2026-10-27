@@ -1,5 +1,5 @@
 import type { StepName } from "@engine/config.ts";
-import type { ArgumentOutput, ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, ShipOutput, RevisionOutput, DraftOutput, OfferConstruction, Dossier } from "@engine/schemas/mod.ts";
+import type { ArgumentOutput, ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, ShipOutput, RevisionOutput, DraftOutput, OfferConstruction, Dossier, TellEditOutput } from "@engine/schemas/mod.ts";
 import type { StepRow, GenerationRow, GenerationStatus } from "@/lib/data/generations";
 
 export type { StepName };
@@ -10,6 +10,7 @@ export const STEP_LABELS: Record<StepName, string> = {
   offer: "Offer construction",
   argument: "Argument selection",
   draft: "Draft",
+  tell_edit: "AI tell cleanup",
   cold_read: "Cold read",
   editorial: "Editorial review",
   mechanical: "Mechanical passes",
@@ -24,6 +25,7 @@ export const STEP_BLURBS: Record<StepName, string> = {
   offer: "Designing what is sold before deciding how to say it. Needs your approval.",
   argument: "Twenty candidate arguments, gated and scored; one thesis wins.",
   draft: "Offer block first, bullets and proof, body, leads, headline last.",
+  tell_edit: "Your editing rules: strips the patterns that make copy read as AI (em dashes, windups, buzzwords and the rest) and keeps every fact.",
   cold_read: "A different model reads the skim path cold and reports what it believes it was sold.",
   editorial: "The copy chief runs the gates in order and predicts beat, lose or unsure.",
   mechanical: "Tell detector, readability, cadence and format gates. Code, not a model.",
@@ -32,12 +34,15 @@ export const STEP_BLURBS: Record<StepName, string> = {
   ship: "The verdict and a short list of what to check before you use it.",
 };
 
-export const REVIEW_LOOP: StepName[] = ["cold_read", "editorial", "mechanical", "factual", "revise"];
+export const REVIEW_LOOP: StepName[] = ["tell_edit", "cold_read", "editorial", "mechanical", "factual", "revise"];
 
-export function stepOrder(generation: GenerationRow): StepName[] {
+export function stepOrder(generation: GenerationRow, steps: Pick<StepRow, "step">[] = []): StepName[] {
   const raw = Array.isArray(generation.step_order) ? (generation.step_order as unknown[]) : [];
   const order = raw.filter((s): s is StepName => typeof s === "string" && s in STEP_LABELS);
-  return order.length ? order : (["argument", "draft", "cold_read", "editorial", "mechanical", "factual", "revise", "ship"] as StepName[]);
+  const base = order.length ? order : (["argument", "draft", "tell_edit", "cold_read", "editorial", "mechanical", "factual", "revise", "ship"] as StepName[]);
+  // generations started before the tell edit existed show it once it has run for them (a retry from the draft)
+  if (!base.includes("tell_edit") && base.includes("draft") && steps.some((s) => s.step === "tell_edit")) base.splice(base.indexOf("draft") + 1, 0, "tell_edit");
+  return base;
 }
 
 /** Latest completed output for a step, as a loosely typed value. */
@@ -55,6 +60,15 @@ export const getMechanical = (steps: StepRow[]) => latestOutput<MechanicalReport
 export const getFactual = (steps: StepRow[]) => latestOutput<FactualOutput>(steps, "factual");
 export const getShip = (steps: StepRow[]) => latestOutput<ShipOutput>(steps, "ship");
 export const getOffer = (steps: StepRow[]) => latestOutput<OfferConstruction>(steps, "offer");
+export const getTellEdit = (steps: StepRow[]) => latestOutput<TellEditOutput>(steps, "tell_edit");
+
+/** Every completed tell edit of the generation, oldest first: one runs after the draft and after each revision. */
+export function getTellEdits(steps: StepRow[]): TellEditOutput[] {
+  return steps
+    .filter((s) => s.step === "tell_edit" && s.status === "completed" && s.output != null && typeof s.output === "object" && "what_changed" in (s.output as object))
+    .sort((a, b) => (a.finished_at ?? a.created_at).localeCompare(b.finished_at ?? b.created_at))
+    .map((s) => s.output as unknown as TellEditOutput);
+}
 
 export type TimelineStatus = "completed" | "running" | "pending" | "failed" | "queued" | "skipped" | "interrupted" | "paused";
 const TIMELINE_STATUSES: readonly TimelineStatus[] = ["completed", "running", "pending", "failed", "queued", "skipped", "interrupted", "paused"];
@@ -82,7 +96,7 @@ export interface TimelineEntry {
 }
 
 export function buildTimeline(generation: GenerationRow, steps: StepRow[]): TimelineEntry[] {
-  const order = stepOrder(generation);
+  const order = stepOrder(generation, steps);
   const gStatus = generation.status as GenerationStatus;
   const currentIdx = generation.current_step ? order.indexOf(generation.current_step as StepName) : -1;
   return order.map((step, idx) => {
@@ -160,6 +174,13 @@ export function summarize(step: StepName, output: unknown): string | null {
       const ns = arr(d.needs_source).length;
       const parts = [words != null ? `${words.toLocaleString()} words` : null, leads ? `${leads} leads` : null, ns ? `${ns} need a source` : null].filter(Boolean);
       if (parts.length) return parts.join(", ");
+      break;
+    }
+    case "tell_edit": {
+      const t = o as Partial<TellEditOutput>;
+      if (t.new_version === false) return "No AI tells found; the copy is unchanged";
+      const n = arr(t.edits).length;
+      if (n) return `${n} change${n === 1 ? "" : "s"}${num(t.owner_tells_before) != null ? `; AI tells ${t.owner_tells_before} to ${t.owner_tells_after}` : ""}`;
       break;
     }
     case "cold_read": {

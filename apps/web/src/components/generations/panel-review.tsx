@@ -1,8 +1,9 @@
 "use client";
-import { Eye, Gavel, Gauge, ShieldAlert } from "lucide-react";
+import { Eraser, Eye, Gavel, Gauge, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { GenerationDetail } from "@/lib/data/generations";
-import { getColdRead, getEditorial, getMechanical, getShip } from "./outputs";
+import type { TellEditOutput } from "@engine/schemas/mod.ts";
+import { getColdRead, getEditorial, getMechanical, getShip, getTellEdits } from "./outputs";
 import { PredictionBadge } from "./status-badge";
 import { Empty } from "./panel-argument";
 import { LedgerText } from "@/components/editor/ledger-chip";
@@ -12,13 +13,14 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
   const cold = getColdRead(detail.steps);
   const mech = getMechanical(detail.steps);
   const ship = getShip(detail.steps);
+  const tellEdits = getTellEdits(detail.steps);
   const prediction = detail.predictions[detail.predictions.length - 1] ?? null;
   // The beat/lose call only means something against copy the user pasted; without it, the verdict is the review.
   const hasControl = !!((detail.generation.options as { control_text?: string } | null)?.control_text ?? "").trim();
   const verdictLabel = editorial?.verdict === "APPROVE" ? "Ready to use" : editorial?.verdict === "REVISE" ? "Needs work" : "Not ready";
   const gateLabel: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
 
-  if (!editorial && !cold && !mech) return <Empty>Reviews appear here once the piece is written: the copy chief&apos;s verdict, what a blind reader took from it, and the tell check.</Empty>;
+  if (!editorial && !cold && !mech && !tellEdits.length) return <Empty>Reviews appear here once the piece is written: the copy chief&apos;s verdict, what a blind reader took from it, and the tell check.</Empty>;
 
   return (
     <div className="space-y-6">
@@ -115,6 +117,8 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
         </section>
       )}
 
+      {tellEdits.length > 0 && <TellEditSection runs={tellEdits} />}
+
       {cold && (
         <section className="space-y-3 border-t border-line pt-5">
           <Heading icon={<Eye className="h-3.5 w-3.5" />}>Cold read <span className="font-normal normal-case tracking-normal text-ink-soft">· a different model, no brief</span></Heading>
@@ -177,6 +181,39 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
         </section>
       )}
     </div>
+  );
+}
+
+/** What the owner's editing rules changed, across the tell edit after the draft and after each revision. */
+function TellEditSection({ runs }: { runs: TellEditOutput[] }) {
+  const edits = runs.flatMap((r) => r.edits);
+  const lines: string[] = [];
+  for (const r of runs) for (const l of r.what_changed) if (!lines.some((x) => x.toLowerCase() === l.toLowerCase())) lines.push(l);
+  const before = runs[0]?.owner_tells_before ?? 0;
+  const after = runs[runs.length - 1]?.owner_tells_after ?? 0;
+  return (
+    <section className="space-y-3 border-t border-line pt-5">
+      <Heading icon={<Eraser className="h-3.5 w-3.5" />}>AI tell cleanup <span className="font-normal normal-case tracking-normal text-ink-soft">· your editing rules, on every draft</span></Heading>
+      {edits.length === 0 ? (
+        <p className="text-sm text-ink-muted">No AI tells found. The copy was left as written.</p>
+      ) : (
+        <>
+          {lines.length > 0 && <ul className="list-disc space-y-1 pl-4 text-sm text-ink">{lines.slice(0, 6).map((l, i) => <li key={i}>{l}</li>)}</ul>}
+          <p className="text-xs text-ink-muted">{edits.length} change{edits.length === 1 ? "" : "s"}. The checker counted {before} AI tell{before === 1 ? "" : "s"} before the cleanup and {after} after.</p>
+          <details>
+            <summary className="cursor-pointer text-xs font-medium text-ink-muted hover:text-ink">See each change</summary>
+            <ul className="mt-2 space-y-2">
+              {edits.slice(0, 60).map((e, i) => (
+                <li key={i} className="rounded-lg border border-line p-2.5 text-xs">
+                  <div className="text-ink-muted line-through"><LedgerText text={e.before} /></div>
+                  <div className="mt-1 text-ink">{e.after ? <LedgerText text={e.after} /> : <span className="italic text-ink-muted">cut</span>}</div>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </>
+      )}
+    </section>
   );
 }
 

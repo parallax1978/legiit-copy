@@ -37,9 +37,10 @@ Next.js 15 (App Router, TS, Tailwind, shadcn/ui) on Vercel. Supabase for Postgre
 - Decide in this order and never repair a higher failure lower down: market, awareness, sophistication, desire, mechanism, big idea, lead, structure, proof, offer, close. The offer is designed before the brief; the argument is chosen before any prose.
 - Every number, study, name, credential, quote, price and deadline carries a ledger ID. Never generate a testimonial, a narrator, a study or a statistic. Precision matches the evidence.
 - Claim never bigger than proof; proof within two sentences of its claim; no hedges on supported claims; compliance is handled by the factual review as `line → rule → rewritten line` flags the user decides on; the engine never prohibits, removes or softens a claim, and never adds "may" or "results vary". Engine fabrications (invented numbers, studies, names, testimonials) are the only hard stop.
-- Draft in the standard's order (offer block and order form, bullets and proof, body, three leads, headline last). The cold read runs on a different model than the drafter.
+- Draft in the standard's order (offer block and order form, bullets and proof, body, three leads, headline last). Every draft and revision passes the tell edit before the cold read. The cold read runs on a different model than the drafter.
 - The editorial reviewer runs gates in order and stops at the first failure, predicts beat/lose/unsure against a control, and never averages a score.
-- The tell detector never penalizes caps, fragments, exclamation marks, ellipses or em dashes at human rates; bold-label-colon bullets, placeholders, assistant residue and unledgered authorities are hard rejects.
+- The owner's tells and words (docs/04 §7.1) stay out of every piece, as patterns: the writer follows them, the tell edit removes what slips through, the detector counts them, and two or more in a piece fail Gate D. No em dashes, emojis or hashtags ship anywhere.
+- The tell detector never penalizes caps, fragments, exclamation marks or ellipses at human rates; bold-label-colon bullets, placeholders, assistant residue, unledgered authorities, em dashes, emojis and hashtags are hard rejects.
 - Prompts carry parameters and exemplar paragraphs, never tone adjectives. Output only copy in the requested structure.
 
 ## Commands

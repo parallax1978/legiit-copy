@@ -2,7 +2,9 @@
  * The words on the home page. The piece itself is what Legiit Copy wrote for its own home page (format
  * landing_page_short, length longer), pasted in as the app shipped it, ledger tags included: the page strips the
  * tags, the sample card shows them. `review` is that run's own review, read from the generation. Replacing the copy
- * means a new run in the app and a paste here; nothing on the page is hand-written persuasion.
+ * means a new run in the app and a paste here; nothing on the page is hand-written persuasion. The piece has been through
+ * the app's tell edit (the owner's AI-tell rules, docs/04 §7.1): one edit, "quietly softened" to "softened behind
+ * your back".
  */
 
 export type HomeBlock = { type: string; text: string; items?: string[] | null; meta?: Record<string, string> | null };
@@ -84,7 +86,7 @@ export const piece: HomeSection[] = [
       },
       {
         "type": "paragraph",
-        "text": "One marketer's verdict on an AI-written sales page: \"There are no verifiable details\" [[L:6e9f6c2a-18f2-4417-b910-99b1b5ac5fa0]]. Here every number, study, name, credential, quote, price and deadline in your copy is tied to the source it came from. A claim with no support gets flagged, with the rule and a rewrite [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]]. You keep, rewrite or drop it; nothing gets quietly softened [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]].",
+        "text": "One marketer's verdict on an AI-written sales page: \"There are no verifiable details\" [[L:6e9f6c2a-18f2-4417-b910-99b1b5ac5fa0]]. Here every number, study, name, credential, quote, price and deadline in your copy is tied to the source it came from. A claim with no support gets flagged, with the rule and a rewrite [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]]. You keep, rewrite or drop it; nothing gets softened behind your back [[L:088f5b44-e43f-4c4c-870f-f997e12d256b]].",
         "items": null,
         "meta": null
       },

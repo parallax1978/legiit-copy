@@ -25,7 +25,6 @@ export const vsl_long: FormatSpec = {
   skim_path_block_types: ["slide", "crosshead", "recap", "price", "guarantee", "cta", "button"],
   hard_gates: ["vsl.cta_count>=3", "vsl.price_position_share>=0.5", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Long VSL, warm or retargeted",

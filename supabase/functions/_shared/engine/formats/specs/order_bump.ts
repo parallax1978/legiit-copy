@@ -15,7 +15,6 @@ export const order_bump: FormatSpec = {
   skim_path_block_types: ["label", "price"],
   hard_gates: ["order_bump.words<=80", "order_bump.sentences<=4", "order_bump.has_price", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Order bump",

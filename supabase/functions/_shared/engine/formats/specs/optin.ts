@@ -18,7 +18,6 @@ export const optin: FormatSpec = {
   skim_path_block_types: ["preheadline", "headline", "deck", "button"],
   hard_gates: ["optin.bullet_items>=3", "optin.bullet_items<=6", "optin.fields<=1", "optin.no_submit_button", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Opt-in page",

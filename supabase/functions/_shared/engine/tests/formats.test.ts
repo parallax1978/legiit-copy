@@ -82,10 +82,16 @@ Deno.test("no section band exceeds one drafting call (about 1,800 words)", () =>
   for (const spec of specs) for (const s of spec.sections) assert(s.band_words[1] <= 1800, `${spec.id}.${s.id}: band max ${s.band_words[1]}`);
 });
 
-Deno.test("markdown headings are disallowed everywhere; emoji bullets only in meta_ad", () => {
+Deno.test("markdown headings are disallowed everywhere; no format allows emojis or hashtags (owner's rule, §7.1)", () => {
   for (const spec of specs) {
     assertEquals(spec.allow_markdown_headings, false, spec.id);
-    assertEquals(spec.allow_emoji_bullets, spec.id === "meta_ad", spec.id);
+    assert(!("allow_emoji_bullets" in spec), `${spec.id} still carries an emoji allowance`);
+    assert(!spec.hard_gates.some((g) => g.includes("emoji")), `${spec.id} gates an emoji count`);
+    assert(!Object.keys(spec.platform_limits ?? {}).some((k) => k.includes("emoji")), `${spec.id} has an emoji platform limit`);
+  }
+  for (const id of ["organic_social", "meta_ad"] as const) {
+    const nots = FORMATS[id].sections.flatMap((s) => s.must_not).join(" | ");
+    assert(nots.includes("emojis") && nots.includes("hashtags"), `${id}: ${nots}`);
   }
 });
 

@@ -20,7 +20,6 @@ export const podcast_read: FormatSpec = {
   skim_path_block_types: ["cta"],
   hard_gates: ["podcast.spot_words<=70", "podcast.cta_count>=1"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   platform_limits: { spot_words_min: 55, spot_words_max: 70 },

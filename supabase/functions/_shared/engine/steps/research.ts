@@ -13,7 +13,7 @@
 import { z } from "zod";
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import researchPrompt from "../prompts/research.v2.ts";
+import researchPrompt from "../prompts/research.v3.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { OfferBrief } from "../schemas/brief.ts";
 import { Dossier, ResearchCollect, ResearchSynthesis } from "../schemas/research.ts";

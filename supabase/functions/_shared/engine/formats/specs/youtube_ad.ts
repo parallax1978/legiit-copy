@@ -7,7 +7,7 @@ export const youtube_ad: FormatSpec = {
   description: "Under 3 minutes. 0-5s call-out and disqualifier; 5-15s stakes and one credibility line; 15-45s mechanism; then proof, offer, spoken and on-screen CTA, rehook, second CTA.",
   length_band_words: [150, 480],
   sections: [
-    { id: "callout", name: "Call-out and disqualifier (0-5s)", job: "Name the viewer and name who should skip, before the skip button appears", band_words: [8, 25], must: ["names the viewer by situation", "one disqualifier"], must_not: ["logo intro", "\"Hey everyone\"", "\"At [Brand], we\""], block_types: ["beat", "hook", "caption"] },
+    { id: "callout", name: "Call-out and disqualifier (0-5s)", job: "Name the viewer and name who should skip, before the skip button appears", band_words: [8, 25], must: ["names the viewer by situation", "one disqualifier"], must_not: ["logo intro", "\"Hey everyone\"", "\"At [Brand], we\"", "a reframe that presents one thing as another (\"X feels like Y. It's Z.\")", "a windup (\"Here's the part...\")", "a teaser that withholds nothing specific"], block_types: ["beat", "hook", "caption"] },
     { id: "stakes", name: "Stakes and one credibility line (5-15s)", job: "What the viewer loses by staying as they are, and one ledger-backed reason to listen", band_words: [20, 50], must: ["one credibility line with a ledger ID", "stakes from the research"], must_not: ["biography", "melodrama"], block_types: ["beat", "caption"] },
     { id: "mechanism", name: "Mechanism (15-45s)", job: "Why the usual fixes fail and what this does instead, in one step", band_words: [50, 120], must: ["mechanism in one step", "names a usual fix that fails"], must_not: ["\"our proven system\"", "multi-step mechanism"], block_types: ["beat", "slide", "caption"] },
     { id: "proof", name: "Proof", job: "One documented result with its typical result adjacent", band_words: [20, 80], must: ["ledger ID", "typical result adjacent"], must_not: ["improbable-result claims", "undated results"], block_types: ["beat", "testimonial", "caption"] },
@@ -22,7 +22,6 @@ export const youtube_ad: FormatSpec = {
   skim_path_block_types: ["caption", "slide", "cta", "button", "price"],
   hard_gates: ["youtube_ad.cta_count>=2", "youtube_ad.spoken_words<=480", "page.no_markdown_headings"],
   cadence_floor_cv: 0.7,
-  allow_emoji_bullets: false,
   allow_markdown_headings: false,
   allow_caps: true,
   platform_limits: { seconds_max: 180, spoken_words: 480 },

@@ -5,8 +5,9 @@
  */
 import type { StepFn } from "./types.ts";
 import { FactualOutput } from "../schemas/review.ts";
-import { factualPrompt } from "../prompts/factual.v3.ts";
+import { factualPrompt } from "../prompts/factual.v4.ts";
 import { droppedReferenceFlags, factualFlags, postProcessFactual } from "../draft/review.ts";
+import { stripNeverTells } from "../draft/tell_edit.ts";
 import { callStep, latestDraftOutput } from "../draft/step_util.ts";
 
 export const factualStep: StepFn = async (ctx) => {
@@ -24,7 +25,9 @@ export const factualStep: StepFn = async (ctx) => {
   const droppedRefs = droppedReferenceFlags(draft.sections, ctx.claims, pp.output.flags);
   const needs = [...pp.output.needs_source];
   for (const n of draft.needs_source) if (!needs.some((x) => x.trim().toLowerCase() === n.trim().toLowerCase())) needs.push(n);
-  const out = FactualOutput.parse({ ...pp.output, flags: [...pp.output.flags, ...droppedRefs], needs_source: needs });
+  // a rewritten line is new copy: the owner's never-rules hold for it too (docs/04 §8.3, §7.1)
+  const flags = [...pp.output.flags, ...droppedRefs].map((f) => (f.suggested_rewrite ? { ...f, suggested_rewrite: stripNeverTells(f.suggested_rewrite) } : f));
+  const out = FactualOutput.parse({ ...pp.output, flags, needs_source: needs });
 
   const fabrications = out.flags.filter((f) => f.fabrication).length;
   const high = out.flags.filter((f) => f.severity === "high").length;

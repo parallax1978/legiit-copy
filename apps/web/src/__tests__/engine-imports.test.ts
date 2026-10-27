@@ -14,6 +14,13 @@ describe("engine modules used by the web app", () => {
     expect(initialSteps({ hasActiveResearch: true, hasApprovedOffer: true })[0]).toBe("argument");
     expect(initialSteps({ hasActiveResearch: true, hasApprovedOffer: false, skipOffer: true })[0]).toBe("argument");
   });
+  it("runs the tell edit after the draft and after every revision, before the cold read", () => {
+    const s = { hasActiveResearch: true, hasApprovedOffer: true, completed: [], revisionCycles: 0 };
+    expect(initialSteps(s)).toEqual(["argument", "draft", "tell_edit", "cold_read", "editorial", "mechanical", "factual", "revise", "ship"]);
+    expect(nextSteps("draft", s)).toEqual(["tell_edit"]);
+    expect(nextSteps("tell_edit", s)).toEqual(["cold_read"]);
+    expect(nextSteps("revise", s)).toEqual(["tell_edit"]);
+  });
   it("fans reviews out after the cold read and ships when clean", () => {
     expect(nextSteps("cold_read", { hasActiveResearch: true, hasApprovedOffer: true, completed: [], revisionCycles: 0 })).toEqual(["editorial", "mechanical", "factual"]);
     const done = { hasActiveResearch: true, hasApprovedOffer: true, completed: ["editorial", "mechanical", "factual"] as const, revisionCycles: 0 };

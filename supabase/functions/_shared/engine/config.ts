@@ -28,6 +28,7 @@ export const STEP_NAMES = [
   "offer",
   "argument",
   "draft",
+  "tell_edit",
   "cold_read",
   "editorial",
   "mechanical",
@@ -43,6 +44,7 @@ export const STEP_DEFAULTS: Record<StepName, { model: string; effort: Effort; ma
   offer: { model: DEFAULT_MODEL, effort: "medium", maxTokens: 12000 },
   argument: { model: DEFAULT_MODEL, effort: "xhigh", maxTokens: 12000 },
   draft: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 },
+  tell_edit: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 }, // the owner's editor: line edits, not a rewrite; medium under-edited on live copy
   cold_read: { model: COLD_READ_MODEL, effort: "medium", maxTokens: 4000 },
   editorial: { model: DEFAULT_MODEL, effort: "high", maxTokens: 12000 }, // xhigh spent the whole budget thinking on the first live runs
   mechanical: { model: CHEAP_MODEL, effort: "low", maxTokens: 1000 }, // code path; model unused

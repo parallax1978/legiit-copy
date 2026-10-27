@@ -34,19 +34,21 @@ Voice
 19. One named person talks to one reader; the reader knows who and why by word 150.
 20. Write in the indicative. Hedges on supported claims are defects.
 21. Use the market's words.
-22. Ask a question only to answer it in the next line.
-23. Read it aloud; rewrite any sentence you would not say across a table.
+22. Never ask a question and answer it yourself ("The result? More sales." "Why does this matter? Because..."). Make the point. A question in the copy is one the reader answers about their own situation, and the next line does not answer it for them.
+23. Read it aloud; rewrite any sentence you would not say across a table. Plain words: "use," not "utilize"; "try," not "endeavor." No formal connectives ("furthermore," "moreover," "additionally," "in addition"); a new sentence or paragraph does that job. Break a wall of text into short paragraphs; when every sentence runs the same medium length, break some up and let a few run long.
 24. Every sentence does a job (claim, proof, mechanism, picture, transition, instruction, identification) or is cut.
 25. Story carries a claim or a proof; beats join with "therefore" or "but," never "and then." A story is the client's documented story, a framed hypothetical, or a sourced public anecdote.
 26. Close long and literally: what the reader gets by acting now, what they lose by waiting, what to do.
-27. No summary paragraphs, no restated subject lines, no cheerful sign-offs.
+27. Open on the point and end on it. No windup ("In today's world," "Today I want to talk about"), no "In conclusion," no summary paragraph or closer that restates what the piece already said, no restated subject lines, no cheerful sign-offs.
+28. The tells and words in Section 7.1 stay out of every piece, as patterns: a synonym or near-variant of a banned pattern is the same tell. No em dashes (a period, a comma or parentheses), no emojis, no hashtags, anywhere. One tell on its own is not the giveaway; the stack is. Get each piece as close to zero as the writing allows without mangling it: rewrite the sentence so it reads well and still loses the tell.
 
 Process
 
-28. Draft in this order: offer block and order form; bullets and proof; body; three leads; headline last.
-29. Write three leads on three reader hypotheses, cut each from the top, cold-read them on a different model, pick one, rewrite it.
-30. Review against a control: beat, lose or unsure, with the one fatal defect. No additive score decides anything.
-31. Log the prediction and the result, including refunds at 30 days.
+29. Draft in this order: offer block and order form; bullets and proof; body; three leads; headline last.
+30. Write three leads on three reader hypotheses, cut each from the top, cold-read them on a different model, pick one, rewrite it.
+31. Every draft and every revision passes the tell edit (Section 7.1) before the cold read.
+32. Review against a control: beat, lose or unsure, with the one fatal defect. No additive score decides anything.
+33. Log the prediction and the result, including refunds at 30 days.
 
 ---`;
 
@@ -95,7 +97,7 @@ Diagnose the state per traffic segment. If the verbatims never contain the categ
 
 Direct leads: Offer, Promise, Problem-Solution. Indirect: Story, Proclamation, Secret; an indirect lead must be interesting on its own. Skeptical readers get an indirect lead even when aware. The lead is 300-600 words in long copy, ends on an open loop, names the mechanism at most, and identifies the speaker by word 150. Draft three leads of different type; cut from the top; cold-read; pick one and rewrite it.
 
-Hooks. Where the opening line is the whole lead (an organic social post, a TikTok or Reels script, a YouTube ad, a short VSL), write three hooks the same way: three reader hypotheses, three lead types, cold-read, pick one. The hook names the reader's need, or the belief the piece displaces, in the reader's own words, with a concrete specific from the reader's world. A number about the product's own output is the proof in the next line, never the hook. The speaker and the product wait for the body.
+Hooks. Where the opening line is the whole lead (an organic social post, a TikTok or Reels script, a YouTube ad, a short VSL), write three hooks the same way: three reader hypotheses, three lead types, cold-read, pick one. The hook says the reader's problem plainly, in words the reader would use: a concrete thing from the reader's world (the tool, the task, the money or the hours) and what it costs them. It states the claim directly: no reframe that presents one thing as another ("Sorting by difficulty feels like research. It's where bad content gets made."), no windup ("Here's the part the score hides"), no teaser that withholds nothing specific ("It starts earlier than you think"). Read it aloud: it is a sentence the speaker would say to one reader across a table, not a line for a poster. A number about the product's own output is the proof in the next line, never the hook. The speaker's credentials and the product's name wait for the body; a first-person line about what the speaker saw or did is fine.
 
 ---`;
 
@@ -125,6 +127,8 @@ export const COPY_CHIEF_RUBRIC = `## 6. Copy chief rubric
 
 Posture: predict whether a skeptical stranger sends money and keeps it. Review against a control or the strongest competitor promotion. Stop at the first fatal defect. Never average.
 
+Before step 1, the draft has passed the tell edit (Section 7.1); the reviewers read the edited copy.
+
 Step 1, cold read, on a different model with no brief, memo or ledger. Read the skim path alone (headline, deck, crossheads, bold, captions, P.S., order form) and report what is sold, to whom, for how much, and why believe it. Then read the full draft once, fast; report where attention dropped, the one claim you disbelieve, and the promise in one sentence.
 
 Step 2, gates in order; stop at the first failure.
@@ -135,7 +139,7 @@ Gate B, belief and lead. Fail if the headline or deck asserts anything the prosp
 
 Gate C, claims. Fail if any claim lacks a ledger entry at the ledger's precision; if a supported claim is hedged; if a headline promise is never paid off; if a description of the reader's state has no verbatim; if an objection is invented or a listed one unanswered; if the offer's numbers differ across assets; if the promise outruns the first-week experience or refund window.
 
-Gate D, voice. Fail on the read-aloud test; assistant register; "we/our" in place of a named "I" to "you"; a "That's why we built" turn with no cause; a tell score at hard fail (Section 7).
+Gate D, voice. Fail on the read-aloud test; assistant register; "we/our" in place of a named "I" to "you"; a "That's why we built" turn with no cause; two or more Section 7.1 tells or words in the piece (the stack); any em dash, emoji or hashtag; a tell score at hard fail (Section 7).
 
 Sentence-job audit alongside the gates: tag every sentence by job; list untagged sentences; flag paragraphs with no claim and no proof.
 
@@ -163,7 +167,7 @@ Reviewer instructions: start with what works, briefly. Quote, name the failure, 
 
 export const AI_TELL_CHECKLIST = `## 7. AI tell checklist
 
-Score = sum of weights per 300 words (Tier 0 weight 10, Tier 1 weight 4 per hit, Tier 2 weight 2 per hit above the density allowance, Tier 3 weight 1 above its allowance and only when a Tier 1 or 2 flag exists; texts under 300 words are scored as 300). Review flag at 6; hard fail at 10, on any Tier 0 hit, or on any format hard gate. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were first measured on 107 Claude drafts and then recalibrated on 899 public human direct response documents (\`research/tells/human_calibration_report.md\`); the values below are the recalibrated ones. Density allowances use at least 500 words, so one hit in an SMS is never a density.
+Score = sum of weights per 300 words (Tier 0 weight 10, Tier 1 weight 4 per hit, Tier 2 weight 2 per hit above the density allowance, Tier 3 weight 1 above its allowance and only when a Tier 1 or 2 flag exists; texts under 300 words are scored as 300). Review flag at 6; hard fail at 10, on any Tier 0 hit, or on any format hard gate. The ledger match is the primary detector; vocabulary is a tiebreaker. Thresholds were first measured on 107 Claude drafts and then recalibrated on 899 public human direct response documents (\`research/tells/human_calibration_report.md\`); the values below are the recalibrated ones. Density allowances use at least 500 words, so one hit in an SMS is never a density. The owner's list in 7.1 governs wherever it and the calibration disagree: em dashes, emojis and hashtags never ship, and the 7.1 tells and words are scored even where human copy uses them.
 
 Tier 0, hard reject
 
@@ -174,7 +178,10 @@ Tier 0, hard reject
 | Unledgered authority, study, number, name or credential | "A Harvard study found 73% of..." | The ledger item, or cut the claim |
 | "AI" in copy for a non-AI product | "our AI-powered approach" | Describe the mechanism |
 | Proof confession: announcing that a test, result, proof or customer does not exist | "No blind test has been run, so I won't tell you it sells better." | Cut it. Make only the claims the ledger carries; absence of proof is never copy (rules 8 and 12). Zero hits in 871,661 words of human direct response |
-| Markdown bold-label-colon bullets (\`**Label:**\`), markdown headings, or emoji bullets in email, video, message, social and audio formats | "**Speed:** get reports in minutes" | A sentence with the claim and its carrier. Plain-text "Label:" lines are human-normal (92% of human sales pages) and only count at Tier 3 above 3 per 1,000 words. Check-mark bullets on pages and commerce formats are allowed at one per 300 words |
+| Markdown bold-label-colon bullets (\`**Label:**\`) or markdown headings in email, video, message, social and audio formats | "**Speed:** get reports in minutes" | A sentence with the claim and its carrier. Plain-text "Label:" lines are human-normal (92% of human sales pages) and only count at Tier 3 above 3 per 1,000 words |
+| Em dash (7.1, tell 11), including a spaced en dash or a double hyphen used as one | "It works — fast." | A period, a comma or parentheses |
+| Emoji anywhere, check marks included (7.1, tell 12) | "✅ Instant access" | Remove it; never add one |
+| Hashtag (7.1, tell 13) | "#SEO #marketing" | Remove it; never add one |
 
 Tier 1, weight 4
 
@@ -186,18 +193,57 @@ Tier 1, weight 4
 | "In the next few minutes I'll show you exactly" / "Stay with me" | VSL opener | The interrupt tied to the promise |
 | Summary closer | "In short, X gives you A, B and C." | The CTA and what happens after the click |
 | Self-posed question header | "### Why only $49?" | A crosshead that states the answer |
+| Any 7.1 tell (1-10), word or structural windup, per hit | "Here's the kicker:" | The 7.1 fix |
 
-Tier 2, weight 2 per hit above the allowance, per 1,000 words, by format profile (email = single email, sequence, cold email, SMS; social = organic social, TikTok/Reels; optin; page = every page, commerce, video and audio format; ads carry the page values): rule of three above 4 (email, social), 7 (page, ads), 11 (opt-in); trailing participles (", giving you...") above 2.0; hedges in body copy ("usually," "often," "may") above 2.0, testimonial and disclosure blocks excluded (hedges inside claim sentences are the factual review's job); "actually / exactly / every single" above 2.0 (4.0 for opt-in and social); anaphora triads and "No X. No Y. Just Z." above 1.5 (exempt in social); "designed to / built for / crafted / tailored" above 1.0; "cancel anytime / no contracts / no setup fees" beyond its first mention (the offer block states it once); negative parallelism ("It's not X. It's Y.") above 1.0, allowed when it corrects a belief the reader holds; "X. Not Y." clips above 2.0; "not just X but Y" above 1.0; generic emotion words as the only emotional content ("frustrated," "overwhelmed," "juggling") above 1.0 (replace with the consequence scene); "Imagine..." or a question opener with no specific on the next line, "Most X don't ... because A. They ... because B." and "No X. No Y. Just Z." as single lines: any hit.
+Tier 2, weight 2 per hit above the allowance, per 1,000 words, by format profile (email = single email, sequence, cold email, SMS; social = organic social, TikTok/Reels; optin; page = every page, commerce, video and audio format; ads carry the page values): rule of three above 4 (email, social), 7 (page, ads), 11 (opt-in); trailing participles (", giving you...") above 2.0; hedges in body copy ("usually," "often," "may") above 2.0, testimonial and disclosure blocks excluded (hedges inside claim sentences are the factual review's job); "actually / exactly / every single" above 2.0 (4.0 for opt-in and social); anaphora triads above 1.5 (exempt in social); "designed to / built for / crafted / tailored" above 1.0; "cancel anytime / no contracts / no setup fees" beyond its first mention (the offer block states it once); negative parallelism ("It's not X. It's Y.") above 1.0, allowed when it corrects a belief the reader holds; "X. Not Y." clips above 2.0; generic emotion words as the only emotional content ("frustrated," "overwhelmed," "juggling") above 1.0 (replace with the consequence scene); "Imagine..." or a question opener with no specific on the next line, and "Most X don't ... because A. They ... because B.": any hit. "No X. No Y. Just Z.", "not just X but Y" and "Here's the kicker" moved to 7.1.
 
-Tier 3, weight 1, never alone: the 4o-era phrases ("game-changer," "Picture this," "Here's the kicker"), the vocabulary that still separates AI drafts ("seamless," "streamline," "cutting-edge," "state-of-the-art," "supercharge," "delve," "tapestry," "testament to," "landscape," "ever-evolving," "unparalleled," "in today's"), plain-text "Label:" lines above 3 per 1,000, and "rather than" above 6.67 per 1,000. Genre vocabulary human copy uses as much as AI does is no longer scored: "transform," "unlock," "elevate," "empower," "effortless," "journey," "next level," "revolutionary," "harness," "leverage," "robust," "holistic," "innovative," "peace of mind," "stress-free."
+Tier 3, weight 1, never alone: the 4o-era phrases ("Picture this"), the vocabulary that still separates AI drafts and is not in 7.1 ("streamline," "state-of-the-art," "supercharge," "unparalleled"), plain-text "Label:" lines above 3 per 1,000, and "rather than" above 6.67 per 1,000. Genre vocabulary human copy uses as much as AI does and 7.1 does not list is not scored: "transform," "empower," "effortless," "journey," "holistic," "innovative," "peace of mind," "stress-free."
 
 Argumentative tells, gate failures: no central argument; wrong awareness level; benefits with "so you can"; no mechanism; proof absent or dumped at the end; invented objections; generic specificity ("over 10 years," "award-winning," "up to 50%"); the obvious angle; prevention framing; a lead with nothing to disbelieve; a headline promise never paid off; a turn with no cause.
 
 Tonal tells: "you may want to consider," "it's worth noting"; both-sides framing; no stance; "You deserve this"; apology at the pitch transition. Structural flag: sentence-length coefficient of variation under 0.70 in 300+ words for pages, commerce, video and audio formats, and under 0.50 for email, message and social formats (78% of long human emails sit under 0.70).
 
-Not tells, never penalize: exclamation marks; ellipses; ALL-CAPS words; fragments; "Here's what / how / why"; "Dear Friend"; "P.S."; "not just X but Y" at human rates; em dashes (human email runs to 11.9 per 1,000 words; at or below 12 per 1,000 is never counted, and above it carries no weight either); superlatives with proof.
+Not tells, never penalize: exclamation marks; ellipses; ALL-CAPS words; fragments; "Dear Friend"; "P.S."; superlatives with proof. (Human direct response uses em dashes, "Here's what / how / why" and "not just X but Y"; the owner's list bans them anyway, 7.1.)
 
-Overrides: Meta ads allow caps and three emoji bullets; opt-in and upsell blocks allow five plain bold lead-ins with no colon; VSL allows "keep watching" once; Google RSA headlines allow no caps and no exclamation marks. Meta ads have no human control yet (no public ad text could be collected), so they carry the page thresholds until one exists.
+Overrides: Meta ads allow caps; opt-in and upsell blocks allow five plain bold lead-ins with no colon; VSL allows "keep watching" once; Google RSA headlines allow no caps and no exclamation marks. Meta ads have no human control yet (no public ad text could be collected), so they carry the page thresholds until one exists.
+
+### 7.1 The owner's tells and words
+
+These are the owner's rules. They apply to every piece in every format: the writer follows them, the tell edit removes what slips through, the detector counts them, and the copy chief fails a stack at Gate D. Each is a pattern, not a word list: rewording a banned pattern with a synonym or near-variant is the same tell.
+
+| # | Tell | Example | Fix |
+|---|---|---|---|
+| 1 | "Quietly" for something that was not a secret | "Legiit quietly passed a million orders." | Cut it, or say who did not know |
+| 2 | The three-beat that lands on a deep third | "Not a tool. Not a course. It's a system." | State the claim once: "It's a system." |
+| 3 | A rhetorical question the copy then answers itself | "The result? More sales." / "Why does this matter? Because..." | Make the point: "You make more sales." |
+| 4 | "Here's the kicker / the thing / the part nobody talks about," and any "Here's the ___" windup, reworded ones included | "Here's the part the score hides:" / "The score hides this:" | Make the point directly |
+| 5 | "Worth noting / remembering / keeping in mind" | "It's worth noting that the trial is free." | State the point: "The trial is free." |
+| 6 | The buzzword pile | "double down," "at scale," "best in class," "move fast" | Keep one precise term, cut the rest |
+| 7 | "Genuinely" and "meaningfully" as filler | "a genuinely useful report" | Cut the word when the sentence means the same without it |
+| 8 | The disguise frame: one thing presented as another thing in disguise | "X wearing a Y costume," "cosplaying as Y," "X dressed as Y," "X wrapped in Y," "X masquerading as Y," "X disguised as Y," "X in Y's clothing," "X with a Y veneer, skin or wrapper," "Sorting by difficulty feels like research. It's where bad content gets made." / "The keyword was never your competition. The pages ranking for it are." | State the claim directly: "X is really Y" or "X is just Y" |
+| 9 | "The uncomfortable truth / the hard truth / the truth nobody wants to hear" | "The hard truth: most pages never rank." | Drop the signpost; a plain "honestly" once is fine |
+| 10 | The pressure test | "stress test this," "sanity check," "pressure test that" | Say what is checked and how |
+| 11 | Em dashes | "It works — fast." | A period, a comma or parentheses |
+| 12 | Emojis | "✅ Instant access" | Remove them; never add them |
+| 13 | Hashtags | "#SEO #marketing" | Remove them; never add them |
+
+Words to cut, or replace with the plainest word that keeps the meaning (cut it when the sentence works without it):
+
+- AI words: delve, tapestry, realm, navigate, navigation, unlock, seamless, elevate, landscape, testament, bustling, harnessing, ever-evolving, ever-changing, multifaceted, meticulous, bespoke, tailored, captivating, enthralling, beacon, unleash, enrich, poised, towards, underpins, demystify, insurmountable, unprecedented, robust.
+- Corporate filler: paradigm shift, cutting-edge, game-changing, transformative, groundbreaking, revolutionary, synergy, ecosystem, scalable, disruptive, move the needle, circle back, at the end of the day, when it comes to, the world of, not only (and its near-variant "not just X but Y"), next level, optimized, value-add, leverage.
+- Guru-speak: abundance mindset, manifest, high vibration, the universe, alignment, holding space, sitting with it, authentic, authenticity, lean into, your truth, intentional, mindful.
+- Empty hedges: just my two cents, for what it is worth, in my humble opinion, IMHO, take this with a grain of salt, your mileage may vary.
+- Formal words: utilize (use), endeavor (try); formal connectives: furthermore, moreover, additionally, in addition.
+
+Exempt: words inside a quotation (a verbatim, a testimonial or a quoted source keeps its words), a proper noun, and a word that is the literal name of what the offer sells ("landscape lighting" for a landscaper, "wheel alignment" for a garage).
+
+Structure: open on the point, with no windup ("In today's world," "Today I want to talk about"); end on the point, with no "In conclusion," no closer that restates what was already said, and no teaser that withholds nothing specific ("earlier than you think," "that's where the trouble starts," "First, though"); no formal connectives; vary sentence length (break up a run of medium sentences, let a few run longer); break walls of text into short paragraphs; plain words ("use," not "utilize"; "try," not "endeavor"); flatten formatting the text does not need (bold, headers or bullets) into plain prose.
+
+The rule that matters most: one of these on its own is not the giveaway (real people write "honestly," and "worth noting"); the stack is, several in one piece. Get each piece as close to zero as the writing allows without mangling it. Natural and human beats sterile and rule-perfect: if removing a tell would make a sentence worse, rewrite the sentence so it reads well and still loses the tell.
+
+The tell edit. Every draft and every revision passes this edit before the cold read; the revise step, passage rewrites and the factual review's rewritten lines follow the same rules. The edit removes the tells and words above and keeps everything else: the meaning and the argument (no opinion or strong claim softened); every fact, name, number, date, quote, link and ledger tag exactly as written (it never adds a detail a sentence lacks, and never changes one it has); the speaker's voice and reading level (the same person on a good day, not another writer and not a corporate memo); the piece's language; the structure (sections, headings, lists and paragraph breaks, unless the formatting itself is the problem); and the length (close to the original word count). Copy that is already clean comes back close to unchanged; the edit never invents a problem to look useful. It reports what it changed in three to six plain lines, with no emojis or hashtags.
+
+Scoring: tells 11-13 are Tier 0; every other 7.1 tell, word or windup is Tier 1 (weight 4) per hit, and two or more in a piece are the stack the copy chief fails at Gate D and the mechanical pass sends back to revision.
 
 ---`;
 
@@ -245,7 +291,7 @@ Decorative hedges, never a qualification: "may," "might," "could," "helps," "sup
 
 ### 8.3 Factual-review procedure
 
-Output per flag: \`line → rule (cited) → rewritten line\`; a flag with no rewrite is rejected. The rewritten line resizes the claim to its carrier or cuts it; it never announces that a test, result, proof or customer is missing (rules 8 and 12; the proof confession is a Tier 0 tell). Tests in order: (1) ledger match for every number, study, credential, date, quote, name, price, deadline and quantity, with a visible \`[[NEEDS SOURCE]]\` where the ledger is silent; (2) strength match against the ledger grade, rewritten to the form in 8.2; (3) disease screen for supplements (disease name, lay symptom, drug substitution, disease-study citation, imagery); (4) testimonial pack (real person on file, bona fide user, typical result adjacent, connection disclosed); (5) earnings screen (documentation, dates, percentage, time and effort, expenses, typical result, adjacent); (6) track-record screen (4.41 statement, net with gross, no projection); (7) net impression on headline, lead and offer only, fixing the headline and never the footer; (8) cross-asset consistency with the offer block as source of truth (names, deliverables, price and plan, added costs, guarantee sentence, deadline, delivery promise, button verb); (9) channel pass (CAN-SPAM, TCPA and CTIA, Meta, Google, native labeling, California B&P 17602); (10) fabrication guard: any name, quote, statistic, study, credential, review or narrator not in the ledger is a hard fail. The reviewer may not add "may," "results vary" or generic disclaimers, delete specifics the ledger supports, or raise "could be seen as" concerns without a rule; it may add an evidence-state sentence from 8.2. Every flag is a decision for the user, never an action by the reviewer: the output shows the line, the rule and the suggested rewrite, and the user keeps the line, applies the rewrite or drops it. The single exception is the fabrication guard, which catches the engine inventing facts, not the user making claims.
+Output per flag: \`line → rule (cited) → rewritten line\`; a flag with no rewrite is rejected. The rewritten line resizes the claim to its carrier or cuts it; it never announces that a test, result, proof or customer is missing (rules 8 and 12; the proof confession is a Tier 0 tell); and it follows Section 7.1 (no em dash, emoji or hashtag, none of its tells or words). Tests in order: (1) ledger match for every number, study, credential, date, quote, name, price, deadline and quantity, with a visible \`[[NEEDS SOURCE]]\` where the ledger is silent; (2) strength match against the ledger grade, rewritten to the form in 8.2; (3) disease screen for supplements (disease name, lay symptom, drug substitution, disease-study citation, imagery); (4) testimonial pack (real person on file, bona fide user, typical result adjacent, connection disclosed); (5) earnings screen (documentation, dates, percentage, time and effort, expenses, typical result, adjacent); (6) track-record screen (4.41 statement, net with gross, no projection); (7) net impression on headline, lead and offer only, fixing the headline and never the footer; (8) cross-asset consistency with the offer block as source of truth (names, deliverables, price and plan, added costs, guarantee sentence, deadline, delivery promise, button verb); (9) channel pass (CAN-SPAM, TCPA and CTIA, Meta, Google, native labeling, California B&P 17602); (10) fabrication guard: any name, quote, statistic, study, credential, review or narrator not in the ledger is a hard fail. The reviewer may not add "may," "results vary" or generic disclaimers, delete specifics the ledger supports, or raise "could be seen as" concerns without a rule; it may add an evidence-state sentence from 8.2. Every flag is a decision for the user, never an action by the reviewer: the output shows the line, the rule and the suggested rewrite, and the user keeps the line, applies the rewrite or drops it. The single exception is the fabrication guard, which catches the engine inventing facts, not the user making claims.
 
 ### 8.4 Ledger row and per-offer config
 
@@ -281,17 +327,17 @@ Long VSL, warm or retargeted. Interrupt; promise with mechanism; credibility and
 
 Short VSL, cold. Interrupt tied to the promise; promise, mechanism name and credibility in one breath; catalyst; three fascination-style benefits or a mini-demonstration; who it is for plus one disqualifier; next step; one real reason to act now. 3-7 minutes. Must-nots: stack; price unless the page sells.
 
-Meta and Instagram ads. Primary text 50-150 characters before the fold, headline 27 characters (Instagram 125 and 40). Hook; one angle; one proof; one literal CTA; headline field restating the offer. Musts: 3-6 variations per ad set; describe the product or outcome, never the reader's attribute. Must-nots: "Are you tired of"; "Do you have [condition]"; "cure, heal, eliminate"; effortless-income claims.
+Meta and Instagram ads. Primary text 50-150 characters before the fold, headline 27 characters (Instagram 125 and 40). Hook; one angle; one proof; one literal CTA; headline field restating the offer. Musts: 3-6 variations per ad set; describe the product or outcome, never the reader's attribute. Must-nots: "Are you tired of"; "Do you have [condition]"; "cure, heal, eliminate"; effortless-income claims; emojis; hashtags.
 
 YouTube ad script. 0-5s call-out and disqualifier; 5-15s stakes and one credibility line; 15-45s mechanism; 45s+ proof, offer, spoken and on-screen CTA, rehook, second CTA. Under 3 minutes. Must-nots: logo intro; "At [Brand], we"; improbable-result claims.
 
-TikTok and Reels. 15-45 seconds, under 90 spoken words. Line one spoken and captioned (result-first, contrarian or POV); lines two to four show the discovery; one proof; CTA with location. Musts: proposition in the first 3 seconds; a real person on camera. Must-nots: "Hey everyone!"; feature tour.
+TikTok and Reels. 15-45 seconds, under 90 spoken words. Line one spoken and captioned (result-first, contrarian or POV); lines two to four show the discovery; one proof; CTA with location. Musts: proposition in the first 3 seconds; a real person on camera. Must-nots: "Hey everyone!"; feature tour; emojis or hashtags in the caption.
 
 Google responsive search ads. 15 headlines of 30 characters: 3-4 keyword, 3-4 benefit with number, 2-3 proof, 2 offer or risk reversal, 2 CTA; 4 descriptions of 90 characters, each a complete argument with CTA. Must-nots: one headline shape; repetition.
 
 Advertorial and native landing page. FTC label above the headline ("Ad," "Advertisement," "Paid Advertisement"); editorial headline; byline and date; scene or surprising fact with no pitch for 150-300 words; the usual fixes widened; mechanism; proof; the turn in the same voice; offer and links repeated in the last third. 800-1,800 words cold; 400-700 retargeting. Listicle variant: number matching the items, reasons escalating problem, mechanism, proof, offer. Musts: label on both pages; narrator exists. Must-nots: brand before word 250; "Promoted" or no label; "stuns," "reveals," "you won't believe"; synthetic before/after.
 
-Organic social. Five lines to earn "see more"; lead-in, main points, CTA; one idea; link in a comment; hook then rehook; three hooks, one picked (Section 3). Musts: a sales intent inside the story or opinion; CTA as verb, object, location. Must-nots: three ideas; "Thoughts?"; emoji bullets.
+Organic social. Five lines to earn "see more"; lead-in, main points, CTA; one idea; link in a comment; hook then rehook; three hooks, one picked (Section 3). Musts: a sales intent inside the story or opinion; CTA as verb, object, location. Must-nots: three ideas; "Thoughts?"; emojis; hashtags.
 
 Product description. Name plus benefit tag; a lead in the buyer's words; three to five bullets translating features to situations; proof line; specs in a separate block. 60-150 words for consumables; 150-400 for considered purchases. Musts: phrases checked against the review corpus. Must-nots: "Elevate your [category] experience"; "crafted with care"; superlatives without the proof line.
 
@@ -318,7 +364,46 @@ From three to ten samples of the client's own writing, selling copy preferred:
 5. Set the readability band from the audience (consumer grade 5-8; B2B marketing, ops and executive 6-8; finance and legal up to 9-12; engineering plain syntax with precise nouns), then let the sample override it.
 6. Write the profile as parameters, never adjectives.
 7. Validate: generate 500 words in the profile, re-measure against step 1, and have the client mark every line they would not have written. Adjust the profile, never the draft.
-8. Never penalize caps, fragments, exclamation marks or ellipses; human direct response uses all four at rates far above AI drafts.`;
+8. Never penalize caps, fragments, exclamation marks or ellipses; human direct response uses all four at rates far above AI drafts.
+9. A voice profile never brings back what Section 7.1 bans: em dashes, emojis, hashtags and the 7.1 tells and words stay out even when the samples use them.`;
+
+export const OWNER_TELLS = `### 7.1 The owner's tells and words
+
+These are the owner's rules. They apply to every piece in every format: the writer follows them, the tell edit removes what slips through, the detector counts them, and the copy chief fails a stack at Gate D. Each is a pattern, not a word list: rewording a banned pattern with a synonym or near-variant is the same tell.
+
+| # | Tell | Example | Fix |
+|---|---|---|---|
+| 1 | "Quietly" for something that was not a secret | "Legiit quietly passed a million orders." | Cut it, or say who did not know |
+| 2 | The three-beat that lands on a deep third | "Not a tool. Not a course. It's a system." | State the claim once: "It's a system." |
+| 3 | A rhetorical question the copy then answers itself | "The result? More sales." / "Why does this matter? Because..." | Make the point: "You make more sales." |
+| 4 | "Here's the kicker / the thing / the part nobody talks about," and any "Here's the ___" windup, reworded ones included | "Here's the part the score hides:" / "The score hides this:" | Make the point directly |
+| 5 | "Worth noting / remembering / keeping in mind" | "It's worth noting that the trial is free." | State the point: "The trial is free." |
+| 6 | The buzzword pile | "double down," "at scale," "best in class," "move fast" | Keep one precise term, cut the rest |
+| 7 | "Genuinely" and "meaningfully" as filler | "a genuinely useful report" | Cut the word when the sentence means the same without it |
+| 8 | The disguise frame: one thing presented as another thing in disguise | "X wearing a Y costume," "cosplaying as Y," "X dressed as Y," "X wrapped in Y," "X masquerading as Y," "X disguised as Y," "X in Y's clothing," "X with a Y veneer, skin or wrapper," "Sorting by difficulty feels like research. It's where bad content gets made." / "The keyword was never your competition. The pages ranking for it are." | State the claim directly: "X is really Y" or "X is just Y" |
+| 9 | "The uncomfortable truth / the hard truth / the truth nobody wants to hear" | "The hard truth: most pages never rank." | Drop the signpost; a plain "honestly" once is fine |
+| 10 | The pressure test | "stress test this," "sanity check," "pressure test that" | Say what is checked and how |
+| 11 | Em dashes | "It works — fast." | A period, a comma or parentheses |
+| 12 | Emojis | "✅ Instant access" | Remove them; never add them |
+| 13 | Hashtags | "#SEO #marketing" | Remove them; never add them |
+
+Words to cut, or replace with the plainest word that keeps the meaning (cut it when the sentence works without it):
+
+- AI words: delve, tapestry, realm, navigate, navigation, unlock, seamless, elevate, landscape, testament, bustling, harnessing, ever-evolving, ever-changing, multifaceted, meticulous, bespoke, tailored, captivating, enthralling, beacon, unleash, enrich, poised, towards, underpins, demystify, insurmountable, unprecedented, robust.
+- Corporate filler: paradigm shift, cutting-edge, game-changing, transformative, groundbreaking, revolutionary, synergy, ecosystem, scalable, disruptive, move the needle, circle back, at the end of the day, when it comes to, the world of, not only (and its near-variant "not just X but Y"), next level, optimized, value-add, leverage.
+- Guru-speak: abundance mindset, manifest, high vibration, the universe, alignment, holding space, sitting with it, authentic, authenticity, lean into, your truth, intentional, mindful.
+- Empty hedges: just my two cents, for what it is worth, in my humble opinion, IMHO, take this with a grain of salt, your mileage may vary.
+- Formal words: utilize (use), endeavor (try); formal connectives: furthermore, moreover, additionally, in addition.
+
+Exempt: words inside a quotation (a verbatim, a testimonial or a quoted source keeps its words), a proper noun, and a word that is the literal name of what the offer sells ("landscape lighting" for a landscaper, "wheel alignment" for a garage).
+
+Structure: open on the point, with no windup ("In today's world," "Today I want to talk about"); end on the point, with no "In conclusion," no closer that restates what was already said, and no teaser that withholds nothing specific ("earlier than you think," "that's where the trouble starts," "First, though"); no formal connectives; vary sentence length (break up a run of medium sentences, let a few run longer); break walls of text into short paragraphs; plain words ("use," not "utilize"; "try," not "endeavor"); flatten formatting the text does not need (bold, headers or bullets) into plain prose.
+
+The rule that matters most: one of these on its own is not the giveaway (real people write "honestly," and "worth noting"); the stack is, several in one piece. Get each piece as close to zero as the writing allows without mangling it. Natural and human beats sterile and rule-perfect: if removing a tell would make a sentence worse, rewrite the sentence so it reads well and still loses the tell.
+
+The tell edit. Every draft and every revision passes this edit before the cold read; the revise step, passage rewrites and the factual review's rewritten lines follow the same rules. The edit removes the tells and words above and keeps everything else: the meaning and the argument (no opinion or strong claim softened); every fact, name, number, date, quote, link and ledger tag exactly as written (it never adds a detail a sentence lacks, and never changes one it has); the speaker's voice and reading level (the same person on a good day, not another writer and not a corporate memo); the piece's language; the structure (sections, headings, lists and paragraph breaks, unless the formatting itself is the problem); and the length (close to the original word count). Copy that is already clean comes back close to unchanged; the edit never invents a problem to look useful. It reports what it changed in three to six plain lines, with no emojis or hashtags.
+
+Scoring: tells 11-13 are Tier 0; every other 7.1 tell, word or windup is Tier 1 (weight 4) per hit, and two or more in a piece are the stack the copy chief fails at Gate D and the mechanical pass sends back to revision.`;
 
 export const STANDARD = { RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, OFFER_PRESENTATION, COPY_CHIEF_RUBRIC, AI_TELL_CHECKLIST, CLAIMS_AND_FACTUAL_REVIEW, FORMAT_SPECS, VOICE_CAPTURE } as const;
 export const STANDARD_TITLES: Record<string, string> = {

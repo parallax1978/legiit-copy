@@ -24,7 +24,6 @@ export interface FormatSpec {
   skim_path_block_types: string[];
   hard_gates: string[];        // machine-checkable rules (e.g. "sms.chars<=240")
   cadence_floor_cv: number;    // flag when sentence-length CV is below this in 300+ words
-  allow_emoji_bullets: boolean;
   allow_markdown_headings: boolean;
   allow_caps: boolean;
   platform_limits?: Record<string, number>; // e.g. {primary_text_chars: 150}
