@@ -300,7 +300,7 @@ import { FORMATS as FORMATS_FOR_OFFER } from "../formats/index.ts";
 Deno.test("offer block: a post states the offer in one line and leaves the guarantee's terms to the page that takes payment", () => {
   const variant = { id: "v", status: "approved", chosen: { variant: "free_trial", reasons: "r", price_presentation: "$59 a month", guarantee: { denominated_text: "Your plan runs to the end or every credit comes back.", terms: "Credits, not cash; plan payments are not refundable.", days: null, costs_seller: true }, deadline: null, premiums: [], first_visible_win: { what: "a decision", interval: "20 minutes" }, biggest_failure_reason: "x", bundle_uncomparable_how: "y" } } as unknown as Parameters<typeof offerBlockText>[0];
   const post = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.organic_social);
-  assert(post.includes("at most one short sentence, the promise only"), post);
+  assert(post.includes("said at all only as one short promise in the speaker's words") && post.includes("never its mechanics or terms"), post);
   assert(!post.includes("plan payments are not refundable"), "the guarantee's terms stay off a post");
   const page = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.sales_letter);
   assert(page.includes("guarantee (repeat this sentence)") && page.includes("plan payments are not refundable"));

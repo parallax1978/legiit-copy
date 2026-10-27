@@ -9,8 +9,8 @@
  * fit in the invocation the step returns `continueLater`; at least one group runs per invocation.
  */
 import type { StepContext, StepResult } from "./types.ts";
-import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v5.ts";
+import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem } from "../schemas/tell_edit.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v6.ts";
 import { exemptTermsFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
@@ -24,6 +24,29 @@ const MAX_LIST = 6;
 
 type Applied = TellEditOutput["edits"][number];
 type Rejected = TellEditOutput["rejected"][number];
+
+const wordsOf = (t: string) => t.toLowerCase().replace(/\[\[[^\]]*\]\]/g, " ").match(/[\p{L}\p{N}'’]+/gu) ?? [];
+
+/** An audited line an edit reached: the edit's span and the line share a run of five words (or the whole of a shorter one). */
+function reached(line: TellEditAuditItem, edits: TellEdit[]): boolean {
+  const a = wordsOf(line.line);
+  const need = Math.min(5, a.length);
+  if (!need) return true;
+  return edits.some((e) => {
+    if (e.ref.trim().replace(/^\[|\]$/g, "") !== line.ref.trim().replace(/^\[|\]$/g, "")) return false;
+    const b = wordsOf(e.before);
+    for (let i = 0; i + need <= a.length; i++) {
+      const run = a.slice(i, i + need).join(" ");
+      if (b.join(" ").includes(run)) return true;
+    }
+    return false;
+  });
+}
+
+/** The lines the editor listed as tells, did not keep, and left without an edit that landed. */
+function leftUnedited(audit: TellEditAuditItem[], landed: TellEdit[]): TellEditAuditItem[] {
+  return audit.filter((x) => !x.keep && !reached(x, landed));
+}
 
 function restore(ctx: StepContext, version: number, units: EditUnit[]): TellEditPartial | null {
   const p = TellEditPartial.safeParse(ctx.partial);
@@ -57,6 +80,8 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const applied: Applied[] = [...(resumed?.edits ?? [])];
   const rejected: Rejected[] = [...(resumed?.rejected ?? [])];
   const whatChanged: string[] = [...(resumed?.what_changed ?? [])];
+  const audit: TellEditAuditItem[] = [...(resumed?.audit ?? [])];
+  const auditLeft: TellEditAuditItem[] = [...(resumed?.audit_left ?? [])];
   let alreadyClean = resumed?.already_clean ?? true;
   let model: string | undefined;
   let groupsThisInvocation = 0;
@@ -71,6 +96,8 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     edits: applied,
     rejected,
     already_clean: alreadyClean,
+    audit,
+    audit_left: auditLeft,
   });
 
   for (let gi = 0; gi < groups.length; gi++) {
@@ -101,11 +128,20 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
     let r = applyInGroup(units, res.output.edits, refs);
+    const listed = (res.output.audit ?? []).filter((x) => refs.has(x.ref.trim().replace(/^\[|\]$/g, "")));
+    audit.push(...listed);
     // the model's summary lines stand only when all its edits landed; otherwise the landed edits' own labels say what changed
     whatChanged.push(...summaryOf(res.output.what_changed, r.applied, r.rejected.length > 0));
-    // edits the guards refused get one more ask, with the reasons, when they were more than a stray and time allows
-    if (r.rejected.length && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3)) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
-      const note = `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}\nReturn edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`;
+    // one more ask, when time allows, for edits the guards refused (more than a stray) and for lines the editor listed
+    // as tells and left without an edit that landed
+    let left = leftUnedited(listed, r.applied);
+    const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
+    if ((refusedMany || left.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
+      const note = [
+        refusedMany ? `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}` : "",
+        left.length ? `You listed these lines and left them without an edit that landed; give each one its edit (cut it, or say the plain specific thing), or keep it only if it carries a fact the piece needs:\n${left.slice(0, 12).map((x) => `- [${x.ref}] (${x.kind}) "${x.line}"`).join("\n")}` : "",
+        `Return edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`,
+      ].filter(Boolean).join("\n");
       try {
         const current = r.units.filter((u) => refs.has(u.ref));
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: findingsFor(r.units), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
@@ -113,12 +149,16 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         const again = applyInGroup(r.units, retry.output.edits, refs);
         whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
+        // a line the retry kept on purpose is kept; one it left again is reported
+        const keptNow = new Set((retry.output.audit ?? []).filter((x) => x.keep).map((x) => `${x.ref}\u0000${x.line}`));
+        left = leftUnedited(left, again.applied).filter((x) => !keptNow.has(`${x.ref}\u0000${x.line}`));
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
         console.warn("tell edit retry failed:", e instanceof Error ? e.message : e);
       }
     }
     units = r.units;
+    auditLeft.push(...left);
     applied.push(...r.applied.map((e) => ({ ...e, by: "editor" as const })));
     rejected.push(...r.rejected);
     alreadyClean = alreadyClean && res.output.already_clean && r.applied.length === 0;
@@ -146,6 +186,8 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     owner_tells_after: after,
     already_clean: !changed && alreadyClean,
     new_version: changed,
+    audit,
+    audit_left: auditLeft,
   });
 
   const editorEdits = applied.filter((e) => e.by === "editor").length;

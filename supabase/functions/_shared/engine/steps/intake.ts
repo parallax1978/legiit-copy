@@ -8,7 +8,7 @@
  */
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import intakePrompt, { type IntakeSource } from "../prompts/intake.v6.ts";
+import intakePrompt, { type IntakeSource } from "../prompts/intake.v7.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { IntakeBriefOutput, IntakeLedgerOutput, IntakeOutput } from "../schemas/brief.ts";
 import { remainingBudgetMs } from "./budget.ts";

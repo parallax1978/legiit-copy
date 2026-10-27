@@ -86,3 +86,19 @@ then count one or more. The fresh test post (ffc9ed71, v9) had four, all of them
 label_windup gained the step-count forms ("It takes seven steps, and...", "seven steps, in this order:", "Three
 reasons to switch:"); "Setup takes three steps." and "It takes three steps to set up." are facts and pass. Human
 social posts with a count windup: 8%.
+
+## Round 3: never_reveal, colon reveals, "What ... is" openers, count_windup (2026-10-27)
+
+Human corpus, share of documents with a hit:
+
+| Pattern | social (145) | email (359) | sales page (132) |
+|---|---|---|---|
+| never_reveal ("X was never going to", "The price was never the problem"; first-person stories skipped) | 0.0% | 0.0% | 0.8% |
+| colon reveal ("leaves the decision with you: whether...") | 0.0% | 0.0% | 0.0% |
+| "What ... is" opener ("What comes back is", "What matters is") | 0.7% | 0.6% | 0.8% |
+
+The step and reason counts moved out of label_windup into count_windup, which counts in short pieces only
+(organic social, TikTok/Reels, Meta ad, Google RSA, single, sequence and cold email, SMS): a webinar's three
+secrets, a VSL's plan and a listicle's numbered reasons are the structure those formats ask for. Its colon must be
+a label's (not a clock's, a ratio's or a link's), and a digit count only counts after a determiner or at a sentence
+start. The round-2 post (8253478d, v9) now scores 3 owner tells and fails the first-comment length gate (63 words).

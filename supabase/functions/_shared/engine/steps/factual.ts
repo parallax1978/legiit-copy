@@ -5,7 +5,7 @@
  */
 import type { StepFn } from "./types.ts";
 import { FactualOutput } from "../schemas/review.ts";
-import { factualPrompt } from "../prompts/factual.v7.ts";
+import { factualPrompt } from "../prompts/factual.v8.ts";
 import { droppedReferenceFlags, factualFlags, postProcessFactual } from "../draft/review.ts";
 import { stripNeverTells } from "../draft/never_tells.ts";
 import { exemptTermsFrom } from "../tells.ts";

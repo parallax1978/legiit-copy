@@ -817,8 +817,8 @@ Deno.test("tells 2, 4, 5 and 9 catch the near-variants of the owner's own exampl
     ["label_windup", "So for any keyword, I'd ask two things. Who searches, and what do they buy?"],
     ["label_windup", "Two questions decide it."],
     ["label_windup", "Then one more check cuts the list again: does a page like yours rank?"],
-    ["label_windup", "It takes seven steps, and your keyword tool stops at the list."],
-    ["label_windup", "On your site, the decision comes at the end of seven steps, in this order:"],
+    ["count_windup", "It takes seven steps, and your keyword tool stops at the list."],
+    ["count_windup", "On your site, the decision comes at the end of seven steps, in this order:"],
     ["empty_hedge", "Difficulty is a guess, in my view."],
   ];
   for (const [name, text] of cases) {
@@ -964,4 +964,58 @@ Deno.test("repeated_phrase: a five-word run said again in a post counts from the
     "So you know which pages win before you spend a dollar on content.",
   ].map((p) => block("paragraph", p)))], FORMATS.sales_letter);
   assertEquals(tells(letter, "repeated_phrase"), undefined);
+});
+
+Deno.test("repeated_phrase: captions, follow-up emails, prices and other languages; each later sentence counts once", () => {
+  const post = (paras: string[]) => analyzeDraft([section("main", paras.map((p) => block("paragraph", p))), section("cta", [block("cta", "Comment PLAN and I'll send the link.")])], FORMATS.organic_social);
+  // a phrase said three times is two repeats, one of them free
+  const thrice = post(["Check who ranks before you write.", "Check who ranks before you write a single post.", "So check who ranks before you write a single post."]);
+  assertEquals(tells(thrice, "repeated_phrase")?.count, 1);
+  // a decimal is not a sentence end
+  assertEquals(tells(post(["Starter is $19.99 a month per seat and Team is $14.99 a month per seat.", "Pick one."]), "repeated_phrase"), undefined);
+  // captions mirror the spoken lines they caption
+  const reel = analyzeDraft([
+    section("line_one", [block("hook", "My keyword tool picked forty posts that never ranked."), block("caption", "My keyword tool picked forty posts that never ranked.")]),
+    section("discovery", [block("beat", "I checked who ranked for each keyword before writing a word."), block("caption", "I checked who ranked for each keyword before writing a word.")]),
+    section("proof", [block("beat", "The next ten posts reached page one in six weeks."), block("caption", "The next ten posts reached page one in six weeks.")]),
+    section("cta", [block("cta", "Comment PLAN for the checklist.")]),
+  ], FORMATS.tiktok_reels);
+  assertEquals(tells(reel, "repeated_phrase"), undefined);
+  // a cold email's follow-ups are separate emails: asking email one's question again is not a repeat
+  const ask = "Is that worth a look for your team?";
+  const cold = analyzeDraft([
+    section("observation", [block("paragraph", "You posted three SEO roles this month on LinkedIn.")]),
+    section("question", [block("paragraph", ask)]),
+    ...[1, 2, 3].map((n) => section(`followup#${n}`, [block("paragraph", `New this week: fact number ${n} about your hiring. ${ask}`)])),
+  ], FORMATS.cold_email);
+  assertEquals(tells(cold, "repeated_phrase"), undefined);
+  // the stop list is English: a Spanish post is not held to it
+  const es = post([
+    "Tu herramienta te dio cuarenta artículos y ninguno salió en la primera página.",
+    "Lo que tienes que hacer es mirar quién ya posiciona.",
+    "En seis semanas, diez de doce artículos estaban en la primera página.",
+    "Y lo que tienes que hacer después es escribir solo esos.",
+  ]);
+  assertEquals(tells(es, "repeated_phrase"), undefined);
+});
+
+Deno.test("count_windup: clocks, ratios, links and literal quantities are not count windups; one windup a sentence; short pieces only", () => {
+  const owner = (t: string, f = FORMATS.email_single) => analyzeText(t, { format: f }).flags.filter((x) => x.tier === 1).map((x) => x.tell);
+  for (const t of [
+    "Three stages, 40 speakers, doors at 8:30 on Saturday.",
+    "Day two adds two stages for hands-on workshops from 1:00 pm.",
+    "Hit 10,000 steps by 8:00 pm and the app logs the streak for you.",
+    "Get the 3 mistakes checklist at https://legiit.com/checklist",
+    "Our crews handle 300 moves a month: local, long-distance and office.",
+    "The lift climbs up to 14 steps: installed in one day, no wall work.",
+    "The process takes three steps and about ten minutes.",
+    "A setup that takes two steps and no developer.",
+  ]) assertEquals(owner(t), [], t);
+  for (const t of ["Follow these 5 steps:", "Three reasons to switch: speed, price and support.", "It takes seven steps, and your keyword tool stops at the list."]) assertEquals(owner(t), ["count_windup"], t);
+  const r = analyzeText("Here's how it works, in three steps: you paste the keyword, it checks who ranks, you get the brief.", { format: FORMATS.organic_social });
+  assertEquals(r.owner_tells, 1, r.flags.map((f) => f.tell).join(","));
+  // the structure a long format asks for is not a windup there
+  for (const [t, f] of [["On Thursday I'll walk you through three secrets:", FORMATS.webinar_package], ["The plan takes three steps, and each one has a reason.", FORMATS.vsl_long], ["Homeowners gave us 7 reasons for switching, in order:", FORMATS.advertorial]] as const) {
+    assertEquals(owner(t, f), [], t);
+  }
 });

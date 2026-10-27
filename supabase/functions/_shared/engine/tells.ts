@@ -83,6 +83,8 @@ export interface TellRule {
   owner?: { tell?: number; words?: boolean };
   /** Block types an owner rule does not scan (a disclosure block carries the legal text by design). */
   skip_block_types?: Block["type"][];
+  /** The format families the rule counts in (all when absent). */
+  families?: FormatSpec["family"][];
 }
 
 export const TIER_WEIGHT: Record<Tier, number> = { 0: 10, 1: 4, 2: 2, 3: 1 };
@@ -278,7 +280,7 @@ export const TELLS: TellRule[] = [
     regex: null,
     example: "…leaves the decision to you. … Ahrefs and Semrush hand you a keyword list and leave the decision to you.",
     fix: "Say it once. Keep the first use and cut or rephrase the later ones.",
-    note: "§7.1 structure (no line that says again what the piece already said): a run of five words or more, two of them content words, repeated in another sentence of the body. CTAs, prices, guarantees, disclosures and quotations are not scanned. Posts, ads, emails and messages only: a page or a script repeats its promise on purpose. Each repeat after the first is one hit, and one repeat per piece is free (a third of human posts have one).",
+    note: "§7.1 structure (no line that says again what the piece already said): a run of five words or more, two of them content words, repeated in another sentence of the body. CTAs, prices, guarantees, disclosures, captions, a P.S. and quotations are not scanned. Short pieces only (organic social, TikTok/Reels, Meta ad, Google RSA, single, sequence and cold email, SMS): a page or a script repeats its promise on purpose. Each sentence that repeats an earlier one is one hit, and one repeat per piece is free (a third of human posts have one).",
   },
   {
     tier: 1, name: "heres_the_windup", weight: 4, scope: "all", owner: { tell: 4 },
@@ -302,14 +304,39 @@ export const TELLS: TellRule[] = [
         `|\\b(?:two|three|four|five|a few) (?:questions|things|checks|tests|rules) (?:decide|matter|settle|separate)\\b` +
         `|\\b(?:it|this|everything|that) (?:all )?(?:comes|boils) down to (?:one|two|three|four|a few) (?:things|questions)\\b` +
         `|\\bone more (?:check|thing|question|test|step|rule)\\b[^.?!\\n:]{0,40}:` +
-        `|\\b(?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|ways|reasons|moves|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:` +
-        // "It takes seven steps, and...": the count of a process as the hook; "It takes three steps to set up" is a fact
-        `|\\b(?:it|this|that|the (?:read|process|plan|research)) takes (?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|moves)\\b(?! to\\b)`,
+        // "it leaves the decision with you: whether your site can beat them"
+        `|\\b(?:to|with|on) you: (?:whether|what|which|how|who)\\b` +
+        // "What comes back is a decision for each group:", "What matters is..."
+        `|(?:^|[.!?]["”’)]?\\s+)What (?:comes back|you get|you see|matters|actually matters|really matters|happens next|changes|I want|you need|you want) (?:is|are)\\b`,
       "gim",
     ),
     example: "My rule: never pay for a keyword tool you open once a month.",
     fix: "Drop the label or the count and make the point: \"Never pay for a keyword tool you open once a month.\"",
-    note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\") or a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\", \"It takes seven steps\", \"seven steps, in this order:\") announces the point instead of making it (§7.1 tell 4).",
+    note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\"), a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\"), a colon reveal (\"it leaves the decision with you: whether...\") or a \"What ... is\" opener (\"What comes back is a decision:\") announces the point instead of making it (§7.1 tell 4). Under 1% of human posts and emails use the last two.",
+  },
+  {
+    tier: 1, name: "never_reveal", weight: 4, scope: "all", owner: { tell: 8 },
+    // a thing as the subject: "I was never going to quit" is a person's story
+    regex: /(?<!\b(?:I|we|you|he|she|they)\s)\b(?:was|were|is|are)(?: never| not ever) (?:going to|the (?:problem|point|issue|question|goal|enemy|bottleneck|competition|real \w+)|about (?:the|your))\b/gi,
+    example: "A list of traffic numbers was never going to tell you which pages would.",
+    fix: "Say plainly what it does or does not do: \"A traffic number does not say which page will sell.\"",
+    note: "The \"was never\" reveal the owner rejected (\"The keyword was never your competition.\"): the reader's belief recast as a mistake in a line built to be quoted (§7.1 tell 8 and structure). Under 1% of human sales pages, none of the human posts or emails.",
+  },
+  {
+    tier: 1, name: "count_windup", weight: 4, scope: "all", owner: { tell: 4 }, families: ["social", "ad", "email", "message"],
+    regex: new RegExp(
+      // a count that announces a list ("seven steps, in this order:", "Follow these 5 steps:"); the colon is a label's,
+      // not a clock's, a ratio's or a link's; a digit count only after a determiner or at a sentence start
+      `\\b(?:two|three|four|five|six|seven|eight|nine|ten) (?:steps|stages|ways|reasons|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:(?![\\d/])` +
+        `|(?:(?:^|[.!?]["”’)]?\\s+)|\\b(?:these|the|my|our|your|in|of|with|follow)\\s+)\\d+ (?:steps|stages|ways|reasons|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:(?![\\d/])` +
+        // "It takes seven steps, and...": the count of a process as the hook, a clause of its own; "It takes three steps
+        // to set up" and "The process takes three steps and ten minutes" are facts
+        `|(?:^|[.!?]["”’)]?\\s+)(?:(?:So|And|But),? )?(?:it|this) takes (?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|moves)\\b(?=\\s*(?:[.:;]|,\\s*(?:and|but|so)\\b|$))`,
+      "gim",
+    ),
+    example: "It takes seven steps, and your keyword tool stops at the list.",
+    fix: "Drop the count and say what the reader gets: \"Your keyword tool stops at the list.\"",
+    note: "§7.1 tell 4 and rule 1: in a short piece a count of the product's steps, or of the reasons or ways coming next (\"It takes seven steps\", \"seven steps, in this order:\", \"Three reasons to switch:\"), announces instead of saying. Short pieces only: a webinar's three secrets, a VSL's plan and a listicle's numbered reasons are the structure those formats ask for.",
   },
   {
     tier: 1, name: "worth_noting", weight: 4, scope: "all", owner: { tell: 5 },
@@ -866,6 +893,16 @@ function isProperNoun(text: string, index: number, match: string, display: boole
 }
 
 /** The sentence holding a match, and the part of it before the match. */
+/** Where the sentence holding `at` starts: after the last line break or sentence punctuation before it. */
+function sentenceStart(text: string, at: number): number {
+  let s = 0;
+  for (const p of ["\n", ". ", "! ", "? "]) {
+    const i = text.lastIndexOf(p, at - 1);
+    if (i >= 0) s = Math.max(s, i + p.length);
+  }
+  return s;
+}
+
 function sentenceAround(text: string, start: number, end: number): { sentence: string; before: string } {
   let s = 0;
   for (const p of ["\n", ".", "!", "?"]) s = Math.max(s, text.lastIndexOf(p, start - 1) + 1);
@@ -918,7 +955,7 @@ interface OwnerHits {
  * Words a rule claims from the start of its match when the match ends in a wildcard tail ("Here's how to ..." runs
  * on to the sentence's end): "Here's how to unlock seamless growth." is three tells, the windup and two words.
  */
-const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, disguise_frame: 2, corporate_filler: 2 };
+const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, count_windup: 3, disguise_frame: 2, corporate_filler: 2 };
 
 /**
  * Scan the owner's regex rules in table order. A span one rule has counted is not counted again by a later rule, so
@@ -927,6 +964,7 @@ const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_de
  */
 function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[], display: boolean[], types: Block["type"][]): Map<string, OwnerHits> {
   const claimed: [number, number][][] = texts.map(() => []);
+  const windups: number[][] = texts.map(() => []);
   const out = new Map<string, OwnerHits>();
   for (const rule of rules) {
     const hit: Hit = { rule, count: 0, examples: [] };
@@ -950,6 +988,9 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
         const head = CLAIM_WORDS[rule.name] ? (new RegExp(`^(?:\\S+\\s+){0,${CLAIM_WORDS[rule.name] - 1}}\\S+`).exec(lead)?.[0] ?? lead) : lead;
         const claimEnd = at + head.length;
         if (claimed[ti].some(([s, e]) => at < e && s < claimEnd)) continue;
+        // tell 4 counts once a sentence: a label or count after a "Here's how ..." windup is the same windup
+        if ((rule.name === "label_windup" || rule.name === "count_windup") && windups[ti].some((w) => w >= sentenceStart(t, at) && w < at)) continue;
+        if (rule.name === "heres_the_windup") windups[ti].push(at);
         claimed[ti].push([at, claimEnd]);
         perText[ti] += 1;
         hit.count += 1;
@@ -985,7 +1026,7 @@ function selfAnswered(q: string, a: string): boolean {
 }
 
 /** Body blocks where a repeat is the copy saying a point again; a CTA, a price, a guarantee or a disclosure may repeat the offer. */
-const REPEAT_SKIP = new Set<Block["type"]>(["cta", "button", "price", "guarantee", "disclosure", "field", "label", "testimonial"]);
+const REPEAT_SKIP = new Set<Block["type"]>(["cta", "button", "price", "guarantee", "disclosure", "field", "label", "testimonial", "caption", "ps"]);
 const REPEAT_RUN = 5;
 /**
  * Formats read in one sitting, where saying a point twice reads as filler. A long letter, a page or a video script
@@ -1013,21 +1054,34 @@ function repeatedPhrases(units: { text: string; kind: UnitKind; type: Block["typ
  * The repeats of a set of texts read as one piece, in reading order: each later text that says again a five-word run
  * of an earlier one, with the run and the text it first appeared in. The tell edit cuts or rephrases the later one.
  */
-export function repeatedRuns(texts: { text: string; type: Block["type"] }[], exemptTerms: string[] = []): { later: number; first: number; run: string }[] {
+export function repeatedRuns(texts: { text: string; type: Block["type"]; piece?: string }[], exemptTerms: string[] = []): { later: number; first: number; run: string }[] {
   const units = texts.map((t) => ({ text: clean(t.text), type: t.type, kind: (DISPLAY_TYPES.has(t.type) ? "display" : "body") as UnitKind }));
-  return repeatPairs(units, units.map(() => "piece"), new Set(exemptTerms.map(stem)));
+  return repeatPairs(units, texts.map((t) => t.piece ?? "piece"), new Set(exemptTerms.map(stem)));
 }
+
+/** English stop words below this share of a piece's words: the piece is in another language and the check skips it. */
+const ENGLISH_STOP_SHARE = 0.2;
 
 function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[], exempt: Set<string>): { later: number; first: number; run: string }[] {
   // piece + run (as stems, so "leaves the decision to you" repeats "leave the decision to you") -> the sentences it
   // occurs in, in order: [unit, sentence, the run as written there]
   const where = new Map<string, [number, number, string][]>();
+  const scanned = units.map((u) => (u.kind === "display" || REPEAT_SKIP.has(u.type) ? [] : sentencesOf(blankQuotes(u.text)).map((x) => x.toLowerCase().replace(/’/g, "'").match(/[\p{L}\p{N}][\p{L}\p{N}']*/gu) ?? [])));
+  // the stop list is English: a piece in another language would count its function words as content
+  const share = new Map<string, [number, number]>();
+  scanned.forEach((ss, ui) => ss.flat().forEach((w) => {
+    const [stop, all] = share.get(pieces[ui]) ?? [0, 0];
+    share.set(pieces[ui], [stop + (STOP_WORDS.has(w) ? 1 : 0), all + 1]);
+  }));
+  const english = (piece: string) => {
+    const [stop, all] = share.get(piece) ?? [0, 0];
+    return all < 20 || stop / all >= ENGLISH_STOP_SHARE;
+  };
   let sid = 0;
-  units.forEach((u, ui) => {
-    if (u.kind === "display" || REPEAT_SKIP.has(u.type)) return;
-    for (const sentence of sentencesOf(blankQuotes(u.text))) {
+  scanned.forEach((ss, ui) => {
+    if (!english(pieces[ui])) return;
+    for (const words of ss) {
       sid++;
-      const words = sentence.toLowerCase().match(/[a-z0-9][a-z0-9'’]*/g) ?? [];
       const stems = words.map(stem);
       for (let i = 0; i + REPEAT_RUN <= words.length; i++) {
         const run = stems.slice(i, i + REPEAT_RUN);
@@ -1040,24 +1094,23 @@ function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] 
       }
     }
   });
-  // one repeat per later sentence, however many five-word runs it shares with an earlier one
-  const counted = new Set<string>();
-  const pairs: { later: number; first: number; run: string }[] = [];
+  // one repeat per later sentence, however many runs it shares with however many earlier ones: the earliest first use
+  // is the one it repeats
+  const best = new Map<number, { later: number; first: number; firstSid: number; run: string }>();
   for (const occ of where.values()) {
     if (occ.length < 2) continue;
+    const [firstUnit, firstSid] = occ[0];
     for (const [ui, s, written] of occ.slice(1)) {
-      const mark = `${occ[0][1]}>${s}`;
-      if (counted.has(mark)) continue;
-      counted.add(mark);
-      pairs.push({ later: ui, first: occ[0][0], run: written });
+      const seen = best.get(s);
+      if (!seen || firstSid < seen.firstSid) best.set(s, { later: ui, first: firstUnit, firstSid, run: written });
     }
   }
-  return pairs;
+  return Array.from(best.entries()).sort(([a], [b]) => a - b).map(([, p]) => ({ later: p.later, first: p.first, run: p.run }));
 }
 
-/** Sentences of a text, linear on runs with no sentence punctuation. */
+/** Sentences of a text: split after terminal punctuation followed by a space, so "$19.99" and "legiit.com" stay whole. */
 function sentencesOf(text: string): string[] {
-  return (text.replace(/\n+/g, " ").match(/[^.?!]+(?:[.?!]+|$)/g) ?? []).map((x) => x.trim()).filter(Boolean);
+  return text.replace(/\n+/g, " ").split(/(?<=[.!?…]["”’)]?)\s+/).map((x) => x.trim()).filter(Boolean);
 }
 
 /**
@@ -1142,9 +1195,15 @@ export interface TellFlagOut {
  * role sharing its first word (registration_*, presentation_*), else one piece for every fixed section (an RSA ad).
  */
 function pieceOf(u: Unit, spec: FormatSpec): string {
+  return pieceOfSection(u.sectionId, spec);
+}
+
+/** pieceOf for a section id: a suffixed section ("body#2", a cold email's "followup#1") is its own piece in any format. */
+export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
+  const item = sectionItemIndex(sectionId);
+  if (item > 0) return `item:${item}`;
   if (!spec.multi_item) return "piece";
-  if (u.item > 0) return `item:${u.item}`;
-  const base = sectionBaseId(u.sectionId);
+  const base = sectionBaseId(sectionId);
   const roles = spec.multi_item.item_roles ?? [];
   if (roles.includes(base)) return `asset:${base}`;
   const prefix = base.split("_")[0];
@@ -1251,6 +1310,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
     let count = h.count;
     if (count === 0) continue;
     if (ov.exempt?.includes(r.name)) continue;
+    if (r.families && !r.families.includes(spec.family)) continue;
     if (r.name === "markdown_heading" && spec.allow_markdown_headings) continue;
 
     const perText = r.tier === 1 ? ownerPerText.get(r.name) : undefined;
@@ -1410,6 +1470,7 @@ export const GATE_METRICS: Record<string, MetricDef> = {
   links: { kind: "item", text: true, note: "cta and button blocks plus URLs in other text", compute: (c) => linksIn(c.sections) },
   email_one_links: { kind: "aggregate", text: true, note: "links in the lowest-indexed item (email one)", compute: (c) => { const idx = Math.min(...itemIndexes(c.all)); return linksIn(c.all.filter((s) => sectionItemIndex(s.section_id) === idx)); } },
   body_urls: { kind: "item", text: true, note: "URLs in text outside the `first_comment` section", compute: (c) => blocks(c.sections.filter((s) => !inBase(s, "first_comment"))).reduce((n, { block }) => n + urlsIn(textOf(block)), 0) },
+  first_comment_words: { kind: "item", text: true, note: "words in the `first_comment` section: the link and the one-line offer, never the terms (rule 16)", compute: (c) => wordsIn(blocks(c.sections.filter((s) => inBase(s, "first_comment")))) },
   questions: { kind: "item", text: true, note: "question marks outside subject blocks", compute: (c) => blocks(c.sections).filter(({ block }) => block.type !== "subject").reduce((n, { block }) => n + (textOf(block).match(/\?/g) ?? []).length, 0) },
   cta_count: { kind: "item", note: "cta and button blocks", compute: (c) => blocks(c.sections).filter(({ block }) => LINK_BLOCKS.has(block.type)).length },
   presentation_ctas: { kind: "aggregate", note: "cta and button blocks in `presentation_*` sections", compute: (c) => blocks(c.all.filter((s) => sectionBaseId(s.section_id).startsWith("presentation_"))).filter(({ block }) => LINK_BLOCKS.has(block.type)).length },

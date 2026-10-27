@@ -9,9 +9,9 @@
  */
 import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
-import { LEDGER_TAG } from "../schemas/common.ts";
+import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, REPEAT_FAMILIES, repeatedRuns, TELLS } from "../tells.ts";
+import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, repeatedRuns, TELLS } from "../tells.ts";
 import { stripNeverTells } from "./never_tells.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
@@ -93,11 +93,21 @@ export function editableUnits(draft: DraftOutput, spec: FormatSpec): EditUnit[] 
 export function renderUnits(units: EditUnit[], draft: DraftOutput): string {
   const out: string[] = [];
   let current = "";
-  for (const u of units) {
+  // the chosen opening is read first, before the sections; before the pick every opening is an alternative
+  const chosen = draft.chosen_lead_id && units.some((u) => u.owner === "lead" && u.ownerId === draft.chosen_lead_id) ? draft.chosen_lead_id : null;
+  const ordered = [...units.filter((u) => u.owner === "lead" && u.ownerId === chosen), ...units.filter((u) => !(u.owner === "lead" && u.ownerId === chosen))];
+  for (const u of ordered) {
     const key = `${u.owner}:${u.ownerId}`;
     if (key !== current) {
       const lead = u.owner === "lead" ? draft.leads?.find((l) => l.id === u.ownerId) : null;
-      out.push(u.owner === "lead" ? `\n=== alternative opening ${u.ownerId}${lead ? ` (${lead.lead_type})` : ""} ===` : `\n=== section ${u.ownerId} ===`);
+      const kind = lead ? ` (${lead.lead_type})` : "";
+      out.push(
+        u.owner !== "lead"
+          ? `\n=== section ${u.ownerId} ===`
+          : u.ownerId === chosen
+          ? `\n=== opening ${u.ownerId}${kind}: the chosen opening, read before the sections ===`
+          : `\n=== alternative opening ${u.ownerId}${kind}${chosen ? `, read in place of ${chosen}` : ""} ===`,
+      );
       current = key;
     }
     const note = u.type === "testimonial" ? "testimonial: the customer's words, never edited" : `${u.type}${u.item !== null ? ` item ${u.item + 1}` : ""}`;
@@ -152,7 +162,8 @@ const LINK_RE = new RegExp(LINK_SOURCE, "gi");
 const OWNER_WORD_RES = TELLS.filter((t) => t.owner && t.regex).map((t) => new RegExp(t.regex!.source, Array.from(new Set([...t.regex!.flags.replace(/[gm]/g, ""), "i"])).join("")));
 
 const strip = (t: string) => t.replace(MARK_RE, " ");
-const list = (t: string, re: RegExp) => (strip(t).match(new RegExp(re.source, re.flags)) ?? []).map((x) => x.toLowerCase().replace(/[.,;:!?]+$/, "").replace(/\s+/g, " ").trim());
+const norm = (x: string) => x.toLowerCase().replace(/[.,;:!?]+$/, "").replace(/\s+/g, " ").trim();
+const list = (t: string, re: RegExp) => (strip(t).match(new RegExp(re.source, re.flags)) ?? []).map(norm);
 const same = (a: string[], b: string[]) => a.length === b.length && a.every((x, i) => x === b[i]);
 const multiset = (xs: string[]) => xs.slice().sort().join("\u0001");
 const wordsOf = (t: string) => (strip(t).toLowerCase().match(/[\p{L}\p{N}']+/gu) ?? []).map((w) => w.replace(/['’]/g, ""));
@@ -220,11 +231,26 @@ function containsRun(hay: string[], needle: string[]): boolean {
   return false;
 }
 
-/** The number words of `after` are those of `before` in order, with none changed: only a count windup's count may be dropped. */
-function countsKept(before: string, after: string): boolean {
-  const windup = new Set(Array.from(strip(before).matchAll(new RegExp(COUNT_WINDUP_RE.source, "gi")), (m) => m.index ?? 0));
-  const was = Array.from(strip(before).matchAll(new RegExp(NUMBER_WORD_RE.source, "gi")), (m) => ({ word: m[0].toLowerCase(), droppable: windup.has(m.index ?? -1) }));
-  const now = list(after, NUMBER_WORD_RE);
+const WINDUP_RES = TELLS.filter((t) => t.name === "label_windup" || t.name === "count_windup").map((t) => t.regex!);
+
+/** Where `text` holds a count or label windup (tells.ts label_windup and count_windup, or a bare "two things"): its count is the tell. */
+function windupSpans(text: string): [number, number][] {
+  const spans: [number, number][] = [];
+  for (const re of [...WINDUP_RES.map((r) => new RegExp(r.source, r.flags)), new RegExp(COUNT_WINDUP_RE.source, "gi")]) {
+    for (const m of text.matchAll(re)) spans.push([m.index ?? 0, (m.index ?? 0) + m[0].length]);
+  }
+  return spans;
+}
+
+/**
+ * The numbers `re` finds in `after` are those of `before` in order, none changed: only a count inside a count windup
+ * ("I'd ask two things", "It takes seven steps, and", "Follow these 5 steps:") may be dropped.
+ */
+function numbersKept(before: string, after: string, re: RegExp): boolean {
+  const text = strip(before);
+  const spans = windupSpans(text);
+  const was = Array.from(text.matchAll(new RegExp(re.source, re.flags)), (m) => ({ word: norm(m[0]), droppable: spans.some(([s, e]) => (m.index ?? 0) >= s && (m.index ?? 0) < e) }));
+  const now = list(after, re);
   let j = 0;
   for (const w of was) {
     if (now[j] === w.word) j++;
@@ -243,7 +269,8 @@ export function factFreeSentenceCut(before: string, after: string): boolean {
   if (after.trim()) return false;
   const plain = strip(before).replace(/\s+/g, " ").trim();
   if (!/^["“(]?\p{Lu}/u.test(plain) || !/[.!?]["”’)]?$/.test(plain)) return false;
-  return !list(before, NUMBER_RE).length && !list(before, NUMBER_WORD_RE).length && !list(before, DATE_WORD_RE).length &&
+  // the count of a count windup ("It takes seven steps.") is the tell, not a fact
+  return numbersKept(before, "", NUMBER_RE) && numbersKept(before, "", NUMBER_WORD_RE) && !list(before, DATE_WORD_RE).length &&
     !list(before, EMAIL_RE).length && !list(before, LINK_RE).length && !list(before, HOST_RE).length && !(before.match(QUOTE_RE) ?? []).length;
 }
 
@@ -261,9 +288,9 @@ export function guardEdit(before: string, after: string): string | null {
   if (!before.trim()) return "empty before";
   if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after)) && !factFreeSentenceCut(before, after)) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
-  if (!same(list(before, NUMBER_RE), list(after, NUMBER_RE))) return "a number, its unit or its currency changed, or numbers changed order";
-  // the count in a count windup ("I'd ask two things", "Two questions decide it") is the tell, not a fact: it may go, never change
-  if (!countsKept(before, after)) return "a number written as a word changed";
+  // the count in a count windup ("I'd ask two things", "It takes seven steps, and") is the tell, not a fact: it may go, never change
+  if (!numbersKept(before, after, NUMBER_RE)) return "a number, its unit or its currency changed, or numbers changed order";
+  if (!numbersKept(before, after, NUMBER_WORD_RE)) return "a number written as a word changed";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";
@@ -407,7 +434,17 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditU
     u.text = next;
     applied.push({ ...e, ref, before: found });
   }
-  return { units: out, applied, rejected };
+  // an opening (or a section) is never cut whole: the cold read could pick an empty opening, a format a missing section
+  const had = new Set(units.filter((u) => u.text.trim()).map((u) => `${u.owner}:${u.ownerId}`));
+  const emptied = new Set(Array.from(had).filter((g) => !out.some((u) => `${u.owner}:${u.ownerId}` === g && u.text.trim())));
+  if (!emptied.size) return { units: out, applied, rejected };
+  const restored = out.map((u, i) => (emptied.has(`${u.owner}:${u.ownerId}`) ? { ...u, text: units[i].text } : u));
+  const lost = new Set(out.filter((u) => emptied.has(`${u.owner}:${u.ownerId}`)).map((u) => u.ref));
+  return {
+    units: restored,
+    applied: applied.filter((e) => !lost.has(e.ref)),
+    rejected: [...rejected, ...applied.filter((e) => lost.has(e.ref)).map((e) => ({ ...e, reason: "an opening or a section is never cut whole; rephrase it instead" }))],
+  };
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -467,7 +504,10 @@ export function rebuildDraft(draft: DraftOutput, units: EditUnit[], spec: Format
 
 const OWNER = new Set(TELLS.filter((t) => t.owner).map((t) => t.name));
 
-/** The owner's tells and words in the whole piece, alternative leads included (the detector's count). */
+/**
+ * The owner's tells and words in the whole piece, alternative leads included, counted as the detector counts them:
+ * each opening's own tells, and the piece's repeats less the one repeat per piece the detector lets go.
+ */
 export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): number {
   const leadId = editsLeads(draft, spec);
   const sections = [
@@ -477,36 +517,63 @@ export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms
   const r = analyzeDraft(sections, spec, { exemptTerms });
   // the alternative openings repeat each other by design: repeats are counted per reading (repeatFindings)
   const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase").reduce((n, f) => n + f.count, 0);
-  return own + repeatFindings(editableUnits(draft, spec), draft, spec, exemptTerms).length;
+  const perPiece = new Map<string, number>();
+  for (const f of repeatFindings(editableUnits(draft, spec), draft, spec, exemptTerms)) perPiece.set(f.piece, (perPiece.get(f.piece) ?? 0) + 1);
+  return own + Array.from(perPiece.values()).reduce((n, k) => n + Math.max(0, k - 1), 0);
 }
 
+export interface RepeatFinding {
+  ref: string;
+  tell: "repeated_phrase";
+  example: string;
+  /** the piece the repeat is in (tells.ts pieceOfSection): one email of a sequence, one ad of a set */
+  piece: string;
+}
+
+const TAG_IN_RE = new RegExp(LEDGER_TAG.source);
+const carriesTag = (u: EditUnit) => TAG_IN_RE.test(u.text) || u.text.includes(NEEDS_SOURCE_TAG);
+
 /**
- * What the piece says twice (tells.ts repeated_phrase), as findings on the later text in reading order. The chosen
- * opening is read with the sections, and a repeat lands on whichever text comes second. Every other opening is read
- * against the sections too, but its repeats land on the opening itself, so an opening the user has not chosen never
- * costs the body a line. The alternative openings are never read against each other.
+ * What the piece says twice (tells.ts repeated_phrase), as findings for the editor, read the way the reader reads it
+ * and only within one piece (an email of a sequence, an ad of a set). Before the cold read picks an opening, the
+ * sections are read alone and every opening is an alternative; once one is chosen it is read before the sections.
+ * A repeat between the body and the chosen opening lands on the later text, unless only that one carries a ledger tag:
+ * the untagged line says it again in other words and the proof stays. An alternative opening takes its own repeats,
+ * worded as a rephrase, so an opening the user has not chosen never costs the body a line and is never cut whole.
+ * The alternative openings are never read against each other.
  */
-export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): { ref: string; tell: string; example: string }[] {
+export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): RepeatFinding[] {
   if (!REPEAT_FAMILIES.has(spec.family)) return [];
   const leadId = editsLeads(draft, spec);
   const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
-  const chosen = leadIds.includes(draft.chosen_lead_id ?? "") ? draft.chosen_lead_id! : leadIds[0] ?? null;
+  const chosen = draft.chosen_lead_id && leadIds.includes(draft.chosen_lead_id) ? draft.chosen_lead_id : null;
+  const pieceOfUnit = (u: EditUnit) => pieceOfSection(u.owner === "lead" ? leadId ?? u.ownerId : u.ownerId, spec);
   const readingWith = (lead: string | null): EditUnit[] =>
-    draft.sections.flatMap((s) => (s.section_id === leadId ? units.filter((u) => u.owner === "lead" && u.ownerId === lead) : units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)));
-  const out: { ref: string; tell: string; example: string }[] = [];
+    draft.sections.flatMap((s) =>
+      s.section_id === leadId ? units.filter((u) => u.owner === "lead" && u.ownerId === lead) : units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)
+    );
+  const out: RepeatFinding[] = [];
   const seen = new Set<string>();
-  for (const lead of leadIds.length ? leadIds : [null]) {
+  // the reader's reading first (the chosen opening, or the sections alone), then each alternative opening in its place
+  for (const lead of [chosen, ...leadIds.filter((l) => l !== chosen)]) {
+    const alternative = lead !== chosen;
     const reading = readingWith(lead);
-    for (const p of repeatedRuns(reading, exemptTerms)) {
+    for (const p of repeatedRuns(reading.map((u) => ({ text: u.text, type: u.type, piece: pieceOfUnit(u) })), exemptTerms)) {
       const [later, first] = [reading[p.later], reading[p.first]];
-      // an alternative opening takes its own repeats; a repeat inside the body is the chosen reading's
-      const target = lead === chosen ? later : later.owner === "lead" ? later : first.owner === "lead" ? first : null;
+      let target: EditUnit | null;
+      if (alternative) target = later.owner === "lead" ? later : first.owner === "lead" ? first : null;
+      else target = carriesTag(later) && !carriesTag(first) ? first : later;
       if (!target) continue;
       const other = target === later ? first : later;
       const key = `${target.ref}\u0000${p.run}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      out.push({ ref: target.ref, tell: "repeated_phrase", example: `"${p.run}" is also said in [${other.ref}]; say it once` });
+      const how = target.owner === "lead" && alternative
+        ? "say it another way in this opening (an opening is never cut whole)"
+        : carriesTag(target)
+        ? "keep this sentence's facts and ledger tag and say the shared words another way"
+        : "say it once";
+      out.push({ ref: target.ref, tell: "repeated_phrase", example: `"${p.run}" is also said in [${other.ref}]; ${how}`, piece: pieceOfUnit(target) });
     }
   }
   return out;

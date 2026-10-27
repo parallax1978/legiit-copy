@@ -1,4 +1,5 @@
 import { assert, assertEquals } from "@std/assert";
+import type { z } from "zod";
 import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import { DraftOutput as DraftOutputSchema } from "../schemas/draft.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
@@ -9,7 +10,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v5.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v6.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -218,7 +219,7 @@ function ctxFor(draft: DraftOutput, over: Partial<StepContext> = {}): StepContex
   return ctx;
 }
 
-function editor(reply: (args: TellEditArgs) => TellEditCall, seen: TellEditArgs[] = []): typeof callStep {
+function editor(reply: (args: TellEditArgs) => z.input<typeof TellEditCall>, seen: TellEditArgs[] = []): typeof callStep {
   return ((_ctx, step, _mod, args, schema) => {
     assertEquals(step, "tell_edit");
     seen.push(args as unknown as TellEditArgs);
@@ -309,12 +310,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v9.ts";
-import { revisePrompt } from "../prompts/revise.v8.ts";
-import { editorialPrompt } from "../prompts/editorial.v9.ts";
-import { factualPrompt } from "../prompts/factual.v7.ts";
-import offerPrompt from "../prompts/offer.v8.ts";
-import intakePrompt from "../prompts/intake.v6.ts";
+import { draftPrompt } from "../prompts/draft.v10.ts";
+import { revisePrompt } from "../prompts/revise.v9.ts";
+import { editorialPrompt } from "../prompts/editorial.v10.ts";
+import { factualPrompt } from "../prompts/factual.v8.ts";
+import offerPrompt from "../prompts/offer.v9.ts";
+import intakePrompt from "../prompts/intake.v7.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -333,13 +334,17 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [9, 8, 9, 7, 5, 8, 6]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [10, 9, 10, 8, 6, 9, 7]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
   assert(editorialPrompt.system.includes("a direction never asks for the product's steps to be listed or counted"));
   for (const t of ["say each point once", "It takes seven steps."]) assert(OWNER_TELLS.includes(t), t);
-  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece"]) assert(tellEditPrompt.system.includes(t), t);
+  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece", "\"audit\" comes first", "In a short piece (organic social", "a code and URL said twice"]) assert(tellEditPrompt.system.includes(t), t);
+  // round 3: a ledger row is the fact, a verbatim the substance; the proof in the promise's terms
+  assert(RULES.includes("A ledger row is the fact, not the wording"));
+  assert(RULES.includes("never uses its survey wording"));
+  assert(editorialPrompt.system.includes("a direction never asks for a verbatim's wording in the copy"));
 });
 
 Deno.test("repeats: the chosen opening is read with the body; an unchosen opening takes its own repeats; openings never count against each other", () => {
@@ -371,9 +376,50 @@ Deno.test("repeats: the chosen opening is read with the body; an unchosen openin
   // lead-c says what lead-a says: alternatives are never read against each other, only against the body
   assert(!found.some((f) => f.example.includes("[lead-a-1]") && f.ref === "lead-c-1"));
   assert(found.every((f) => f.tell === "repeated_phrase"));
-  assert(ownerTellCount(draft, spec, []) >= found.length);
+  // counted as the detector counts: one repeat per piece is free
+  assertEquals(ownerTellCount(draft, spec, []), found.length - 1);
   // a page is not checked: a long letter repeats its promise on purpose
   assertEquals(repeatFindings(units, draft, FORMATS.sales_letter, []), []);
+  // the opening is shown where it is read: the chosen one first, the others as alternatives in its place
+  const shown = renderUnits(units, draft);
+  assert(shown.indexOf("=== opening lead-a (promise): the chosen opening, read before the sections ===") < shown.indexOf("=== section main ==="), shown);
+  assert(shown.includes("=== alternative opening lead-b (secret), read in place of lead-a ==="), shown);
+});
+
+Deno.test("repeats: before the pick no opening costs the body a line; a tagged proof keeps its line; ads in a set are read apart", () => {
+  const spec = FORMATS.organic_social;
+  const leads = [
+    { id: "lead-a", lead_type: "promise" as const, reader_hypothesis: "r1", blocks: [blk("lead-a-1", "Most keyword tools leave the decision to you.", "hook")] },
+    { id: "lead-b", lead_type: "secret" as const, reader_hypothesis: "r2", blocks: [blk("lead-b-1", "Your export says nothing about who ranks.", "hook")] },
+  ];
+  const body = [blk("main-1", `Our reviewers read every page that ranks and leave the decision to you [[L:${A}]].`), blk("main-2", "Then you pick.")];
+  const draft = assembleDraft({ spec, sections: [provisionalLeadSection("lead_in", null, leads), sec("main", body), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const before = repeatFindings(editableUnits(draft, spec), draft, spec, []);
+  assert(before.length === 1 && before[0].ref === "lead-a-1" && before[0].example.includes("never cut whole"), JSON.stringify(before));
+  // after the pick the body's tagged proof keeps its line; the untagged opening says it another way
+  const picked = { ...draft, chosen_lead_id: "lead-a" };
+  const after = repeatFindings(editableUnits(picked, spec), picked, spec, []);
+  assert(after.length === 1 && after[0].ref === "lead-a-1", JSON.stringify(after));
+
+  // a Meta ad set: each variation is its own ad, so a proof line every ad carries is not a repeat
+  const ad = FORMATS.meta_ad;
+  const proof = `Our clients cut their cost per lead by 31% in 60 days [[L:${A}]].`;
+  const variations = [1, 2, 3].map((n) => sec(`primary_text#${n}`, [blk(`pt${n}-1`, `Variation ${n} opens on a different worry about wasted ad spend.`), blk(`pt${n}-proof`, proof)]));
+  const adDraft = assembleDraft({ spec: ad, sections: variations, leads: [], chosenLeadId: null, needsSource: [], keepOrder: true });
+  assertEquals(repeatFindings(editableUnits(adDraft, ad), adDraft, ad, []), []);
+});
+
+Deno.test("applyEdits: an opening is never cut whole; the guard lets a step count's number go with its windup", () => {
+  const unit = (ref: string, text: string, owner: EditUnit["owner"] = "lead", ownerId = "lead-b"): EditUnit => ({ ref, owner, ownerId, blockIndex: 0, item: null, type: "paragraph", text });
+  const units = [unit("lead-b-1", "You paid a writer before you knew which pages could win."), unit("main-1", "You paid a writer before you knew which pages could win, twice.", "section", "main")];
+  const r = applyEdits(units, [{ ref: "lead-b-1", before: "You paid a writer before you knew which pages could win.", after: "", tell: "repeated_phrase" }]);
+  assertEquals(r.units[0].text, units[0].text);
+  assertEquals(r.applied.length, 0);
+  assert(r.rejected[0].reason.includes("never cut whole"), r.rejected[0].reason);
+  assertEquals(guardEdit("It takes seven steps, and your keyword tool stops at the list.", "Your keyword tool stops at the list."), null);
+  assertEquals(guardEdit("Follow these 5 steps: plan, check, write.", "Plan, check, write."), null);
+  assert(guardEdit("Setup takes three steps.", "Setup is quick."));
+  assert(guardEdit("The process takes 3 steps and 10 minutes.", "The process takes 10 minutes."));
 });
 
 Deno.test("applyEdits: testimonials, quotations and names keep their words; seams only; sentence starts get their capital", () => {
@@ -549,4 +595,38 @@ Deno.test("prompt: the tell edit request carries the cadence note only when the 
   assert(tellEditPrompt.user(ctx, { ...base, cadence: { cv: 0.43, floor: 0.5 } }).includes("CADENCE: the sentences run close to one length (variation 0.43"));
   assert(!tellEditPrompt.user(ctx, { ...base, cadence: null }).includes("CADENCE"));
   assert(tellEditPrompt.system.includes("A slogan lands after the point"));
+});
+
+Deno.test("tell edit step: a line the editor lists and leaves gets one more ask; a line it keeps on purpose stays", async () => {
+  const seen: TellEditArgs[] = [];
+  const spec = FORMATS.organic_social;
+  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook"), blk("lead_in-2", "A low difficulty score doesn't keep a keyword in.")]), sec("main", [blk("main-1", `It reads the pages that rank and checks your links [[L:${A}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const ctx = ctxFor(draft);
+  let calls = 0;
+  const res = await runTellEdit(ctx, {
+    call: editor((args) => {
+      calls++;
+      if (calls === 1) {
+        return {
+          audit: [
+            { ref: "lead_in-2", line: "A low difficulty score doesn't keep a keyword in.", kind: "quote_card", keep: false },
+            { ref: "main-1", line: "It reads the pages that rank and checks your links", kind: "tool_tour", keep: true },
+          ],
+          edits: [],
+          what_changed: [],
+          already_clean: false,
+        };
+      }
+      assert(args.retryNote?.includes("You listed these lines and left them") && args.retryNote.includes("[lead_in-2] (quote_card)"), args.retryNote ?? "");
+      assert(!(args.retryNote ?? "").includes("[main-1]"), "a line kept on purpose is not asked about");
+      return { audit: [], edits: [{ ref: "lead_in-2", before: "A low difficulty score doesn't keep a keyword in.", after: "", tell: "quote-card line" }], what_changed: ["Cut a quote-card line"], already_clean: false };
+    }, seen),
+  });
+  assertEquals(calls, 2);
+  const out = TellEditOutput.parse(res.output);
+  assert(out.new_version);
+  assertEquals(out.audit_left, []);
+  assertEquals(out.audit?.length, 2);
+  const text = JSON.stringify(res.effects!.newDraft!.blocks);
+  assert(!text.includes("keep a keyword in"), text);
 });

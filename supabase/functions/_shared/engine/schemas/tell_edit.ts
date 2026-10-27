@@ -9,8 +9,19 @@ export const TellEditEdit = z.object({
 });
 export type TellEditEdit = z.infer<typeof TellEditEdit>;
 
-/** What one tell edit call returns. */
+/** One line the editor found on its read of the whole piece, before it edits (tell edit v6). */
+export const TellEditAuditItem = z.object({
+  ref: z.string().describe("the reference of the text that holds the line"),
+  line: z.string().describe("the line, copied from that text"),
+  kind: z.enum(["quote_card", "said_again", "windup", "survey_wording", "ledger_wording", "tool_tour", "other"]),
+  keep: z.boolean().describe("true only when the line carries a fact the piece needs and a plainer sentence would lose it; every line with keep false gets an edit"),
+});
+export type TellEditAuditItem = z.infer<typeof TellEditAuditItem>;
+
+/** What one tell edit call returns: the audit first, then the edits that answer it. */
 export const TellEditCall = z.object({
+  // the native structured output marks it required; the default keeps a reply without one (an older version) valid
+  audit: z.array(TellEditAuditItem).default([]),
   edits: z.array(TellEditEdit),
   what_changed: z.array(z.string()).describe("three to six short plain lines naming the main tells or words removed; empty when the copy was already clean"),
   already_clean: z.boolean(),
@@ -29,6 +40,9 @@ export const TellEditOutput = z.object({
   owner_tells_after: z.number(),
   already_clean: z.boolean(),
   new_version: z.boolean(),
+  /** the editor's audit lines, and those it listed but left unedited after its retry */
+  audit: z.array(TellEditAuditItem).optional(),
+  audit_left: z.array(TellEditAuditItem).optional(),
 });
 export type TellEditOutput = z.infer<typeof TellEditOutput>;
 
@@ -43,5 +57,7 @@ export const TellEditPartial = z.object({
   edits: z.array(Applied),
   rejected: z.array(Rejected),
   already_clean: z.boolean(),
+  audit: z.array(TellEditAuditItem).optional(),
+  audit_left: z.array(TellEditAuditItem).optional(),
 });
 export type TellEditPartial = z.infer<typeof TellEditPartial>;
