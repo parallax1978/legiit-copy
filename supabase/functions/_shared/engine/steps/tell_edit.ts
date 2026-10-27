@@ -57,6 +57,8 @@ function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: Edi
     if (!was || !now || was.type === "testimonial" || !has(was.text, x.line)) return false;
     if (!opts.short && SHORT_ONLY.has(x.kind)) return false;
     if (x.kind === "said_again" && /\[\[(?:L:|NEEDS SOURCE)/.test(was.text)) return false;
+    // a price, the guarantee, a disclosure and an amount keep the offer's wording: never asked about as copied wording
+    if (x.kind === "ledger_wording" && (["price", "guarantee", "disclosure", "cta", "button"].includes(was.type) || /[$€£¥]\s?\d/.test(x.line))) return false;
     if (opts.accepted.some((w) => has(x.line, w) || has(w, x.line))) return false;
     return has(now.text, x.line);
   });
