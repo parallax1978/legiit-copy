@@ -6,28 +6,30 @@ Human corpus: 899 public direct response documents, 871,553 words (email, sales 
 
 | Detector | Human documents with a hit | Human hits per 1,000 words |
 |---|---|---|
-| em_dash | 50.1% | 2.953 |
-| emoji | 11.7% | 0.823 |
-| hashtag | 1.9% | 0.036 |
-| summary_closer | 2.6% | 0.028 |
+| em_dash | 64.5% | 4.093 |
+| emoji | 11.1% | 0.516 |
+| hashtag | 2.1% | 0.038 |
+| summary_closer | 3.1% | 0.037 |
 | quietly | 1.7% | 0.018 |
-| three_beat_deep_third | 0.1% | 0.001 |
-| self_answered_question | 17.4% | 0.297 |
-| heres_the_windup | 13.3% | 0.211 |
-| worth_noting | 3.2% | 0.034 |
-| buzzword_pile | 8.2% | 0.139 |
+| three_beat_deep_third | 0.3% | 0.006 |
+| self_answered_question | 41.4% | 0.881 |
+| heres_the_windup | 17.7% | 0.281 |
+| label_windup | 0.8% | 0.009 |
+| worth_noting | 3.6% | 0.039 |
+| buzzword_pile | 5.1% | 0.054 |
 | genuinely_meaningfully | 0.9% | 0.011 |
 | disguise_frame | 0.6% | 0.006 |
-| hard_truth | 1.2% | 0.015 |
+| hard_truth | 1.2% | 0.014 |
 | pressure_test | 0.0% | 0.000 |
-| ai_words | 27.3% | 1.130 |
-| corporate_filler | 31.7% | 0.830 |
-| guru_speak | 13.6% | 0.496 |
-| empty_hedge | 0.3% | 0.003 |
-| formal_words | 11.8% | 0.146 |
-| windup_opener | 1.0% | 0.011 |
+| ai_words | 28.3% | 1.181 |
+| corporate_filler | 32.1% | 0.847 |
+| guru_speak | 13.9% | 0.545 |
+| empty_hedge | 2.1% | 0.023 |
+| formal_words | 12.6% | 0.163 |
+| empty_teaser | 2.0% | 0.022 |
+| windup_opener | 1.3% | 0.015 |
 
-Precision notes from the sampled hits: the windup, signpost, word-list and disguise detectors match the pattern itself; literal uses are rare ("quietly" for a quiet ride, "doubled down" at a blackjack table). The self-answered question detector skips tag questions (", okay?") and a question followed by an instruction or a parenthesis; what it still catches in human copy is the device itself ("Carbon? Bad.", "Why? Because..."), which the owner bans.
+Precision notes from the sampled hits: the windup, signpost, word-list and disguise detectors match the pattern itself; literal uses are skipped where the code can tell (a machine that runs quietly, a cardiac or load stress test, kids in costumes, a porcelain veneer, a delivery line such as "Here's the link:"). The self-answered question detector skips tag questions (", okay?"), a question to the reader followed by an instruction, the buyer's own questions ("Can I cancel?"), FAQ, objection and Q&A sections, and list items; it pairs a question paragraph with the next paragraph, so what it catches in human copy is the device itself ("Carbon? Bad.", "Why? Because...", "His mission? To train..."), which the owner bans. The em dash count includes a spaced hyphen between words used as a dash ("It works - fast."), the typed stand-in for one; ranges ("9 - 5") are not counted. The stack is counted per piece: an email of a sequence, a webinar asset, the whole of a single piece.
 
 ## The engine's own drafts before the tell edit
 
