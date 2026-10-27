@@ -13,7 +13,7 @@ import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "../draft/prompt_text.ts";
@@ -140,7 +140,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     // the checker's list for this group: each text's own tells, and what the whole piece says twice
     const findingsFor = (all: EditUnit[]) => {
       const mine = all.filter((u) => refs.has(u.ref));
-      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
+      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
     };
     const args: TellEditArgs = {
       draft: source,

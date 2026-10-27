@@ -50,7 +50,7 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
     if (c.flag) parts.push(`  flag: ${j(c.flag)}`);
     return parts.join("\n");
   });
-  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and every word that sets a claim's size or precision ("up to," "about," "most," "within") and say the rest the way the speaker would to one reader, never in the row's feature phrasing; a row the user decided "rewrite" and a line the offer block says to repeat stay as written: rule 11):\n${lines.join("\n")}`;
+  return `CLAIMS LEDGER (${rows.length} rows; cite the id inline immediately after the fact it supports; a row is the fact, not the wording: keep its numbers, names and every word that sets a claim's size or precision ("up to," "about," "most," "within") and say the rest the way the speaker would to one reader, never in the row's feature phrasing; a row the user decided "rewrite", a line the offer block says to repeat and a quotation of a documented person or source stay as written: rule 11):\n${lines.join("\n")}`;
 }
 
 export function briefText(brief: OfferBrief | null, offerName: string): string {

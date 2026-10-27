@@ -7,7 +7,7 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, coupletFindings, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
@@ -310,12 +310,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v11.ts";
-import { revisePrompt } from "../prompts/revise.v10.ts";
-import { editorialPrompt } from "../prompts/editorial.v11.ts";
-import { factualPrompt } from "../prompts/factual.v9.ts";
-import offerPrompt from "../prompts/offer.v10.ts";
-import intakePrompt from "../prompts/intake.v8.ts";
+import { draftPrompt } from "../prompts/draft.v12.ts";
+import { revisePrompt } from "../prompts/revise.v11.ts";
+import { editorialPrompt } from "../prompts/editorial.v12.ts";
+import { factualPrompt } from "../prompts/factual.v10.ts";
+import offerPrompt from "../prompts/offer.v11.ts";
+import intakePrompt from "../prompts/intake.v9.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -334,7 +334,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 9, 9, 10, 8]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [12, 11, 12, 10, 9, 11, 9]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
@@ -718,7 +718,7 @@ Deno.test("round 4 review: a rewrite keeps the words that set a number's size; a
   assert(guardEdit("The research covers about 2,000 local shops.", "The research covers 2,000 local shops."));
   assert(guardEdit("Most reports come back within 10 minutes.", "Your report comes back in 10 minutes."));
   assertEquals(guardEdit("Each report checks up to 40 keywords against the pages ranking for them.", "Each report checks up to 40 of your keywords against the pages that rank."), null);
-  assert(RULES.includes("a line the offer block says to repeat (a page's guarantee sentence, a bonus name, the button), stay as written"));
+  assert(RULES.includes("a line the offer block says to repeat (a page's guarantee sentence, a bonus name, the button), and a quotation of a documented person or source stay as written"));
   assert(RULES.includes("keeps its condition and its remedy"));
   assert(tellEditPrompt.system.includes("every word that sets the claim's size or precision"));
   assert(!tellEditPrompt.system.includes("\"every credit it charged comes back to your balance\")"), "the guarantee clause is no longer the example of copied wording");
@@ -757,4 +757,15 @@ Deno.test("round 4 review: the precision guard holds for narrow spans and lets a
   assert(lands("The research covers about 2,000 local shops.", "about", "roughly"));
   assert(lands("It's not about the 40 keywords you track. It's about the 3 that sell.", "It's not about the 40 keywords you track. It's about the 3 that sell.", "Of the 40 keywords you track, 3 sell."));
   assert(lands("Under the hood, it reads the 10 pages that rank.", "Under the hood, it", "It"));
+});
+
+Deno.test("round 4 review: couplets reach the editor per reading; a quoted testimonial keeps its words", () => {
+  const spec = FORMATS.organic_social;
+  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook")]), sec("main", [blk("main-1", "A keyword tool settles neither. Ahrefs and Semrush hand you the list."), blk("main-2", "Legiit Keywords settles both. For each group it checks your backlinks.")]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const units = editableUnits(draft, spec);
+  const found = coupletFindings(units, draft, spec);
+  assertEquals(found.map((f) => f.ref), ["main-2"]);
+  assertEquals(ownerTellCount(draft, spec, []), 1);
+  const quoted: EditUnit[] = [{ ref: "m-1", owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text: `Dana Reyes at Bright Smile Dental: "We published 12 pages from the plan and 9 reached page one within 90 days." [[L:${A}]]` }];
+  assertEquals(ledgerWordingFindings(quoted, [{ id: A, claim_type: "results_testimonial", claim_text: "We published 12 pages from the plan and 9 reached page one within 90 days.", user_decision: null }], spec), []);
 });

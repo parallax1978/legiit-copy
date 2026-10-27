@@ -1071,3 +1071,20 @@ Deno.test("round 4: the aphorism reframe, the bare credential and the slogan cou
   const ok = post(["I founded Legiit, and I stopped letting volume pick pages.", "Each page is a brief you can hand to a writer.", "Neither tool shows you the pages that rank. Both show volume."]);
   for (const t of ["slogan_couplet", "bare_credential", "aphorism_reframe"]) assertEquals(tells(ok, t), undefined, t);
 });
+
+Deno.test("round 4 review: the new checks pass plain comparisons, stories and product facts; the credential reads paragraphs only", () => {
+  const t1 = (text: string, f: (typeof FORMATS)[keyof typeof FORMATS]) => analyzeText(text, { format: f }).flags.filter((x) => x.tier === 1).map((x) => x.tell);
+  for (const [text, f] of [
+    ["The Basic plan includes none of the templates. The Pro plan includes all 40, plus the brief builder.", FORMATS.pricing_page],
+    ["In 2015 I had nothing. No clients, no savings. By 2017 I had all the work two crews could handle.", FORMATS.sales_letter],
+    ["You also get three bonuses. Every bonus is a tool you won't find anywhere else.", FORMATS.sales_letter],
+    ["We pour 40 candles a week by hand in Asheville. Each one is a soy blend that won't tunnel.", FORMATS.product_description],
+  ] as const) assertEquals(t1(text, f), [], text);
+  for (const text of ["Every page it skips is a page you never pay a writer for.", "Every skip is a page nobody has to write."]) assertEquals(t1(text, FORMATS.organic_social), ["aphorism_reframe"], text);
+  for (const text of ["I'm the CEO of Legiit.", "I'm Mike, Legiit's founder.", "I'm Legiit's founder"]) assertEquals(t1(text, FORMATS.organic_social), ["bare_credential"], text);
+  // a list item and a caption are not a paragraph of their own
+  const r = analyzeDraft([section("about", [block("bullets", "", ["I founded Reyes Plumbing.", "I have trained 412 apprentices."]), block("caption", "I'm the founder of Legiit.")])], FORMATS.sales_letter);
+  assertEquals(tells(r, "bare_credential"), undefined);
+  // a word inside the aphorism's tail still counts on its own
+  assertEquals(analyzeText("Every brief is a tailored plan you don't have to write yourself.", { format: FORMATS.organic_social }).owner_tells, 2);
+});

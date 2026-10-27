@@ -202,7 +202,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "youre_not_alone", weight: 4, scope: "all",
     regex: new RegExp(`\\byou${A}re not alone\\b|\\bif (?:that|this) sounds (?:like you|familiar)\\b|\\bsound familiar\\?|\\bsound like you\\?`, "gi"),
     example: "If that sounds familiar, you're not alone.",
-    fix: "A quoted verbatim from the research.",
+    fix: "The concrete thing the reader lived, from the research, in the speaker's words (rule 11).",
   },
   {
     tier: 1, name: "less_than_a_cup", weight: 4, scope: "all",
@@ -376,14 +376,16 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 1, name: "aphorism_reframe", weight: 4, scope: "all", owner: { tell: 8 },
-    regex: /\b(?:every|each) (?:one|\w+) (?:is|was) (?:a|an|one) (?:\w+ ){0,2}(?:you|that|nobody|no one) (?:don['’]t|didn['’]t|never|won['’]t|can['’]t|will never)\b/gi,
+    // "every skip is a page you don't pay a writer for", "every page it skips is a page nobody has to write"; a product
+    // fact with a negative ("each one is a soy blend that won't tunnel", "a tool you won't find anywhere else") passes
+    regex: /\b(?:every|each) (?:[\w'’]+ ){1,3}?(?:is|was) (?:a|an|one) (?:\w+ ){0,2}(?:you(?:['’](?:ll|d))? (?:don['’]t|didn['’]t|never|won['’]t|can['’]t|will never|do not|will not)(?: have to| need to)? (?:pay|spend|lose|waste|write|build|buy|fund)|(?:nobody|no one) (?:has to |needs to |ever )?(?:pays?|writes?|builds?|buys?|spends?))\b/gi,
     example: "Every skip is a page you don't pay a writer for.",
     fix: "Say what happens plainly: \"A skip means no writer gets paid for that page.\"",
     note: "A reframe written as an aphorism (§7.1 tell 8 and structure): each X recast as a Y the reader does not lose. None of 895 human posts, emails and pages.",
   },
   {
     tier: 1, name: "bare_credential", weight: 4, scope: "paragraph", owner: {},
-    regex: /^(?:I['’]m|I am) (?:the |a |an )?(?:[A-Z][\w'’]+['’]s )?(?:co-?)?(?:founder|ceo|owner|creator|president|director)(?: of [A-Z][\w'’ ]{0,30})?\s*\.$|^I (?:founded|started|built|run|own) [A-Z][\w'’]+(?: [A-Z][\w'’]+)?\s*\.$/g,
+    regex: /^(?:I['’]m|I am) (?:[A-Z][\w'’-]+(?: [A-Z][\w'’-]+)?, )?(?:the |a |an )?(?:[A-Z][\w'’]+['’]s )?(?:[Cc]o-?)?(?:[Ff]ounder|CEO|[Cc]eo|[Oo]wner|[Cc]reator|[Pp]resident|[Dd]irector)(?: (?:of|at) [A-Z][\w'’ ]{0,30})?\s*[.!]?$|^I (?:founded|started|built|run|own) [A-Z][\w'’]+(?: [A-Z][\w'’]+)?\s*[.!]?$/gm,
     example: "I'm Legiit's founder.",
     fix: "Put the credential in the sentence that says why it matters: \"I founded Legiit, and I stopped letting volume pick pages.\"",
     note: "A credential as a paragraph of its own (§7.1 structure, the feed's AI cadence): it says who is talking and never why to listen. None of 895 human posts, emails and pages.",
@@ -975,14 +977,14 @@ interface OwnerHits {
  * Words a rule claims from the start of its match when the match ends in a wildcard tail ("Here's how to ..." runs
  * on to the sentence's end): "Here's how to unlock seamless growth." is three tells, the windup and two words.
  */
-const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, count_windup: 2, disguise_frame: 2, never_reveal: 2, corporate_filler: 2 };
+const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, count_windup: 2, disguise_frame: 2, never_reveal: 2, aphorism_reframe: 3, corporate_filler: 2 };
 
 /**
  * Scan the owner's regex rules in table order. A span one rule has counted is not counted again by a later rule, so
  * "Here's the hard truth:" is one tell, not two. Words skip proper nouns; every rule skips matches made only of the
  * offer's own words and matches in their literal sense.
  */
-function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[], display: boolean[], types: Block["type"][]): Map<string, OwnerHits> {
+function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[], display: boolean[], types: Block["type"][], items: boolean[] = []): Map<string, OwnerHits> {
   const claimed: [number, number][][] = texts.map(() => []);
   const windups: number[][] = texts.map(() => []);
   const out = new Map<string, OwnerHits>();
@@ -992,6 +994,7 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
     const re = new RegExp(rule.regex!.source, rule.regex!.flags.includes("g") ? rule.regex!.flags : rule.regex!.flags + "g");
     texts.forEach((t, ti) => {
       if (rule.skip_block_types?.includes(types[ti])) return;
+      if (rule.scope === "paragraph" && (items[ti] || (types[ti] !== "paragraph" && types[ti] !== "hook"))) return;
       for (const m of t.matchAll(re)) {
         const lead = m[0].replace(/^[\s.!?:"”’)]+/, "").trimEnd();
         if (!lead) continue;
@@ -1137,31 +1140,46 @@ function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] 
   return Array.from(best.entries()).sort(([a], [b]) => a - b).map(([, p]) => ({ later: p.later, first: p.first, run: p.run }));
 }
 
-/** "A keyword tool settles neither. … Legiit Keywords settles both.": the same verb answered across a few lines of one piece. */
-const SLOGAN_COUPLET_RE = /\b(\w{3,}) (?:neither|nothing|none)\b[\s\S]{0,320}?\b\1 (?:both|everything|all)\b/gi;
+/**
+ * "A keyword tool settles neither. … Legiit Keywords settles both.": a sentence that closes on "neither", "nothing" or
+ * "none" answered within the next two sentences by the same verb closing on "both", "everything" or "all". A plain
+ * comparison ("includes none of the templates … includes all 40, plus the brief builder") and a story ("I had
+ * nothing … I had all the work") do not close on the quantifier, and pass.
+ */
+const SLOGAN_COUPLET_RE = /\b(?!(?:and|but|for|you|with|the|that|this|are|was|were|has|had|have|all|any|can|will|would)\b)(\w{3,}) (?:neither|nothing|none)(?: \w+){0,2}[.!]["”’)]?\s+(?:[^.!?\n]*[.!?]["”’)]?\s+){0,2}?[^.!?\n]*?\b\1 (?:both|everything|all)(?: \w+){0,2}[.!]/gi;
+/** Blocks a couplet's halves may sit in: the prose, and a CTA or P.S. that answers it. */
+const COUPLET_SKIP = new Set<Block["type"]>(["testimonial", "disclosure", "field", "label", "button"]);
 
-function sloganCouplets(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[]): { found: string[]; perText: number[] } {
-  const perText = units.map(() => 0);
-  const found: string[] = [];
+/** Couplets across the texts of each piece, as [the text that answers, the text that opens, the matched lines]. */
+export function sloganCoupletPairs(texts: { text: string; type: Block["type"]; kind?: UnitKind; piece?: string }[]): { later: number; first: number; match: string }[] {
+  const out: { later: number; first: number; match: string }[] = [];
   const byPiece = new Map<string, number[]>();
-  units.forEach((u, i) => {
-    if (u.kind === "display" || REPEAT_SKIP.has(u.type)) return;
-    byPiece.set(pieces[i], [...(byPiece.get(pieces[i]) ?? []), i]);
+  texts.forEach((u, i) => {
+    if ((u.kind ?? (DISPLAY_TYPES.has(u.type) ? "display" : "body")) === "display" || COUPLET_SKIP.has(u.type)) return;
+    byPiece.set(u.piece ?? "piece", [...(byPiece.get(u.piece ?? "piece") ?? []), i]);
   });
   for (const idx of byPiece.values()) {
-    // the piece's prose joined, with where each text starts, so a hit lands on the text that answers the first line
     let joined = "";
     const starts: number[] = [];
     for (const i of idx) {
       starts.push(joined.length);
-      joined += blankQuotes(units[i].text) + "\n\n";
+      joined += blankQuotes(clean(texts[i].text)) + "\n\n";
     }
-    for (const m of joined.matchAll(new RegExp(SLOGAN_COUPLET_RE.source, SLOGAN_COUPLET_RE.flags))) {
-      const end = (m.index ?? 0) + m[0].length;
-      const k = starts.findLastIndex((st) => st < end);
-      perText[idx[Math.max(0, k)]] += 1;
-      found.push(m[0].replace(/\s+/g, " ").slice(0, 120));
+    for (const m of joined.replace(/\n\n/g, "  ").matchAll(new RegExp(SLOGAN_COUPLET_RE.source, SLOGAN_COUPLET_RE.flags))) {
+      const at = m.index ?? 0;
+      const end = at + m[0].length;
+      out.push({ later: idx[Math.max(0, starts.findLastIndex((st) => st < end))], first: idx[Math.max(0, starts.findLastIndex((st) => st <= at))], match: m[0].replace(/\s+/g, " ").slice(0, 160) });
     }
+  }
+  return out;
+}
+
+function sloganCouplets(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[]): { found: string[]; perText: number[] } {
+  const perText = units.map(() => 0);
+  const found: string[] = [];
+  for (const p of sloganCoupletPairs(units.map((u, i) => ({ ...u, piece: pieces[i] })))) {
+    perText[p.later] += 1;
+    found.push(p.match);
   }
   return { found, perText };
 }
@@ -1279,7 +1297,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const ownerTexts = ownerUnits.map((u) => (u.kind === "display" && !u.tagged && WHOLE_QUOTE_RE.test(u.text) ? u.text : blankQuotes(u.text)));
   const ownerOriginals = ownerUnits.map((u) => u.text);
   const exempt = new Set(exemptTerms.map(stem));
-  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex && (!r.families || r.families.includes(spec.family))), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type));
+  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex && (!r.families || r.families.includes(spec.family))), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type), ownerUnits.map((u) => u.kind === "item"));
   const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };

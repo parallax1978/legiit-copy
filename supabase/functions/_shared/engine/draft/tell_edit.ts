@@ -11,7 +11,7 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, TELLS } from "../tells.ts";
+import { analyzeDraft, blankQuotes, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, sloganCoupletPairs, TELLS } from "../tells.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "./prompt_text.ts";
 import { stripNeverTells } from "./never_tells.ts";
 
@@ -587,7 +587,8 @@ export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms
   ];
   const r = analyzeDraft(sections, spec, { exemptTerms });
   // the alternative openings repeat each other by design: repeats are counted per reading (repeatFindings)
-  const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase").reduce((n, f) => n + f.count, 0);
+  const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet").reduce((n, f) => n + f.count, 0) +
+    coupletFindings(editableUnits(draft, spec), draft, spec).length;
   const perPiece = new Map<string, number>();
   for (const f of repeatFindings(editableUnits(draft, spec), draft, spec, exemptTerms)) perPiece.set(f.piece, (perPiece.get(f.piece) ?? 0) + 1);
   return own + Array.from(perPiece.values()).reduce((n, k) => n + Math.max(0, k - 1), 0);
@@ -725,7 +726,7 @@ export function openPoints(points: { point: string; lines: { ref: string; line: 
 const OFFER_LINE_TYPES = new Set<Block["type"]>(["price", "guarantee", "disclosure", "cta", "button", "field"]);
 
 /** Ledger rows whose wording the copy keeps as written: prices, the trial, the deadline, a free tier and the market's verbatims. */
-const EXACT_WORDING_TYPES = new Set(["price_discount", "continuity_trial", "scarcity_urgency", "free", "audience_language"]);
+const EXACT_WORDING_TYPES = new Set(["price_discount", "continuity_trial", "scarcity_urgency", "free", "audience_language", "results_testimonial", "experience_testimonial", "expert_endorsement"]);
 /** Words in a row copied from a ledger row before it is the row's wording, not the speaker's. */
 const LEDGER_RUN = 7;
 
@@ -751,13 +752,17 @@ function longestCommonRun(a: string[], b: string[]): string[] {
  * accepted wording ("rewrite") stay as written; so does a guarantee outside a short piece (a page repeats its sentence).
  */
 export function ledgerWordingFindings(units: EditUnit[], claims: { id: string; claim_type: string; claim_text: string; user_decision: string | null; role?: string | null }[], spec: FormatSpec): { ref: string; tell: string; example: string }[] {
-  const exact = (c: { claim_type: string; role?: string | null }) => EXACT_WORDING_TYPES.has(c.claim_type) || c.role === "offer_term" || (c.claim_type === "guarantee" && !ONE_LINE_OFFER_FAMILIES.has(spec.family));
+  // a guarantee keeps its sentence on a page that takes payment and is said in the speaker's words elsewhere (rule 16);
+  // every other offer term keeps its wording
+  const exact = (c: { claim_type: string; role?: string | null }) =>
+    c.claim_type === "guarantee" ? !ONE_LINE_OFFER_FAMILIES.has(spec.family) : EXACT_WORDING_TYPES.has(c.claim_type) || c.role === "offer_term";
   const rows = claims.filter((c) => c.claim_text && c.user_decision !== "drop" && c.user_decision !== "rewrite" && !exact(c)).map((c) => ({ id: c.id, words: runWords(c.claim_text) }));
   const out: { ref: string; tell: string; example: string }[] = [];
   for (const u of units) {
     // the offer's own lines (a price, the guarantee, a CTA, a disclosure) keep the offer's wording
     if (u.type === "testimonial" || OFFER_LINE_TYPES.has(u.type)) continue;
-    const w = runWords(u.text);
+    // a quotation keeps its words: only the copy's own sentences are measured
+    const w = runWords(blankQuotes(u.text));
     let longest: string[] = [];
     for (const r of rows) {
       const run = longestCommonRun(w, r.words);
@@ -765,6 +770,33 @@ export function ledgerWordingFindings(units: EditUnit[], claims: { id: string; c
     }
     // a run that carries an amount is the offer's figure, kept as written
     if (longest.length >= LEDGER_RUN && !(/[$€£¥]\s?\d/.test(u.text) && longest.some((w) => /\d/.test(w)))) out.push({ ref: u.ref, tell: "ledger_wording", example: `"${longest.join(" ")}" copies a ledger row's wording; say the fact the way you would to one reader, its numbers and tag kept` });
+  }
+  return out;
+}
+
+/**
+ * Slogan couplets that span texts ("A keyword tool settles neither." … "Legiit Keywords settles both."), read the way
+ * the reader reads the piece (as repeatFindings does: the chosen opening with the sections, each alternative in its
+ * place, never two openings together), handed to the editor on the text that answers.
+ */
+export function coupletFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec): { ref: string; tell: string; example: string }[] {
+  const leadId = editsLeads(draft, spec);
+  const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
+  const chosen = draft.chosen_lead_id && leadIds.includes(draft.chosen_lead_id) ? draft.chosen_lead_id : null;
+  const pieceOfUnit = (u: EditUnit) => pieceOfSection(u.owner === "lead" ? leadId ?? u.ownerId : u.ownerId, spec);
+  const out: { ref: string; tell: string; example: string }[] = [];
+  const seen = new Set<string>();
+  for (const lead of [chosen, ...leadIds.filter((l) => l !== chosen)]) {
+    const reading = draft.sections.flatMap((s) => (s.section_id === leadId ? units.filter((u) => u.owner === "lead" && u.ownerId === lead) : units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)));
+    for (const p of sloganCoupletPairs(reading.map((u) => ({ text: u.text, type: u.type, piece: pieceOfUnit(u) })))) {
+      const later = reading[p.later], first = reading[p.first];
+      // an alternative opening takes the finding only when it holds a half; the body's couplet is the chosen reading's
+      if (lead !== chosen && later.owner !== "lead" && first.owner !== "lead") continue;
+      const key = `${later.ref}\u0000${p.match}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ ref: later.ref, tell: "slogan_couplet", example: `"${p.match}" answers a line in [${first.ref}]; say what the product does that the other does not, plainly, once` });
+    }
   }
   return out;
 }
@@ -783,8 +815,8 @@ export function unitFindings(units: EditUnit[], spec: FormatSpec, exemptTerms: s
     if (u.type === "testimonial") continue;
     const block: Block = { id: u.ref, type: u.item === null ? u.type : "paragraph", text: u.text, items: null, meta: null };
     const r = analyzeDraft([{ section_id: "unit", title: null, blocks: [block] }], spec, { exemptTerms });
-    // repeats are a piece-level finding (repeatFindings)
-    for (const f of r.flags) if (OWNER.has(f.tell) && f.tell !== "repeated_phrase") out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
+    // repeats and couplets are piece-level findings (repeatFindings, coupletFindings)
+    for (const f of r.flags) if (OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet") out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
   }
   return out;
 }
