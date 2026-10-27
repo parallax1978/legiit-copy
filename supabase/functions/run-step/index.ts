@@ -510,7 +510,10 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
   const cycleStart = completedRows.filter((r) => r.step === "draft" || r.step === "revise" || r.step === "tell_edit" || r.step === "cold_read").reduce<string | null>((m, r) => later(m, r.finished_at ?? r.created_at), null);
   const thisCycle = completedRows.filter((r) => isAfter(r.finished_at ?? r.created_at, cycleStart));
   const completed = Array.from(new Set(thisCycle.map((r) => r.step))) as StepName[];
-  const revisionCycles = completedRows.filter((r) => r.step === "revise" && isAfter(r.finished_at ?? r.created_at, latestDraft?.finished_at ?? null)).length;
+  // the revision budget counts from the last draft, or from the user's last requeue: a run the user starts again
+  // (from the tell edit, the cold read or the revision) gets its own review loop instead of inheriting a spent one
+  const loopStart = later(latestDraft?.finished_at ?? null, gen.requeued_at ?? null);
+  const revisionCycles = completedRows.filter((r) => r.step === "revise" && isAfter(r.finished_at ?? r.created_at, loopStart)).length;
 
   const latest = (s: StepName) => thisCycle.filter((r) => r.step === s).at(-1)?.output ?? null;
   const editorialOut = asRecord(latest("editorial"));
