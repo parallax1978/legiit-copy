@@ -389,7 +389,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "bare_credential", weight: 4, scope: "paragraph", owner: {},
     regex: /^(?:I['’]m|I am) (?:[A-Z][\w'’-]+(?: [A-Z][\w'’-]+)?, )?(?:the |a |an )?(?:[A-Z][\w'’]+['’]s )?(?:[Cc]o-?)?(?:[Ff]ounder|CEO|[Cc]eo|[Oo]wner|[Cc]reator|[Pp]resident|[Dd]irector)(?: (?:of|at) [A-Z][\w'’ ]{0,30})?\s*[.!]?$|^I (?:founded|started|built|run|own) [A-Z][\w'’]+(?: [A-Z][\w'’]+)?\s*[.!]?$/gm,
     example: "I'm Legiit's founder.",
-    fix: "Put the credential in the sentence that says why it matters: \"I founded Legiit, and I stopped letting volume pick pages.\"",
+    fix: "Put the credential in the sentence that says why it matters, in the speaker's own words (the pattern: \"I've wired houses here for twenty years, and I quote every job in person.\")",
     note: "A credential as a paragraph of its own (§7.1 structure, the feed's AI cadence): it says who is talking and never why to listen. None of 895 human posts, emails and pages.",
   },
   {

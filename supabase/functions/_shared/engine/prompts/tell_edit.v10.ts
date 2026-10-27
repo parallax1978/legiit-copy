@@ -13,6 +13,11 @@ export type { TellEditArgs };
 const PROMISE_KEPT = `A promise and the line that proves it are two points, never a repeat: the piece's first statement of the result it promises is never the line cut (a proof line that names the result again keeps its proof and drops the restated result).`;
 
 const SYSTEM = amend(tellEditPrev.system, [
+  // the owner's own example came back word for word in his post: the pattern, from another trade, never the words
+  [
+    `- A credential set as a paragraph of its own ("I'm Legiit's founder.") is rewritten in its own paragraph into the sentence that says why it matters, the name kept: "As Legiit's founder, I stopped letting volume pick pages."`,
+    `- A credential set as a paragraph of its own ("I'm a licensed electrician.") is rewritten in its own paragraph into the sentence that says why it matters, the name kept, in the speaker's own words (the pattern, never these words: "I've wired houses here for twenty years, and I quote every job in person.")`,
+  ],
   [
     `"keep" is true only when the line carries a fact the piece needs and a plainer sentence would lose it;`,
     `"keep" is true when the line carries a fact the piece needs, the promise of the result or the reason-why that carries it, and a plainer sentence would lose it; a reason-why line listed as a general truth is said plainly as the cause, never cut or sized down;`,
