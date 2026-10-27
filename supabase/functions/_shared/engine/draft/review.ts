@@ -11,6 +11,7 @@ import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, readerText, v
 import { stripNeverTells } from "./never_tells.ts";
 import { admissionsAdded, admissionsIn } from "./admissions.ts";
 import { ownerTellsIn } from "../tells.ts";
+import { promiseOverlap, statesPromise } from "./tell_edit.ts";
 
 type Flag = NonNullable<StepEffects["flags"]>[number];
 
@@ -289,10 +290,16 @@ function misquoteShaped(quote: string): boolean {
 /** What the product or a named competitor does: a line that says more than its row is the engine's invention, never a claim the user makes. */
 const DESCRIBED_TYPES = new Set<string>(["comparative", "feature", "mechanism"]);
 
-export function pendingFactualFlags(out: FactualOutput | null, claims: { id: string; user_decision: string | null }[]): FactualOutput["flags"] {
+/**
+ * `promise` (the argument's promise stems) keeps a line that carries the promise out of the described fixes: the
+ * revision never rewrites the promise on its own, and reason-why logic or the speaker's call, which cite no row, never
+ * reach it either (a described fix needs the row it contradicts: a ledger tag in the line, or the flag's claim).
+ */
+export function pendingFactualFlags(out: FactualOutput | null, claims: { id: string; user_decision: string | null }[], promise?: Set<string>): FactualOutput["flags"] {
   if (!out) return [];
   const keep = new Set(claims.filter((c) => c.user_decision === "keep").map((c) => c.id));
-  const described = (f: FactualOutput["flags"][number]) => DESCRIBED_TYPES.has(f.claim_type) && (f.test === 1 || f.test === 10);
+  const described = (f: FactualOutput["flags"][number]) =>
+    DESCRIBED_TYPES.has(f.claim_type) && (f.test === 1 || f.test === 10) && (new RegExp(LEDGER_TAG.source).test(f.quote) || !!f.claim_id) && !(promise?.size && statesPromise(readerText(f.quote), promise, { loose: true }));
   return out.flags.filter((f) => f.fabrication || ((((f.test === 1 || f.test === 8) && misquoteShaped(f.quote)) || described(f)) && (!f.claim_id || !keep.has(f.claim_id))));
 }
 
@@ -337,6 +344,8 @@ export interface Reconciled {
   reverted: string[];
   /** blocks a revision gave a weakening admission ("a planned subscription", "hasn't launched yet"): reverted or dropped, rule 12 */
   admissions: string[];
+  /** blocks that carried the promise and would have left the piece with no line that states it: kept as written, rule 8 */
+  promiseKept: string[];
   added: string[];
   removed: string[];
   changed: string[];
@@ -351,7 +360,7 @@ export interface Reconciled {
  * - Removed blocks are allowed only when referenced; otherwise restored in place.
  * - DO NOT TOUCH quotes present before must be present after; a violation is returned for the step to fail on.
  */
-export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[]): Reconciled {
+export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[], promise?: Set<string>): Reconciled {
   const beforeIds = new Set(before.map((s) => s.section_id));
   const afterIds = new Set(revision.sections.map((s) => s.section_id));
   const missing = [...beforeIds].filter((id) => !afterIds.has(id));
@@ -361,6 +370,18 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
   }
   const referenced = blocksQuoted(before, quotes);
   for (const c of revision.changes) referenced.add(c.block_id);
+  // the promise stays (rule 8): when the revision would leave no block that states it, the blocks that carried it keep
+  // their words, whatever note asked to change or cut them
+  const carried = new Set<string>();
+  const promiseKept: string[] = [];
+  if (promise?.size) {
+    const blocksOf = (secs: Section[]) => secs.flatMap((x) => x.blocks);
+    const held = Math.max(0, ...blocksOf(before).filter((b) => statesPromise(blockText(b), promise)).map((b) => promiseOverlap(blockText(b), promise)));
+    const statesIt = (b: Section["blocks"][number]) => statesPromise(blockText(b), promise) && promiseOverlap(blockText(b), promise) >= held;
+    if (held > 0 && !blocksOf(revision.sections).some(statesIt)) {
+      for (const b of blocksOf(before)) if (statesPromise(blockText(b), promise, { loose: true })) carried.add(b.id);
+    }
+  }
 
   const diff = diffBlocks(before, revision.sections);
   const reverted: string[] = [];
@@ -387,7 +408,11 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
           if (keepNew(nb)) blocks.push(nb);
         }
         const rb = rev.blocks[cursor++];
-        if (diff.changed.includes(ob.id) && !referenced.has(ob.id)) {
+        if (diff.changed.includes(ob.id) && carried.has(ob.id)) {
+          reverted.push(ob.id);
+          promiseKept.push(ob.id);
+          blocks.push(ob);
+        } else if (diff.changed.includes(ob.id) && !referenced.has(ob.id)) {
           reverted.push(ob.id);
           blocks.push(ob);
         } else if (diff.changed.includes(ob.id) && admissionsAdded(blockText(ob), blockText(rb)).length) {
@@ -396,8 +421,9 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
           admissions.push(ob.id);
           blocks.push(ob);
         } else blocks.push(rb);
-      } else if (!referenced.has(ob.id)) {
+      } else if (!referenced.has(ob.id) || carried.has(ob.id)) {
         reverted.push(ob.id);
+        if (carried.has(ob.id)) promiseKept.push(ob.id);
         blocks.push(ob);
       }
     }
@@ -410,7 +436,7 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
 
   const finalDiff = diffBlocks(before, sections);
   const dnt = verifyDoNotTouch(doNotTouch, before, sections);
-  return { sections, reverted, admissions, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
+  return { sections, reverted, admissions, promiseKept, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
 }
 
 // ---------------------------------------------------------------- ship
@@ -447,6 +473,8 @@ export function userAttention(input: AttentionInput): string[] {
     const n = /^owner_stack: (\d+)/.exec(r)?.[1];
     if (n) push(`Fix first (tell check): ${n} AI tells from your editing rules are still in the copy. The Flags tab lists each one.`);
   }
+  // the promise check is a note: the copy is shipped, and the user sees that no sentence says the promise
+  for (const f of input.mechanical?.flags ?? []) if (f.tell === "promise_unstated") push(`Worth fixing (promise check): ${f.fix}`);
   // the last review's main note went into the final revision, which no reviewer read again: said whatever is pending
   if (input.finalPass && input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
     push(`Check this (copy chief): the last revision worked on this note, and nobody reviewed it again: ${input.editorial.one_thing.fails}`);

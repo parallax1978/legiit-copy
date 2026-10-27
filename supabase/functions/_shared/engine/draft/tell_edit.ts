@@ -584,7 +584,12 @@ function promiseStem(word: string): string {
  * Words that end a promise's head phrase: the result comes before them ("rankings on keywords", "customers from
  * search"), including a relative clause with no "that" ("rankings you can actually win", "customers your site gets").
  */
-const PROMISE_PHRASE_END = new Set("on for from in at with without that which who whose whom where when while if because so to of by through via across over under than you your we our they their it its i , ;".split(" "));
+const PROMISE_PHRASE_END = new Set("on for from in at with without that which who whose whom where when while if because so to of by through via across over under than worth you your we our they their it its i , ;".split(" "));
+/** Past participles that follow a head noun and end its phrase ("a draft reviewed and revised", "pages chosen on"). */
+const PARTICIPLES = new Set("written chosen built made done given taken shown known seen sent sold paid found kept held won brought drawn grown driven proven".split(" "));
+const participle = (w: string) => PARTICIPLES.has(w) || (w.length >= 5 && w.endsWith("ed") && !w.endsWith("eed") && w !== "hundred");
+/** The results rule 8 names that a promise can join ("rankings ... that bring paying customers"): each one it names is said. */
+const RESULT_STEMS = new Set(["rank", "custom", "client"]);
 /** Time and quantity words a head phrase may end on ("10 new clients a month"): never the result itself. */
 const PROMISE_MEASURE = new Set("day days week weeks month months year years hour hours minute minutes time times".split(" "));
 
@@ -596,11 +601,15 @@ const PROMISE_MEASURE = new Set("day days week weeks month months year years hou
 export function promiseStems(promise: string | null | undefined): Set<string> {
   const tokens = (promise ?? "").toLowerCase().match(/[a-z][a-z'’]*|[,;]/g) ?? [];
   let head: string | undefined;
+  let prev = "";
   for (const t of tokens) {
     if (PROMISE_PHRASE_END.has(t)) {
       if (head) break;
       continue;
     }
+    // a participle after the head ends the phrase; after an adverb ("a fully booked calendar") it describes the head
+    if (head && participle(t) && !prev.endsWith("ly")) break;
+    prev = t;
     if (PROMISE_SKIP.has(t) || PROMISE_MEASURE.has(t)) continue;
     const stem = promiseStem(t);
     if (stem.length >= 3) head = stem;
@@ -611,17 +620,19 @@ export function promiseStems(promise: string | null | undefined): Set<string> {
 
 /**
  * True when one sentence of the text states the promise: half of its stems, between two and four (all of them for a
- * promise of one or two), with the head among them; a feature line that shares only the qualifiers ("you get only the
- * keywords that bring paying customers") does not state a promise of rankings. `loose` drops the head: the test for
- * a line that may carry the promise and is protected, never for a line that stands in for it.
+ * promise of one or two), with the head among them and every result the promise joins ("rankings ... that bring paying
+ * customers" says both); a feature line that shares only the qualifiers ("you get only the keywords that bring paying
+ * customers") does not state a promise of rankings. `loose` drops the head and the results: the test for a line that
+ * may carry the promise and is protected, never for a line that stands in for it.
  */
 export function statesPromise(text: string, promise: Set<string>, opts: { loose?: boolean } = {}): boolean {
   if (!promise.size) return false;
   const need = Math.min(promise.size, Math.max(2, Math.min(4, Math.ceil(promise.size / 2))));
   const head = promise.values().next().value;
+  const results = [...promise].filter((p) => RESULT_STEMS.has(p));
   for (const sentence of text.replace(MARK_RE, " ").split(/(?<=[.!?…]["”’)]?)\s+|\n+/)) {
     const stems = new Set((sentence.toLowerCase().match(/[a-z][a-z'’]*/g) ?? []).map(promiseStem));
-    if (!opts.loose && !stems.has(head as string)) continue;
+    if (!opts.loose && (!stems.has(head as string) || results.some((r) => !stems.has(r)))) continue;
     let hits = 0;
     for (const p of promise) if (stems.has(p)) hits++;
     if (hits >= need) return true;
@@ -657,7 +668,11 @@ function promiseLost(units: EditUnit[], target: EditUnit, next: string, promise:
   const strict = statesPromise(target.text, promise);
   if (!strict && !statesPromise(target.text, promise, { loose: true })) return false;
   if (statesPromise(next, promise, { loose: !strict })) return false;
-  return readings(units).some((reading) => reading.includes(target) && !reading.some((u) => u !== target && statesPromise(u.text, promise)));
+  // a stand-in states the promise and carries as much of it as the line it replaces ("the pages already ranking" in a
+  // filter line is no stand-in for "You win rankings ... that bring paying customers")
+  const held = promiseOverlap(target.text, promise);
+  const standsIn = (u: EditUnit) => u !== target && statesPromise(u.text, promise) && promiseOverlap(u.text, promise) >= held;
+  return readings(units).some((reading) => reading.includes(target) && !reading.some(standsIn));
 }
 
 // ---------------------------------------------------------------------------------------------------------------

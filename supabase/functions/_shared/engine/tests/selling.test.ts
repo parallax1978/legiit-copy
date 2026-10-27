@@ -315,13 +315,23 @@ Deno.test("mechanical: a piece that never says its promise, or says half of a pr
 });
 
 Deno.test("fact check: a line that says more about what the product or a named tool does than its row is fixed like a misquoted figure", () => {
-  const ahrefs = fl({ quote: "A difficulty score doesn't look at the pages ranking on page one, and it doesn't look at your backlinks.", test: 1, claim_type: "comparative", suggested_rewrite: "A difficulty score doesn't tell you what the pages ranking on page one say, or whether your backlinks can beat theirs." });
-  const filter = fl({ quote: "You get only the keywords advertisers pay Google to show up for.", test: 10, claim_type: "feature", suggested_rewrite: "You keep the searches that buy, each one showing what advertisers pay Google per click." });
+  const ahrefs = fl({ quote: `Ahrefs and Semrush don't tell you whether your links can beat those sites. They leave both calls to you [[L:${ROW}]].`, test: 10, claim_type: "comparative", suggested_rewrite: `Ahrefs and Semrush hand you the list and leave it to you to decide whether your links can beat those sites [[L:${ROW}]].` });
+  const filter = fl({ quote: `You get only the keywords advertisers pay Google to show up for [[L:${ROW}]].`, test: 10, claim_type: "feature", suggested_rewrite: `You see what advertisers pay Google per click on every keyword [[L:${ROW}]].` });
+  const claimed = fl({ quote: "It makes the build call for you.", test: 1, claim_type: "feature", claim_id: "9a9a9a9a-0000-4000-8000-000000000002" });
   const promise = fl({ quote: "You rank for the keywords that bring paying customers.", test: 1, claim_type: "benefit" });
   const compliance = fl({ quote: "Cancel anytime.", test: 9, claim_type: "continuity_trial" });
-  const kept = fl({ quote: "It makes the call for you.", test: 1, claim_type: "feature", claim_id: ROW });
-  const pending = pendingFactualFlags(out([ahrefs, filter, promise, compliance, kept]), [{ id: ROW, user_decision: "keep" }]);
-  assertEquals(pending.map((f) => f.quote), [ahrefs.quote, filter.quote]);
+  const kept = fl({ quote: `It makes the call for you [[L:${ROW}]].`, test: 1, claim_type: "feature", claim_id: ROW });
+  // reason-why logic and the speaker's call cite no row: never a described fix
+  const reason = fl({ quote: "That works because advertisers stop paying for clicks that never buy.", test: 1, claim_type: "mechanism" });
+  const call = fl({ quote: "This picks better pages than any volume sort I've used.", test: 1, claim_type: "comparative" });
+  const pending = pendingFactualFlags(out([ahrefs, filter, claimed, promise, compliance, kept, reason, call]), []);
+  assertEquals(pending.map((f) => f.quote), [ahrefs.quote, filter.quote, claimed.quote, kept.quote]);
+  // a kept claim is never touched
+  assertEquals(pendingFactualFlags(out([kept]), [{ id: ROW, user_decision: "keep" }]).length, 0);
+  // a line that carries the promise is the user's call, never the revision's
+  const stems = promiseStems("rankings on keywords that bring paying customers");
+  const carrier = fl({ quote: `You keep only the searches that bring customers [[L:${ROW}]], checked against the pages already ranking.`, test: 10, claim_type: "mechanism", suggested_rewrite: "x" });
+  assertEquals(pendingFactualFlags(out([carrier, ahrefs]), [], stems).map((f) => f.quote), [ahrefs.quote]);
 });
 
 Deno.test("standard: a common column stays as the reason-why, a named tool is described as its row says, and a promise of two results says both", () => {
@@ -335,4 +345,65 @@ Deno.test("standard: a common column stays as the reason-why, a named tool is de
   assert(!editorialPrompt.system.includes("is no reason: fail Gate A and point the do at what the reader's tool does not do."));
   const social = FORMATS.organic_social.sections.find((x) => x.id === "main")!;
   assert(social.must_not.includes("a second call to action"));
+});
+
+Deno.test("promise gate: a note, read only in sentences to the reader outside the offer, with the result noun as head", () => {
+  const promise = "rankings on keywords that bring paying customers";
+  const social = FORMATS.organic_social;
+  const piece = (...lines: [string, string][]) => [s("main", lines.map(([id, t]) => b(id, t)))];
+  // a sentence about the product, or the call to action alone, is not the promise said to the reader
+  assert(promiseGap(piece(["main-1", "Legiit Keywords delivers rankings on keywords that bring paying customers."]), social, promise, ["Legiit Keywords"]));
+  assert(promiseGap([s("main", [b("main-1", "Every skip tells you why.")]), s("cta", [{ ...b("cta-1", "Get rankings on keywords that bring paying customers: the link is in the first comment."), type: "cta" }])], social, promise));
+  assertEquals(promiseGap(piece(["main-1", "You rank on keywords that bring paying customers."]), social, promise, ["Legiit Keywords"]), null);
+  // half of a promise of two results is not the promise
+  assert(promiseGap(piece(["main-1", "You rank on the keywords your buyers search."]), social, promise));
+  // checkout, bump, confirmation and cold opener have no slot for it
+  for (const id of ["order_form", "order_bump", "thank_you", "cold_email"] as const) assertEquals(promiseGap(piece(["main-1", "Yes, I want it."]), FORMATS[id], promise), null, id);
+  // the closest line is one sentence, never a price line
+  const gap = promiseGap(piece(["main-1", "You rank for the keywords your buyers search. Every skip tells you why."], ["main-2", "Pro is $59 a month for rankings on keywords."]), social, promise)!;
+  assert(gap.includes(`the closest line is "You rank for the keywords your buyers search."`), gap);
+  // a participle or "worth" ends the head phrase; an adverb before a participle does not
+  assertEquals(promiseStems("a draft reviewed and revised before you see it").values().next().value, "draft");
+  assertEquals(promiseStems("pages chosen on whether you can win").values().next().value, "page");
+  assertEquals(promiseStems("the pages worth building on your site").values().next().value, "page");
+  assertEquals(promiseStems("a finished first piece written on your own offer").values().next().value, "piece");
+  assertEquals(promiseStems("a fully booked calendar").values().next().value, "calendar");
+});
+
+Deno.test("promise guard: a line that names the competitors' ranking pages never stands in for the promise it carries less of", () => {
+  const promise = promiseStems("rankings you can actually win, on keywords that bring paying customers");
+  const filter = "You keep only the searches that bring customers, checked against the backlinks of the pages already ranking.";
+  const line = "You win rankings your site can hold, on keywords that bring paying customers.";
+  assert(statesPromise(filter, promise), "the filter line holds the stems");
+  const units = [unit("main-1", line), unit("main-2", filter)];
+  const r = applyEdits(units, [{ ref: "main-1", before: line, after: "", tell: "said again" }], "social", promise);
+  assertEquals(r.applied.length, 0, "the fuller promise line stays");
+  assertEquals(applyEdits(units, [{ ref: "main-2", before: filter, after: "", tell: "tool tour" }], "social", promise).applied.length, 1);
+});
+
+Deno.test("revision: a fix that would leave no line saying the promise keeps the line that carried it", () => {
+  const promise = promiseStems("rankings on keywords that bring paying customers");
+  const before = [s("main", [b("main-1", "You rank on keywords that bring paying customers."), b("main-2", "Every skip tells you why.")])];
+  const revision: RevisionOutput = {
+    sections: [s("main", [b("main-1", "Every keyword shows what advertisers pay per click."), b("main-2", "Every skip tells you why, with the pages behind it.")])],
+    changes: [{ block_id: "main-1", before: "", after: "", reason: "factual", source: "factual" }, { block_id: "main-2", before: "", after: "", reason: "note", source: "editorial" }],
+    untouched_confirmed: [],
+  };
+  const r = reconcileRevision(before, revision, [], [], promise);
+  assertEquals(r.sections[0].blocks.map((x) => x.text), ["You rank on keywords that bring paying customers.", "Every skip tells you why, with the pages behind it."]);
+  assertEquals(r.promiseKept, ["main-1"]);
+  // a revision that says the promise in another line may change this one
+  const moved: RevisionOutput = { ...revision, sections: [s("main", [b("main-1", "Every keyword shows what advertisers pay per click."), b("main-2", "You rank on keywords that bring paying customers, and every skip tells you why.")])] };
+  assertEquals(reconcileRevision(before, moved, [], [], promise).promiseKept, []);
+  // a cut of the only promise line is restored too
+  const cut: RevisionOutput = { ...revision, sections: [s("main", [b("main-2", "Every skip tells you why.")])], changes: [{ block_id: "main-1", before: "", after: "", reason: "cut", source: "editorial" }] };
+  assertEquals(reconcileRevision(before, cut, [], [], promise).sections[0].blocks.map((x) => x.id), ["main-1", "main-2"]);
+});
+
+import { userAttention } from "../draft/review.ts";
+
+Deno.test("ship: an unsaid promise is a note the user sees, never a blocker", () => {
+  const mechanical = { tell_score_per_300: 0, flags: [{ tier: 1, tell: "promise_unstated", weight: 0, count: 1, examples: [], fix: "No sentence says the argument's promise." }], hard_fail: false, hard_fail_reasons: [], fk_grade: 5, cadence_cv: 0.6, cadence_flag: false, and_then_count: 0, format_gate_failures: [], word_count: 300 };
+  const att = userAttention({ editorial: null, factual: null, mechanical, pendingFlags: [], needsSource: [], openQuestions: [], finalPass: true });
+  assertEquals(att, ["Worth fixing (promise check): No sentence says the argument's promise."]);
 });

@@ -11,6 +11,8 @@ import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
 import { leadSectionId } from "../draft/plan.ts";
 import { callStep, latestDraftOutput, stepOutput } from "../draft/step_util.ts";
+import { promiseStems } from "../draft/tell_edit.ts";
+import { Candidate } from "../schemas/argument.ts";
 
 export const reviseStep: StepFn = async (ctx) => {
   const spec = ctx.format;
@@ -20,7 +22,10 @@ export const reviseStep: StepFn = async (ctx) => {
   const mechanical = stepOutput(ctx, "mechanical", MechanicalReport);
   const coldRead = stepOutput(ctx, "cold_read", ColdRead);
 
-  const factualPending = pendingFactualFlags(factual, ctx.claims);
+  // the argument's promise: no factual fix rewrites a line that carries it, and no revision leaves the piece without it
+  const angle = Candidate.safeParse(ctx.winningAngle?.candidate);
+  const promise = promiseStems(angle.success ? angle.data.promise : null);
+  const factualPending = pendingFactualFlags(factual, ctx.claims, promise);
   const tier01 = mechanical?.flags.filter((f) => f.tier <= 1) ?? [];
   const hasWork = (editorial !== null && editorial.verdict !== "APPROVE") || factualPending.length > 0 || (mechanical?.hard_fail ?? false) || tier01.length > 0;
   const doNotTouch = editorial?.do_not_touch ?? [];
@@ -39,7 +44,7 @@ export const reviseStep: StepFn = async (ctx) => {
   const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, retryNote: null };
   const run = async (retryNote: string | null) => {
     const res = await callStep(ctx, "revise", revisePrompt, { ...args, retryNote }, RevisionOutput, `revise ${cycle}${retryNote ? " (retry)" : ""}`);
-    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch);
+    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise);
     const unknown = unknownLedgerRefs(rec.sections, known);
     return { res, rec, unknown };
   };
@@ -81,7 +86,7 @@ export const reviseStep: StepFn = async (ctx) => {
     changes: res.output.changes.filter((c) => changedSet.has(c.block_id)),
     untouched_confirmed: doNotTouch.filter((q) => !rec.doNotTouch.unverifiable.includes(q)),
   });
-  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} edit(s) reverted` : ""}${rec.admissions.length ? ` (${rec.admissions.length} for a weakening admission)` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
+  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} edit(s) reverted` : ""}${rec.admissions.length ? ` (${rec.admissions.length} for a weakening admission)` : ""}${rec.promiseKept.length ? ` (${rec.promiseKept.length} kept the promise)` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
   await ctx.progress(summary);
   return { output, model: res.model, summary, effects: { newDraft: toDraftEffect(revised, "revise", `revise ${cycle}`) } };
 };

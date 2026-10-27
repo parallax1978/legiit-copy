@@ -14,7 +14,7 @@ const SYSTEM = amend(revisePrev.system, [
   ],
   [
     `fix each line that misquotes the ledger or the offer block with its rewrite, ledger tags kept;`,
-    `fix each line that misquotes the ledger or the offer block with its rewrite, ledger tags kept (a fix corrects the number, name or term it names; where a rewrite also brings in a hedge or a weakening detail such as "planned" or "not yet", fix only the misquoted item and keep the rest of the line at full strength);`,
+    `fix each line that misquotes the ledger or the offer block, and each line that says more about what the product or a named tool does than its row holds, with its rewrite, ledger tags kept (a fix corrects the number, name, term or description it names to what the row says; where a rewrite also brings in a hedge or a weakening detail such as "planned" or "not yet", fix only the misquoted item and keep the rest of the line at full strength);`,
   ],
   [
     `A fix never adds a hedge ("may", "can help", "results vary"),`,

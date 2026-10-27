@@ -28,28 +28,48 @@ export function sectionsFromBlocks(blocks: unknown): Section[] {
   return Array.isArray(parsed.data) ? parsed.data : parsed.data.sections;
 }
 
-/** Blocks that carry the offer, the button or the terms: never where the promise has to be said. */
-const OFFER_BLOCK_TYPES = new Set(["cta", "button", "price", "guarantee", "disclosure", "terms"]);
+/** Blocks that carry the offer, the button, the terms or a customer's words: never where the promise has to be said. */
+const OFFER_BLOCK_TYPES = new Set(["cta", "button", "price", "guarantee", "disclosure", "terms", "testimonial"]);
+/** Pieces with no slot of their own for the promise: the checkout, the bump, the confirmation, the cold opener. */
+const NO_PROMISE_FORMATS = new Set(["order_form", "order_bump", "thank_you", "cold_email"]);
+const SENTENCE_SPLIT = /(?<=[.!?…]["”’)]?)\s+|\n+/;
+export const PROMISE_UNSTATED = "promise_unstated";
+
+/** A sentence that speaks to the reader: it holds "you" and does not open on the product's name. */
+function readerSentence(sentence: string, names: string[]): boolean {
+  const t = sentence.trim().replace(/^["“(]+/, "").toLowerCase();
+  return /\b(?:you|your|yours|yourself)\b/.test(t) && !names.some((n) => n && t.startsWith(n.toLowerCase()));
+}
 
 /**
- * The argument's promise said in the piece (docs/04 rule 8): one sentence holds its head and half its words. Returns
- * the gate failure, naming the promise and the line that comes closest to it, or null when a sentence says it or the
- * format has no sentence of its own to say it in (an ad set, a sequence, an SMS).
+ * The argument's promise said in the piece (docs/04 rule 8): one sentence to the reader, outside the offer and the
+ * call to action, holds its head, every result it joins and half its words. Returns the note for the revision, naming
+ * the promise and the sentence that comes closest to it, or null when a sentence says it or the piece has no slot of
+ * its own for it (an ad set, a sequence, an SMS, a checkout, a confirmation, a cold opener).
  */
-export function promiseGap(sections: Section[], spec: FormatSpec, promise: string | null | undefined): string | null {
-  if (!promise?.trim() || spec.multi_item || spec.family === "message") return null;
+export function promiseGap(sections: Section[], spec: FormatSpec, promise: string | null | undefined, names: string[] = []): string | null {
+  if (!promise?.trim() || spec.multi_item || spec.family === "message" || NO_PROMISE_FORMATS.has(spec.id)) return null;
   const stems = promiseStems(promise);
   if (!stems.size) return null;
-  const lines = sections.flatMap((s) => s.blocks.flatMap((b) => [b.text, ...(b.items ?? [])].map((t) => ({ type: b.type, text: readerText(t) })))).filter((l) => l.text);
-  if (lines.some((l) => statesPromise(l.text, stems))) return null;
+  const head = stems.values().next().value as string;
+  const sentences = sections
+    .filter((s) => s.section_id !== "first_comment")
+    .flatMap((s) => s.blocks.filter((b) => !OFFER_BLOCK_TYPES.has(b.type)).flatMap((b) => [b.text, ...(b.items ?? [])]))
+    .flatMap((t) => readerText(t).split(SENTENCE_SPLIT))
+    .map((t) => t.trim())
+    .filter(Boolean);
+  if (sentences.some((x) => readerSentence(x, names) && statesPromise(x, stems))) return null;
+  // the closest sentence: most of the promise's words (two at least), the head breaking ties, no figure or price in it
   let closest: string | null = null;
-  let best = 0;
-  for (const l of lines) {
-    if (OFFER_BLOCK_TYPES.has(l.type)) continue;
-    const n = promiseOverlap(l.text, stems);
-    if (n > best) [closest, best] = [l.text, n];
+  let best = 1;
+  let bestHead = false;
+  for (const x of sentences) {
+    if (/[\d$€£%]/.test(x)) continue;
+    const n = promiseOverlap(x, stems);
+    const hasHead = promiseOverlap(x, new Set([head])) > 0;
+    if (n > best || (n === best && closest !== null && hasHead && !bestHead)) [closest, best, bestHead] = [x, n, hasHead];
   }
-  return `promise: no sentence says the argument's promise ("${promise.trim()}") with the reader as its subject; say it as a sentence of its own, early (in a short piece by the rehook), with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}`;
+  return `No sentence says the argument's promise ("${promise.trim()}") to the reader: say it as a sentence of its own, early (in a short piece by the rehook), with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}.`;
 }
 
 export function flagsFromReport(report: MechanicalReport): Flag[] {
@@ -57,6 +77,10 @@ export function flagsFromReport(report: MechanicalReport): Flag[] {
   const hasHigher = report.flags.some((f) => f.tier === 1 || f.tier === 2);
   for (const f of report.flags) {
     if (f.tier === 3 && !hasHigher) continue; // Tier 3 never counts alone
+    if (f.tell === PROMISE_UNSTATED) {
+      flags.push({ source: "mechanical", kind: PROMISE_UNSTATED, severity: "medium", quote: f.examples[0] ?? null, rule: "04-copy-standard §1 rule 8", issue: f.fix, suggestedRewrite: null });
+      continue;
+    }
     flags.push({
       source: "mechanical",
       kind: f.tell,
@@ -89,13 +113,14 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
   // the offer's own words are exempt here exactly as in the tell edit, or the stack would loop revisions on them
   const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms: exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name) }));
   // the piece says the argument's promise (rule 8): a draft that only describes the product, or says half a promise of
-  // two results, goes back to the revision with the line to rewrite
+  // two results, carries a note to the revision with the line to rewrite. A note, not a hard fail: the match is on
+  // words, and a piece that says the promise in other words never costs a review cycle for it
   const angle = Candidate.safeParse(ctx.winningAngle?.candidate);
-  const gap = promiseGap(sections, ctx.format, angle.success ? angle.data.promise : null);
+  const names = [ctx.offer?.name, ctx.brief?.product_name].filter((n): n is string => !!n?.trim());
+  const gap = promiseGap(sections, ctx.format, angle.success ? angle.data.promise : null, names);
   if (gap) {
-    report.format_gate_failures.push(gap);
-    report.hard_fail_reasons.push(`gate:${gap}`);
-    report.hard_fail = true;
+    const quoted = /the closest line is "(.*)"\.$/.exec(gap)?.[1];
+    report.flags.push({ tier: 1, tell: PROMISE_UNSTATED, weight: 0, count: 1, examples: quoted ? [quoted] : [], fix: gap });
   }
   const flags = flagsFromReport(report);
 
