@@ -2,6 +2,7 @@
  * Pure post-processing for the review half of the pipeline: editorial flags, factual-flag discipline,
  * revision reconciliation (change only referenced blocks, honor DO NOT TOUCH) and the ship summary.
  */
+import type { FormatSpec } from "../formats/spec.ts";
 import type { Section } from "../schemas/draft.ts";
 import type { EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput, ColdRead } from "../schemas/review.ts";
 import type { StepEffects } from "../steps/types.ts";
@@ -82,7 +83,7 @@ export interface FactualPostProcess {
  *   ledger row, or a flag mapped to one, is the user's claim, not an invention;
  * - fabrication is fatal; claim_id must point at an existing row or is nulled.
  */
-export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[], exemptTerms: string[] = []): FactualPostProcess {
+export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[], exemptTerms: string[] = [], spec?: FormatSpec): FactualPostProcess {
   const known = new Map(claims.map((c) => [c.id, c]));
   const droppedIds = droppedClaimIds(claims);
   const dropped: FactualPostProcess["dropped"] = [];
@@ -117,7 +118,7 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
       continue;
     }
     // a rewritten line is new copy: it may not bring in a Section 7.1 tell or word the line did not have
-    if (f.suggested_rewrite && ownerTellsIn(stripNeverTells(f.suggested_rewrite), exemptTerms) > ownerTellsIn(f.quote, exemptTerms)) {
+    if (f.suggested_rewrite && ownerTellsIn(stripNeverTells(f.suggested_rewrite), exemptTerms, spec) > ownerTellsIn(f.quote, exemptTerms, spec)) {
       violations.push(`rewrite brings in one of the owner's tells or words (Section 7.1) the line did not have: "${f.suggested_rewrite}"`);
     }
     flags.push(f);

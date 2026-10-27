@@ -10,7 +10,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v6.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v7.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -310,12 +310,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v10.ts";
-import { revisePrompt } from "../prompts/revise.v9.ts";
-import { editorialPrompt } from "../prompts/editorial.v10.ts";
+import { draftPrompt } from "../prompts/draft.v11.ts";
+import { revisePrompt } from "../prompts/revise.v10.ts";
+import { editorialPrompt } from "../prompts/editorial.v11.ts";
 import { factualPrompt } from "../prompts/factual.v8.ts";
-import offerPrompt from "../prompts/offer.v9.ts";
-import intakePrompt from "../prompts/intake.v7.ts";
+import offerPrompt from "../prompts/offer.v10.ts";
+import intakePrompt from "../prompts/intake.v8.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -334,7 +334,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [10, 9, 10, 8, 6, 9, 7]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 8, 7, 10, 8]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
@@ -629,4 +629,49 @@ Deno.test("tell edit step: a line the editor lists and leaves gets one more ask;
   assertEquals(out.audit?.length, 2);
   const text = JSON.stringify(res.effects!.newDraft!.blocks);
   assert(!text.includes("keep a keyword in"), text);
+});
+
+Deno.test("round 3 review: only a windup's count may go, in its real sentence and format; an off-list audit label is other", () => {
+  // a price, a percentage or a duration in a windup's stretch stays a fact
+  assert(guardEdit("Three reasons to switch before the $49 price ends: it syncs nightly.", "Switch now: it syncs nightly."));
+  assert(guardEdit("Three ways to save two hours a week: batch, template and automate.", "Save hours every week: batch, template and automate."));
+  assert(!factFreeSentenceCut(`Three reasons to switch before the $49 [[L:${A}]] price ends: speed, cost and support.`, ""));
+  // the windup is matched in its whole sentence: "It takes three steps to set up" is a fact however the span is cut
+  const unit = (ref: string, text: string): EditUnit => ({ ref, owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text });
+  const setup = [unit("m-1", "It takes three steps to set up, and the first report is ready in ten minutes."), unit("m-2", "Then you pick.")];
+  assertEquals(applyEdits(setup, [{ ref: "m-1", before: "It takes three steps", after: "It is quick", tell: "count" }], "social").applied.length, 0);
+  // a count a long format asks for stays
+  const webinar = [unit("r-1", "On the call I'll walk you through three secrets: why lists fail, why you can win anyway, and why budget is not the wall."), unit("r-2", "Register below.")];
+  assertEquals(applyEdits(webinar, [{ ref: "r-1", before: "three secrets:", after: "the secrets:", tell: "count" }], "page").applied.length, 0);
+  assertEquals(applyEdits(webinar, [{ ref: "r-1", before: "three secrets:", after: "the secrets:", tell: "count" }], "social").applied.length, 1);
+  // the audit's label never fails a reply
+  const call = TellEditCall.parse({ audit: [{ ref: "main-2", line: "x", kind: "repeated_phrase", keep: false }], edits: [], what_changed: [], already_clean: true });
+  assertEquals(call.audit[0].kind, "other");
+});
+
+Deno.test("round 3 review: a listed line is reached when its words changed; a tagged repeat and a long piece's repeat are not asked about", async () => {
+  const spec = FORMATS.organic_social;
+  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook"), blk("lead_in-2", "My rule: never pay for a keyword tool you open once a month.")]), sec("main", [blk("main-1", `Our reviewers read every page that ranks [[L:${A}]].`), blk("main-2", "Unlock the pages you can actually win.")]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  let calls = 0;
+  const res = await runTellEdit(ctxFor(draft), {
+    call: editor(() => {
+      calls++;
+      return {
+        audit: [
+          { ref: "lead_in-2", line: "My rule: never pay for a keyword tool you open once a month.", kind: "windup", keep: false },
+          { ref: "main-2", line: "Unlock the pages you can actually win.", kind: "other", keep: false },
+          { ref: "main-1", line: "Our reviewers read every page that ranks.", kind: "said_again", keep: false },
+        ],
+        edits: [
+          { ref: "lead_in-2", before: "My rule: ", after: "", tell: "label windup" },
+          { ref: "main-2", before: "Unlock", after: "Find", tell: "unlock" },
+          { ref: "main-2", before: " actually", after: "", tell: "filler" },
+        ],
+        what_changed: ["Cut a label windup", "Swapped unlock and cut actually"],
+        already_clean: false,
+      };
+    }),
+  });
+  assertEquals(calls, 1, "no retry: every listed line changed, and the tagged proof is not asked about");
+  assertEquals(TellEditOutput.parse(res.output).audit_left, []);
 });

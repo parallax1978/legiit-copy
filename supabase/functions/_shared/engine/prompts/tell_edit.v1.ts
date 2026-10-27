@@ -23,6 +23,8 @@ export interface TellEditArgs {
   retryNote: string | null;
   /** the piece's sentence-length variation when it runs flat against the format's floor */
   cadence?: { cv: number; floor: number } | null;
+  /** ledger rows whose wording the user accepted ("rewrite"): used as written, never reworded */
+  acceptedWording?: string[];
 }
 
 const SYSTEM = [
@@ -85,6 +87,7 @@ export const tellEditPrompt: PromptModule<TellEditArgs> = {
       args.groupTotal > 1 ? `This is part ${args.groupIndex + 1} of ${args.groupTotal} of the piece; edit only the texts shown.` : "",
       found,
       args.cadence ? `CADENCE: the sentences run close to one length (variation ${args.cadence.cv} against the format's floor of ${args.cadence.floor}). Break one or two long sentences in two and let one run long; never add words to do it.` : "",
+      args.acceptedWording?.length ? `THE USER'S ACCEPTED WORDING (ledger rows the user approved word for word; where the copy uses them, leave them as written):\n${args.acceptedWording.map((w) => `- ${w}`).join("\n")}` : "",
       `THE COPY:\n${renderUnits(args.units, args.draft)}`,
       args.retryNote ? `NOTE ON YOUR PREVIOUS ANSWER: ${args.retryNote}` : "",
     ].filter(Boolean).join("\n\n");

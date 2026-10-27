@@ -305,7 +305,7 @@ export const TELLS: TellRule[] = [
         `|\\b(?:it|this|everything|that) (?:all )?(?:comes|boils) down to (?:one|two|three|four|a few) (?:things|questions)\\b` +
         `|\\bone more (?:check|thing|question|test|step|rule)\\b[^.?!\\n:]{0,40}:` +
         // "it leaves the decision with you: whether your site can beat them"
-        `|\\b(?:to|with|on) you: (?:whether|what|which|how|who)\\b` +
+        `|\\b(?:to|with|on) you: (?:whether|what|which|how|who)\\b(?![^.!?\\n]*\\?)` +
         // "What comes back is a decision for each group:", "What matters is..."
         `|(?:^|[.!?]["”’)]?\\s+)What (?:comes back|you get|you see|matters|actually matters|really matters|happens next|changes|I want|you need|you want) (?:is|are)\\b`,
       "gim",
@@ -315,20 +315,12 @@ export const TELLS: TellRule[] = [
     note: "The windup reworded as a label (\"My rule:\", \"The fix:\", \"Bottom line:\"), a count of what is coming (\"Two questions decide it.\", \"I'd ask two things.\", \"One more check:\"), a colon reveal (\"it leaves the decision with you: whether...\") or a \"What ... is\" opener (\"What comes back is a decision:\") announces the point instead of making it (§7.1 tell 4). Under 1% of human posts and emails use the last two.",
   },
   {
-    tier: 1, name: "never_reveal", weight: 4, scope: "all", owner: { tell: 8 },
-    // a thing as the subject: "I was never going to quit" is a person's story
-    regex: /(?<!\b(?:I|we|you|he|she|they)\s)\b(?:was|were|is|are)(?: never| not ever) (?:going to|the (?:problem|point|issue|question|goal|enemy|bottleneck|competition|real \w+)|about (?:the|your))\b/gi,
-    example: "A list of traffic numbers was never going to tell you which pages would.",
-    fix: "Say plainly what it does or does not do: \"A traffic number does not say which page will sell.\"",
-    note: "The \"was never\" reveal the owner rejected (\"The keyword was never your competition.\"): the reader's belief recast as a mistake in a line built to be quoted (§7.1 tell 8 and structure). Under 1% of human sales pages, none of the human posts or emails.",
-  },
-  {
     tier: 1, name: "count_windup", weight: 4, scope: "all", owner: { tell: 4 }, families: ["social", "ad", "email", "message"],
     regex: new RegExp(
       // a count that announces a list ("seven steps, in this order:", "Follow these 5 steps:"); the colon is a label's,
       // not a clock's, a ratio's or a link's; a digit count only after a determiner or at a sentence start
       `\\b(?:two|three|four|five|six|seven|eight|nine|ten) (?:steps|stages|ways|reasons|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:(?![\\d/])` +
-        `|(?:(?:^|[.!?]["”’)]?\\s+)|\\b(?:these|the|my|our|your|in|of|with|follow)\\s+)\\d+ (?:steps|stages|ways|reasons|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:(?![\\d/])` +
+        `|(?:(?:^|[.!?]["”’)]?\\s+)|\\b(?:these|the|my|our|your|in|of|with|follow|are|were)\\s+)\\d+ (?:steps|stages|ways|reasons|signs|mistakes|secrets)\\b[^.?!\\n:]{0,40}:(?![\\d/])` +
         // "It takes seven steps, and...": the count of a process as the hook, a clause of its own; "It takes three steps
         // to set up" and "The process takes three steps and ten minutes" are facts
         `|(?:^|[.!?]["”’)]?\\s+)(?:(?:So|And|But),? )?(?:it|this) takes (?:two|three|four|five|six|seven|eight|nine|ten|\\d+) (?:steps|stages|moves)\\b(?=\\s*(?:[.:;]|,\\s*(?:and|but|so)\\b|$))`,
@@ -371,6 +363,16 @@ export const TELLS: TellRule[] = [
     example: "Sorting by difficulty feels like research. It's where bad content gets made.",
     fix: "State the claim directly: \"X is really Y\" or \"X is just Y\".",
     note: "One thing presented as another in disguise; the reframes \"X feels like Y. It's Z.\" and \"X was never Y. Z is.\" are the same pattern.",
+  },
+  {
+    tier: 1, name: "never_reveal", weight: 4, scope: "all", owner: { tell: 8 },
+    // "The keyword was never your competition", "You were never the problem"; the "going to" form only where a thing
+    // was never going to tell, find or pick (a story's "My dad was never going to retire" and "It was never going to be
+    // easy" are not the reveal)
+    regex: /\b(?:was|were|is|are)(?: never| not ever) (?:the|your|their|a) (?:problem|point|issue|question|goal|enemy|bottleneck|competition|real \w+)\b|(?<!\b(?:I|we|he|she|they)\s)\b(?:was|were) never going to (?:tell|show|give|hand|find|pick|choose|save|make|get|bring|rank|win|sell)\b/gi,
+    example: "A list of traffic numbers was never going to tell you which pages would.",
+    fix: "Say plainly what it does or does not do: \"A traffic number does not say which page will sell.\"",
+    note: "The \"was never\" reveal the owner rejected (\"The keyword was never your competition.\"): the reader's belief recast as a mistake in a line built to be quoted (§7.1 tell 8 and structure). Under 1% of human sales pages, none of the human posts or emails.",
   },
   {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
@@ -896,10 +898,7 @@ function isProperNoun(text: string, index: number, match: string, display: boole
 /** Where the sentence holding `at` starts: after the last line break or sentence punctuation before it. */
 function sentenceStart(text: string, at: number): number {
   let s = 0;
-  for (const p of ["\n", ". ", "! ", "? "]) {
-    const i = text.lastIndexOf(p, at - 1);
-    if (i >= 0) s = Math.max(s, i + p.length);
-  }
+  for (const m of text.slice(0, at).matchAll(/[.!?…]["”’)\]]*\s+|\n/g)) s = (m.index ?? 0) + m[0].length;
   return s;
 }
 
@@ -955,7 +954,7 @@ interface OwnerHits {
  * Words a rule claims from the start of its match when the match ends in a wildcard tail ("Here's how to ..." runs
  * on to the sentence's end): "Here's how to unlock seamless growth." is three tells, the windup and two words.
  */
-const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, count_windup: 3, disguise_frame: 2, corporate_filler: 2 };
+const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_deep_third: 2, label_windup: 3, count_windup: 2, disguise_frame: 2, never_reveal: 2, corporate_filler: 2 };
 
 /**
  * Scan the owner's regex rules in table order. A span one rule has counted is not counted again by a later rule, so
@@ -988,9 +987,13 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
         const head = CLAIM_WORDS[rule.name] ? (new RegExp(`^(?:\\S+\\s+){0,${CLAIM_WORDS[rule.name] - 1}}\\S+`).exec(lead)?.[0] ?? lead) : lead;
         const claimEnd = at + head.length;
         if (claimed[ti].some(([s, e]) => at < e && s < claimEnd)) continue;
-        // tell 4 counts once a sentence: a label or count after a "Here's how ..." windup is the same windup
-        if ((rule.name === "label_windup" || rule.name === "count_windup") && windups[ti].some((w) => w >= sentenceStart(t, at) && w < at)) continue;
-        if (rule.name === "heres_the_windup") windups[ti].push(at);
+        // tell 4 counts once a sentence: "Here's how it works, in three steps:" and "One more thing, in two steps:" are
+        // one windup each, whichever of the tell's rules matched first
+        if (rule.owner?.tell === 4) {
+          const s = sentenceStart(t, at);
+          if (windups[ti].includes(s)) continue;
+          windups[ti].push(s);
+        }
         claimed[ti].push([at, claimEnd]);
         perText[ti] += 1;
         hit.count += 1;
@@ -1059,8 +1062,13 @@ export function repeatedRuns(texts: { text: string; type: Block["type"]; piece?:
   return repeatPairs(units, texts.map((t) => t.piece ?? "piece"), new Set(exemptTerms.map(stem)));
 }
 
-/** English stop words below this share of a piece's words: the piece is in another language and the check skips it. */
-const ENGLISH_STOP_SHARE = 0.2;
+/**
+ * Function words of the other languages the app writes in (Spanish, French, German, Portuguese, Italian), none of them
+ * common in English copy: a piece where they pass this share of the words is not English, and the English stop list
+ * would count its function words as content.
+ */
+const FOREIGN_FUNCTION_WORDS = new Set("de la que el los las y en una por con para del se lo les des et est du au aux une und der das ist nicht mit ich eine uma não il che di sono".split(" "));
+const FOREIGN_SHARE = 0.08;
 
 function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] }[], pieces: string[], exempt: Set<string>): { later: number; first: number; run: string }[] {
   // piece + run (as stems, so "leaves the decision to you" repeats "leave the decision to you") -> the sentences it
@@ -1070,12 +1078,12 @@ function repeatPairs(units: { text: string; kind: UnitKind; type: Block["type"] 
   // the stop list is English: a piece in another language would count its function words as content
   const share = new Map<string, [number, number]>();
   scanned.forEach((ss, ui) => ss.flat().forEach((w) => {
-    const [stop, all] = share.get(pieces[ui]) ?? [0, 0];
-    share.set(pieces[ui], [stop + (STOP_WORDS.has(w) ? 1 : 0), all + 1]);
+    const [foreign, all] = share.get(pieces[ui]) ?? [0, 0];
+    share.set(pieces[ui], [foreign + (FOREIGN_FUNCTION_WORDS.has(w) ? 1 : 0), all + 1]);
   }));
   const english = (piece: string) => {
-    const [stop, all] = share.get(piece) ?? [0, 0];
-    return all < 20 || stop / all >= ENGLISH_STOP_SHARE;
+    const [foreign, all] = share.get(piece) ?? [0, 0];
+    return all < 20 || foreign / all < FOREIGN_SHARE;
   };
   let sid = 0;
   scanned.forEach((ss, ui) => {
@@ -1201,9 +1209,10 @@ function pieceOf(u: Unit, spec: FormatSpec): string {
 /** pieceOf for a section id: a suffixed section ("body#2", a cold email's "followup#1") is its own piece in any format. */
 export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
   const item = sectionItemIndex(sectionId);
+  const base = sectionBaseId(sectionId);
+  if (spec.piece_sections?.includes(base)) return `section:${base}#${item}`;
   if (item > 0) return `item:${item}`;
   if (!spec.multi_item) return "piece";
-  const base = sectionBaseId(sectionId);
   const roles = spec.multi_item.item_roles ?? [];
   if (roles.includes(base)) return `asset:${base}`;
   const prefix = base.split("_")[0];
@@ -1220,7 +1229,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const ownerTexts = ownerUnits.map((u) => (u.kind === "display" && !u.tagged && WHOLE_QUOTE_RE.test(u.text) ? u.text : blankQuotes(u.text)));
   const ownerOriginals = ownerUnits.map((u) => u.text);
   const exempt = new Set(exemptTerms.map(stem));
-  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type));
+  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex && (!r.families || r.families.includes(spec.family))), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type));
   const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
@@ -1470,8 +1479,14 @@ export const GATE_METRICS: Record<string, MetricDef> = {
   links: { kind: "item", text: true, note: "cta and button blocks plus URLs in other text", compute: (c) => linksIn(c.sections) },
   email_one_links: { kind: "aggregate", text: true, note: "links in the lowest-indexed item (email one)", compute: (c) => { const idx = Math.min(...itemIndexes(c.all)); return linksIn(c.all.filter((s) => sectionItemIndex(s.section_id) === idx)); } },
   body_urls: { kind: "item", text: true, note: "URLs in text outside the `first_comment` section", compute: (c) => blocks(c.sections.filter((s) => !inBase(s, "first_comment"))).reduce((n, { block }) => n + urlsIn(textOf(block)), 0) },
-  first_comment_words: { kind: "item", text: true, note: "words in the `first_comment` section: the link and the one-line offer, never the terms (rule 16)", compute: (c) => wordsIn(blocks(c.sections.filter((s) => inBase(s, "first_comment")))) },
-  questions: { kind: "item", text: true, note: "question marks outside subject blocks", compute: (c) => blocks(c.sections).filter(({ block }) => block.type !== "subject").reduce((n, { block }) => n + (textOf(block).match(/\?/g) ?? []).length, 0) },
+  first_comment_words: {
+    kind: "item", text: true, note: "words in the `first_comment` section, a link counted as one: the link and the one-line offer, never the terms (rule 16)",
+    compute: (c) => blocks(c.sections.filter((s) => inBase(s, "first_comment"))).reduce((n, { block }) => {
+      const t = textOf(block);
+      return n + countWords(t.replace(new RegExp(LINK_SOURCE, "gi"), " ")) + urlsIn(t);
+    }, 0),
+  },
+  questions: { kind: "item", text: true, note: "question marks outside subject blocks and follow-ups (a follow-up is its own email)", compute: (c) => blocks(c.sections.filter((s) => !inBase(s, "followup"))).filter(({ block }) => block.type !== "subject").reduce((n, { block }) => n + (textOf(block).match(/\?/g) ?? []).length, 0) },
   cta_count: { kind: "item", note: "cta and button blocks", compute: (c) => blocks(c.sections).filter(({ block }) => LINK_BLOCKS.has(block.type)).length },
   presentation_ctas: { kind: "aggregate", note: "cta and button blocks in `presentation_*` sections", compute: (c) => blocks(c.all.filter((s) => sectionBaseId(s.section_id).startsWith("presentation_"))).filter(({ block }) => LINK_BLOCKS.has(block.type)).length },
   replay_emails: { kind: "aggregate", note: "distinct items among `replay_email` sections", compute: (c) => distinctItems(c.all.filter((s) => inBase(s, "replay_email"))) },
@@ -1625,8 +1640,8 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
 }
 
 /** The owner's tells and words in a short text (an idiom, a habit, an exemplar), em dashes, emojis and hashtags included. */
-export function ownerTellsIn(text: string, exemptTerms: string[] = []): number {
-  const { owner } = detectTells(unitsOf(textToSections(text)), FORMATS.email_single, countWords(text), exemptTerms);
+export function ownerTellsIn(text: string, exemptTerms: string[] = [], spec: FormatSpec = FORMATS.email_single): number {
+  const { owner } = detectTells(unitsOf(textToSections(text)), spec, countWords(text), exemptTerms);
   return owner;
 }
 

@@ -29,4 +29,5 @@ export interface FormatSpec {
   platform_limits?: Record<string, number>; // e.g. {primary_text_chars: 150}
   standard_section: string;    // the paragraph in docs/04-copy-standard.md §9 this spec encodes
   multi_item?: { item_name: string; min: number; max: number; item_roles?: string[] }; // sequences, ad sets
+  piece_sections?: string[];   // sections that are a separate piece of their own (a cold email's follow-up)
 }

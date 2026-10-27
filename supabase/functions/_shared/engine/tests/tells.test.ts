@@ -1019,3 +1019,41 @@ Deno.test("count_windup: clocks, ratios, links and literal quantities are not co
     assertEquals(owner(t, f), [], t);
   }
 });
+
+Deno.test("round 3 review: tell 4 once a sentence, rules scoped before the scan, reveals and questions, other languages", () => {
+  const owner = (t: string, f = FORMATS.organic_social) => analyzeText(t, { format: f }).owner_tells;
+  // one windup a sentence, whichever rule of tell 4 matched first; an ellipsis ends a sentence
+  assertEquals(owner("One more thing, in two steps: paste the keyword and read the brief."), 1);
+  assertEquals(owner("Here's what happened… Two questions decide it."), 2);
+  // a rule that does not count in a format claims no words there
+  assertEquals(owner("Seven ways tailored to your clinic: online booking, reminders and reviews.", FORMATS.sales_letter), 1);
+  // the never reveal: the owner's examples, not a person's story
+  for (const t of ["The keyword was never your competition.", "You were never the problem.", "Your keyword tool was never your problem.", "A list of traffic numbers was never going to tell you which pages would."]) assertEquals(owner(t), 1, t);
+  for (const t of ["My dad was never going to retire. He worked the farm until he was 80.", "It was never going to be easy, and I knew it.", "The bank was never going to lend me the money, so I sold my truck.", "I really was never going to quit."]) assertEquals(owner(t, FORMATS.email_single), 0, t);
+  // an engagement question after "to you:" is not a reveal; "Here are 5 ways ...:" is a count windup
+  assertEquals(owner("Over to you: what would you add?"), 0);
+  assertEquals(owner("Here are 5 ways to fix it: check who ranks, read page one, skip the brands."), 1);
+  // a first-person English post is English
+  const post = analyzeDraft([section("main", [
+    "I paid a writer $4,000 for forty posts last year.", "I tried every keyword tool I could find. Then I stopped guessing.",
+    "Now I check who ranks before I write a single post.", "Same writer. Same budget. I check who ranks before I write a single post.",
+    "Ten of my next twelve posts hit page one, and I check who ranks before I write a single post.",
+  ].map((p) => block("paragraph", p))), section("cta", [block("cta", "Comment PLAN and I'll send you the checklist.")])], FORMATS.organic_social);
+  assertEquals(tells(post, "repeated_phrase")?.count, 1);
+});
+
+Deno.test("round 3 review: a cold email's follow-up is its own email; the first comment counts a link as one word", () => {
+  const cold = analyzeDraft([
+    section("problem_or_case", [block("paragraph", "Worth noting: Bright Dental cut its content spend by half with the same team.")]),
+    section("question", [block("paragraph", "Is that worth a look for your team?")]),
+    section("followup", [block("paragraph", "New this week: you also listed a content lead role. My rule: one writer per keyword cluster. Is that worth a look for your team?")]),
+  ], FORMATS.cold_email);
+  assertEquals(cold.hard_fail_reasons.filter((r) => r.startsWith("owner_stack") || r.includes("questions")), []);
+  const social = analyzeDraft([
+    section("lead_in", [block("hook", "You paid a writer for a page that never ranked.")]),
+    section("main", [block("paragraph", "It reads the pages that rank and checks your links.")]),
+    section("cta", [block("cta", "Comment PLAN and I'll send the link.")]),
+    section("first_comment", [block("paragraph", "Keyword Briefs: 14-day free trial, then $49 a month for 40 briefs. Paste a keyword, see who ranks for it, and get the brief in minutes: https://legiit.com/tools/keyword-briefs?utm_source=linkedin&utm_medium=organic&utm_campaign=oct-launch")]),
+  ], FORMATS.organic_social);
+  assertEquals(social.hard_fail_reasons.filter((r) => r.includes("first_comment_words")), []);
+});

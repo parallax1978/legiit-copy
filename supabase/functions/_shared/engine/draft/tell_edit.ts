@@ -93,9 +93,15 @@ export function editableUnits(draft: DraftOutput, spec: FormatSpec): EditUnit[] 
 export function renderUnits(units: EditUnit[], draft: DraftOutput): string {
   const out: string[] = [];
   let current = "";
-  // the chosen opening is read first, before the sections; before the pick every opening is an alternative
+  // the chosen opening is shown where its section sits (first in a post, after the headline in a letter); before the
+  // pick every opening is an alternative, shown after the sections
   const chosen = draft.chosen_lead_id && units.some((u) => u.owner === "lead" && u.ownerId === draft.chosen_lead_id) ? draft.chosen_lead_id : null;
-  const ordered = [...units.filter((u) => u.owner === "lead" && u.ownerId === chosen), ...units.filter((u) => !(u.owner === "lead" && u.ownerId === chosen))];
+  // the lead section: the one the openings stand in for (its own text is never edited directly)
+  const leadId = chosen ? draft.sections.find((x) => !units.some((u) => u.owner === "section" && u.ownerId === x.section_id) && x.blocks.some((b) => b.meta?.lead_id === chosen))?.section_id ?? null : null;
+  const opening = units.filter((u) => u.owner === "lead" && u.ownerId === chosen);
+  const sectionUnits = draft.sections.flatMap((s) => (s.section_id === leadId ? opening : units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)));
+  const ordered = [...(leadId ? [] : opening), ...sectionUnits, ...units.filter((u) => u.owner === "lead" && u.ownerId !== chosen)];
+  const firstIsOpening = ordered[0]?.owner === "lead" && ordered[0]?.ownerId === chosen;
   for (const u of ordered) {
     const key = `${u.owner}:${u.ownerId}`;
     if (key !== current) {
@@ -105,7 +111,7 @@ export function renderUnits(units: EditUnit[], draft: DraftOutput): string {
         u.owner !== "lead"
           ? `\n=== section ${u.ownerId} ===`
           : u.ownerId === chosen
-          ? `\n=== opening ${u.ownerId}${kind}: the chosen opening, read before the sections ===`
+          ? `\n=== opening ${u.ownerId}${kind}: the chosen opening, ${firstIsOpening ? "read before the sections" : "read in its place among the sections"} ===`
           : `\n=== alternative opening ${u.ownerId}${kind}${chosen ? `, read in place of ${chosen}` : ""} ===`,
       );
       current = key;
@@ -231,25 +237,45 @@ function containsRun(hay: string[], needle: string[]): boolean {
   return false;
 }
 
-const WINDUP_RES = TELLS.filter((t) => t.name === "label_windup" || t.name === "count_windup").map((t) => t.regex!);
+const WINDUP_RULES = TELLS.filter((t) => t.name === "label_windup" || t.name === "count_windup");
+/** The count itself: the number right before the counted noun. Every other number in a windup is a fact. */
+const COUNT_TOKEN_RE = /\b(?:two|three|four|five|six|seven|eight|nine|ten|\d+)(?=\s+(?:steps|stages|ways|reasons|signs|mistakes|secrets|moves|things|questions|checks|tests|rules)\b)/gi;
 
-/** Where `text` holds a count or label windup (tells.ts label_windup and count_windup, or a bare "two things"): its count is the tell. */
-function windupSpans(text: string): [number, number][] {
-  const spans: [number, number][] = [];
-  for (const re of [...WINDUP_RES.map((r) => new RegExp(r.source, r.flags)), new RegExp(COUNT_WINDUP_RE.source, "gi")]) {
-    for (const m of text.matchAll(re)) spans.push([m.index ?? 0, (m.index ?? 0) + m[0].length]);
+/** Where an edit sits: the whole text it is cut from, its offset there, and the format family (count windups count in short pieces only). */
+export interface EditContext {
+  text: string;
+  at: number;
+  family?: FormatSpec["family"];
+}
+
+const blankMarks = (t: string) => t.replace(MARK_RE, (m) => " ".repeat(m.length));
+
+/**
+ * Positions, in the whole text, of the counts of its count windups (tells.ts label_windup and count_windup, or a bare
+ * "two things"): the windups are matched on the whole text, so a sentence's own start and end anchor them, and only
+ * the count goes; a price, a percentage or a duration in the same stretch stays a fact.
+ */
+function windupCounts(ctx: EditContext): Set<number> {
+  const text = blankMarks(ctx.text);
+  const res = [...WINDUP_RULES.filter((r) => !r.families || !ctx.family || r.families.includes(ctx.family)).map((r) => new RegExp(r.regex!.source, r.regex!.flags)), new RegExp(COUNT_WINDUP_RE.source, "gi")];
+  const out = new Set<number>();
+  for (const re of res) {
+    for (const m of text.matchAll(re)) {
+      const start = m.index ?? 0;
+      for (const c of m[0].matchAll(new RegExp(COUNT_TOKEN_RE.source, COUNT_TOKEN_RE.flags))) out.add(start + (c.index ?? 0));
+    }
   }
-  return spans;
+  return out;
 }
 
 /**
- * The numbers `re` finds in `after` are those of `before` in order, none changed: only a count inside a count windup
+ * The numbers `re` finds in `after` are those of `before` in order, none changed: only the count of a count windup
  * ("I'd ask two things", "It takes seven steps, and", "Follow these 5 steps:") may be dropped.
  */
-function numbersKept(before: string, after: string, re: RegExp): boolean {
-  const text = strip(before);
-  const spans = windupSpans(text);
-  const was = Array.from(text.matchAll(new RegExp(re.source, re.flags)), (m) => ({ word: norm(m[0]), droppable: spans.some(([s, e]) => (m.index ?? 0) >= s && (m.index ?? 0) < e) }));
+function numbersKept(before: string, after: string, re: RegExp, ctx: EditContext = { text: before, at: 0 }): boolean {
+  const counts = windupCounts(ctx);
+  const text = blankMarks(before);
+  const was = Array.from(text.matchAll(new RegExp(re.source, re.flags)), (m) => ({ word: norm(m[0]), droppable: counts.has(ctx.at + (m.index ?? 0)) }));
   const now = list(after, re);
   let j = 0;
   for (const w of was) {
@@ -265,12 +291,12 @@ function numbersKept(before: string, after: string, re: RegExp): boolean {
  * hook again, a slogan, a leftover. The tags go with the claim they cite. A sentence with a number, a date, an email,
  * a link or a quotation is never cut this way (names are checked on the whole text).
  */
-export function factFreeSentenceCut(before: string, after: string): boolean {
+export function factFreeSentenceCut(before: string, after: string, ctx?: EditContext): boolean {
   if (after.trim()) return false;
   const plain = strip(before).replace(/\s+/g, " ").trim();
   if (!/^["“(]?\p{Lu}/u.test(plain) || !/[.!?]["”’)]?$/.test(plain)) return false;
   // the count of a count windup ("It takes seven steps.") is the tell, not a fact
-  return numbersKept(before, "", NUMBER_RE) && numbersKept(before, "", NUMBER_WORD_RE) && !list(before, DATE_WORD_RE).length &&
+  return numbersKept(before, "", NUMBER_RE, ctx) && numbersKept(before, "", NUMBER_WORD_RE, ctx) && !list(before, DATE_WORD_RE).length &&
     !list(before, EMAIL_RE).length && !list(before, LINK_RE).length && !list(before, HOST_RE).length && !(before.match(QUOTE_RE) ?? []).length;
 }
 
@@ -284,13 +310,13 @@ function minus(xs: string[], drop: string[]): string[] {
   return out;
 }
 
-export function guardEdit(before: string, after: string): string | null {
+export function guardEdit(before: string, after: string, ctx?: EditContext): string | null {
   if (!before.trim()) return "empty before";
-  if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after)) && !factFreeSentenceCut(before, after)) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
+  if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after)) && !factFreeSentenceCut(before, after, ctx)) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
   // the count in a count windup ("I'd ask two things", "It takes seven steps, and") is the tell, not a fact: it may go, never change
-  if (!numbersKept(before, after, NUMBER_RE)) return "a number, its unit or its currency changed, or numbers changed order";
-  if (!numbersKept(before, after, NUMBER_WORD_RE)) return "a number written as a word changed";
+  if (!numbersKept(before, after, NUMBER_RE, ctx)) return "a number, its unit or its currency changed, or numbers changed order";
+  if (!numbersKept(before, after, NUMBER_WORD_RE, ctx)) return "a number written as a word changed";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";
@@ -390,7 +416,7 @@ export function splice(text: string, index: number, length: number, after: strin
 }
 
 /** Apply the editor's edits in order; each must find its span, pass the guards and leave the text changed. */
-export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
+export function applyEdits(units: EditUnit[], edits: TellEdit[], family?: FormatSpec["family"]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
   const out = units.map((u) => ({ ...u }));
   const byRef = new Map(out.map((u) => [u.ref, u]));
   const applied: TellEdit[] = [];
@@ -416,7 +442,8 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditU
       continue;
     }
     const found = u.text.slice(at.index, at.index + at.length);
-    const why = guardEdit(found, e.after);
+    const ctx: EditContext = { text: u.text, at: at.index, family };
+    const why = guardEdit(found, e.after, ctx);
     if (why) {
       rejected.push({ ...e, reason: why });
       continue;
@@ -425,7 +452,7 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditU
     // a crosshead the text does not need may go whole (a ledger tag or a number in it still may not)
     const dropsHeader = !next.trim() && u.item === null && DELETABLE_DISPLAY.has(u.type);
     // a whole-sentence cut takes its own tags with it; every other mark stays with its fact
-    const expected = factFreeSentenceCut(found, e.after) ? minus(anchoredMarks(u.text), anchoredMarks(found)) : anchoredMarks(u.text);
+    const expected = factFreeSentenceCut(found, e.after, ctx) ? minus(anchoredMarks(u.text), anchoredMarks(found)) : anchoredMarks(u.text);
     const whole = multiset(expected) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, u.item === null && TITLE_CASE_TYPES.has(u.type))) ?? quotationsIntact(u.text, next);
     if (whole) {
       rejected.push({ ...e, reason: whole });
@@ -531,7 +558,21 @@ export interface RepeatFinding {
 }
 
 const TAG_IN_RE = new RegExp(LEDGER_TAG.source);
-const carriesTag = (u: EditUnit) => TAG_IN_RE.test(u.text) || u.text.includes(NEEDS_SOURCE_TAG);
+const runWords = (t: string) => t.toLowerCase().replace(/’/g, "'").replace(MARK_RE, " ").match(/[\p{L}\p{N}][\p{L}\p{N}']*/gu) ?? [];
+
+/** Whether the sentence of `u` that holds `run` carries a ledger tag or NEEDS SOURCE mark (the mark after its full stop included). */
+function runTagged(u: EditUnit, run: string): boolean {
+  // a mark that follows a sentence's full stop belongs to that sentence
+  const sentences = u.text.replace(/([.!?…]["”’)]?)\s+(\[\[[^\]]+\]\])/g, "$1$2").split(/(?<=[.!?…]["”’)]?(?:\[\[[^\]]+\]\])*)\s+/);
+  const target = run.split(" ").map((w) => w.replace(/’/g, "'"));
+  const holds = (s: string) => {
+    const w = runWords(s);
+    for (let i = 0; i + target.length <= w.length; i++) if (target.every((t, k) => w[i + k] === t || w[i + k].replace(/s$/, "") === t.replace(/s$/, ""))) return true;
+    return false;
+  };
+  const s = sentences.find(holds);
+  return s ? TAG_IN_RE.test(s) || s.includes(NEEDS_SOURCE_TAG) : TAG_IN_RE.test(u.text) || u.text.includes(NEEDS_SOURCE_TAG);
+}
 
 /**
  * What the piece says twice (tells.ts repeated_phrase), as findings for the editor, read the way the reader reads it
@@ -562,16 +603,18 @@ export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: Form
       const [later, first] = [reading[p.later], reading[p.first]];
       let target: EditUnit | null;
       if (alternative) target = later.owner === "lead" ? later : first.owner === "lead" ? first : null;
-      else target = carriesTag(later) && !carriesTag(first) ? first : later;
+      else target = runTagged(later, p.run) && !runTagged(first, p.run) ? first : later;
       if (!target) continue;
       const other = target === later ? first : later;
       const key = `${target.ref}\u0000${p.run}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      const how = target.owner === "lead" && alternative
-        ? "say it another way in this opening (an opening is never cut whole)"
-        : carriesTag(target)
+      // an opening, or the only text of its section, is never cut whole: it is said another way
+      const sole = target.owner === "lead" || units.filter((u) => u.owner === target!.owner && u.ownerId === target!.ownerId).length === 1;
+      const how = runTagged(target, p.run)
         ? "keep this sentence's facts and ledger tag and say the shared words another way"
+        : sole
+        ? `say it another way here (${target.owner === "lead" ? "an opening" : "the only text of its section"} is never cut whole)`
         : "say it once";
       out.push({ ref: target.ref, tell: "repeated_phrase", example: `"${p.run}" is also said in [${other.ref}]; ${how}`, piece: pieceOfUnit(target) });
     }

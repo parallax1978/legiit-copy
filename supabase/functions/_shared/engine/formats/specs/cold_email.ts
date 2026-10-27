@@ -23,4 +23,5 @@ export const cold_email: FormatSpec = {
   allow_markdown_headings: false,
   allow_caps: true,
   standard_section: "Cold email",
+  piece_sections: ["followup"],
 };

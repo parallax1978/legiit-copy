@@ -9,10 +9,12 @@
  * fit in the invocation the step returns `continueLater`; at least one group runs per invocation.
  */
 import type { StepContext, StepResult } from "./types.ts";
+import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v6.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v7.ts";
 import { exemptTermsFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { REPEAT_FAMILIES } from "../tells.ts";
 import { toDraftEffect } from "../draft/assemble.ts";
 import { callStep, latestDraftOutput, RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { PERSIST_RESERVE_MS, remainingBudgetMs } from "./budget.ts";
@@ -25,27 +27,37 @@ const MAX_LIST = 6;
 type Applied = TellEditOutput["edits"][number];
 type Rejected = TellEditOutput["rejected"][number];
 
-const wordsOf = (t: string) => t.toLowerCase().replace(/\[\[[^\]]*\]\]/g, " ").match(/[\p{L}\p{N}'’]+/gu) ?? [];
+/** Words of a line, the way the step compares them: lower case, tags out, curly apostrophes and quotes straightened. */
+const wordsOf = (t: string) => t.toLowerCase().replace(/\[\[[^\]]*\]\]/g, " ").replace(/[’‘]/g, "'").replace(/[“”]/g, '"').match(/[\p{L}\p{N}']+/gu) ?? [];
+const refOf = (r: string) => r.trim().replace(/^\[|\]$/g, "");
+const has = (text: string, line: string) => {
+  const t = ` ${wordsOf(text).join(" ")} `;
+  const l = wordsOf(line).join(" ");
+  return !!l && t.includes(` ${l} `);
+};
 
-/** An audited line an edit reached: the edit's span and the line share a run of five words (or the whole of a shorter one). */
-function reached(line: TellEditAuditItem, edits: TellEdit[]): boolean {
-  const a = wordsOf(line.line);
-  const need = Math.min(5, a.length);
-  if (!need) return true;
-  return edits.some((e) => {
-    if (e.ref.trim().replace(/^\[|\]$/g, "") !== line.ref.trim().replace(/^\[|\]$/g, "")) return false;
-    const b = wordsOf(e.before);
-    for (let i = 0; i + need <= a.length; i++) {
-      const run = a.slice(i, i + need).join(" ");
-      if (b.join(" ").includes(run)) return true;
-    }
-    return false;
+/** The audit kinds a long piece is not held to: it may repeat its promise and walk its steps on purpose. */
+const SHORT_ONLY = new Set<TellEditAuditItem["kind"]>(["said_again", "tool_tour"]);
+
+/**
+ * The lines the editor listed as tells, did not keep, and that still stand word for word in their text (an edit that
+ * changed any word of a line reached it). Left out: a line the editor's own copy of the text never had, a testimonial,
+ * a line in a text that carries a ledger tag when it was listed as said again (the proof keeps its line; the untagged
+ * one changes), a line that is the user's accepted wording, and in a long piece a repeat or a tour of the steps.
+ */
+function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: EditUnit[], opts: { short: boolean; accepted: string[] }): TellEditAuditItem[] {
+  const textOf = (units: EditUnit[], ref: string) => units.find((u) => u.ref === ref);
+  return audit.filter((x) => {
+    if (x.keep) return false;
+    const ref = refOf(x.ref);
+    const was = textOf(before, ref);
+    const now = textOf(after, ref);
+    if (!was || !now || was.type === "testimonial" || !has(was.text, x.line)) return false;
+    if (!opts.short && SHORT_ONLY.has(x.kind)) return false;
+    if (x.kind === "said_again" && /\[\[(?:L:|NEEDS SOURCE)/.test(was.text)) return false;
+    if (opts.accepted.some((w) => has(x.line, w) || has(w, x.line))) return false;
+    return has(now.text, x.line);
   });
-}
-
-/** The lines the editor listed as tells, did not keep, and left without an edit that landed. */
-function leftUnedited(audit: TellEditAuditItem[], landed: TellEdit[]): TellEditAuditItem[] {
-  return audit.filter((x) => !x.keep && !reached(x, landed));
 }
 
 function restore(ctx: StepContext, version: number, units: EditUnit[]): TellEditPartial | null {
@@ -71,6 +83,9 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
   const before = ownerTellCount(source, spec, exemptTerms);
   const cadence = flatCadence(source, spec);
+  // the user's accepted wording for a ledger row ("rewrite") is used as written: the editor leaves it alone
+  const acceptedWording = ctx.claims.filter((c) => c.user_decision === "rewrite" && c.claim_text).map((c) => c.claim_text);
+  const auditOpts = { short: REPEAT_FAMILIES.has(spec.family), accepted: acceptedWording };
 
   const original = editableUnits(source, spec);
   const groups = groupUnits(original);
@@ -124,34 +139,40 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
       groupTotal: groups.length,
       retryNote: null,
       cadence,
+      acceptedWording,
     };
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);
     model = res.model;
-    let r = applyInGroup(units, res.output.edits, refs);
-    const listed = (res.output.audit ?? []).filter((x) => refs.has(x.ref.trim().replace(/^\[|\]$/g, "")));
+    const unitsBefore = units;
+    let r = applyInGroup(units, res.output.edits, refs, spec.family);
+    const listed = (res.output.audit ?? []).filter((x) => refs.has(refOf(x.ref)));
     audit.push(...listed);
     // the model's summary lines stand only when all its edits landed; otherwise the landed edits' own labels say what changed
     whatChanged.push(...summaryOf(res.output.what_changed, r.applied, r.rejected.length > 0));
     // one more ask, when time allows, for edits the guards refused (more than a stray) and for lines the editor listed
     // as tells and left without an edit that landed
-    let left = leftUnedited(listed, r.applied);
+    let left = leftUnedited(listed, unitsBefore, r.units, auditOpts);
     const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
     if ((refusedMany || left.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = [
         refusedMany ? `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}` : "",
-        left.length ? `You listed these lines and left them without an edit that landed; give each one its edit (cut it, or say the plain specific thing), or keep it only if it carries a fact the piece needs:\n${left.slice(0, 12).map((x) => `- [${x.ref}] (${x.kind}) "${x.line}"`).join("\n")}` : "",
+        left.length ? `You listed these lines and left them as they were; give each one its edit (say the plain specific thing, or cut it where a cut is allowed), or keep it only if it carries a fact the piece needs:\n${left.slice(0, 12).map((x) => {
+          const refused = r.rejected.filter((e) => refOf(e.ref) === refOf(x.ref)).map((e) => e.reason);
+          const opening = units.find((u) => u.ref === refOf(x.ref))?.owner === "lead";
+          return `- [${refOf(x.ref)}] (${x.kind}) "${x.line}"${opening ? " (an opening: rephrase it, never cut it whole)" : ""}${refused.length ? `; refused before: ${Array.from(new Set(refused)).join("; ")}` : ""}`;
+        }).join("\n")}` : "",
         `Return edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`,
       ].filter(Boolean).join("\n");
       try {
         const current = r.units.filter((u) => refs.has(u.ref));
         const retry = await deps.call(ctx, "tell_edit", tellEditPrompt, { ...args, units: current, findings: findingsFor(r.units), retryNote: note }, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""} (retry)`);
         model = retry.model;
-        const again = applyInGroup(r.units, retry.output.edits, refs);
+        const again = applyInGroup(r.units, retry.output.edits, refs, spec.family);
         whatChanged.push(...summaryOf(retry.output.what_changed, again.applied, again.rejected.length > 0));
         r = { units: again.units, applied: [...r.applied, ...again.applied], rejected: [...r.rejected, ...again.rejected] };
         // a line the retry kept on purpose is kept; one it left again is reported
-        const keptNow = new Set((retry.output.audit ?? []).filter((x) => x.keep).map((x) => `${x.ref}\u0000${x.line}`));
-        left = leftUnedited(left, again.applied).filter((x) => !keptNow.has(`${x.ref}\u0000${x.line}`));
+        const keptNow = (retry.output.audit ?? []).filter((x) => x.keep);
+        left = leftUnedited(left, unitsBefore, again.units, auditOpts).filter((x) => !keptNow.some((k) => refOf(k.ref) === refOf(x.ref) && (has(k.line, x.line) || has(x.line, k.line))));
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
         console.warn("tell edit retry failed:", e instanceof Error ? e.message : e);
@@ -208,9 +229,9 @@ function summaryOf(lines: string[], landed: TellEdit[], refused: boolean): strin
 }
 
 /** applyEdits for one group: an edit naming a text outside the group is refused with its reason, never dropped silently. */
-function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>): ReturnType<typeof applyEdits> {
-  const outside = edits.filter((e) => !refs.has(e.ref.trim().replace(/^\[|\]$/g, "")));
-  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)));
+function applyInGroup(units: EditUnit[], edits: TellEdit[], refs: Set<string>, family?: FormatSpec["family"]): ReturnType<typeof applyEdits> {
+  const outside = edits.filter((e) => !refs.has(refOf(e.ref)));
+  const r = applyEdits(units, edits.filter((e) => !outside.includes(e)), family);
   return { ...r, rejected: [...outside.map((e) => ({ ...e, reason: `no text in this part has the reference ${e.ref}` })), ...r.rejected] };
 }
 
