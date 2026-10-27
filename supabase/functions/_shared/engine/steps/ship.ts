@@ -9,7 +9,6 @@ import { parseStoredDraft } from "../draft/assemble.ts";
 import { runnerUpLead } from "../draft/leads.ts";
 import { userAttention } from "../draft/review.ts";
 import { stepOutput } from "../draft/step_util.ts";
-import { MAX_REVISION_CYCLES } from "../config.ts";
 
 export const shipStep: StepFn = async (ctx) => {
   const latest = ctx.latestDraft;
@@ -36,13 +35,18 @@ export const shipStep: StepFn = async (ctx) => {
   }
 
   const challenger = draft ? runnerUpLead(draft.leads, draft.chosen_lead_id) : null;
+  // the final revision applied the last review's notes; no reviewer predicted on this copy
+  const finalPass = ctx.finalPass === true;
   const out = ShipOutput.parse({
     control_draft_version: latest.version,
     challenger_lead_id: challenger,
     test_variable: challenger ? "lead" : null,
-    prediction: editorial?.prediction ?? "unsure",
-    prediction_reason: editorial?.prediction_reason ?? "no editorial verdict was recorded for this generation",
-    user_attention: userAttention({ editorial, factual, mechanical, pendingFlags, needsSource: draft?.needs_source ?? [], openQuestions, finalPass: ctx.revisionCycles > MAX_REVISION_CYCLES }),
+    prediction: finalPass ? "unsure" : editorial?.prediction ?? "unsure",
+    prediction_reason: finalPass
+      ? "The last revision applied the copy chief's notes after the final review, so no reviewer has predicted on this version."
+      : editorial?.prediction_reason ?? "no editorial verdict was recorded for this generation",
+    user_attention: userAttention({ editorial, factual, mechanical, pendingFlags, needsSource: draft?.needs_source ?? [], openQuestions, finalPass }),
+    final_pass: finalPass,
   });
 
   const n = out.user_attention.length;

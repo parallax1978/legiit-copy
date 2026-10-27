@@ -313,4 +313,7 @@ Deno.test("ship after the final revision: the last review's note is listed as ap
   const after = userAttention({ ...base, finalPass: true });
   assert(after[0].startsWith("Check this (copy chief): the last revision worked on this note, and nobody reviewed it again"), after[0]);
   assert(!after[0].includes("(line:"), "the quoted line may be gone after the final revision");
+  // said whatever else is pending on the shipped draft
+  const pending = userAttention({ ...base, finalPass: true, pendingFlags: [{ source: "mechanical", severity: "medium", quote: "x", issue: "y" }] });
+  assert(pending.some((l) => l.startsWith("Check this (copy chief)")), JSON.stringify(pending));
 });

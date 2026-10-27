@@ -87,5 +87,7 @@ export const ShipOutput = z.object({
   prediction: z.enum(["beat", "lose", "unsure"]),
   prediction_reason: z.string(),
   user_attention: z.array(z.string()).describe("flags and open questions the user must look at"),
+  /** the shipped copy is the final revision: the last review's notes applied, checked, not reviewed again */
+  final_pass: z.boolean().optional(),
 });
 export type ShipOutput = z.infer<typeof ShipOutput>;

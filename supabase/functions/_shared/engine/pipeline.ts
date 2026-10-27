@@ -13,6 +13,51 @@ export interface PipelineState {
   factualFatal?: boolean;          // fabrication found
   revisionCycles: number;
   skipOffer?: boolean;             // user chose to keep the offer as-is
+  finalPass?: boolean;             // the newest tell edit came after the newest cold read: the checks of the final pass
+}
+
+/**
+ * The final pass, read from the shape of the history: a completed tell edit that no cold read followed, after a cold
+ * read had run. Only the final revision's tell edit goes straight to the checks, so a Retry or Resume inside the
+ * final pass (which restarts the revision count) still ships once the checks are done.
+ */
+export function inFinalPass(rows: { step: string; status?: string; finished_at: string | null; created_at: string }[]): boolean {
+  const lastAt = (name: string) => rows.filter((r) => r.step === name && (r.status === undefined || r.status === "completed")).reduce((m, r) => Math.max(m, Date.parse(r.finished_at ?? r.created_at)), -Infinity);
+  const tell = lastAt("tell_edit");
+  const cold = lastAt("cold_read");
+  return Number.isFinite(cold) && tell > cold;
+}
+
+/**
+ * Which steps enqueue a given step (run-step's idempotency gate): a completed row of the step newer than every
+ * predecessor's completion means "done this pass". The final revision's tell edit enqueues the checks itself (no cold
+ * read in the final pass); in a normal cycle the cold read finishes after the tell edit, so its boundary holds.
+ */
+export const STEP_PREDECESSORS: Record<StepName, StepName[]> = {
+  intake: [],
+  research: [],
+  offer: ["research"],
+  argument: ["research", "offer"],
+  draft: ["argument"],
+  tell_edit: ["draft", "revise"],
+  // draft and revise stay listed so a cold read a pre-tell-edit revision enqueued still finds its boundary
+  cold_read: ["tell_edit", "draft", "revise"],
+  editorial: ["cold_read"],
+  mechanical: ["cold_read", "tell_edit"],
+  factual: ["cold_read", "tell_edit"],
+  revise: ["editorial", "mechanical", "factual"],
+  ship: ["editorial", "mechanical", "factual"],
+};
+
+/** The latest completion among the step's predecessors; rows of the step created before it belong to an earlier pass. */
+export function passBoundary(step: StepName, history: { step: string; status: string; finished_at: string | null; created_at: string }[]): string | null {
+  let b: string | null = null;
+  for (const r of history) {
+    if (r.status !== "completed" || !STEP_PREDECESSORS[step].includes(r.step as StepName)) continue;
+    const t = r.finished_at ?? r.created_at;
+    if (!b || Date.parse(t) > Date.parse(b)) b = t;
+  }
+  return b;
 }
 
 /** Steps in a brand-new generation, before any work. */
@@ -47,7 +92,7 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
     case "editorial":
     case "mechanical":
     case "factual": {
-      if (s.revisionCycles > MAX_REVISION_CYCLES) {
+      if (s.finalPass || s.revisionCycles > MAX_REVISION_CYCLES) {
         // the final pass: the last review's notes are in; it ships once the facts and the mechanics are checked
         return (["mechanical", "factual"] as StepName[]).every((x) => s.completed.includes(x)) ? ["ship"] : [];
       }

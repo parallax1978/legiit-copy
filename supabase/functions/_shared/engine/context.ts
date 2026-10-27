@@ -6,6 +6,7 @@ import type { Db } from "../supabase.ts";
 import type { Json } from "../database.types.ts";
 import type { StepName } from "./config.ts";
 import { getFormat } from "./formats/index.ts";
+import { inFinalPass } from "./pipeline.ts";
 import { withLength } from "./formats/length.ts";
 import { parseOptions } from "./draft/options.ts";
 import { FormatId } from "./schemas/common.ts";
@@ -91,6 +92,7 @@ export async function buildContext(db: Db, generationId: string, attempt: number
     latestDraft: draftRows.length ? draftRows[draftRows.length - 1] : null,
     stepOutputs,
     revisionCycles,
+    finalPass: inFinalPass(steps.data ?? []),
     attempt,
     promptVersions,
     progress,

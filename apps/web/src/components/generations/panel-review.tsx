@@ -35,6 +35,9 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
             )}
             {hasControl && <PredictionBadge prediction={ship?.prediction ?? prediction?.prediction ?? editorial?.prediction ?? "unsure"} />}
           </div>
+          {ship?.final_pass && editorial && (
+            <p className="rounded-lg bg-surface-alt px-3 py-2 text-xs text-ink-muted">This is the last review. The final revision then worked on its notes, and nobody reviewed it again: read the piece before you use it.</p>
+          )}
           {editorial && !hasControl && (
             <p className="text-xs text-ink-soft">To get a head-to-head call, paste the copy you use today as &quot;Your current copy&quot; when you start a piece.</p>
           )}
@@ -48,8 +51,8 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
           {editorial && (
             <>
               {editorial.one_thing && (
-                <div className="rounded-lg border border-bad/30 bg-bad-soft/40 p-3">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-bad">Fix this first</div>
+                <div className={cn("rounded-lg border p-3", ship?.final_pass ? "border-warn/30 bg-warn-soft/40" : "border-bad/30 bg-bad-soft/40")}>
+                  <div className={cn("mb-1 text-[11px] font-semibold uppercase tracking-wide", ship?.final_pass ? "text-warn" : "text-bad")}>{ship?.final_pass ? "Worked on in the final revision, not reviewed again" : "Fix this first"}</div>
                   <Note note={editorial.one_thing} />
                 </div>
               )}

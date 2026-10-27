@@ -16,7 +16,7 @@ import { type Db, serviceClient } from "shared/supabase.ts";
 import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls, secretMatches } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
-import { nextSteps, type PipelineState } from "engine/pipeline.ts";
+import { inFinalPass, nextSteps, passBoundary, STEP_PREDECESSORS, type PipelineState } from "engine/pipeline.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
 import { RefusalError, TruncatedError } from "engine/llm.ts";
@@ -34,24 +34,9 @@ const Body = z.object({
 });
 type Body = z.infer<typeof Body>;
 
-/** Which steps enqueue a given step. A completed row newer than every predecessor's completion means "done this pass". */
-const PREDECESSORS: Record<StepName, StepName[]> = {
-  intake: [],
-  research: [],
-  offer: ["research"],
-  argument: ["research", "offer"],
-  draft: ["argument"],
-  tell_edit: ["draft", "revise"],
-  // draft and revise stay listed so a cold read a pre-tell-edit revision enqueued still finds its boundary
-  cold_read: ["tell_edit", "draft", "revise"],
-  editorial: ["cold_read"],
-  mechanical: ["cold_read"],
-  factual: ["cold_read"],
-  revise: ["editorial", "mechanical", "factual"],
-  ship: ["editorial", "mechanical", "factual"],
-};
+/** Which steps a given step enqueues (pipeline.ts STEP_PREDECESSORS, inverted). */
 const SUCCESSORS: Record<StepName, StepName[]> = Object.fromEntries(
-  STEP_NAMES.map((s) => [s, STEP_NAMES.filter((t) => PREDECESSORS[t].includes(s))]),
+  STEP_NAMES.map((s) => [s, STEP_NAMES.filter((t) => STEP_PREDECESSORS[t].includes(s))]),
 ) as Record<StepName, StepName[]>;
 
 const LABELS: Record<StepName, string> = {
@@ -158,7 +143,7 @@ async function runMessage(body: Body): Promise<void> {
   const history = await loadHistory(db, generationId);
   const forced = gen.status === "queued" && gen.current_step === step; // requeue_generation targets this step on purpose
   // a Retry or Try another angle starts a new pass: attempts before the restart are not counted, not resumed
-  const boundary = later(predecessorBoundary(step, history), gen.requeued_at ?? null);
+  const boundary = later(passBoundary(step, history), gen.requeued_at ?? null);
   const thisPass = history.filter((r) => r.step === step && isAfter(r.created_at, boundary));
 
   if (!forced) {
@@ -541,6 +526,7 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
     factualFatal,
     revisionCycles,
     skipOffer: options.skip_offer === true,
+    finalPass: inFinalPass(completedRows),
   };
 }
 
@@ -561,16 +547,6 @@ async function loadHistory(db: Db, generationId: string): Promise<StepRowLite[]>
     .order("created_at", { ascending: true });
   if (error) throw new Error(`generation_steps load failed: ${error.message}`);
   return (data ?? []) as StepRowLite[];
-}
-
-/** Latest completion among the step's predecessors; rows of the step created before it belong to an earlier pass. */
-function predecessorBoundary(step: StepName, history: StepRowLite[]): string | null {
-  let b: string | null = null;
-  for (const r of history) {
-    if (r.status !== "completed" || !PREDECESSORS[step].includes(r.step as StepName)) continue;
-    b = later(b, r.finished_at ?? r.created_at);
-  }
-  return b;
 }
 
 function isAfter(ts: string | null, boundary: string | null): boolean {

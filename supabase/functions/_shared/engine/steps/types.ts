@@ -36,6 +36,8 @@ export interface StepContext {
   latestDraft: DraftRow | null;
   stepOutputs: Partial<Record<StepName, unknown>>; // latest completed output per step
   revisionCycles: number;
+  /** the copy is the final revision, checked and not reviewed again (pipeline.ts inFinalPass) */
+  finalPass?: boolean;
   attempt: number;
   promptVersions: Record<string, { id: string; version: number; template: string; model: string; effort: string; max_tokens: number } | undefined>;
   /** Report progress to the UI (generations.progress_message). */
