@@ -7,6 +7,7 @@ import { RULES } from "./standard.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import type { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport } from "../schemas/review.ts";
 import { formatRulesText, ledgerText, offerBlockText, sectionsWithIds, voiceText } from "../draft/prompt_text.ts";
+import { exemptTermsFrom } from "../tells.ts";
 
 export interface ReviseArgs {
   draft: DraftOutput;
@@ -63,7 +64,7 @@ export const revisePrompt: PromptModule<ReviseArgs> = {
       formatRulesText(ctx.format),
       offerBlockText(ctx.variant, ctx.brief, ctx.claims),
       ledgerText(ctx.claims),
-      voiceText(ctx.voice, ctx.config?.greeting),
+      voiceText(ctx.voice, ctx.config?.greeting, exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name)),
       CACHE_BREAK,
       `REVISION CYCLE ${args.cycle}.`,
       edText,

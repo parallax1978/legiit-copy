@@ -12,6 +12,7 @@ import type { LeadVariantT } from "../draft/assemble.ts";
 import { LEAD_IDS, LEAD_RULES_BY_AWARENESS } from "../draft/leads.ts";
 import { briefText, configText, dossierText, formatRulesText, ledgerText, offerBlockText, questionsText, sectionSpecText, sectionsWithIds, voiceText } from "../draft/prompt_text.ts";
 import { parseOptions } from "../draft/options.ts";
+import { exemptTermsFrom } from "../tells.ts";
 
 export interface DraftArgs {
   call: DraftCall;
@@ -147,7 +148,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
       briefText(ctx.brief, ctx.offer.name),
       ledgerText(ctx.claims),
       dossierText(ctx.dossier, { claims: ctx.claims }),
-      voiceText(ctx.voice, ctx.config?.greeting),
+      voiceText(ctx.voice, ctx.config?.greeting, exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name)),
       configText(ctx.config),
       questionsText(ctx.questions),
       CACHE_BREAK,

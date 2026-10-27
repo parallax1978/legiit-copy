@@ -871,3 +871,60 @@ Deno.test("residuals: a machine that runs quietly and a cardiac or load stress t
   assertEquals(tells(analyzeText("The tool quietly runs in the background.", { format: FORMATS.email_single }), "quietly")?.count, 1);
   assertEquals(tells(analyzeText("It runs quietly in the background, checking your rankings.", { format: FORMATS.email_single }), "quietly")?.count, 1);
 });
+
+// ---------------------------------------------------------------------------------------------------------------
+// Second review: regressions in the rewritten owner scan
+// ---------------------------------------------------------------------------------------------------------------
+
+Deno.test("a long-span rule claims only its head: words inside its tail still count", () => {
+  const n = (t: string) => analyzeText(t, { format: FORMATS.email_single }).owner_tells;
+  assertEquals(n("Here's how to unlock seamless growth."), 3);
+  assertEquals(n("Not a robust tool. Not a seamless course. It's a system."), 3);
+  assertEquals(n("Here's why most agencies never move the needle."), 2);
+  assertEquals(n("The keyword was never your real landscape. The pages ranking for it are."), 2);
+  assertEquals(n("Here's the hard truth: most pages never rank."), 1);
+  assertEquals(n("In today's landscape, content is everything."), 1);
+});
+
+Deno.test("a body sentence full of names is not a headline; a delivery line is not a windup; plain terms are not a three-beat", () => {
+  const n = (t: string, f = FORMATS.email_single) => analyzeText(t, { format: f }).owner_tells;
+  assertEquals(n("Call Beacon Dental in Austin today."), 0);
+  for (const t of ["Here's the link: https://legiit.com/live", "Here's the link to join:", "Here's the replay:", "Here's my calendar link:", "Here is the schedule:"]) assertEquals(n(t), 0, t);
+  for (const t of ["No contracts. No setup fees. Cancel anytime.", "No hidden fees. No contracts. You pay $49 a month.", "No credit card. No contract. Sam will call you within a day.", "Never miss a call. Never lose a lead. Our receptionist answers 24/7."]) {
+    assertEquals(tells(analyzeText(t, { format: FORMATS.landing_page_short }), "three_beat_deep_third"), undefined, t);
+  }
+});
+
+Deno.test("questions: list items and objection sections are not self-answered; the narrator asking himself is", () => {
+  const optin = analyzeDraft([section("bullets", [block("bullets", "", ["Which three pages should you fix first?", "The 5-minute test that shows if a keyword can rank"])])], FORMATS.optin);
+  assertEquals(tells(optin, "self_answered_question"), undefined);
+  const objections = analyzeDraft([section("objections", [block("paragraph", "Does it work on a new site?"), block("paragraph", "Yes. Two of the five case studies started under 40 pages."), block("paragraph", "What if it does not rank? You get every dollar back.")])], FORMATS.landing_page_short);
+  assertEquals(tells(objections, "self_answered_question"), undefined);
+  for (const t of ["So what did I do? I rebuilt the page from scratch.", "Why did I build it? Because I lost my best client in March.", "What did I find? Half the pages had no title tag."]) {
+    assert(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), t);
+  }
+  assertEquals(tells(analyzeText("Can I cancel? Yes, from the billing page.", { format: FORMATS.email_single }), "self_answered_question"), undefined);
+});
+
+Deno.test("literal senses do not hide the canonical tells", () => {
+  const t = (s: string, rule: string) => tells(analyzeText(s, { format: FORMATS.email_single }), rule)?.count ?? 0;
+  assertEquals(t("While everyone else made noise, Legiit quietly passed a million orders.", "quietly"), 1);
+  assertEquals(t("Nobody heard about it, but Legiit quietly passed a million orders.", "quietly"), 1);
+  assertEquals(t("They are affiliates dressed as reviewers.", "disguise_frame"), 1);
+  assertEquals(t("We watched people dressed as coaches sell the same course.", "disguise_frame"), 1);
+  assertEquals(t("It runs quietly at 24 dB on low.", "quietly"), 0);
+  assertEquals(t("Kids dressed as superheroes get in free.", "disguise_frame"), 0);
+});
+
+Deno.test("the stack: a webinar's presentation sections are one piece, and an RSA ad's fixed sections are one piece", () => {
+  const webinar = analyzeDraft([
+    section("presentation_open", [block("paragraph", "We built a robust plan.")]),
+    section("presentation_case_study", [block("paragraph", "It is genuinely short.")]),
+  ], FORMATS.webinar_package);
+  assert(webinar.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")), webinar.hard_fail_reasons.join("; "));
+  const rsa = analyzeDraft([
+    section("headlines", [block("headline", "Unlock More Local Leads")]),
+    section("descriptions", [block("paragraph", "A robust audit of your site in 4 hours.")]),
+  ], FORMATS.google_rsa);
+  assert(rsa.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")), rsa.hard_fail_reasons.join("; "));
+});

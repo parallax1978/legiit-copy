@@ -7,18 +7,21 @@ import type { StepFn } from "./types.ts";
 import { FactualOutput } from "../schemas/review.ts";
 import { factualPrompt } from "../prompts/factual.v5.ts";
 import { droppedReferenceFlags, factualFlags, postProcessFactual } from "../draft/review.ts";
-import { stripNeverTells } from "../draft/tell_edit.ts";
+import { stripNeverTells } from "../draft/never_tells.ts";
+import { exemptTermsFrom } from "../tells.ts";
 import { callStep, latestDraftOutput } from "../draft/step_util.ts";
 
 export const factualStep: StepFn = async (ctx) => {
   const draft = latestDraftOutput(ctx);
   await ctx.progress("Factual and compliance review: ten tests in order");
 
+  // the offer's own words are not owner words in a rewrite either (a brand called "Seamless Books")
+  const exemptTerms = exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name);
   let res = await callStep(ctx, "factual", factualPrompt, { draft, retryNote: null }, FactualOutput, "factual review");
-  let pp = postProcessFactual(res.output, ctx.claims);
+  let pp = postProcessFactual(res.output, ctx.claims, exemptTerms);
   if (pp.violations.length) {
     res = await callStep(ctx, "factual", factualPrompt, { draft, retryNote: pp.violations.join("\n") }, FactualOutput, "factual review (retry: reviewer rules)");
-    pp = postProcessFactual(res.output, ctx.claims);
+    pp = postProcessFactual(res.output, ctx.claims, exemptTerms);
   }
 
   // any sentence citing a ledger row the user dropped is a fabrication-level flag, whether or not the reviewer caught it

@@ -157,29 +157,30 @@ const NEVER_HABIT = /em[_ -]?dash|\bdash(?:es)?\b|emoji|hashtag/i;
  * emoji or hashtag habit; no idiom, stance marker or exemplar carrying one of the owner's tells or words; never-tells
  * stripped from the exemplars that stay.
  */
-export function voiceForWriter(v: VoiceProfileRow): { parameters: unknown; idioms: string[]; exemplars: unknown[] } {
+export function voiceForWriter(v: VoiceProfileRow, exemptTerms: string[] = []): { parameters: unknown; idioms: string[]; exemplars: unknown[] } {
   const params = (v.parameters && typeof v.parameters === "object" && !Array.isArray(v.parameters) ? { ...(v.parameters as Record<string, unknown>) } : {}) as Record<string, unknown>;
   for (const k of Object.keys(params)) if (NEVER_HABIT.test(k)) delete params[k];
   for (const k of ["formatting_habits", "stance_markers"]) {
-    if (Array.isArray(params[k])) params[k] = (params[k] as unknown[]).map(String).filter((h) => !NEVER_HABIT.test(h) && ownerTellsIn(h) === 0);
+    if (Array.isArray(params[k])) params[k] = (params[k] as unknown[]).map(String).filter((h) => !NEVER_HABIT.test(h) && ownerTellsIn(h, exemptTerms) === 0);
   }
-  const idioms = (Array.isArray(v.idiom_bank) ? v.idiom_bank.map(String) : []).filter((p) => ownerTellsIn(p) === 0);
+  const idioms = (Array.isArray(v.idiom_bank) ? v.idiom_bank.map(String) : []).filter((p) => ownerTellsIn(p, exemptTerms) === 0);
   const exemplars = (Array.isArray(v.exemplar_paragraphs) ? (v.exemplar_paragraphs as unknown[]) : []).flatMap((e) => {
     const text = typeof e === "string" ? e : e && typeof e === "object" && typeof (e as { text?: unknown }).text === "string" ? (e as { text: string }).text : null;
     if (text === null) return [e];
     const clean = stripNeverTells(text);
-    if (ownerTellsIn(clean) > 0) return [];
+    if (ownerTellsIn(clean, exemptTerms) > 0) return [];
     return [typeof e === "string" ? clean : { ...(e as object), text: clean }];
   });
   return { parameters: params, idioms, exemplars };
 }
 
-export function voiceText(v: VoiceProfileRow | null, configGreeting: string | null | undefined): string {
+/** The voice profile for a writer's request; `exemptTerms` are the offer's own words (a brand named "Elevate" is not an owner word). */
+export function voiceText(v: VoiceProfileRow | null, configGreeting: string | null | undefined, exemptTerms: string[] = []): string {
   if (!v) {
     return `VOICE PROFILE: none. Write as one named person to one reader in plain spoken English (or the copy's own language when it is another) at consumer grade 6-8; sentence length varies (coefficient of variation above 0.7); fragments allowed; ${configGreeting ? `greeting: "${configGreeting}"` : "greeting per the format"}.`;
   }
   const arr = (x: unknown): string[] => (Array.isArray(x) ? x.map(String) : []);
-  const w = voiceForWriter(v);
+  const w = voiceForWriter(v, exemptTerms);
   return [
     `VOICE PROFILE "${v.name}" (parameters and habits; match the measurements, never imitate the exemplars' content; Section 7.1 outranks it: no habit, idiom or exemplar brings back an em dash, emoji, hashtag or any of the owner's tells and words):`,
     `parameters: ${j(w.parameters)}`,

@@ -73,7 +73,7 @@ export const tellEditPrompt: PromptModule<TellEditArgs> = {
     const material = [
       `FORMAT: ${spec.name}. ${spec.description}`,
       `LENGTH BAND: ${spec.length_band_words[0]}-${spec.length_band_words[1]} words; stay close to the copy's own length.`,
-      voiceText(ctx.voice, ctx.config?.greeting ?? null),
+      voiceText(ctx.voice, ctx.config?.greeting ?? null, args.exemptTerms),
       args.exemptTerms.length ? `THE OFFER'S OWN WORDS (the literal names of what it sells; not counted against the word lists): ${args.exemptTerms.join(", ")}` : "",
     ].filter(Boolean).join("\n");
     const found = args.findings.length

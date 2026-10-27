@@ -11,7 +11,7 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, isTitleCaseLine, LINK_SOURCE, TELLS } from "../tells.ts";
+import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, TELLS } from "../tells.ts";
 import { stripNeverTells } from "./never_tells.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
@@ -142,7 +142,8 @@ const QUOTE_RE = /"[^"\n]{1,600}"|“[^”\n]{1,600}”|‘[^’\n]{1,600}’|(?
 const NUMBER_RE = /[$€£¥]?\d[\d,.:]*(?:%|\s?(?:x|k|m|bn|am|pm|a\.m\.|p\.m\.|days?|hours?|hrs?|minutes?|mins?|seconds?|weeks?|months?|years?|yrs?)\b)?/gi;
 /** Cardinal number words; "one", "half", "double" and ordinals are left out, they are mostly turns of phrase ("one thing", "double down"). */
 const NUMBER_WORD_RE = /\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|dozen)\b/gi;
-const COUNT_WINDUP_RE = /\b(?:two|three|four|five)\s+(?:things|questions|checks)\b/gi;
+/** The count of a count windup ("two things", "Three rules"): the label_windup rule's nouns. */
+const COUNT_WINDUP_RE = /\b(?:two|three|four|five)\s+(?:things|questions|checks|tests|rules)\b/gi;
 const DATE_WORD_RE = /\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|January|February|March|April|May|June|July|August|September|October|November|December)\b/g;
 const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 const HOST_RE = /\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b/gi;
@@ -173,20 +174,21 @@ const ABBREVIATION = /\b(?:Dr|Mr|Mrs|Ms|Mx|St|Jr|Sr|Prof|Inc|Ltd|Co|Corp|vs|etc|
 const PRONOUN_I = /^I(?:['’](?:m|d|ve|ll|re))?$/;
 
 /** A word whose capitals mark a name wherever it stands: an acronym ("SEO") or an inner capital ("HubSpot"). */
-const MARKED_NAME = /^[\p{Lu}\d]{2,}$|\p{Ll}\p{Lu}/u;
+/** Words a Title Case headline capitalises that are never names. */
+const TITLE_WORDS = new Set("a an and are as at be best but by can do does every for from get here here's how if in into is it it's its just make more most my new no not now of off on one only or our out over so than that the then these this those to up us we what when where who why will with without you your".split(" "));
 
 /**
  * Names, brands and places: capitalised words that do not open a sentence (a title like "Dr." does not end one),
  * and a sentence's first word when the next word is capitalised too ("Sarah Chen runs"). "I" is not a name. In a
- * Title Case line every word is capitalised, so a word there is a name only when it is marked as one or is in
- * `known` (the names the piece uses in its sentence-case lines); without `known` the line gives no names.
+ * Title Case display line (a headline, a subject) every word is capitalised, so every capitalised word there but a
+ * title word ("How", "Your", "Get") counts as a name: "How Dana Doubled Her Bookings In Austin" keeps Dana and Austin.
  */
-function namesOf(t: string, known: Set<string> | null = null): string[] {
+function namesOf(t: string, display = false): string[] {
   const text = strip(t);
   const titleLines: [number, number][] = [];
   let at = 0;
   for (const line of text.split("\n")) {
-    if (isTitleCaseLine(line)) titleLines.push([at, at + line.length]);
+    if (headlineLike(line, display) && isTitleCaseLine(line)) titleLines.push([at, at + line.length]);
     at += line.length + 1;
   }
   const tokens = Array.from(text.matchAll(/[\p{Lu}][\p{L}'’.-]*/gu));
@@ -196,7 +198,7 @@ function namesOf(t: string, known: Set<string> | null = null): string[] {
     const i = m.index ?? 0;
     if (titleLines.some(([s, e]) => i >= s && i < e)) {
       const word = m[0].replace(/[.'’]+$/, "");
-      if (MARKED_NAME.test(word) || known?.has(word)) out.push(word);
+      if (!TITLE_WORDS.has(word.toLowerCase())) out.push(word);
       return;
     }
     const before = text.slice(0, m.index).replace(/\s+$/, "");
@@ -218,14 +220,27 @@ function containsRun(hay: string[], needle: string[]): boolean {
   return false;
 }
 
+/** The number words of `after` are those of `before` in order, with none changed: only a count windup's count may be dropped. */
+function countsKept(before: string, after: string): boolean {
+  const windup = new Set(Array.from(strip(before).matchAll(new RegExp(COUNT_WINDUP_RE.source, "gi")), (m) => m.index ?? 0));
+  const was = Array.from(strip(before).matchAll(new RegExp(NUMBER_WORD_RE.source, "gi")), (m) => ({ word: m[0].toLowerCase(), droppable: windup.has(m.index ?? -1) }));
+  const now = list(after, NUMBER_WORD_RE);
+  let j = 0;
+  for (const w of was) {
+    if (now[j] === w.word) j++;
+    else if (!w.droppable) return false;
+  }
+  return j === now.length;
+}
+
 /** Why an edit may not be applied, or null when it keeps every fact, tag, quote and link and stays close in length. */
 export function guardEdit(before: string, after: string): string | null {
   if (!before.trim()) return "empty before";
   if (multiset(anchoredMarks(before)) !== multiset(anchoredMarks(after))) return "a ledger tag or NEEDS SOURCE mark was added, dropped, changed or moved to another fact";
   if (BROKEN_TAG_RE.test(after)) return "a ledger tag is malformed";
   if (!same(list(before, NUMBER_RE), list(after, NUMBER_RE))) return "a number, its unit or its currency changed, or numbers changed order";
-  // the count in a count windup ("I'd ask two things", "Two questions decide it") is the tell, not a fact, and may go
-  if (!same(list(before.replace(COUNT_WINDUP_RE, " "), NUMBER_WORD_RE), list(after.replace(COUNT_WINDUP_RE, " "), NUMBER_WORD_RE))) return "a number written as a word changed";
+  // the count in a count windup ("I'd ask two things", "Two questions decide it") is the tell, not a fact: it may go, never change
+  if (!countsKept(before, after)) return "a number written as a word changed";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";
@@ -240,13 +255,16 @@ export function guardEdit(before: string, after: string): string | null {
 }
 
 /** Names in a whole text survive an edit, and none is invented; an owner's word in a title-cased line may go. */
-function namesIntact(before: string, after: string, known: Set<string> | null = null): string | null {
-  const lost = namesOf(before, known).filter((n) => !after.includes(n) && !OWNER_WORD_RES.some((re) => re.test(n)));
+function namesIntact(before: string, after: string, display = false): string | null {
+  const lost = namesOf(before, display).filter((n) => !after.includes(n) && !OWNER_WORD_RES.some((re) => re.test(n)));
   if (lost.length) return `a name was dropped or changed: ${lost[0]}`;
-  const added = namesOf(after, known).filter((n) => !before.includes(n));
+  const added = namesOf(after, display).filter((n) => !before.includes(n));
   if (added.length) return `a name was added: ${added[0]}`;
   return null;
 }
+
+/** Display lines that may be set in Title Case. */
+const TITLE_CASE_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button"]);
 
 /** Display text the owner's "flatten formatting the text does not need" fix may delete outright. */
 const DELETABLE_DISPLAY = new Set<Block["type"]>(["crosshead", "preheadline"]);
@@ -320,11 +338,9 @@ export function splice(text: string, index: number, length: number, after: strin
 }
 
 /** Apply the editor's edits in order; each must find its span, pass the guards and leave the text changed. */
-export function applyEdits(units: EditUnit[], edits: TellEdit[], names: (string | null | undefined)[] = []): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
+export function applyEdits(units: EditUnit[], edits: TellEdit[]): { units: EditUnit[]; applied: TellEdit[]; rejected: RejectedEdit[] } {
   const out = units.map((u) => ({ ...u }));
   const byRef = new Map(out.map((u) => [u.ref, u]));
-  // in a Title Case line only these are names (with acronyms): the brand, product and competitor names, and the names the texts use mid-sentence
-  const known = new Set([...units.flatMap((u) => namesOf(u.text)), ...names.flatMap((n) => (n ?? "").match(/[\p{Lu}][\p{L}'’.-]*/gu) ?? []).map((w) => w.replace(/[.'’]+$/, ""))]);
   const applied: TellEdit[] = [];
   const rejected: RejectedEdit[] = [];
   for (const e of edits) {
@@ -356,7 +372,7 @@ export function applyEdits(units: EditUnit[], edits: TellEdit[], names: (string 
     const next = splice(u.text, at.index, at.length, e.after);
     // a crosshead the text does not need may go whole (a ledger tag or a number in it still may not)
     const dropsHeader = !next.trim() && u.item === null && DELETABLE_DISPLAY.has(u.type);
-    const whole = multiset(anchoredMarks(u.text)) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, known)) ?? quotationsIntact(u.text, next);
+    const whole = multiset(anchoredMarks(u.text)) !== multiset(anchoredMarks(next)) ? "a ledger tag or NEEDS SOURCE mark moved to another fact" : BROKEN_TAG_RE.test(next) ? "a ledger tag is malformed" : (dropsHeader ? null : namesIntact(u.text, next, u.item === null && TITLE_CASE_TYPES.has(u.type))) ?? quotationsIntact(u.text, next);
     if (whole) {
       rejected.push({ ...e, reason: whole });
       continue;

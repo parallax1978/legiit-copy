@@ -13,7 +13,7 @@ import { z } from "zod";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
 import { assertEditor, type JsonValue, loadPromptVersions, parseBody, serve } from "shared/http.ts";
 import { callModel } from "engine/llm.ts";
-import { ownerTellsIn } from "engine/tells.ts";
+import { exemptTermsFrom, ownerTellsIn } from "engine/tells.ts";
 import { DEFAULT_MODEL } from "engine/config.ts";
 import { VOICE_CAPTURE } from "engine/prompts/standard.ts";
 
@@ -83,9 +83,11 @@ serve(async (req) => {
 
   // 2. extracted material (one model call)
   let audience: string | null = null;
+  let offerName: string | null = null;
   if (profile.offer_id) {
-    const { data: offer } = await db.from("offers").select("audience").eq("id", profile.offer_id).maybeSingle();
+    const { data: offer } = await db.from("offers").select("audience, name").eq("id", profile.offer_id).maybeSingle();
     audience = offer?.audience ?? null;
+    offerName = offer?.name ?? null;
   }
   const userMsg = [
     audience ? `AUDIENCE (sets the default readability band; the samples override it): ${audience}` : "",
@@ -120,7 +122,7 @@ serve(async (req) => {
   }
   const stories = m.story_inventory.filter((s) => s.quote.trim().length > 10 && normCorpus.includes(norm(s.quote)));
   // Section 7.1 outranks the samples (docs/04 §10 rule 9): an idiom carrying one of the owner's tells or words is not part of the voice
-  const idioms = dedupe(m.idiom_bank.map((p) => p.trim()).filter((p) => p && normCorpus.includes(norm(p)) && ownerTellsIn(p) === 0)).slice(0, 40);
+  const idioms = dedupe(m.idiom_bank.map((p) => p.trim()).filter((p) => p && normCorpus.includes(norm(p)) && ownerTellsIn(p, exemptTermsFrom(offerName)) === 0)).slice(0, 40);
 
   const fkBand = `${Math.max(3, Math.round(measured.fk_grade) - 1)}-${Math.round(measured.fk_grade) + 1}`;
   const readability_band = m.readability_band?.trim() || fkBand;

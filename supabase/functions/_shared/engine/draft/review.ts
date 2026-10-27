@@ -82,7 +82,7 @@ export interface FactualPostProcess {
  *   ledger row, or a flag mapped to one, is the user's claim, not an invention;
  * - fabrication is fatal; claim_id must point at an existing row or is nulled.
  */
-export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[]): FactualPostProcess {
+export function postProcessFactual(out: FactualOutput, claims: { id: string; user_decision: string | null }[], exemptTerms: string[] = []): FactualPostProcess {
   const known = new Map(claims.map((c) => [c.id, c]));
   const droppedIds = droppedClaimIds(claims);
   const dropped: FactualPostProcess["dropped"] = [];
@@ -117,7 +117,7 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
       continue;
     }
     // a rewritten line is new copy: it may not bring in a Section 7.1 tell or word the line did not have
-    if (f.suggested_rewrite && ownerTellsIn(stripNeverTells(f.suggested_rewrite)) > ownerTellsIn(f.quote)) {
+    if (f.suggested_rewrite && ownerTellsIn(stripNeverTells(f.suggested_rewrite), exemptTerms) > ownerTellsIn(f.quote, exemptTerms)) {
       violations.push(`rewrite brings in one of the owner's tells or words (Section 7.1) the line did not have: "${f.suggested_rewrite}"`);
     }
     flags.push(f);

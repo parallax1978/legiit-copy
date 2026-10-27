@@ -409,7 +409,7 @@ Deno.test("applyEdits: a Title Case line can lose its owner words; a name the pi
     { ref: "h-1", before: "Unlock Seamless SEO Rankings", after: "Get SEO Rankings", tell: "ai words" },
     { ref: "h-2", before: "How Legiit Writes", after: "How We Write", tell: "test: a known name dropped" },
     { ref: "c-1", before: "The Plan", after: "", tell: "formatting the text does not need" },
-  ], ["Legiit"]);
+  ]);
   assertEquals(r.units[0].text, "Get SEO Rankings For Every Local Shop");
   assertEquals(r.rejected.map((x) => x.ref), ["h-2"]);
   assert(/name/.test(r.rejected[0].reason), r.rejected[0].reason);
@@ -467,4 +467,21 @@ Deno.test("residuals: short weekday, quarter, multiplier and ordinal ranges keep
   assertEquals(replaceEmDashes("He said “wait—” and left."), "He said “wait” and left.");
   assertEquals(replaceEmDashes("“—and that was it,” she said."), "“and that was it,” she said.");
   assertEquals(replaceEmDashes("It works--fast."), "It works, fast.");
+});
+
+Deno.test("second review: names in a Title Case headline and in a name-heavy sentence are protected; a count may go but never change", () => {
+  const unit = (ref: string, text: string, type: Block["type"] = "paragraph"): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type, text });
+  const r = applyEdits([
+    unit("h-1", "How Dana Doubled Her Bookings In Austin", "headline"),
+    unit("s-1", "How Dana [[L:abcd1234-0000-0000-0000-000000000000]] Doubled Her Bookings", "subject"),
+    unit("p-1", "Ask Dana Reyes at Bright Smile Dental."),
+  ], [
+    { ref: "h-1", before: "Dana Doubled Her Bookings In Austin", after: "Maria Doubled Her Bookings In Denver", tell: "test" },
+    { ref: "s-1", before: "Dana", after: "Maria", tell: "test" },
+    { ref: "p-1", before: "Dana Reyes", after: "Maria Lopez", tell: "test" },
+  ]);
+  assertEquals(r.applied.length, 0, JSON.stringify(r.applied));
+  assert(guardEdit("We check three things on every site: speed, links and content.", "We check five things on every site: speed, links and content."));
+  assert(guardEdit("You get answers to five questions in the audit call.", "You get answers to two questions in the audit call."));
+  assertEquals(guardEdit("Two tests settle it. Does the page load fast?", "Check whether the page loads fast."), null);
 });
