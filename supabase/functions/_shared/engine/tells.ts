@@ -675,7 +675,7 @@ interface Unit {
   tagged: boolean;
 }
 
-const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
+export const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
 const PROSE_TYPES = new Set<Block["type"]>(["paragraph", "beat", "hook", "slide", "caption", "cta", "ps", "greeting", "signoff", "recap", "price", "guarantee", "testimonial", "disclosure"]);
 
 /** Strip ledger tags and the NEEDS SOURCE marker, keeping line structure (render.ts's stripLedger collapses newlines). */
@@ -1050,7 +1050,7 @@ function selfAnswered(q: string, a: string): boolean {
 }
 
 /** Body blocks where a repeat is the copy saying a point again; a CTA, a price, a guarantee or a disclosure may repeat the offer. */
-const REPEAT_SKIP = new Set<Block["type"]>(["cta", "button", "price", "guarantee", "disclosure", "field", "label", "testimonial", "caption", "ps"]);
+export const REPEAT_SKIP = new Set<Block["type"]>(["cta", "button", "price", "guarantee", "disclosure", "field", "label", "testimonial", "caption", "ps"]);
 const REPEAT_RUN = 5;
 /**
  * Formats read in one sitting, where saying a point twice reads as filler. A long letter, a page or a video script

@@ -11,7 +11,8 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, countWords, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, repeatedRuns, TELLS } from "../tells.ts";
+import { analyzeDraft, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, TELLS } from "../tells.ts";
+import { ONE_LINE_OFFER_FAMILIES } from "./prompt_text.ts";
 import { stripNeverTells } from "./never_tells.ts";
 
 export { removeEmojis, removeHashtags, replaceEmDashes, stripNeverTells } from "./never_tells.ts";
@@ -214,7 +215,7 @@ function namesOf(t: string, display = false): string[] {
     if (PRONOUN_I.test(m[0])) return;
     const i = m.index ?? 0;
     if (titleLines.some(([s, e]) => i >= s && i < e)) {
-      const word = m[0].replace(/[.'’]+$/, "");
+      const word = m[0].replace(/['’]s$/, "").replace(/[.'’]+$/, "");
       if (!TITLE_WORDS.has(word.toLowerCase())) out.push(word);
       return;
     }
@@ -223,7 +224,7 @@ function namesOf(t: string, display = false): string[] {
     const next = tokens[k + 1];
     const nextIsName = !!next && (next.index ?? 0) === (m.index ?? 0) + m[0].length + 1 && !PRONOUN_I.test(next[0]);
     if (opens && !nextIsName) return;
-    out.push(m[0].replace(/[.'’]+$/, ""));
+    out.push(m[0].replace(/['’]s$/, "").replace(/[.'’]+$/, ""));
   });
   return out;
 }
@@ -285,23 +286,45 @@ function numbersKept(before: string, after: string, re: RegExp, ctx: EditContext
   return j === now.length;
 }
 
-/** Words that set a number's size or precision: "up to 40", "about 2,000", "most reports come back within 10 minutes". */
-const QUANTIFIER_RE = /\b(?:up to|about|around|roughly|nearly|almost|approximately|at least|at most|more than|less than|fewer than|over|under|within|on average|typically|usually|most|some)\b/gi;
+/** A size word by meaning, so "about 2,000" and "roughly 2,000" are the same claim and "up to 40" and "40" are not. */
+const SIZE_CLASS: Record<string, string> = {
+  about: "approx", around: "approx", roughly: "approx", approximately: "approx", nearly: "nearly", almost: "nearly",
+  "up to": "max", "at most": "max", "at least": "min", "more than": "min", over: "min", "less than": "below", "fewer than": "below", under: "below", within: "within",
+};
+const NUMBER_TOKEN = `(?:[$€£¥]?\\d(?:[\\d,.]*\\d)?|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|twenty|thirty|forty|fifty|hundred|thousand|million|dozen)`;
+/** A size word right before its number ("up to 40", "within 10 minutes"); "about the 40 keywords" is a topic, not a size. */
+const SIZE_PAIR_RE = new RegExp(`\\b(up to|at most|at least|more than|less than|fewer than|about|around|roughly|approximately|nearly|almost|over|under|within)\\s+(${NUMBER_TOKEN})\\b`, "gi");
+/** Words that size a claim about many ("most reports", "usually") in a sentence that holds a number. */
+const SHARE_RE = /\b(?:most|some|many|usually|typically|often|on average)\b/gi;
 
-/** In a sentence that holds a number, every word that sets its size or precision is still in the replacement. */
-function quantifiersKept(before: string, after: string): boolean {
-  const need: string[] = [];
-  for (const s of strip(before).split(/(?<=[.!?…])\s+/)) {
-    if (!list(s, NUMBER_RE).length && !list(s, NUMBER_WORD_RE).length) continue;
-    need.push(...(s.match(new RegExp(QUANTIFIER_RE.source, "gi")) ?? []).map((q) => q.toLowerCase()));
+function sizeWords(text: string): string[] {
+  const out: string[] = [];
+  for (const s of strip(text).split(/(?<=[.!?…]["”’)]?)\s+/)) {
+    for (const m of s.matchAll(new RegExp(SIZE_PAIR_RE.source, "gi"))) out.push(`${SIZE_CLASS[m[1].toLowerCase()]}:${norm(m[2])}`);
+    if (list(s, NUMBER_RE).length || list(s, NUMBER_WORD_RE).length) out.push(...(s.match(new RegExp(SHARE_RE.source, "gi")) ?? []).map((w) => `share:${w.toLowerCase()}`));
   }
-  const have = (strip(after).match(new RegExp(QUANTIFIER_RE.source, "gi")) ?? []).map((q) => q.toLowerCase());
-  for (const q of need) {
-    const i = have.indexOf(q);
-    if (i < 0) return false;
-    have.splice(i, 1);
-  }
-  return true;
+  return out.sort();
+}
+
+/** The span of the whole sentences of `ctx.text` an edit of `before` at `ctx.at` touches. */
+function touchedSentences(ctx: EditContext, before: string): [number, number] {
+  let start = 0;
+  for (const m of ctx.text.slice(0, ctx.at).matchAll(/[.!?…]["”’)\]]*\s+|\n/g)) start = (m.index ?? 0) + m[0].length;
+  const tail = ctx.text.slice(ctx.at + before.length);
+  const m = /[.!?…]["”’)\]]*(?=\s|$)|\n/.exec(tail);
+  return [start, m ? ctx.at + before.length + (m.index ?? 0) + m[0].length : ctx.text.length];
+}
+
+/**
+ * The words that set the size of the claims an edit touches are the same after it: "up to 40" never becomes "40" or
+ * "over 40", and "Most reports" never becomes "Reports", however narrow the span; "about" may become "roughly".
+ */
+function precisionKept(before: string, after: string, ctx?: EditContext): boolean {
+  if (!ctx) return sizeWords(before).join("|") === sizeWords(after).join("|");
+  const [s, e] = touchedSentences(ctx, before);
+  const was = ctx.text.slice(s, e);
+  const now = ctx.text.slice(s, ctx.at) + after + ctx.text.slice(ctx.at + before.length, e);
+  return sizeWords(was).join("|") === sizeWords(now).join("|");
 }
 
 /** Why an edit may not be applied, or null when it keeps every fact, tag, quote and link and stays close in length. */
@@ -336,8 +359,8 @@ export function guardEdit(before: string, after: string, ctx?: EditContext): str
   // the count in a count windup ("I'd ask two things", "It takes seven steps, and") is the tell, not a fact: it may go, never change
   if (!numbersKept(before, after, NUMBER_RE, ctx)) return "a number, its unit or its currency changed, or numbers changed order";
   if (!numbersKept(before, after, NUMBER_WORD_RE, ctx)) return "a number written as a word changed";
-  // a whole-sentence cut takes its claim with it; a rewrite keeps the claim's size
-  if (after.trim() && !quantifiersKept(before, after)) return "a word that sets a number's size or precision was dropped (\"up to\", \"about\", \"most\", \"within\")";
+  // a whole-sentence cut takes its claim with it; any other edit keeps the size of the claims it touches
+  if (!(after.trim() === "" && factFreeSentenceCut(before, after, ctx)) && !precisionKept(before, after, ctx)) return "a word that sets a number's size or precision changed (\"up to\", \"about\", \"most\", \"within\")";
   if (!same(list(before, DATE_WORD_RE), list(after, DATE_WORD_RE))) return "a day or month changed";
   if (multiset(list(before, EMAIL_RE)) !== multiset(list(after, EMAIL_RE))) return "an email address changed";
   if (multiset(list(before, LINK_RE)) !== multiset(list(after, LINK_RE)) || multiset(list(before, HOST_RE)) !== multiset(list(after, HOST_RE))) return "a link or web address changed";
@@ -579,7 +602,16 @@ export interface RepeatFinding {
 }
 
 const TAG_IN_RE = new RegExp(LEDGER_TAG.source);
-const runWords = (t: string) => t.toLowerCase().replace(/’/g, "'").replace(MARK_RE, " ").match(/[\p{L}\p{N}][\p{L}\p{N}']*/gu) ?? [];
+const runWords = (t: string) => t.replace(MARK_RE, " ").toLowerCase().replace(/’/g, "'").match(/\p{N}+(?:[.,]\p{N}+)*|\p{L}[\p{L}\p{N}']*/gu) ?? [];
+
+/** Whether the sentence of `text` that holds `line` carries a ledger tag or NEEDS SOURCE mark (the mark after its full stop included). */
+export function sentenceTagged(text: string, line: string): boolean {
+  const sentences = text.replace(/([.!?…]["”’)]?)\s+(\[\[[^\]]+\]\])/g, "$1$2").split(/(?<=[.!?…]["”’)]?(?:\[\[[^\]]+\]\])*)\s+/);
+  const want = runWords(line);
+  const s = want.length ? sentences.find((x) => containsRun(runWords(x), want.slice(0, Math.min(5, want.length)))) : undefined;
+  const t = s ?? text;
+  return TAG_IN_RE.test(t) || t.includes(NEEDS_SOURCE_TAG);
+}
 
 /** Whether the sentence of `u` that holds `run` carries a ledger tag or NEEDS SOURCE mark (the mark after its full stop included). */
 function runTagged(u: EditUnit, run: string): boolean {
@@ -643,6 +675,55 @@ export function repeatFindings(units: EditUnit[], draft: DraftOutput, spec: Form
   return out;
 }
 
+/** A line, the way the step compares it word for word: tags out, quotes and apostrophes straightened, punctuation kept. */
+const lineText = (t: string) => t.replace(MARK_RE, " ").replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, " ").trim().toLowerCase();
+
+/** Whether `line` still stands in `text` exactly (an em dash or an emoji taken out of it counts as a change). */
+export function stillStands(text: string, line: string): boolean {
+  const l = lineText(line).replace(/[.!?…]+$/, "");
+  return !!l && lineText(text).includes(l);
+}
+
+/**
+ * The points of a short piece the editor mapped to two lines or more that still stand together: in one piece (an
+ * email of a sequence, an ad of a set) and one reading (an alternative opening is read with the sections, never with
+ * another opening). A CTA, a price, a guarantee, a caption, a P.S. and a display field may restate the offer and are
+ * left out. For each open point, the lines to change: every standing line but the one to keep (the line whose
+ * sentence carries a ledger tag, else the first).
+ */
+export function openPoints(points: { point: string; lines: { ref: string; line: string }[] }[], units: EditUnit[], draft: DraftOutput, spec: FormatSpec): { point: string; lines: { ref: string; line: string }[] }[] {
+  if (!REPEAT_FAMILIES.has(spec.family)) return [];
+  const leadId = editsLeads(draft, spec);
+  const out: { point: string; lines: { ref: string; line: string }[] }[] = [];
+  const refOf = (r: string) => r.trim().replace(/^\[|\]$/g, "");
+  for (const p of points) {
+    const standing = p.lines
+      .map((l) => ({ l: { ref: refOf(l.ref), line: l.line }, u: units.find((x) => x.ref === refOf(l.ref)) }))
+      .filter((x): x is { l: { ref: string; line: string }; u: EditUnit } => !!x.u && x.u.type !== "testimonial" && !REPEAT_SKIP.has(x.u.type) && !DISPLAY_TYPES.has(x.u.type) && stillStands(x.u.text, x.l.line));
+    // group by piece; within a piece an opening's lines read with the sections' lines, never with another opening's
+    const byPiece = new Map<string, typeof standing>();
+    for (const s of standing) {
+      const piece = pieceOfSection(s.u.owner === "lead" ? leadId ?? s.u.ownerId : s.u.ownerId, spec);
+      byPiece.set(piece, [...(byPiece.get(piece) ?? []), s]);
+    }
+    for (const group of byPiece.values()) {
+      const openings = new Set(group.filter((s) => s.u.owner === "lead").map((s) => s.u.ownerId));
+      const readings = openings.size ? Array.from(openings).map((o) => group.filter((s) => s.u.owner !== "lead" || s.u.ownerId === o)) : [group];
+      const toChange = new Map<string, { ref: string; line: string }>();
+      for (const r of readings) {
+        if (r.length < 2) continue;
+        const keep = r.find((s) => sentenceTagged(s.u.text, s.l.line)) ?? r[0];
+        for (const s of r) if (s !== keep) toChange.set(`${s.l.ref}\u0000${s.l.line}`, s.l);
+      }
+      if (toChange.size) out.push({ point: p.point, lines: Array.from(toChange.values()) });
+    }
+  }
+  return out;
+}
+
+/** Blocks that carry the offer's own wording. */
+const OFFER_LINE_TYPES = new Set<Block["type"]>(["price", "guarantee", "disclosure", "cta", "button", "field"]);
+
 /** Ledger rows whose wording the copy keeps as written: prices, the trial, the deadline, a free tier and the market's verbatims. */
 const EXACT_WORDING_TYPES = new Set(["price_discount", "continuity_trial", "scarcity_urgency", "free", "audience_language"]);
 /** Words in a row copied from a ledger row before it is the row's wording, not the speaker's. */
@@ -669,19 +750,21 @@ function longestCommonRun(a: string[], b: string[]): string[] {
  * as findings for the editor on the text that copies. Prices, the trial, the deadline, verbatims and the user's
  * accepted wording ("rewrite") stay as written; so does a guarantee outside a short piece (a page repeats its sentence).
  */
-export function ledgerWordingFindings(units: EditUnit[], claims: { id: string; claim_type: string; claim_text: string; user_decision: string | null }[], spec: FormatSpec): { ref: string; tell: string; example: string }[] {
-  const exact = (c: { claim_type: string }) => EXACT_WORDING_TYPES.has(c.claim_type) || (c.claim_type === "guarantee" && !REPEAT_FAMILIES.has(spec.family));
+export function ledgerWordingFindings(units: EditUnit[], claims: { id: string; claim_type: string; claim_text: string; user_decision: string | null; role?: string | null }[], spec: FormatSpec): { ref: string; tell: string; example: string }[] {
+  const exact = (c: { claim_type: string; role?: string | null }) => EXACT_WORDING_TYPES.has(c.claim_type) || c.role === "offer_term" || (c.claim_type === "guarantee" && !ONE_LINE_OFFER_FAMILIES.has(spec.family));
   const rows = claims.filter((c) => c.claim_text && c.user_decision !== "drop" && c.user_decision !== "rewrite" && !exact(c)).map((c) => ({ id: c.id, words: runWords(c.claim_text) }));
   const out: { ref: string; tell: string; example: string }[] = [];
   for (const u of units) {
-    if (u.type === "testimonial") continue;
+    // the offer's own lines (a price, the guarantee, a CTA, a disclosure) keep the offer's wording
+    if (u.type === "testimonial" || OFFER_LINE_TYPES.has(u.type)) continue;
     const w = runWords(u.text);
     let longest: string[] = [];
     for (const r of rows) {
       const run = longestCommonRun(w, r.words);
       if (run.length > longest.length) longest = run;
     }
-    if (longest.length >= LEDGER_RUN) out.push({ ref: u.ref, tell: "ledger_wording", example: `"${longest.join(" ")}" copies a ledger row's wording; say the fact the way you would to one reader, its numbers and tag kept` });
+    // a run that carries an amount is the offer's figure, kept as written
+    if (longest.length >= LEDGER_RUN && !(/[$€£¥]\s?\d/.test(u.text) && longest.some((w) => /\d/.test(w)))) out.push({ ref: u.ref, tell: "ledger_wording", example: `"${longest.join(" ")}" copies a ledger row's wording; say the fact the way you would to one reader, its numbers and tag kept` });
   }
   return out;
 }

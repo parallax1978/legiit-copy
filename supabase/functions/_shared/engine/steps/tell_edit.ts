@@ -11,9 +11,9 @@
 import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v8.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
 import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, ownerTellCount, rebuildDraft, repeatFindings, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "../draft/prompt_text.ts";
@@ -56,11 +56,11 @@ function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: Edi
     const now = textOf(after, ref);
     if (!was || !now || was.type === "testimonial" || !has(was.text, x.line)) return false;
     if (!opts.short && SHORT_ONLY.has(x.kind)) return false;
-    if (x.kind === "said_again" && /\[\[(?:L:|NEEDS SOURCE)/.test(was.text)) return false;
+    if (x.kind === "said_again" && sentenceTagged(was.text, x.line)) return false;
     // a price, the guarantee, a disclosure and an amount keep the offer's wording: never asked about as copied wording
     if (x.kind === "ledger_wording" && (["price", "guarantee", "disclosure", "cta", "button"].includes(was.type) || /[$€£¥]\s?\d/.test(x.line))) return false;
-    if (opts.accepted.some((w) => has(x.line, w) || has(w, x.line))) return false;
-    return has(now.text, x.line);
+    if (opts.accepted.some((w) => has(w, x.line))) return false;
+    return stillStands(now.text, x.line);
   });
 }
 
@@ -76,22 +76,6 @@ function dedupe(lines: string[]): string[] {
   const out: string[] = [];
   for (const l of lines.map((x) => stripNeverTells(x.trim())).filter(Boolean)) if (!out.some((o) => o.toLowerCase() === l.toLowerCase())) out.push(l);
   return out;
-}
-
-/**
- * The points of a short piece still made by two or more lines that stand word for word: the editor mapped them and
- * left them. A line in a text with a ledger tag is the proof and may stay; the others are the ones to change.
- */
-function pointsLeft(points: TellEditPoint[], after: EditUnit[], short: boolean): TellEditPoint[] {
-  if (!short) return [];
-  return points.filter((p) => {
-    const standing = p.lines.filter((l) => {
-      const u = after.find((x) => x.ref === refOf(l.ref));
-      return !!u && u.type !== "testimonial" && has(u.text, l.line);
-    });
-    const untagged = standing.filter((l) => !/\[\[(?:L:|NEEDS SOURCE)/.test(after.find((x) => x.ref === refOf(l.ref))?.text ?? ""));
-    return standing.length >= 2 && untagged.length >= 1;
-  });
 }
 
 export async function runTellEdit(ctx: StepContext, deps: { call: typeof callStep; now?: () => number }): Promise<StepResult<TellEditOutput | TellEditPartial>> {
@@ -181,7 +165,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     // as tells and left without an edit that landed
     let left = leftUnedited(listed, unitsBefore, r.units, auditOpts);
     const mapped = (res.output.points ?? []).map((p) => ({ ...p, lines: p.lines.filter((l) => refs.has(refOf(l.ref))) })).filter((p) => p.lines.length > 1);
-    let pointsOpen = pointsLeft(mapped, r.units, auditOpts.short);
+    let pointsOpen = openPoints(mapped, r.units, source, spec);
     const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
     if ((refusedMany || left.length || pointsOpen.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = [
@@ -191,7 +175,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
           const opening = units.find((u) => u.ref === refOf(x.ref))?.owner === "lead";
           return `- [${refOf(x.ref)}] (${x.kind}) "${x.line}"${opening ? " (an opening: rephrase it, never cut it whole)" : ""}${refused.length ? `; refused before: ${Array.from(new Set(refused)).join("; ")}` : ""}`;
         }).join("\n")}` : "",
-        pointsOpen.length ? `These points are still made by more than one line; keep the strongest line of each (a line with a ledger tag is the proof) and cut the others, or rewrite each so it adds something the first did not:\n${pointsOpen.slice(0, 8).map((p) => `- ${p.point}: ${p.lines.map((l) => `[${refOf(l.ref)}] "${l.line}"`).join("; ")}`).join("\n")}` : "",
+        pointsOpen.length ? `These points are still made by more than one line; change these lines (cut each, or rewrite it so it adds something the point's other line did not):\n${pointsOpen.slice(0, 8).map((p) => `- ${p.point}: ${p.lines.map((l) => `[${refOf(l.ref)}] "${l.line}"`).join("; ")}`).join("\n")}` : "",
         `Return edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`,
       ].filter(Boolean).join("\n");
       try {
@@ -204,7 +188,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
         // a line the retry kept on purpose is kept; one it left again is reported
         const keptNow = (retry.output.audit ?? []).filter((x) => x.keep);
         left = leftUnedited(left, unitsBefore, again.units, auditOpts).filter((x) => !keptNow.some((k) => refOf(k.ref) === refOf(x.ref) && (has(k.line, x.line) || has(x.line, k.line))));
-        pointsOpen = pointsLeft(pointsOpen, again.units, auditOpts.short);
+        pointsOpen = openPoints(mapped, again.units, source, spec);
       } catch (e) {
         // a failed retry keeps the first call's edits for this group
         console.warn("tell edit retry failed:", e instanceof Error ? e.message : e);

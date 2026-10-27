@@ -7,10 +7,10 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v8.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -334,13 +334,13 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 9, 8, 10, 8]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [11, 10, 11, 9, 9, 10, 8]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
   assert(editorialPrompt.system.includes("a direction never asks for the product's steps to be listed or counted"));
   for (const t of ["say each point once", "It takes seven steps."]) assert(OWNER_TELLS.includes(t), t);
-  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece", "\"points\" comes first", "\"audit\" comes next", "In a short piece (organic social", "a code and URL said twice", "settles both", "goes into the sentence that says why it matters"]) assert(tellEditPrompt.system.includes(t), t);
+  for (const t of ["The checker lists each run of five words it found said again", "the read,", "A teaser anywhere in the piece", "\"points\" comes first", "\"audit\" comes next", "In a short piece (organic social", "a code and URL said twice", "settles both", "is rewritten in its own paragraph into the sentence that says why it matters", "never with another opening"]) assert(tellEditPrompt.system.includes(t), t);
   // round 3: a ledger row is the fact, a verbatim the substance; the proof in the promise's terms
   assert(RULES.includes("A ledger row is the fact, not the wording"));
   assert(RULES.includes("never uses its survey wording"));
@@ -722,4 +722,39 @@ Deno.test("round 4 review: a rewrite keeps the words that set a number's size; a
   assert(RULES.includes("keeps its condition and its remedy"));
   assert(tellEditPrompt.system.includes("every word that sets the claim's size or precision"));
   assert(!tellEditPrompt.system.includes("\"every credit it charged comes back to your balance\")"), "the guarantee clause is no longer the example of copied wording");
+});
+
+Deno.test("round 4 review: open points read per piece and reading; offer lines and openings are never asked to be cut", () => {
+  const spec = FORMATS.organic_social;
+  const leads = [
+    { id: "lead-a", lead_type: "promise" as const, reader_hypothesis: "r1", blocks: [blk("lead-a-1", "Volume picked the page, and the page never ranked.", "hook")] },
+    { id: "lead-b", lead_type: "secret" as const, reader_hypothesis: "r2", blocks: [blk("lead-b-1", "A traffic estimate chose the page, so it never ranked.", "hook")] },
+  ];
+  const draft = assembleDraft({ spec, sections: [provisionalLeadSection("lead_in", null, leads), sec("main", [blk("main-1", "Pick by volume and the page never ranks.")]), sec("cta", [blk("cta-1", "Pick by what can rank: the link is in the first comment.", "cta")])], leads, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const units = editableUnits(draft, spec);
+  const point = { point: "volume picks the wrong page", lines: [
+    { ref: "lead-a-1", line: "Volume picked the page, and the page never ranked." },
+    { ref: "lead-b-1", line: "A traffic estimate chose the page, so it never ranked." },
+    { ref: "cta-1", line: "Pick by what can rank: the link is in the first comment." },
+  ] };
+  // two openings and a CTA: openings are never read together and the CTA may restate; nothing to change
+  assertEquals(openPoints([point], units, draft, spec), []);
+  // an opening and a body line in one reading: the body line changes, the opening (the first use) stays
+  const withBody = { ...point, lines: [point.lines[0], { ref: "main-1", line: "Pick by volume and the page never ranks." }] };
+  assertEquals(openPoints([withBody], units, draft, spec).flatMap((p) => p.lines.map((l) => l.ref)), ["main-1"]);
+  // the possessive is the same name: the credential fix the prompt teaches lands
+  const cred: EditUnit[] = [{ ref: "m-1", owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text: "I'm Legiit's founder." }, { ref: "m-2", owner: "section", ownerId: "main", blockIndex: 1, item: null, type: "paragraph", text: "Then you pick." }];
+  assertEquals(applyEdits(cred, [{ ref: "m-1", before: "I'm Legiit's founder.", after: "I founded Legiit, and I stopped letting volume pick pages.", tell: "bare credential" }]).applied.length, 1);
+});
+
+Deno.test("round 4 review: the precision guard holds for narrow spans and lets a same-meaning swap through", () => {
+  const units = (text: string): EditUnit[] => [{ ref: "m-1", owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text }, { ref: "m-2", owner: "section", ownerId: "main", blockIndex: 1, item: null, type: "paragraph", text: "Then you pick." }];
+  const lands = (text: string, before: string, after: string) => applyEdits(units(text), [{ ref: "m-1", before, after, tell: "t" }], "social").applied.length === 1;
+  assert(!lands(`Each report checks up to 40 keywords against the pages ranking for them [[L:${A}]].`, "up to ", ""));
+  assert(!lands(`Each report checks up to 40 keywords against the pages ranking for them [[L:${A}]].`, "up to", "all"));
+  assert(!lands(`Most reports come back within 10 minutes [[L:${A}]].`, "Most reports", "Reports"));
+  assert(!lands("It checks 40 keywords.", "checks 40", "checks over 40"));
+  assert(lands("The research covers about 2,000 local shops.", "about", "roughly"));
+  assert(lands("It's not about the 40 keywords you track. It's about the 3 that sell.", "It's not about the 40 keywords you track. It's about the 3 that sell.", "Of the 40 keywords you track, 3 sell."));
+  assert(lands("Under the hood, it reads the 10 pages that rank.", "Under the hood, it", "It"));
 });
