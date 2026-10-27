@@ -115,28 +115,71 @@ Deno.test("promise guard: the piece's last line that states its promise is never
   assertEquals(lead.applied.length, 0);
 });
 
-Deno.test("promise guard: a feature line that shares the promise's qualifiers does not stand in for it, and a cut chained on a refused one goes too", () => {
+Deno.test("promise guard: the head is the result noun; a feature line never stands in for the promise; a chained cut never lands mid-sentence", () => {
+  // the head is the last content word of the promise's first phrase, so an adjective never stands for the result
+  const heads: [string, string][] = [
+    ["rankings on keywords that bring paying customers", "rank"],
+    ["more paying customers from search", "custom"],
+    ["a fully booked calendar", "calendar"],
+    ["steady energy without coffee", "energy"],
+    ["10 new clients a month", "client"],
+    ["first-page Google rankings", "rank"],
+    ["money from every page you publish", "money"],
+    ["more booked jobs from the quotes you already send", "job"],
+    ["a full calendar of paying clients", "calendar"],
+    ["pages that rank and pay for themselves", "page"],
+    ["more customers", "custom"],
+  ];
+  for (const [p, head] of heads) assertEquals(promiseStems(p).values().next().value, head, p);
+  assert(statesPromise("Search sends you customers, week after week.", promiseStems("more paying customers from search")));
+  assert(!statesPromise("The tool shows you which searches pay.", promiseStems("more paying customers from search")));
+  assert(statesPromise("Your calendar stays booked.", promiseStems("a fully booked calendar")));
+  assert(statesPromise("You sign new clients every month.", promiseStems("10 new clients a month")));
+  // a promise of one stem is stated by its one stem
+  assert(statesPromise("More customers find you.", promiseStems("more customers")));
+
   // the round-5 clean run: the argument's promise, the tool's filter line, and the one sentence that said the result
   const promise = promiseStems("rankings on keywords that bring paying customers");
   const feature = "I founded Legiit, and I made Legiit Keywords to make that decision for your site. You get only the keywords that bring customers, and a build, improve or skip call for every group.";
   const line = "You rank on the keywords that bring paying customers, because every page you pay for is one you can win, on a keyword buyers type. It's the best way I know to choose what to publish.";
   assert(!statesPromise(feature, promise), "the filter is not the result");
+  assert(!statesPromise("You get the keywords that bring paying customers.", promise), "all the qualifiers without the head are still the filter");
+  assert(statesPromise("You get the keywords that bring paying customers.", promise, { loose: true }), "but a loose carrier is protected");
   assert(!statesPromise("You rank for the keywords your buyers search.", promise), "two stems are not enough");
   assert(statesPromise(line, promise));
-  // with the head, half the stems still state it; without the head, a sentence needs one more
   assert(statesPromise("Your pages rank on keywords that bring customers.", promise));
-  assert(statesPromise("You get the keywords that bring paying customers.", promise));
   const units = [unit("main-5", feature), unit("main-7", line), unit("main-8", "Enter your site and your first decision shows up in about 20 minutes.")];
-  const first = "You rank on the keywords that bring paying customers, because every page you pay for is one you can win, on a keyword buyers type. It's the best way I know to choose what to publish.";
-  const r = applyEdits(units, [
-    { ref: "main-7", before: first, after: "Every page you pay for is one you can win, on a keyword buyers type.", tell: "restated promise, slogan closer" },
+  const text7 = (r: ReturnType<typeof applyEdits>) => r.units.find((u) => u.ref === "main-7")?.text;
+  const pair = [
+    { ref: "main-7", before: line, after: "Every page you pay for is one you can win, on a keyword buyers type.", tell: "restated promise, slogan closer" },
     { ref: "main-7", before: "Every page you pay for is one you can win, on a keyword buyers type.", after: "", tell: "slogan restating the promise" },
-  ], "social", promise);
+  ];
+  const r = applyEdits(units, pair, "social", promise);
   assertEquals(r.applied.length, 0);
   assert(r.rejected[0].reason.includes("states its promise"));
-  // the second edit's words match the middle of the original sentence (the locator ignores case): it never lands there
-  assertEquals(r.rejected[1].reason, "it edits the text of an earlier edit that was refused");
-  assertEquals(r.units.find((u) => u.ref === "main-7")?.text, line);
+  // the second edit was written against the first one's text: its capitalised start never lands inside the original sentence
+  assertEquals(r.rejected[1].reason, "the span was not found in that text");
+  assertEquals(text7(r), line);
+  // the same holds in a later call (the retry), which knows nothing of the first call's refusals
+  assertEquals(text7(applyEdits(units, [pair[1]], "social", promise)), line);
+  // cut the clause, then cut what is left: the first is refused, the second lands nowhere
+  const clause = applyEdits(units, [{ ref: "main-7", before: "You rank on the keywords that bring paying customers, because ", after: "", tell: "x" }, pair[1]], "social", promise);
+  assertEquals(clause.applied.length, 0);
+  assertEquals(text7(clause), line);
+  // a cut written in lower case that ends a sentence it starts inside is refused for the half sentence it leaves
+  const half = applyEdits(units, [{ ref: "main-7", before: "every page you pay for is one you can win, on a keyword buyers type.", after: "", tell: "x" }], "social", promise);
+  assert(half.rejected[0]?.reason.includes("half a sentence"), JSON.stringify(half.rejected));
+  // a whole sentence still goes, curly apostrophe or not; so does a clause without its sentence's end
+  for (const t of ["It's", "It’s"]) {
+    const curly = applyEdits([unit("main-5", feature), unit("main-7", line.replace("It's", t))], [{ ref: "main-7", before: "It's the best way I know to choose what to publish.", after: "", tell: "x" }], "social", promise);
+    assertEquals(curly.applied.length, 1, t);
+  }
+  assertEquals(applyEdits(units, [{ ref: "main-7", before: ", on a keyword buyers type", after: "", tell: "x" }], "social", promise).applied.length, 1);
+  // rewording the only line that states the promise into the filter is a lost promise, too
+  const reworded = applyEdits(units, [{ ref: "main-7", before: "You rank on the keywords that bring paying customers", after: "You get the keywords that bring paying customers", tell: "x" }], "social", promise);
+  assertEquals(reworded.applied.length, 0);
+  // a feature line that loosely carries the promise may go when a line states it
+  assertEquals(applyEdits(units, [{ ref: "main-5", before: "You get only the keywords that bring customers, and a build, improve or skip call for every group.", after: "", tell: "tool tour" }], "social", promise).applied.length, 1);
   // a chained edit after an applied one still works
   const chain = applyEdits(units, [
     { ref: "main-8", before: "Enter your site and your first decision shows up in about 20 minutes.", after: "Enter your site; your first decision shows up in about 20 minutes.", tell: "x" },

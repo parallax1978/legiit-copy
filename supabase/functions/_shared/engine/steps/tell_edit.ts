@@ -59,7 +59,7 @@ function leftUnedited(audit: TellEditAuditItem[], before: EditUnit[], after: Edi
     if (!opts.short && SHORT_ONLY.has(x.kind)) return false;
     if (x.kind === "said_again" && sentenceTagged(was.text, x.line)) return false;
     // the line that states the promise is never pressed to go (docs/04 rule 8): its repeat is the other line's to fix
-    if (x.kind === "said_again" && opts.promise?.size && statesPromise(x.line, opts.promise)) return false;
+    if (x.kind === "said_again" && opts.promise?.size && statesPromise(x.line, opts.promise, { loose: true })) return false;
     // a price, the guarantee, a disclosure and an amount keep the offer's wording: never asked about as copied wording
     if (x.kind === "ledger_wording" && (["price", "guarantee", "disclosure", "cta", "button"].includes(was.type) || /[$€£¥]\s?\d/.test(x.line))) return false;
     if (opts.accepted.some((w) => has(w, x.line))) return false;
