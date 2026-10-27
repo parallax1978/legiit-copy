@@ -11,7 +11,7 @@
 import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
 import { exemptTermsFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, repeatFindings, sentenceTagged, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";

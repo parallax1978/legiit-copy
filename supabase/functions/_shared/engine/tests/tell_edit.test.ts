@@ -10,7 +10,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v9.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -334,7 +334,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [13, 12, 13, 11, 9, 12, 10]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [13, 12, 13, 11, 10, 12, 10]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("the piece never lists or counts the product's steps"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));

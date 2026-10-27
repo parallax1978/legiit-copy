@@ -2,7 +2,7 @@
  * Factual review prompt, version 11: version 10's messages. A rewrite fixes only what its rule names and never sizes an
  * outcome promise down, adds a hedge or a weakening detail, or cuts a promise; the promise of the result with no number
  * on it, reason-why logic, the reader's situation, what the product does and the founder's call are not flags, and a
- * delivery timing note in the offer block is not a rule. the system text carries the standard as of this version (sell the result, rule 8; precision never sizes a promise down, rule 10; a line true only with a weakening detail is rewritten, rule 12; the short-piece guarantee only when the offer leads with it, rule 16; indicative with no conditional voice, rule 20; section 2's promise, C8 and C9; section 4's no-results proof and the obvious demonstration; the first-week check, section 5; Gates A and C and the reviewer's directions, section 6; the outcome, reasoning and situation rows, grade F and the factual procedure, section 8).
+ * delivery timing note in the offer block is not a rule; an evidence-state sentence goes only on a health claim whose rule requires one. the system text carries the standard as of this version (sell the result, rule 8; precision never sizes a promise down, rule 10; a line true only with a weakening detail is rewritten, rule 12; the short-piece guarantee only when the offer leads with it, rule 16; indicative with no conditional voice, rule 20; section 2's promise, C8 and C9; section 4's no-results proof and the obvious demonstration; the first-week check, section 5; Gates A and C and the reviewer's directions, section 6; the outcome, reasoning and situation rows, grade F and the factual procedure, section 8).
  */
 import { factualPrompt as factualPrev, type FactualArgs } from "./factual.v10.ts";
 import { amend, type PromptModule } from "./types.ts";
@@ -10,6 +10,10 @@ import { amend, type PromptModule } from "./types.ts";
 export type { FactualArgs };
 
 const SYSTEM = amend(factualPrev.system, [
+  [
+    `You may add an evidence-state sentence from §8.2 ("We did not run our own trial."); you may not add`,
+    `You add an evidence-state sentence only to a health claim whose cited rule requires one (§8.2), never to any other claim; you may not add`,
+  ],
   [
     `you may not delete a specific the ledger supports; you may not soften a claim the ledger carries at its grade.`,
     `you may not delete a specific the ledger supports; you may not soften a claim the ledger carries at its grade; you may not size an outcome promise down, add "some", "could" or a weakening detail ("planned", "new", "not yet"), or cut a promise. A rewrite fixes only what its rule names: when a line overstates its subject, drop the overstated words.`,
