@@ -51,6 +51,13 @@ Deno.test("editorial flags: fatal on REJECT, high on REVISE, secondary medium; p
   assertEquals(approve, []);
 });
 
+Deno.test("editorial flags: a note's direction is the fix in the issue, never a one-click rewrite, and carries no em dash", () => {
+  const flags = editorialFlags(verdict({ one_thing: { quote: "Start today.", fails: "Gate C: the fee is hidden", do: "Open on the fee — $49 — then the free week." } }));
+  assertEquals(flags.map((f) => f.suggestedRewrite), [null, null]);
+  assertEquals(flags[0].issue, "Gate C: the fee is hidden Fix: Open on the fee ($49) then the free week.");
+  assertEquals(flags[1].issue, "precision below the ledger Fix: state the ledger figure");
+});
+
 Deno.test("validateEditorial: REJECT needs its gate and the one thing; APPROVE may have none", () => {
   assertEquals(validateEditorial(verdict()), []);
   assert(validateEditorial(verdict({ verdict: "REJECT" })).some((p) => /gate/.test(p)));
@@ -114,6 +121,23 @@ Deno.test("postProcessFactual enforces the reviewer's discipline", () => {
 
   assertEquals(pendingFactualFlags(out, claims).length, 6, "revise ignores only flags on claims the user kept");
   assertEquals(pendingFactualFlags(null, claims), []);
+});
+
+Deno.test("postProcessFactual: a rewrite that brings in an owner's tell is a violation worth a retry; the flag stays", () => {
+  const claims = [{ id: B, user_decision: null }];
+  const out: FactualOutput = {
+    flags: [
+      flag({ claim_id: B, quote: `takes 4 hours [[L:${B}]]`, suggested_rewrite: `unlock a robust audit in 4 hours [[L:${B}]]` }),
+      flag({ claim_id: B, quote: `a robust audit in 4 hours [[L:${B}]]`, suggested_rewrite: `a robust audit in 4 hours [[L:${B}]] in our last 12 audits` }),
+      flag({ claim_id: B, quote: `takes 4 hours [[L:${B}]]`, suggested_rewrite: `takes 4 hours [[L:${B}]] — in our last 12 audits` }),
+    ],
+    consistency_check: { ok: true, mismatches: [] },
+    needs_source: [],
+  };
+  const pp = postProcessFactual(out, claims);
+  assertEquals(pp.output.flags.length, 3);
+  assertEquals(pp.violations.length, 1, pp.violations.join("; "));
+  assert(/owner's tells/.test(pp.violations[0]));
 });
 
 Deno.test("dropped ledger rows: citing one is a fabrication-level flag, caught by the model or added in code", () => {

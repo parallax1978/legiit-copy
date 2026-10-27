@@ -13,6 +13,7 @@ import { z } from "zod";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
 import { assertEditor, type JsonValue, loadPromptVersions, parseBody, serve } from "shared/http.ts";
 import { callModel } from "engine/llm.ts";
+import { ownerTellsIn } from "engine/tells.ts";
 import { DEFAULT_MODEL } from "engine/config.ts";
 import { VOICE_CAPTURE } from "engine/prompts/standard.ts";
 
@@ -118,7 +119,8 @@ serve(async (req) => {
     }
   }
   const stories = m.story_inventory.filter((s) => s.quote.trim().length > 10 && normCorpus.includes(norm(s.quote)));
-  const idioms = dedupe(m.idiom_bank.map((p) => p.trim()).filter((p) => p && normCorpus.includes(norm(p)))).slice(0, 40);
+  // Section 7.1 outranks the samples (docs/04 §10 rule 9): an idiom carrying one of the owner's tells or words is not part of the voice
+  const idioms = dedupe(m.idiom_bank.map((p) => p.trim()).filter((p) => p && normCorpus.includes(norm(p)) && ownerTellsIn(p) === 0)).slice(0, 40);
 
   const fkBand = `${Math.max(3, Math.round(measured.fk_grade) - 1)}-${Math.round(measured.fk_grade) + 1}`;
   const readability_band = m.readability_band?.trim() || fkBand;

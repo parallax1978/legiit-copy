@@ -24,7 +24,7 @@ import type { MechanicalReport } from "./schemas/review.ts";
 import type { FormatSpec } from "./formats/spec.ts";
 import type { FormatId } from "./schemas/common.ts";
 import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "./schemas/common.ts";
-import { sectionBaseId, sectionItemIndex } from "./formats/index.ts";
+import { FORMATS, sectionBaseId, sectionItemIndex } from "./formats/index.ts";
 import { draftWordCount } from "./render.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -1413,6 +1413,12 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
     word_count: wordCountAll,
     owner_tells: owner,
   };
+}
+
+/** The owner's tells and words in a short text (an idiom, a habit, an exemplar), em dashes, emojis and hashtags included. */
+export function ownerTellsIn(text: string, exemptTerms: string[] = []): number {
+  const { owner } = detectTells(unitsOf(textToSections(text)), FORMATS.email_single, countWords(text), exemptTerms);
+  return owner;
 }
 
 /** Raw text (ledger tags are stripped here) treated as a run of paragraphs; only text-computable gates are evaluated. */

@@ -8,6 +8,7 @@ import { FORMAT_IDS } from "@/lib/formats";
 import { settingsToInput, type GenerationOptions, type DraftRow } from "@/lib/data/generations";
 import type { Json } from "@/lib/supabase/database.types";
 import { initialSteps } from "@engine/pipeline.ts";
+import { stripNeverTells } from "@engine/draft/never_tells.ts";
 import { draftFromMarkdown, draftToMarkdown, readDraftOutput, replaceInDraft, ledgerIdsInDraft, draftWords } from "@/components/editor/markdown-blocks";
 
 export type ActionResult<T = object> = ({ ok: true } & T) | { ok: false; error: string };
@@ -282,6 +283,8 @@ export async function decideFlag(flagId: string, decision: "keep" | "drop" | "re
 
   if (decision === "rewrite") {
     if (!flag.quote || !flag.suggested_rewrite) return { ok: false, error: "This flag has no suggested rewrite to apply." };
+    // a rewritten line is new copy: no em dash, emoji or hashtag goes in with it (docs/04 §7.1), even on flags written before the reviewers stripped them
+    const rewrite = stripNeverTells(flag.suggested_rewrite);
     const base = await latestDraft(supabase, flag.generation_id);
     if (!base) return { ok: false, error: "No draft to rewrite." };
     const parsedDraft = readDraftOutput(base.blocks);
@@ -290,15 +293,15 @@ export async function decideFlag(flagId: string, decision: "keep" | "drop" | "re
     let ledger: string[] = Array.isArray(base.ledger_refs) ? (base.ledger_refs as string[]) : [];
     let words = base.word_count ?? 0;
     if (parsedDraft) {
-      const r = replaceInDraft(parsedDraft, flag.quote, flag.suggested_rewrite);
+      const r = replaceInDraft(parsedDraft, flag.quote, rewrite);
       replaced = r.count;
       nextBlocks = r.draft;
-      nextMarkdown = r.count > 0 ? draftToMarkdown(r.draft) : base.markdown.split(flag.quote).join(flag.suggested_rewrite);
+      nextMarkdown = r.count > 0 ? draftToMarkdown(r.draft) : base.markdown.split(flag.quote).join(rewrite);
       ledger = ledgerIdsInDraft(r.draft);
       words = draftWords(r.draft);
     } else {
       replaced = base.markdown.split(flag.quote).length - 1;
-      nextMarkdown = base.markdown.split(flag.quote).join(flag.suggested_rewrite);
+      nextMarkdown = base.markdown.split(flag.quote).join(rewrite);
     }
     if (!replaced) return { ok: false, error: "The quoted line is no longer in the latest version. Edit it by hand instead." };
     const res = await insertVersion(supabase, base, { blocks: nextBlocks, markdown: nextMarkdown, origin: "rewrite", label: `Applied ${flag.source} rewrite`, ledger_refs: ledger, word_count: words, skim_path: base.skim_path });

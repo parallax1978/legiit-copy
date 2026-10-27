@@ -8,6 +8,7 @@ import { editorialPrompt, type EditorialArgs } from "../prompts/editorial.v6.ts"
 import { parseOptions } from "../draft/options.ts";
 import { targetAwareness } from "../draft/ledger.ts";
 import { editorialFlags, validateEditorial } from "../draft/review.ts";
+import { analyzeDraft, exemptTermsFrom } from "../tells.ts";
 import { callStep, describeArgument, latestDraftOutput, stepOutput, thesisOf } from "../draft/step_util.ts";
 
 export const DEFAULT_CONTROL = "No documented control was supplied. Predict against the strongest competitor promotion in the dossier's competitor table: the one whose headline outcome and proof the market cites most.";
@@ -24,7 +25,9 @@ export const editorialStep: StepFn = async (ctx) => {
     thesis,
     argumentText: describeArgument(ctx.winningAngle, ctx.angles),
     coldRead: stepOutput(ctx, "cold_read", ColdRead),
-    mechanical: stepOutput(ctx, "mechanical", MechanicalReport),
+    // Gate D counts the tells of the draft under review: the mechanical step runs beside this one, so its stored
+    // report can still be the previous cycle's; the same pure pass is cheap to run here
+    mechanical: MechanicalReport.parse(analyzeDraft(draft.sections, ctx.format, { exemptTerms: exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name) })),
     controlText: options.control_text?.trim() ? `A documented control:\n${options.control_text}` : DEFAULT_CONTROL,
     awareness: target.awareness,
     segment: target.segment,

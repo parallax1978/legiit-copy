@@ -7,6 +7,8 @@ import type { EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput,
 import type { StepEffects } from "../steps/types.ts";
 import { ClaimType, LEDGER_TAG } from "../schemas/common.ts";
 import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
+import { stripNeverTells } from "./never_tells.ts";
+import { ownerTellsIn } from "../tells.ts";
 
 type Flag = NonNullable<StepEffects["flags"]>[number];
 
@@ -23,22 +25,27 @@ export function validateEditorial(v: EditorialVerdict): string[] {
   return problems;
 }
 
-/** THE ONE THING is fatal on REJECT, high otherwise; secondary notes are medium. */
+/**
+ * THE ONE THING is fatal on REJECT, high otherwise; secondary notes are medium. A note's "do" is a direction (with at
+ * most one rewritten line inside it), so it goes in the issue as the fix, never as a one-click replacement: pasting a
+ * direction over the quoted line would put the copy chief's note into the copy.
+ */
 export function editorialFlags(v: EditorialVerdict): Flag[] {
   const out: Flag[] = [];
+  const issue = (fails: string, todo: string) => (todo.trim() ? `${fails} Fix: ${stripNeverTells(todo.trim())}` : fails);
   if (v.one_thing) {
     out.push({
       source: "editorial",
       kind: v.reject_gate ? `one_thing:gate_${v.reject_gate}` : "one_thing",
       severity: v.verdict === "REJECT" ? "fatal" : "high",
       quote: v.one_thing.quote,
-      rule: v.one_thing.fails,
-      issue: v.one_thing.fails,
-      suggestedRewrite: v.one_thing.do,
+      rule: v.reject_gate ? `Copy chief, Gate ${v.reject_gate}` : null,
+      issue: issue(v.one_thing.fails, v.one_thing.do),
+      suggestedRewrite: null,
     });
   }
   for (const n of v.secondary_notes) {
-    out.push({ source: "editorial", kind: "secondary", severity: "medium", quote: n.quote, rule: n.fails, issue: n.fails, suggestedRewrite: n.do });
+    out.push({ source: "editorial", kind: "secondary", severity: "medium", quote: n.quote, rule: null, issue: issue(n.fails, n.do), suggestedRewrite: null });
   }
   return out;
 }
@@ -69,6 +76,7 @@ export interface FactualPostProcess {
  * - a flag on a row the user decided to keep is not re-raised (matched by claim_id, or by the ids the quote cites);
  * - a flag with no rewrite is rejected (fabrication excepted: the rewrite may be "cut");
  * - a rewrite that adds "may" / "results vary" / a generic disclaimer is a violation;
+ * - a rewrite that brings in one of the owner's tells or words (§7.1) is a violation worth a retry; the flag stays;
  * - a quote citing a row the user dropped is a fabrication (the row is unusable), whatever the model said;
  * - otherwise fabrication is true only for an item the ledger does not hold: a quote that cites an existing usable
  *   ledger row, or a flag mapped to one, is the user's claim, not an invention;
@@ -107,6 +115,10 @@ export function postProcessFactual(out: FactualOutput, claims: { id: string; use
       violations.push(`flag without a rewrite: "${f.quote}"`);
       dropped.push({ quote: f.quote, why: "a flag with no rewrite is rejected" });
       continue;
+    }
+    // a rewritten line is new copy: it may not bring in a Section 7.1 tell or word the line did not have
+    if (f.suggested_rewrite && ownerTellsIn(stripNeverTells(f.suggested_rewrite)) > ownerTellsIn(f.quote)) {
+      violations.push(`rewrite brings in one of the owner's tells or words (Section 7.1) the line did not have: "${f.suggested_rewrite}"`);
     }
     flags.push(f);
   }

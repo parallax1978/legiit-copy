@@ -11,6 +11,7 @@ type J = NonNullable<Json>;
 type ClaimUpdate = Database["public"]["Tables"]["offer_claims"]["Update"];
 import { OfferBrief as OfferBriefSchema } from "@engine/schemas/brief.ts";
 import { ClaimType } from "@engine/schemas/common.ts";
+import { stripNeverTells } from "@engine/draft/never_tells.ts";
 import { type ActionResult, normalizeBrief, chosenFromBrief, hostOf } from "@/components/offers/normalize";
 import { CLAIM_ROLES, EVIDENCE_GRADES, CLAIM_STATUSES, EDGE_TOLERANCES } from "@/components/offers/constants";
 
@@ -429,7 +430,8 @@ export async function decideClaim(offerId: string, claimId: string, decision: "k
   const update: ClaimUpdate = { user_decision: decision };
   if (decision === "rewrite") {
     if (!flag.suggested_rewrite) return fail("This flag has no suggested rewrite. Edit the claim instead.");
-    update.claim_text = flag.suggested_rewrite;
+    // the ledger's words go into the copy as written: no em dash, emoji or hashtag rides in with a rewrite (docs/04 §7.1)
+    update.claim_text = stripNeverTells(flag.suggested_rewrite);
     update.status = "unverified";
   } else if (decision === "keep") {
     update.status = "unverified";
