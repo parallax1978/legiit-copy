@@ -332,7 +332,7 @@ Deno.test("bold-label-colon bullets are Tier 0 (markdown only); plain bold lead-
   assertEquals(tells(optin, "bold_leadin_bullet"), undefined, "opt-in allows five plain bold lead-ins");
 });
 
-Deno.test("emojis are Tier 0 in every format and block, check marks included; ©, ® and ™ are not emojis", () => {
+Deno.test("emojis are Tier 0 in every format and block, check marks included; stars, suits, ©, ® and ™ are not emojis", () => {
   const items = ["✅ Syncs your sales", "✅ Sorts your expenses", "✅ Shows real profit"];
   const email = analyzeDraft([section("body", [block("bullets", "", items)])], FORMATS.email_single);
   assertEquals(tells(email, "emoji")?.tier, 0);
@@ -342,8 +342,8 @@ Deno.test("emojis are Tier 0 in every format and block, check marks included; ©
   assert(meta.hard_fail);
   const page = analyzeDraft([section("benefits", [block("paragraph", filler(250)), block("bullets", "", ["✓ Ships Monday", "✔ Packed in straw"])])], FORMATS.sales_letter);
   assertEquals(tells(page, "emoji")?.count, 2, "check marks are emojis under the owner's rule");
-  const inline = analyzeDraft([section("headline", [block("headline", "Books done by Friday 🚀")]), section("body", [block("paragraph", "Rated ★★★★★ by the guild. Legiit® and Legiit Copy™ © 2026.")])], FORMATS.landing_page_short);
-  assertEquals(tells(inline, "emoji")?.count, 6, "the rocket in a headline and five stars; not ®, ™ or ©");
+  const inline = analyzeDraft([section("headline", [block("headline", "Books done by Friday 🚀")]), section("body", [block("paragraph", "Rated ★★★★☆ by the guild. Hold A♠ K♠. Legiit® and Legiit Copy™ © 2026. Team 👩‍💻 ready.")])], FORMATS.landing_page_short);
+  assertEquals(tells(inline, "emoji")?.count, 2, "the rocket and the ZWJ sequence; rating stars, card suits, ®, ™ and © are typography");
 });
 
 Deno.test("hashtags are Tier 0; #1, C#, HTML entities and URL fragments are not hashtags", () => {

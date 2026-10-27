@@ -94,6 +94,22 @@ export const OWNER_STACK = 2;
 
 const A = "['’]?"; // optional straight or curly apostrophe
 
+/**
+ * The owner's never-rules (§7.1, tells 11-13), defined once: the detector counts with these and the tell edit's
+ * backstop (draft/tell_edit.ts) removes with them, so what the backstop leaves is never what the detector flags.
+ *
+ * Emoji: emoji-presentation characters, any pictograph shown as an emoji (VS16), check marks and hearts, flags,
+ * keycaps, with skin tones, ZWJ sequences and tag characters attached. Rating stars, check boxes, card suits, ©, ®
+ * and ™ are typography, not emoji.
+ */
+export const EMOJI_SOURCE = String.raw`(?:\p{Emoji_Presentation}|\p{Extended_Pictographic}\uFE0F|[✓✔☑❤♥])(?:\uFE0F|\u200D(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})\uFE0F?|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}])*|[\u{1F1E6}-\u{1F1FF}]{1,2}|[0-9#*]\uFE0F?\u20E3`;
+/** A hashtag: "#" then a letter, not inside a word, an entity, a URL, a markdown anchor or a quote, and not a hex colour with a digit. */
+export const HASHTAG_SOURCE = String.raw`(?<![\p{L}\p{N}_&#/=?.\-("'“‘\[])#(?!(?=[0-9a-fA-F]*\d)[0-9a-fA-F]{3,8}\b)(\p{L}[\p{L}\p{N}_]*)`;
+/** An em dash, a spaced en dash or a double hyphen used as one. Links are blanked before scanning. */
+export const EM_DASH_SOURCE = String.raw`—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)`;
+/** Links in copy, blanked before the em dash scan (a URL may hold "--") and kept whole by the backstop. */
+export const LINK_SOURCE = String.raw`https?:\/\/[^\s)\]]+|www\.[^\s)\]]+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|co|io|net|org|ai|app|me|us|uk|ca|de|store|shop|so|gg)\b(?:\/[^\s)\]]*)?`;
+
 export const TELLS: TellRule[] = [
   // ---- Tier 0: hard reject ----
   {
@@ -129,24 +145,24 @@ export const TELLS: TellRule[] = [
   },
   {
     tier: 0, name: "em_dash", weight: 10, scope: "all", owner: { tell: 11 },
-    regex: /—|(?<=\S) – (?=\S)|(?<=\S) -- (?=\S)|(?<=\w)--(?=\w)/g,
+    regex: new RegExp(EM_DASH_SOURCE, "g"),
     example: "It works — fast.",
     fix: "A period, a comma or parentheses.",
-    note: "The owner's rule (§7.1, tell 11), in every format, quotations included. A spaced en dash or a double hyphen used as a dash is the same tell; an en dash in a range (3–5) is not. Human direct response runs 1.57 per 1,000; the owner bans it anyway.",
+    note: "The owner's rule (§7.1, tell 11), in every format, quotations included. A spaced en dash or a double hyphen used as a dash is the same tell; an unspaced en dash in a range (3–5) is not, and links are not scanned. Human direct response runs 1.57 per 1,000; the owner bans it anyway.",
   },
   {
     tier: 0, name: "emoji", weight: 10, scope: "all", owner: { tell: 12 },
-    regex: /(?![©®™✝])\p{Extended_Pictographic}|[✓\u20E3\u{1F1E6}-\u{1F1FF}]/gu,
+    regex: new RegExp(EMOJI_SOURCE, "gu"),
     example: "✅ Syncs your sales automatically.",
     fix: "Remove it; never add one.",
-    note: "The owner's rule (§7.1, tell 12), in every format and block, check marks, stars and keycaps included; ©, ®, ™ and the ✝ footnote mark are not emojis.",
+    note: "The owner's rule (§7.1, tell 12), in every format and block: emoji-presentation characters and pictographs shown as emoji, check marks, hearts, flags and keycaps. Rating stars (★ ☆), check boxes, card suits, ©, ® and ™ are typography, not emoji.",
   },
   {
     tier: 0, name: "hashtag", weight: 10, scope: "all", owner: { tell: 13 },
-    regex: /(?<![\p{L}\p{N}_&#/=?.-])#\p{L}[\p{L}\p{N}_]*/gu,
+    regex: new RegExp(HASHTAG_SOURCE, "gu"),
     example: "#SEO #marketing",
     fix: "Remove it; never add one.",
-    note: "The owner's rule (§7.1, tell 13). \"#1\", \"C#\", HTML entities and URL fragments are not hashtags.",
+    note: "The owner's rule (§7.1, tell 13). \"#1\", \"C#\", HTML entities, URL fragments, markdown anchors and hex colours with a digit are not hashtags.",
   },
 
   // ---- Tier 1: weight 4 (phrases at 0.00-0.02 per 1,000 in 879k human words) ----
@@ -729,10 +745,11 @@ function quoteExempt(rule: TellRule): boolean {
   return !!rule.owner && !((rule.owner.tell ?? 0) >= 11);
 }
 
-function scanOwner(rule: TellRule, texts: string[], exempt: Set<string>): Hit {
+function scanOwner(rule: TellRule, texts: string[], exempt: Set<string>, originals: string[] = texts): Hit {
   const hit: Hit = { rule, count: 0, examples: [] };
   if (!rule.regex) return hit;
-  for (const t of texts) {
+  for (let ti = 0; ti < texts.length; ti++) {
+    const t = texts[ti];
     const re = new RegExp(rule.regex.source, rule.regex.flags.includes("g") ? rule.regex.flags : rule.regex.flags + "g");
     for (const m of t.matchAll(re)) {
       const word = m[0].trim();
@@ -740,7 +757,7 @@ function scanOwner(rule: TellRule, texts: string[], exempt: Set<string>): Hit {
       if (rule.owner?.words && isProperNoun(t, (m.index ?? 0) + (m[0].length - m[0].trimStart().length), lead)) continue;
       if (rule.owner?.words && lead.toLowerCase().split(/[\s-]+/).some((w) => exempt.has(w))) continue;
       hit.count += 1;
-      if (hit.examples.length < 3) hit.examples.push(snippet(t, m.index ?? 0, m[0].length));
+      if (hit.examples.length < 3) hit.examples.push(snippet(originals[ti] ?? t, m.index ?? 0, m[0].length));
     }
   }
   return hit;
@@ -817,7 +834,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
   // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
-  const ownerTexts = units.filter((u) => u.type !== "testimonial").map((u) => blankQuotes(u.text));
+  const ownerUnits = units.filter((u) => u.type !== "testimonial");
+  const ownerTexts = ownerUnits.map((u) => blankQuotes(u.text));
+  const ownerOriginals = ownerUnits.map((u) => u.text);
   const ownerBodyTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial").map((u) => blankQuotes(u.text));
   const exempt = new Set(exemptTerms.map((w) => w.toLowerCase()));
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
@@ -834,6 +853,11 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       case "hedge":
         hit = scanRegex(rule, hedgeTexts);
         break;
+      case "em_dash": {
+        const link = new RegExp(LINK_SOURCE, "gi");
+        hit = scanRegex(rule, allTexts.map((t) => t.replace(link, (m) => " ".repeat(m.length))));
+        break;
+      }
       case "self_answered_question": {
         const found = selfAnsweredQuestions(ownerBodyTexts);
         hit = { rule, count: found.length, examples: trimExamples(found) };
@@ -875,7 +899,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
         break;
       }
       default:
-        if (quoteExempt(rule)) hit = scanOwner(rule, ownerTexts, exempt);
+        if (quoteExempt(rule)) hit = scanOwner(rule, ownerTexts, exempt, ownerOriginals);
         else hit = scanRegex(rule, rule.scope === "paragraph" ? paragraphTexts : rule.scope === "body" ? bodyTexts : allTexts);
     }
     hits.push(hit);

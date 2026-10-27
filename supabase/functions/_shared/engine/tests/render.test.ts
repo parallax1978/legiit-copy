@@ -31,3 +31,16 @@ Deno.test("cleanBlockText: heading marks a drafter wrote into display blocks are
   assertEquals(s.blocks[1].text, "A copy chief reads it");
   assertEquals(s.blocks[2].text, "# not a heading in prose");
 });
+
+Deno.test("cleanBlockText: a list block whose text repeats its items as list lines keeps the items once", () => {
+  const items = ["It reads twenty pages of your site [[L:a1]].", "It groups keywords that share top pages [[L:a1]]."];
+  const [s] = cleanBlockText([section([
+    { id: "b1", type: "bullets", text: "Here is how:\n- It reads twenty pages of your site [[L:a1]].\n- It groups keywords that share top pages [[L:a1]].", items, meta: null },
+    { id: "b2", type: "bullets", text: "- A line that is not an item.", items, meta: null },
+    { id: "b3", type: "paragraph", text: "- It reads twenty pages of your site [[L:a1]].", items: null, meta: null },
+  ])]);
+  assertEquals(s.blocks[0].text, "Here is how:");
+  assertEquals(s.blocks[0].items, items);
+  assertEquals(s.blocks[1].text, "- A line that is not an item.", "a list line that is not one of the items stays");
+  assertEquals(s.blocks[2].text, "- It reads twenty pages of your site [[L:a1]].", "prose blocks are untouched");
+});

@@ -42,7 +42,8 @@ const PREDECESSORS: Record<StepName, StepName[]> = {
   argument: ["research", "offer"],
   draft: ["argument"],
   tell_edit: ["draft", "revise"],
-  cold_read: ["tell_edit"],
+  // draft and revise stay listed so a cold read a pre-tell-edit revision enqueued still finds its boundary
+  cold_read: ["tell_edit", "draft", "revise"],
   editorial: ["cold_read"],
   mechanical: ["cold_read"],
   factual: ["cold_read"],

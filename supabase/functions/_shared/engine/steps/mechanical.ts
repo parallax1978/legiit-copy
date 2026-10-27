@@ -6,7 +6,7 @@ import { z } from "zod";
 import type { StepEffects, StepFn, StepResult } from "./types.ts";
 import { Section } from "../schemas/draft.ts";
 import { MechanicalReport } from "../schemas/review.ts";
-import { analyzeDraft, TELL_THRESHOLDS } from "../tells.ts";
+import { analyzeDraft, exemptTermsFrom, TELL_THRESHOLDS } from "../tells.ts";
 
 const DraftBlocks = z.union([z.array(Section), z.object({ sections: z.array(Section) })]);
 
@@ -35,8 +35,9 @@ export function flagsFromReport(report: MechanicalReport): Flag[] {
       severity: severity(f.tier),
       quote: f.examples[0] ?? null,
       rule: RULE,
-      issue: `${f.tell}: ${f.count} occurrence${f.count === 1 ? "" : "s"} (tier ${f.tier}, weight ${f.weight})`,
-      suggestedRewrite: f.fix,
+      issue: `${f.tell}: ${f.count} occurrence${f.count === 1 ? "" : "s"} (tier ${f.tier}, weight ${f.weight}). Fix: ${f.fix}`,
+      // the fix is guidance, not a line: offering it as a rewrite would paste it into the copy
+      suggestedRewrite: null,
     });
   }
   for (const g of report.format_gate_failures) {
@@ -57,7 +58,8 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
   await ctx.progress("Running mechanical passes");
 
   const sections = sectionsFromBlocks(draft.blocks);
-  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format));
+  // the offer's own words are exempt here exactly as in the tell edit, or the stack would loop revisions on them
+  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms: exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name) }));
   const flags = flagsFromReport(report);
 
   const verdict = report.hard_fail ? "HARD FAIL" : report.tell_score_per_300 >= TELL_THRESHOLDS.flag ? "FLAG" : "CLEAN";

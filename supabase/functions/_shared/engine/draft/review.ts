@@ -297,6 +297,11 @@ export function userAttention(input: AttentionInput): string[] {
   const who: Record<string, string> = { editorial: "copy chief", factual: "fact check", mechanical: "tell check", cold_read: "blind reader" };
   const gate: Record<string, string> = { A: "the argument", B: "the lead", C: "the claims", D: "the voice" };
   for (const f of input.pendingFlags) if (f.severity === "fatal" || f.severity === "high") push(`Fix first (${who[f.source] ?? f.source}): ${f.issue ?? ""}${f.quote ? ` (line: "${f.quote}")` : ""}`);
+  // the owner's stack is a piece-level verdict: its flags are medium one by one, so it is listed whatever else is pending
+  for (const r of input.mechanical?.hard_fail_reasons ?? []) {
+    const n = /^owner_stack: (\d+)/.exec(r)?.[1];
+    if (n) push(`Fix first (tell check): ${n} AI tells from your editing rules are still in the copy. The Flags tab lists each one.`);
+  }
   if (input.pendingFlags.length === 0) {
     if (input.editorial && input.editorial.verdict !== "APPROVE" && input.editorial.one_thing) {
       // A rejection at a gate blocks; a "revise" note after the last revision pass is advice, not a blocker.

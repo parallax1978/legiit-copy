@@ -6,7 +6,7 @@ import { FORMATS } from "../formats/index.ts";
 import { initialSteps, nextSteps } from "../pipeline.ts";
 import { STEP_DEFAULTS, STEP_NAMES } from "../config.ts";
 import { STEPS } from "../steps/index.ts";
-import { applyEdits, backstopUnits, editableUnits, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, type EditUnit } from "../draft/tell_edit.ts";
+import { applyEdits, backstopUnits, editableUnits, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v1.ts";
@@ -14,6 +14,7 @@ import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
 const A = "0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e";
+const B = "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d";
 const blk = (id: string, text: string, type: Block["type"] = "paragraph", items: string[] | null = null): Block => ({ id, type, text, items, meta: null });
 const sec = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
 
@@ -45,6 +46,11 @@ Deno.test("em dashes: a pair becomes parentheses, a single one a comma; leading 
   assertEquals(replaceEmDashes("It rose--slowly, then -- fast."), "It rose (slowly, then) fast.", "two in one sentence are a pair");
   assertEquals(replaceEmDashes("A fact [[L:" + A + "]] — and another."), "A fact [[L:" + A + "]], and another.");
   assertEquals(replaceEmDashes("Dear Friend,"), "Dear Friend,", "a greeting comma is not a dash");
+  assertEquals(replaceEmDashes("Open 9 am – 5 pm, Monday – Friday."), "Open 9 am–5 pm, Monday–Friday.", "a range keeps an unspaced en dash");
+  assertEquals(replaceEmDashes("Plans run $29 – $49 a month. Pages 3—5 cover it. Open 9--5."), "Plans run $29–$49 a month. Pages 3–5 cover it. Open 9–5.");
+  assertEquals(replaceEmDashes("Read https://example.com/guides/seo--basics — it is short."), "Read https://example.com/guides/seo--basics, it is short.", "a link stays whole");
+  assertEquals(replaceEmDashes(`He said—"stop."`), `He said "stop."`);
+  assertEquals(replaceEmDashes("Vous hésitez ? Oui — prêt : 30 jours !"), "Vous hésitez ? Oui, prêt : 30 jours !", "only the dash's seam changes");
 });
 
 Deno.test("emojis go, sequences and keycaps included; ©, ® and ™ stay", () => {
@@ -52,6 +58,10 @@ Deno.test("emojis go, sequences and keycaps included; ©, ® and ™ stay", () =
   assertEquals(removeEmojis("Done by Friday 🚀🚀"), "Done by Friday");
   assertEquals(removeEmojis("Team 👩‍💻 ready ✨."), "Team ready.");
   assertEquals(removeEmojis("1️⃣ Pick a keyword"), "1. Pick a keyword");
+  assertEquals(removeEmojis("Top 1️⃣0️⃣ tools and tip 🔟."), "Top 10 tools and tip 10.");
+  assertEquals(removeEmojis("Rated ★★★★☆ from 1,200 reviews. Hold A♠ K♠."), "Rated ★★★★☆ from 1,200 reviews. Hold A♠ K♠.", "stars and suits are not emoji");
+  assertEquals(removeEmojis("- ✅ Syncs your sales"), "- Syncs your sales", "a list marker keeps its space");
+  assertEquals(removeEmojis("#️⃣ Step one"), "Step one");
   assertEquals(removeEmojis("Legiit® and Legiit Copy™ © 2026"), "Legiit® and Legiit Copy™ © 2026");
   assertEquals(removeEmojis("✓ Ships Monday"), "Ships Monday");
 });
@@ -61,7 +71,12 @@ Deno.test("hashtags: a run at the end of a line goes, an inline one keeps its wo
   assertEquals(removeHashtags("Post it with #SEO and #marketing."), "Post it with SEO and marketing.");
   assertEquals(removeHashtags("We are the #1 marketplace for C# devs."), "We are the #1 marketplace for C# devs.");
   assertEquals(removeHashtags("See example.com/#pricing"), "See example.com/#pricing");
-  assertEquals(stripNeverTells("Ship it — today ✅ #win"), "Ship it, today");
+  assertEquals(stripNeverTells("Ship it — today. ✅ #win"), "Ship it, today.");
+  assertEquals(removeHashtags("Proudly serving #Austin"), "Proudly serving Austin", "a single tag ending a sentence keeps its word");
+  assertEquals(removeHashtags("Proudly serving #Austin."), "Proudly serving Austin.");
+  assertEquals(removeHashtags("I use it for every client #ad #sponsored"), "I use it for every client (Ad) (Sponsored)", "a disclosure stays, as plain words");
+  assertEquals(removeHashtags("Jump to [the order form](#order). Brand color #FF5733."), "Jump to [the order form](#order). Brand color #FF5733.");
+  assertEquals(stripNeverTells("Big news #🚀launch"), "Big news launch", "emojis go before hashtags, so no tag survives");
 });
 
 // ---------------------------------------------------------------- the guards
@@ -74,9 +89,16 @@ Deno.test("guards: an edit keeps every ledger tag, number, quotation and link, a
   assert(guardEdit(`One buyer said "it is a robust tool".`, "One buyer said it is a strong tool."), "a quotation lost its words");
   assertEquals(guardEdit(`One buyer said "it is slow — painfully slow".`, `One buyer said "it is slow, painfully slow".`), null, "punctuation inside a quote may change");
   assert(guardEdit("See https://legiit.com/keywords now.", "See the site now."), "link dropped");
-  assert(guardEdit("Short line.", "Short line that the editor turned into a much longer sentence with many words that were never there at all."), "too long");
+  assert(guardEdit("Short line.", "Short line that the editor turned into a much longer sentence with many, many words that were never there at all, on and on."), "too long");
+  assertEquals(guardEdit("Two questions decide it. Your keyword tool answers neither.", "Two questions decide it: can your site beat the pages ranking now, and does the searcher buy? Your keyword tool answers neither."), null, "naming the specific a teaser withheld is the owner's fix");
   assert(guardEdit("A fact [[NEEDS SOURCE]].", "A fact."), "NEEDS SOURCE dropped");
   assert(guardEdit("A fact.", "A fact [[L:bad id]]."), "malformed tag");
+  assert(guardEdit(`Used by 4,000 agencies [[L:${A}]], it cuts research by 30% [[L:${B}]].`, `It cuts research by 30% [[L:${A}]] and 4,000 agencies use it [[L:${B}]].`), "a tag moved to the other fact");
+  assertEquals(guardEdit(`Used by 4,000 agencies [[L:${A}]].`, `4,000 agencies use it [[L:${A}]].`), null, "rephrasing around a tagged fact is fine");
+  assert(guardEdit("It ranks a page in 14 days [[NEEDS SOURCE]]. It costs less.", "It ranks a page in 14 days. It costs less [[NEEDS SOURCE]]."), "the mark moved to another claim");
+  for (const [b, a] of [["Save 50% today", "Save $50 today"], ["only $1,299", "only €1,299"], ["Was $99, now $49", "Was $49, now $99"], ["Results in 30 days", "Results in 30 hours"], ["three days and two calls", "two days and one call"], ["Tuesday, March 3", "Thursday, May 3"], ["Write to support@legiit.com", "Write to help@legiit.com"], ["Visit go.legiit.com", "Visit app.legiit.com"]]) {
+    assert(guardEdit(b, a), `${b} -> ${a}`);
+  }
 });
 
 Deno.test("applyEdits: exact or tolerant spans, in order; refused edits are reported with a reason", () => {
@@ -308,4 +330,56 @@ Deno.test("prompts: the owner's list is in the writer's, the reviser's, the edit
   assert(editorialPrompt.system.includes("two or more of them in the piece, or any em dash, emoji or hashtag, fail Gate D"));
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version], [6, 5, 6, 4, 1]);
+});
+
+Deno.test("applyEdits: testimonials, quotations and names keep their words; seams only; sentence starts get their capital", () => {
+  const unit = (ref: string, text: string, type: Block["type"] = "paragraph"): EditUnit => ({ ref, owner: "section", ownerId: "s", blockIndex: 0, item: null, type, text });
+  const r = applyEdits([
+    unit("t-1", "This report is a game-changer for my agency. Sam Ortiz, Ortiz SEO", "testimonial"),
+    unit("q-1", `One buyer said "it is a robust, game-changing tool for any team" [[L:${A}]].`),
+    unit("n-1", "Dr. Sarah Chen runs the audit. It is genuinely short."),
+    unit("w-1", "Here's the kicker: the trial is free. Most tools guess. Here's the thing: our report reads the pages."),
+    unit("f-1", "Vous hésitez ? Il est prêt : 30 jours d'essai ! Honnêtement, c'est simple."),
+  ], [
+    { ref: "t-1", before: "is a game-changer for", after: "made a difference for", tell: "corporate filler" },
+    { ref: "q-1", before: "robust, game-changing", after: "solid", tell: "ai words" },
+    { ref: "n-1", before: "Dr. Sarah Chen runs", after: "Dr. Susan Chen runs", tell: "x" },
+    { ref: "n-1", before: "It is genuinely short.", after: "It is short.", tell: "genuinely" },
+    { ref: "w-1", before: "Here's the kicker: ", after: "", tell: "windup" },
+    { ref: "w-1", before: "Here's the thing: ", after: "", tell: "windup" },
+    { ref: "f-1", before: "Honnêtement, c'est simple.", after: "C'est simple.", tell: "x" },
+  ]);
+  const by = (ref: string) => r.units.find((u) => u.ref === ref)!.text;
+  assertEquals(by("t-1"), "This report is a game-changer for my agency. Sam Ortiz, Ortiz SEO", "a testimonial is never edited");
+  assert(by("q-1").includes("robust, game-changing"), "a quotation keeps its words even when the span starts inside it");
+  assertEquals(by("n-1"), "Dr. Sarah Chen runs the audit. It is short.");
+  assertEquals(by("w-1"), "The trial is free. Most tools guess. Our report reads the pages.");
+  assertEquals(by("f-1"), "Vous hésitez ? Il est prêt : 30 jours d'essai ! C'est simple.", "untouched text keeps its own spacing");
+  assertEquals(r.rejected.map((x) => x.ref), ["t-1", "q-1", "n-1"]);
+});
+
+Deno.test("a lone dash span never lands on a hyphen; a line break matches only a line break", () => {
+  const units: EditUnit[] = [{ ref: "p-1", owner: "section", ownerId: "s", blockIndex: 0, item: null, type: "paragraph", text: "Book a follow-up call—it takes 10 minutes." }];
+  const r = applyEdits(units, [{ ref: "p-1", before: " — ", after: ", ", tell: "em dash" }]);
+  assertEquals(r.units[0].text, "Book a follow-up call—it takes 10 minutes.", "not applied to the hyphen in follow-up");
+  assertEquals(r.rejected.length, 1);
+});
+
+Deno.test("rebuild keeps the runner-up leads' NEEDS SOURCE lines and follows a rewritten opening", () => {
+  const d0 = socialDraft("lead-b");
+  const d = { ...d0, needs_source: ["You paid a writer for a page that never ranked."] };
+  const units = editableUnits(d, FORMATS.organic_social).map((u) => (u.ref === "main-1" ? { ...u, text: "It reads the pages that rank and checks your links." } : u));
+  assertEquals(rebuildDraft(d, units, FORMATS.organic_social).needs_source, ["You paid a writer for a page that never ranked."], "lead-c's line is still in the piece");
+  const rewritten = { ...d0, sections: d0.sections.map((s) => (s.section_id === "lead_in" ? { ...s, blocks: s.blocks.map((b) => ({ ...b, text: "A new opening the user wrote." })) } : s)) };
+  const synced = syncChosenLead(rewritten, FORMATS.organic_social);
+  assertEquals(synced.leads!.find((l) => l.id === "lead-b")!.blocks[0].text, "A new opening the user wrote.");
+  const rebuilt = rebuildDraft(synced, editableUnits(synced, FORMATS.organic_social), FORMATS.organic_social);
+  assertEquals(rebuilt.sections.find((s) => s.section_id === "lead_in")!.blocks[0].text, "A new opening the user wrote.", "the user's rewrite is not reverted");
+});
+
+Deno.test("tell edit step: an edit naming a text outside the part is refused with its reason, not dropped", async () => {
+  const res = await runTellEdit(ctxFor(socialDraft(null)), { call: editor(() => ({ edits: [{ ref: "nowhere-9", before: "x", after: "y", tell: "x" }, { ref: "main-2::0", before: "Unlock", after: "Get", tell: "unlock" }], what_changed: ["Swapped unlock"], already_clean: false })) });
+  const out = TellEditOutput.parse(res.output);
+  assert(out.rejected.length >= 2 && out.rejected.every((x) => x.reason.startsWith("no text in this part has the reference")), JSON.stringify(out.rejected));
+  assert(!out.what_changed.includes("Swapped unlock"), "a summary line whose edits all failed is not reported as a change");
 });

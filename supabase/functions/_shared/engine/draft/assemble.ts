@@ -2,8 +2,8 @@
  * Assembling and re-assembling a DraftOutput from sections, and turning it into the runner's newDraft effect.
  */
 import type { FormatSpec } from "../formats/spec.ts";
-import { DraftOutput, type Section } from "../schemas/draft.ts";
-import type { LeadType } from "../schemas/common.ts";
+import { type Block, DraftOutput, type Section } from "../schemas/draft.ts";
+import { LEDGER_TAG, type LeadType } from "../schemas/common.ts";
 import { draftWordCount, extractSkimPath, renderMarkdown } from "../render.ts";
 import type { StepEffects } from "../steps/types.ts";
 import { collectLedgerRefs, needsSourceLines, readerText } from "./ledger.ts";
@@ -38,10 +38,22 @@ export interface AssembleInput {
 /** Heading marks and emphasis wrappers a drafter writes into a display block's text; the block type carries that. */
 const HEADING_MARK = /^\s{0,3}#{1,6}\s+/;
 const DISPLAY_BLOCKS = new Set(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button"]);
+const LIST_LINE = /^\s*(?:[-*•]|\d+[.)])\s+/;
+const listKey = (t: string) => t.replace(new RegExp(LEDGER_TAG.source, "g"), " ").replace(LIST_LINE, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+
+/** A list block whose text repeats its own items as list lines would render the list twice; the items stay, the copy goes. */
+function dropListCopy(b: Block): Block {
+  if ((b.type !== "bullets" && b.type !== "numbered") || !b.items?.length || !b.text.trim()) return b;
+  const items = new Set(b.items.map(listKey));
+  const kept = b.text.split("\n").filter((line) => !(LIST_LINE.test(line) && items.has(listKey(line))));
+  return kept.length === b.text.split("\n").length ? b : { ...b, text: kept.join("\n").trim() };
+}
+
 export function cleanBlockText(sections: Section[]): Section[] {
   return sections.map((s) => ({
     ...s,
     blocks: s.blocks.map((b) => {
+      b = dropListCopy(b);
       if (!DISPLAY_BLOCKS.has(b.type) || !HEADING_MARK.test(b.text)) return b;
       return { ...b, text: b.text.replace(HEADING_MARK, "").replace(/^\*\*(.+)\*\*$/s, "$1").trim() };
     }),

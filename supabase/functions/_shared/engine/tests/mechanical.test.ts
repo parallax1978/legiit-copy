@@ -53,7 +53,8 @@ Deno.test("mechanical step maps tiers to severities and gate failures to format_
   const fatal = flags.find((f) => f.kind === "bold_label_colon");
   assert(fatal && fatal.severity === "fatal" && fatal.source === "mechanical" && fatal.rule === "04-copy-standard §7");
   assert(fatal.quote && fatal.quote.includes("**Speed:**"));
-  assertEquals(fatal.suggestedRewrite, "A sentence with the claim and its carrier.");
+  assertEquals(fatal.suggestedRewrite, null, "a tell's fix is guidance, never a line to paste");
+  assert(fatal.issue.includes("Fix: A sentence with the claim and its carrier."));
   const medium = flags.find((f) => f.kind === "thats_why_we_built");
   assertEquals(medium?.severity, "medium");
   const gate = flags.find((f) => f.kind === "format_gate");

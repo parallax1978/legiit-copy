@@ -202,7 +202,21 @@ async function runStepOnce(db: Db, generationId: string, step: StepName, opts: R
   const started = Date.now();
   let result: StepResult;
   try {
-    result = await STEPS[step](ctx);
+    // a resumable step (draft, tell edit) returns continueLater with its checkpoint: run it again from the checkpoint
+    // with a fresh budget, as the worker does in a new invocation
+    let run = ctx;
+    let saved: unknown = null;
+    run.savePartial = async (p: unknown) => { saved = p; };
+    for (;;) {
+      result = await STEPS[step](run);
+      if (!result.continueLater) break;
+      log(`  [${step}] continues: ${result.continueLater.reason}`);
+      const partial = saved ?? result.output;
+      run = await buildContext(db, generationId, attempt, progress);
+      run.partial = partial;
+      saved = null;
+      run.savePartial = async (p: unknown) => { saved = p; };
+    }
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     await db.from("generation_steps").update({ status: "failed", error: msg, finished_at: new Date().toISOString(), duration_ms: Date.now() - started }).eq("id", row.id);
