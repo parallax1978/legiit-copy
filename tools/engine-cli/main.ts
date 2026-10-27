@@ -16,7 +16,7 @@ import type { Json } from "../../supabase/functions/_shared/database.types.ts";
 import { STEPS } from "../../supabase/functions/_shared/engine/steps/index.ts";
 import type { StepContext, StepResult } from "../../supabase/functions/_shared/engine/steps/types.ts";
 import { applyEffects, buildContext } from "../../supabase/functions/_shared/engine/context.ts";
-import { initialSteps, nextSteps, type PipelineState } from "../../supabase/functions/_shared/engine/pipeline.ts";
+import { initialSteps, nextSteps, passBoundary, type PipelineState } from "../../supabase/functions/_shared/engine/pipeline.ts";
 import { MAX_STEP_ATTEMPTS, STEP_DEFAULTS, STEP_NAMES, type StepName } from "../../supabase/functions/_shared/engine/config.ts";
 import { FormatId } from "../../supabase/functions/_shared/engine/schemas/common.ts";
 import { ClaimRowInput, OfferBrief, OfferConfigInput } from "../../supabase/functions/_shared/engine/schemas/brief.ts";
@@ -198,9 +198,12 @@ interface RunOpts {
 }
 
 async function runStepOnce(db: Db, generationId: string, step: StepName, opts: RunOpts, index: number): Promise<{ result: StepResult; applied: Awaited<ReturnType<typeof applyEffects>> }> {
-  const existing = await db.from("generation_steps").select("attempt").eq("generation_id", generationId).eq("step", step).order("attempt", { ascending: false }).limit(1);
-  const attempt = (existing.data?.[0]?.attempt ?? 0) + 1;
-  if (attempt > MAX_STEP_ATTEMPTS) throw new Error(`${step}: ${MAX_STEP_ATTEMPTS} attempts used`);
+  const history = (await db.from("generation_steps").select("step,status,attempt,created_at,finished_at").eq("generation_id", generationId).order("created_at", { ascending: true })).data ?? [];
+  const attempt = history.filter((r) => r.step === step).reduce((m, r) => Math.max(m, r.attempt), 0) + 1;
+  // as run-step does: the cap counts failed attempts in this pass; a later review cycle is a new pass, not a retry
+  const boundary = passBoundary(step, history);
+  const failedBefore = history.filter((r) => r.step === step && (!boundary || Date.parse(r.created_at) > Date.parse(boundary)) && (r.status === "failed" || r.status === "interrupted")).length;
+  if (failedBefore >= MAX_STEP_ATTEMPTS) throw new Error(`${step}: ${MAX_STEP_ATTEMPTS} failed attempts in this pass`);
 
   const progress = async (m: string) => {
     log(`  [${step}] ${m}`);
