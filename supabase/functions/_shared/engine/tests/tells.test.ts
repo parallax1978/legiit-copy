@@ -928,3 +928,12 @@ Deno.test("the stack: a webinar's presentation sections are one piece, and an RS
   ], FORMATS.google_rsa);
   assert(rsa.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 2")), rsa.hard_fail_reasons.join("; "));
 });
+
+Deno.test("legal boilerplate in sales copy is the owner's tell; a disclosure block and the order form may carry it", () => {
+  const r = analyzeText("Credits come back as credits, not cash, and plan payments are not refundable; non-waivable legal rights apply.", { format: FORMATS.organic_social });
+  assertEquals(tells(r, "legal_boilerplate")?.count, 2);
+  const disclosure = analyzeDraft([section("body", [block("disclosure", "Plan payments are not refundable. Terms and conditions apply.")])], FORMATS.landing_page_short);
+  assertEquals(tells(disclosure, "legal_boilerplate"), undefined);
+  const orderForm = analyzeDraft([section("form", [block("paragraph", "Plan payments are not refundable.")])], FORMATS.order_form);
+  assertEquals(tells(orderForm, "legal_boilerplate"), undefined);
+});

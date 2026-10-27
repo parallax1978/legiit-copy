@@ -72,7 +72,7 @@ export const editorialPrompt: PromptModule<EditorialArgs> = {
       `AWARENESS FIELD: ${args.awareness}${args.segment ? ` (segment ${args.segment})` : ""}. Lead rule: ${rule.opening_move}; product named ${rule.product_named.toLowerCase()}; do not: ${rule.do_not}. Lead type drafted: ${args.chosenLeadType ?? "not recorded"}.`,
       `ARGUMENT MEMO:\nTHESIS: ${args.thesis}\n${args.argumentText}`,
       `CONTROL TO PREDICT AGAINST:\n${args.controlText}`,
-      offerBlockText(ctx.variant, ctx.brief, ctx.claims),
+      offerBlockText(ctx.variant, ctx.brief, ctx.claims, ctx.format),
       ledgerText(ctx.claims, { includeDropped: true }),
       dossierText(ctx.dossier, { maxVerbatims: 60, claims: ctx.claims }),
       CACHE_BREAK,

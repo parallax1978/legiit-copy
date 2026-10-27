@@ -119,8 +119,13 @@ Deno.test("postProcessFactual enforces the reviewer's discipline", () => {
   assertEquals(fx[0].claimId, B);
   assertEquals(fx[1].severity, "fatal");
 
-  assertEquals(pendingFactualFlags(out, claims).length, 6, "revise ignores only flags on claims the user kept");
+  // the revision acts only on the engine's own errors: fabrications, and ledger or offer misquotes the user did not keep
+  const pending = pendingFactualFlags(out, claims);
+  assertEquals(pending.length, out.flags.filter((f) => f.fabrication || ((f.test === 1 || f.test === 8) && f.claim_id !== A)).length);
+  assert(pending.every((f) => f.fabrication || f.test === 1 || f.test === 8));
   assertEquals(pendingFactualFlags(null, claims), []);
+  const compliance = { ...out, flags: [flag({ claim_id: B, test: 9, rule: "B&P 17602", suggested_rewrite: "Cancel anytime." }), flag({ claim_id: B, test: 2 }), flag({ claim_id: B, test: 1 }), flag({ claim_id: A, test: 1 })] };
+  assertEquals(pendingFactualFlags(compliance, claims).map((f) => f.test), [1], "compliance and strength flags wait for the user; a kept claim is never touched");
 });
 
 Deno.test("postProcessFactual: a rewrite that brings in an owner's tell is a violation worth a retry; the flag stays", () => {
@@ -281,4 +286,22 @@ Deno.test("userAttention lists pending fatal/high flags, deduplicated; sources a
   assert(fallback[0].startsWith("Fix first (copy chief, the claims)"));
   assert(fallback[1].includes("invented fact"));
   assert(fallback[2].includes("Fix first (tell check)"));
+});
+
+Deno.test("postProcessFactual: a rewrite that adds legal boilerplate is a violation and is dropped", () => {
+  const pp = postProcessFactual({ flags: [flag({ claim_id: B, quote: "Credits come back to your balance.", suggested_rewrite: "Credits come back to your balance; plan payments are not refundable and non-waivable legal rights apply." })], consistency_check: { ok: true, mismatches: [] }, needs_source: [] }, [{ id: B, user_decision: null }]);
+  assertEquals(pp.output.flags.length, 0);
+  assertEquals(pp.violations.length, 1);
+});
+
+import { offerBlockText } from "../draft/prompt_text.ts";
+import { FORMATS as FORMATS_FOR_OFFER } from "../formats/index.ts";
+
+Deno.test("offer block: a post states the offer in one line and leaves the guarantee's terms to the page that takes payment", () => {
+  const variant = { id: "v", status: "approved", chosen: { variant: "free_trial", reasons: "r", price_presentation: "$59 a month", guarantee: { denominated_text: "Your plan runs to the end or every credit comes back.", terms: "Credits, not cash; plan payments are not refundable.", days: null, costs_seller: true }, deadline: null, premiums: [], first_visible_win: { what: "a decision", interval: "20 minutes" }, biggest_failure_reason: "x", bundle_uncomparable_how: "y" } } as unknown as Parameters<typeof offerBlockText>[0];
+  const post = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.organic_social);
+  assert(post.includes("at most one short sentence, the promise only"), post);
+  assert(!post.includes("plan payments are not refundable"), "the guarantee's terms stay off a post");
+  const page = offerBlockText(variant, null, [], FORMATS_FOR_OFFER.sales_letter);
+  assert(page.includes("guarantee (repeat this sentence)") && page.includes("plan payments are not refundable"));
 });

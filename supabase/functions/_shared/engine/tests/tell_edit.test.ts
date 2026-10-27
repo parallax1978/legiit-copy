@@ -9,7 +9,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, rebuildDraft, removeEmojis, removeHashtags, renderUnits, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v3.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v4.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -309,12 +309,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v7.ts";
-import { revisePrompt } from "../prompts/revise.v6.ts";
-import { editorialPrompt } from "../prompts/editorial.v7.ts";
-import { factualPrompt } from "../prompts/factual.v5.ts";
-import offerPrompt from "../prompts/offer.v6.ts";
-import intakePrompt from "../prompts/intake.v4.ts";
+import { draftPrompt } from "../prompts/draft.v8.ts";
+import { revisePrompt } from "../prompts/revise.v7.ts";
+import { editorialPrompt } from "../prompts/editorial.v8.ts";
+import { factualPrompt } from "../prompts/factual.v6.ts";
+import offerPrompt from "../prompts/offer.v7.ts";
+import intakePrompt from "../prompts/intake.v5.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -333,7 +333,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [7, 6, 7, 5, 3, 6, 4]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [8, 7, 8, 6, 4, 7, 5]);
 });
 
 Deno.test("applyEdits: testimonials, quotations and names keep their words; seams only; sentence starts get their capital", () => {

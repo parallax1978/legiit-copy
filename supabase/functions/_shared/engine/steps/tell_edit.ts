@@ -10,7 +10,7 @@
  */
 import type { StepContext, StepResult } from "./types.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v3.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v4.ts";
 import { exemptTermsFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, editableUnits, flatCadence, groupUnits, ownerTellCount, rebuildDraft, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { toDraftEffect } from "../draft/assemble.ts";

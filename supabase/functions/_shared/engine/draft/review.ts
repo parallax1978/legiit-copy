@@ -52,8 +52,8 @@ export function editorialFlags(v: EditorialVerdict): Flag[] {
 
 // ---------------------------------------------------------------- factual
 
-/** Decorative hedges and generic disclaimers the reviewer may not add (standard §8.2). */
-export const DECORATIVE_HEDGE_RE = /\b(may|might|could)\b|\bcan help\b|\bhelps? (to )?support\b|\bresults (may |can )?vary\b|\bindividual results\b|\bresults (are )?not typical\b|\bnot guaranteed\b|\bconsult (your|a) (doctor|physician)\b|\bfor (informational|educational) purposes\b/i;
+/** Decorative hedges, generic disclaimers and legal boilerplate the reviewer may not add (standard §8.2, §8.3). */
+export const DECORATIVE_HEDGE_RE = /\b(may|might|could)\b|\bcan help\b|\bhelps? (to )?support\b|\bresults (may |can )?vary\b|\bindividual results\b|\bresults (are )?not typical\b|\bnot guaranteed\b|\bconsult (your|a) (doctor|physician)\b|\bfor (informational|educational) purposes\b|\bnon-?waivable\b|\blegal rights apply\b|\bterms (and conditions )?apply\b|\b(not|non-?) ?refundable\b|\bvoid where prohibited\b|\bsubject to change\b|\bwhere permitted by law\b|\bat (our|its) sole discretion\b|\brestrictions apply\b/i;
 
 /** True when the rewrite introduces a decorative hedge the quoted line did not already carry. */
 export function introducesDecorativeHedge(quote: string, rewrite: string | null): boolean {
@@ -180,10 +180,16 @@ export function factualFlags(out: FactualOutput): Flag[] {
 }
 
 /** Flags the revise step acts on: not those the user decided to keep. */
+/**
+ * The factual flags the revision acts on: the engine's own errors only. A fabrication is cut; a line that misquotes
+ * the ledger (test 1) or the offer block (test 8) is fixed, unless the user kept that claim. Every other flag (claim
+ * strength, compliance and channel screens) is the user's decision in the Flags panel and never enters the copy on
+ * its own (docs/04 §8.3).
+ */
 export function pendingFactualFlags(out: FactualOutput | null, claims: { id: string; user_decision: string | null }[]): FactualOutput["flags"] {
   if (!out) return [];
   const keep = new Set(claims.filter((c) => c.user_decision === "keep").map((c) => c.id));
-  return out.flags.filter((f) => f.fabrication || !f.claim_id || !keep.has(f.claim_id));
+  return out.flags.filter((f) => f.fabrication || ((f.test === 1 || f.test === 8) && (!f.claim_id || !keep.has(f.claim_id))));
 }
 
 // ---------------------------------------------------------------- revise

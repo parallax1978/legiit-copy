@@ -81,6 +81,8 @@ export interface TellRule {
   note?: string;
   /** The owner's list (§7.1), with the tell's number there when it has one. Owner rules other than 11-13 skip quotations and testimonials. */
   owner?: { tell?: number; words?: boolean };
+  /** Block types an owner rule does not scan (a disclosure block carries the legal text by design). */
+  skip_block_types?: Block["type"][];
 }
 
 export const TIER_WEIGHT: Record<Tier, number> = { 0: 10, 1: 4, 2: 2, 3: 1 };
@@ -377,6 +379,13 @@ export const TELLS: TellRule[] = [
     fix: "Cut it and state the point.",
   },
   {
+    tier: 1, name: "legal_boilerplate", weight: 4, scope: "all", owner: { words: true }, skip_block_types: ["disclosure"],
+    regex: /\bnon-?waivable(?: legal)?(?: rights)?(?: apply)?\b|\blegal rights apply\b|\bterms (?:and conditions )?apply\b|\b(?:not|non-?) ?refundable\b|\bvoid where prohibited\b|\bsubject to change\b|\bwhere permitted by law\b|\ball rights reserved\b|\bwithout (?:prior )?notice\b|\bat (?:our|its) sole discretion\b|\brestrictions apply\b|\bfor informational purposes only\b/gi,
+    example: "Credits come back as credits, not cash, and plan payments are not refundable; non-waivable legal rights apply.",
+    fix: "Cut it. The copy states the offer in plain words; the terms live on the page that takes payment.",
+    note: "The owner's rule (§7.1): sales copy carries no legal boilerplate. Disclosure blocks and the order form, which takes the billing details, are exempt.",
+  },
+  {
     tier: 1, name: "formal_words", weight: 4, scope: "all", owner: { words: true },
     regex: /\butili[sz](?:e|es|ed|ing|ation)\b|\bendeavou?r(?:s|ed|ing)?\b|(?:^|[.!?]["”’)]?\s+)(?:Furthermore|Moreover|Additionally|In addition)\b/gim,
     example: "Furthermore, you can utilize the report.",
@@ -571,6 +580,7 @@ export const NON_TELLS: { name: string; why: string }[] = [
 /** §7 overrides and calibration exemptions by format. */
 export const FORMAT_OVERRIDES: Partial<Record<FormatId, { bold_leadins?: number; keep_watching?: number; exempt?: string[] }>> = {
   optin: { bold_leadins: 5 },
+  order_form: { exempt: ["legal_boilerplate"] },
   upsell: { bold_leadins: 5 },
   vsl_long: { keep_watching: 1 },
   vsl_short: { keep_watching: 1 },
@@ -905,7 +915,7 @@ const CLAIM_WORDS: Record<string, number> = { heres_the_windup: 3, three_beat_de
  * "Here's the hard truth:" is one tell, not two. Words skip proper nouns; every rule skips matches made only of the
  * offer's own words and matches in their literal sense.
  */
-function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[], display: boolean[]): Map<string, OwnerHits> {
+function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>, originals: string[], display: boolean[], types: Block["type"][]): Map<string, OwnerHits> {
   const claimed: [number, number][][] = texts.map(() => []);
   const out = new Map<string, OwnerHits>();
   for (const rule of rules) {
@@ -913,6 +923,7 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
     const perText = texts.map(() => 0);
     const re = new RegExp(rule.regex!.source, rule.regex!.flags.includes("g") ? rule.regex!.flags : rule.regex!.flags + "g");
     texts.forEach((t, ti) => {
+      if (rule.skip_block_types?.includes(types[ti])) return;
       for (const m of t.matchAll(re)) {
         const lead = m[0].replace(/^[\s.!?:"”’)]+/, "").trimEnd();
         if (!lead) continue;
@@ -1069,7 +1080,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const ownerTexts = ownerUnits.map((u) => (u.kind === "display" && !u.tagged && WHOLE_QUOTE_RE.test(u.text) ? u.text : blankQuotes(u.text)));
   const ownerOriginals = ownerUnits.map((u) => u.text);
   const exempt = new Set(exemptTerms.map(stem));
-  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"));
+  const ownerScan = scanOwnerRules(TELLS.filter((r) => quoteExempt(r) && r.regex), ownerTexts, exempt, ownerOriginals, ownerUnits.map((u) => u.kind === "display"), ownerUnits.map((u) => u.type));
   const questions = selfAnsweredQuestions(ownerUnits.map((u, i) => ({ ...u, text: ownerTexts[i] })));
   const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText]]);
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));

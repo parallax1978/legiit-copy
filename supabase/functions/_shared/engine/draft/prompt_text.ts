@@ -73,10 +73,16 @@ export function briefText(brief: OfferBrief | null, offerName: string): string {
   ].filter(Boolean).join("\n");
 }
 
+/** Formats that do not take payment: they state the offer in one line and leave the terms to the page that does (rule 16). */
+const ONE_LINE_OFFER_FAMILIES = new Set<FormatSpec["family"]>(["social", "ad", "email", "message", "audio"]);
+
 /** The approved offer: the single source of truth for price, guarantee, deadline, bonuses and the button. */
-export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrief | null, claims: ClaimRow[]): string {
+export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrief | null, claims: ClaimRow[], spec: FormatSpec | null = null): string {
+  const oneLine = !!spec && ONE_LINE_OFFER_FAMILIES.has(spec.family);
   const terms = claims.filter((c) => c.user_decision !== "drop" && (c.role === "offer_term" || ["price_discount", "guarantee", "scarcity_urgency", "continuity_trial", "free"].includes(c.claim_type)));
-  const termLines = terms.length ? `offer-term ledger rows (cite these):\n${terms.map((c) => `  [[L:${c.id}]] ${c.claim_text}`).join("\n")}` : "offer-term ledger rows: none; any price, guarantee or deadline figure without a row is written with [[NEEDS SOURCE]]";
+  const termLines = terms.length
+    ? `offer-term ledger rows (cite these${oneLine ? `; this ${spec!.name} does not take payment, so it states the offer once, in one line (the price, the trial and the action), and leaves the guarantee's terms, the cancel mechanics and the refund policy to the page that takes payment: rule 16` : ""}):\n${terms.map((c) => `  [[L:${c.id}]] ${c.claim_text}`).join("\n")}`
+    : "offer-term ledger rows: none; any price, guarantee or deadline figure without a row is written with [[NEEDS SOURCE]]";
   if (!variant) {
     return [
       `APPROVED OFFER BLOCK: no constructed variant. The offer is the brief's deliverables, price and guarantee exactly as stated there. Nothing is added: no bonus, no discount, no deadline, no stack value.`,
@@ -91,7 +97,9 @@ export function offerBlockText(variant: OfferVariantRow | null, brief: OfferBrie
     lines.push(`variant: ${c.variant}; reasons: ${c.reasons}`);
     lines.push(`price presentation: ${c.price_presentation}`);
     if (brief) lines.push(`price: ${brief.price.text}${brief.price.plan ? ` (${brief.price.plan})` : ""}`);
-    lines.push(`guarantee (repeat this sentence): ${c.guarantee.denominated_text}; terms: ${c.guarantee.terms}${c.guarantee.days ? `; ${c.guarantee.days} days` : ""}`);
+    lines.push(oneLine
+      ? `guarantee (at most one short sentence, the promise only; its terms stay on the page that takes payment): ${c.guarantee.denominated_text}`
+      : `guarantee (repeat this sentence): ${c.guarantee.denominated_text}; terms: ${c.guarantee.terms}${c.guarantee.days ? `; ${c.guarantee.days} days` : ""}`);
     lines.push(c.deadline ? `deadline: ${c.deadline.date_or_rule}; mechanism: ${c.deadline.mechanism}` : "deadline: none (no urgency device; do not invent one)");
     lines.push(c.premiums.length ? `premiums: ${c.premiums.map((p) => `${p.name} (answers: ${p.answers_worry}${p.value_basis ? `; value basis: ${p.value_basis}` : "; no dollar value: none may be stated"})`).join(" | ")}` : "premiums: none");
     lines.push(`first visible win: ${c.first_visible_win.what} within ${c.first_visible_win.interval}`);

@@ -52,7 +52,7 @@ export const revisePrompt: PromptModule<ReviseArgs> = {
         ].filter(Boolean).join("\n")
       : "COPY CHIEF VERDICT: none available.";
     const factText = args.factual.length
-      ? `FACTUAL FLAGS (apply each rewrite as given; the user has not decided to keep these):\n${args.factual.map((f, i) => `  ${i + 1}. [test ${f.test}, ${f.severity}${f.fabrication ? ", FABRICATION: cut the invented item" : ""}] quote: "${f.quote}"\n     rule: ${f.rule}\n     issue: ${f.issue}\n     rewrite: ${f.suggested_rewrite ?? "(cut)"}`).join("\n")}`
+      ? `FACTUAL FLAGS (the engine's own errors: cut each fabrication, fix each line that misquotes the ledger or the offer, as given; every other factual flag is the user's decision and is not shown here):\n${args.factual.map((f, i) => `  ${i + 1}. [test ${f.test}, ${f.severity}${f.fabrication ? ", FABRICATION: cut the invented item" : ""}] quote: "${f.quote}"\n     rule: ${f.rule}\n     issue: ${f.issue}\n     rewrite: ${f.suggested_rewrite ?? "(cut)"}`).join("\n")}`
       : "FACTUAL FLAGS: none pending.";
     const m = args.mechanical;
     const mechText = m
@@ -62,7 +62,7 @@ export const revisePrompt: PromptModule<ReviseArgs> = {
     return [
       // stable per generation first, so every revision cycle reads it from the cache
       formatRulesText(ctx.format),
-      offerBlockText(ctx.variant, ctx.brief, ctx.claims),
+      offerBlockText(ctx.variant, ctx.brief, ctx.claims, ctx.format),
       ledgerText(ctx.claims),
       voiceText(ctx.voice, ctx.config?.greeting, exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name)),
       CACHE_BREAK,

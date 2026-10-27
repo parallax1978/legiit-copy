@@ -43,7 +43,7 @@ export const factualPrompt: PromptModule<FactualArgs> = {
     return [
       formatRulesText(ctx.format),
       configText(ctx.config),
-      offerBlockText(ctx.variant, ctx.brief, ctx.claims),
+      offerBlockText(ctx.variant, ctx.brief, ctx.claims, ctx.format),
       briefText(ctx.brief, ctx.offer.name),
       ledgerText(ctx.claims, { includeDropped: true }),
       CACHE_BREAK,
