@@ -883,6 +883,8 @@ Deno.test("a long-span rule claims only its head: words inside its tail still co
   assertEquals(n("Here's how to unlock seamless growth."), 3);
   assertEquals(n("Not a robust tool. Not a seamless course. It's a system."), 3);
   assertEquals(n("Here's why most agencies never move the needle."), 2);
+  // as line 1 of the piece the elliptic twist is also the closing verdict, but the words another owner rule already
+  // counts are one flaw, counted once
   assertEquals(n("The keyword was never your real landscape. The pages ranking for it are."), 2);
   assertEquals(n("Here's the hard truth: most pages never rank."), 1);
   assertEquals(n("In today's landscape, content is everything."), 1);
@@ -1011,7 +1013,9 @@ Deno.test("count_windup: clocks, ratios, links and literal quantities are not co
     "The process takes three steps and about ten minutes.",
     "A setup that takes two steps and no developer.",
   ]) assertEquals(owner(t), [], t);
-  for (const t of ["Follow these 5 steps:", "Three reasons to switch: speed, price and support.", "It takes seven steps, and your keyword tool stops at the list."]) assertEquals(owner(t), ["count_windup"], t);
+  for (const t of ["Follow these 5 steps:", "Three reasons to switch: speed, price and support."]) assertEquals(owner(t), ["count_windup"], t);
+  // as line 1, the keyword tool that stops at the list is also the talking tool (an opening rule)
+  assertEquals(owner("It takes seven steps, and your keyword tool stops at the list."), ["count_windup", "talking_tool"]);
   const r = analyzeText("Here's how it works, in three steps: you paste the keyword, it checks who ranks, you get the brief.", { format: FORMATS.organic_social });
   assertEquals(r.owner_tells, 1, r.flags.map((f) => f.tell).join(","));
   // the structure a long format asks for is not a windup there
@@ -1078,6 +1082,7 @@ Deno.test("round 4 review: the new checks pass plain comparisons, stories and pr
     ["The Basic plan includes none of the templates. The Pro plan includes all 40, plus the brief builder.", FORMATS.pricing_page],
     ["In 2015 I had nothing. No clients, no savings. By 2017 I had all the work two crews could handle.", FORMATS.sales_letter],
     ["You also get three bonuses. Every bonus is a tool you won't find anywhere else.", FORMATS.sales_letter],
+    // a line that gives a number and the speaker states facts: its negative is a product fact, not a closing verdict
     ["We pour 40 candles a week by hand in Asheville. Each one is a soy blend that won't tunnel.", FORMATS.product_description],
   ] as const) assertEquals(t1(text, f), [], text);
   for (const text of ["Every page it skips is a page you never pay a writer for.", "Every skip is a page nobody has to write."]) assertEquals(t1(text, FORMATS.organic_social), ["aphorism_reframe"], text);

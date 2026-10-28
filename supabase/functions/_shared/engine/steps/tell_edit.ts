@@ -12,8 +12,8 @@ import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
 import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
-import { exemptTermsFrom } from "../tells.ts";
-import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, statesPromise, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
+import { exemptTermsFrom, toolNamesFrom } from "../tells.ts";
+import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, statesPromise, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { Candidate } from "../schemas/argument.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
 import { ChosenOffer } from "../schemas/offer.ts";
@@ -88,7 +88,9 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const source = syncChosenLead(latestDraftOutput(ctx), spec);
   const version = ctx.latestDraft!.version;
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
-  const before = ownerTellCount(source, spec, exemptTerms);
+  // the tools and metrics the comparative ledger rows name join the talking-tool rule's nouns (tells.ts toolNamesFrom)
+  const toolNames = toolNamesFrom(ctx.claims ?? [], exemptTerms);
+  const before = ownerTellCount(source, spec, exemptTerms, toolNames);
   const cadence = flatCadence(source, spec);
   // the user's accepted wording for a ledger row ("rewrite") and, on a page that takes payment, the guarantee sentence
   // the offer block says to repeat are used as written: the editor leaves them alone
@@ -146,10 +148,12 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
 
     const refs = new Set(groups[gi].map((u) => u.ref));
     const mine = () => units.filter((u) => refs.has(u.ref));
-    // the checker's list for this group: each text's own tells, and what the whole piece says twice
+    // the checker's list for this group: each text's own tells, what the whole piece says twice, and the opening tells
+    // of each lead in its place (or of each piece's opening)
+    const openingsIn = (all: EditUnit[]) => openingFindings(all, source, spec, toolNames).filter((f) => refs.has(f.ref));
     const findingsFor = (all: EditUnit[]) => {
       const mine = all.filter((u) => refs.has(u.ref));
-      return [...unitFindings(mine, spec, exemptTerms), ...repeatFindings(all, source, spec, exemptTerms, promise).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
+      return [...unitFindings(mine, spec, exemptTerms), ...openingsIn(all).map(({ ref, tell, example }) => ({ ref, tell, example })), ...repeatFindings(all, source, spec, exemptTerms, promise).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
     };
     const args: TellEditArgs = {
       draft: source,
@@ -175,8 +179,10 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     let left = leftUnedited(listed, unitsBefore, r.units, auditOpts);
     const mapped = (res.output.points ?? []).map((p) => ({ ...p, lines: p.lines.filter((l) => refs.has(refOf(l.ref))) })).filter((p) => p.lines.length > 1);
     let pointsOpen = openPoints(mapped, r.units, source, spec, promise);
+    // an opening tell the checker still finds after the edits (the owner's first complaint is the hook)
+    const openingLeft = openingsIn(r.units);
     const refusedMany = r.rejected.length > 0 && r.rejected.length >= Math.max(2, Math.ceil(res.output.edits.length / 3));
-    if ((refusedMany || left.length || pointsOpen.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
+    if ((refusedMany || left.length || pointsOpen.length || openingLeft.length) && remainingBudgetMs(ctx, now()) >= RETRY_MIN_BUDGET_MS) {
       const note = [
         refusedMany ? `These edits could not be applied:\n${r.rejected.slice(0, 12).map((x) => `- [${x.ref}] "${x.before}" -> "${x.after}": ${x.reason}`).join("\n")}` : "",
         left.length ? `You listed these lines and left them as they were; give each one its edit (say the plain specific thing, or cut it where a cut is allowed), or keep it only if it carries a fact the piece needs:\n${left.slice(0, 12).map((x) => {
@@ -185,6 +191,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
           return `- [${refOf(x.ref)}] (${x.kind}) "${x.line}"${opening ? " (an opening: rephrase it, never cut it whole)" : ""}${refused.length ? `; refused before: ${Array.from(new Set(refused)).join("; ")}` : ""}`;
         }).join("\n")}` : "",
         pointsOpen.length ? `These points are still made by more than one line; change these lines (cut each, or rewrite it so it adds something the point's other line did not):\n${pointsOpen.slice(0, 8).map((p) => `- ${p.point}: ${p.lines.map((l) => `[${refOf(l.ref)}] "${l.line}"`).join("; ")}`).join("\n")}` : "",
+        openingLeft.length ? `These opening lines still carry an opening tell; rewrite each one as its fix says, keeping its facts and ledger tags:\n${openingLeft.slice(0, 12).map((f) => `- [${f.ref}] ${f.tell}: ${f.example}`).join("\n")}` : "",
         `Return edits for the texts as they stand now; copy "before" exactly and keep every ledger tag, number, name, quote and link.`,
       ].filter(Boolean).join("\n");
       try {
@@ -221,7 +228,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const rebuilt = rebuildDraft(source, units, spec);
   const changed = units.some((u, i) => u.text !== original[i].text) || JSON.stringify([rebuilt.sections, rebuilt.leads]) !== JSON.stringify([source.sections, source.leads]);
   const edited = changed ? rebuilt : source;
-  const after = changed ? ownerTellCount(edited, spec, exemptTerms) : before;
+  const after = changed ? ownerTellCount(edited, spec, exemptTerms, toolNames) : before;
   const lines = dedupe(whatChanged).slice(0, MAX_LIST);
   if (b.edits.length && !lines.some((l) => /dash|emoji|hashtag/i.test(l))) lines.push("Removed the em dashes, emojis and hashtags that were left");
   const output = TellEditOutput.parse({

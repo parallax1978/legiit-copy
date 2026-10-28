@@ -6,7 +6,7 @@ import { z } from "zod";
 import type { StepEffects, StepFn, StepResult } from "./types.ts";
 import { Section } from "../schemas/draft.ts";
 import { MechanicalReport } from "../schemas/review.ts";
-import { analyzeDraft, exemptTermsFrom, TELL_THRESHOLDS } from "../tells.ts";
+import { analyzeDraft, exemptTermsFrom, TELL_THRESHOLDS, toolNamesFrom } from "../tells.ts";
 import { Candidate } from "../schemas/argument.ts";
 import { promiseOverlap, promiseStems, statesPromise } from "../draft/tell_edit.ts";
 import { readerText } from "../draft/ledger.ts";
@@ -111,7 +111,9 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
 
   const sections = sectionsFromBlocks(draft.blocks);
   // the offer's own words are exempt here exactly as in the tell edit, or the stack would loop revisions on them
-  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms: exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name) }));
+  const exemptTerms = exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name);
+  // the tools the comparative ledger rows name join the talking-tool rule's nouns, as in the tell edit
+  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms, toolNames: toolNamesFrom(ctx.claims ?? [], exemptTerms) }));
   // the piece says the argument's promise (rule 8): a draft that only describes the product, or says half a promise of
   // two results, carries a note to the revision with the line to rewrite. A note, not a hard fail: the match is on
   // words, and a piece that says the promise in other words never costs a review cycle for it

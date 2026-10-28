@@ -11,7 +11,9 @@
  * The owner's list (§7.1) governs where it and the calibration disagree: em dashes, emojis and hashtags are Tier 0
  * in every format, and the owner's pattern tells and words are Tier 1 per hit, scanned outside quotations and
  * testimonials, skipping proper nouns and the literal words of what the offer sells. Two or more owner hits in a
- * piece are the stack: a hard fail that sends the draft back to revision.
+ * piece are the stack: a hard fail that sends the draft back to revision. Four of them read only each piece's opening
+ * (reader_scene_opener, closing_verdict, slogan_rehook, talking_tool; see openingsOf), ported from the hook14
+ * measurement of the engine's hooks against human openings.
  *
  * Two entry points:
  *  - analyzeDraft(sections, spec): block-aware. Headline, deck and crosshead blocks are legitimate display text, so
@@ -27,6 +29,7 @@ import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "./schemas/common.ts";
 import { FORMATS, sectionBaseId, sectionItemIndex } from "./formats/index.ts";
 import { draftWordCount } from "./render.ts";
 import { ADMISSION_TELL_RE } from "./draft/admissions.ts";
+import { itemShape, leadSectionId } from "./draft/plan.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rule table
@@ -399,6 +402,35 @@ export const TELLS: TellRule[] = [
     fix: "Say what the product does that the other does not, plainly, once.",
     note: "§7.1 structure (a slogan couplet): a line with \"neither\", \"nothing\" or \"none\" answered a few lines later by the same verb with \"both\", \"everything\" or \"all\". Scanned across the paragraphs of one piece. None of 895 human posts, emails and pages.",
   },
+  // ---- the opening (§7.1 hooks): computed in code over the opening lines of each piece (see openingsOf) ----
+  {
+    tier: 1, name: "reader_scene_opener", weight: 4, scope: "structural", owner: {},
+    regex: null,
+    example: "You paid a writer for a page your keyword tool scored as easy. / You've paid... / Your keyword tool sold you... / If you pick keywords by...",
+    fix: "Open with the speaker, not the reader's past: say what the speaker did, counted or decided, in first person, with a date, number or name from the ledger or the story inventory, or state a plain fact the reader can check; the reader comes in as 'you' after the speaker has said something true, or through a real question. Example (a plumber): not 'You paid for a new water heater and it died inside a year.' but 'I replaced the same water heater on Elm Street twice this March.'",
+    note: "The first sentence of line 1 narrates the reader's own past or present habit back to them: \"You / You've / Your X\" with a past-tense verb that takes an object, \"You / Your X\" with a present verb of the problem (pay, pick, sort, buy, bills...), or \"If you + that verb\" / \"If your X is\". \"You've heard\", \"You've been told\", \"You've got\" and a sentence with a date or time anchor (a reader action on record: \"You signed up on Wednesday, November 26.\") are exempt. Measured (hook14): engine 31 of 45 hooks (21 of 32 hook families, 3 of the 6 the owner rejected), human 0 of 842 openings (0 of 144 social posts), 6 of 6,572 held-out human body paragraphs.",
+  },
+  {
+    tier: 1, name: "closing_verdict", weight: 4, scope: "structural", owner: {},
+    regex: null,
+    example: "You paid a writer for a page your keyword tool scored as easy. It never brought in a single customer. / ..., and it never cracked page one. / ...feels like research. It's where bad content gets made.",
+    fix: "End line 1 on the fact, not a verdict on it: cut the closing 'It never...', ', and it never...', 'nothing', 'nobody', 'not a single' clause or sentence; if the outcome is the point, say what was counted with its size and source inside the sentence that states the fact. Example (a gym owner): not 'The annual pass looked like a deal in January. It never got used after February.' but 'I count who scans in at the front desk in March, and it's about a third of January's sign-ups.'",
+    note: "Line 1 ends on a short negative verdict after a setup (a last sentence of 14 words or fewer opening on it, they, that, this, the X or your X with never, didn't, nothing, nobody, a single...; or the same clause after \", and\", \", then\" or \", but\"), on a short pronoun verdict that carries a negative or a reframe (\"feels like research. It's where bad content gets made.\"), or on an elliptic twist (\"The pages ranking for it are.\"). Measured (hook14): engine 14 of 45 hooks (4 of the 6 the owner rejected), human 1 of 842 openings (\"Do you know who's awesome? You are.\"), 0 of 144 social posts; 49 of 6,572 held-out human body paragraphs read as a line 1, which is why the rule reads the opening only.",
+  },
+  {
+    tier: 1, name: "slogan_rehook", weight: 4, scope: "structural", owner: {},
+    regex: null,
+    example: "You win rankings your site can hold, on keywords that bring paying customers.",
+    fix: "Cut the slogan line: say the promise once, as what the product hands the reader and when, with a ledger fact in the same sentence, or as the speaker's own decision in first person. Example (an accountant): not 'You keep the deductions you earned, on returns that never get flagged.' but 'I send every client the list of deductions I took, with the receipt for each one, before I file.'",
+    note: "A tagline sentence in lines 1-5 of the opening: \"You\" + a benefit verb (get, win, rank, find, keep, end up, land, grow, make, own, reach, beat, outrank) with a relative tail (that, who, where, you can, your X can, can't, worth, never), no number and no first person. Measured (hook14): engine 24 of 124 leads, human 0 of 842 openings, 0 of 6,572 held-out human paragraphs.",
+  },
+  {
+    tier: 1, name: "talking_tool", weight: 4, scope: "structural", owner: {},
+    regex: null,
+    example: "the difficulty score said it was easy / Semrush rated the keyword easy / the tool hands you a list / that rating left you guessing",
+    fix: "Make a person the subject: a tool shows a number; a person reads it, picks, pays or decides. Example (a mechanic): not 'The dashboard said the tires were fine.' but 'I check every tire with a tread gauge at every oil change.'",
+    note: "In lines 1-3 of the opening a tool, score, list or export is the subject of a verb of saying, judging, choosing or giving (said, rated, hides, hands you, left you, knows, picks, can't tell...). The nouns are the generic ones (score, rating, number, estimate, list, export, tool, report, dashboard, data...) plus the tools and metrics the offer's comparative ledger rows name, when the caller passes them. Measured (hook14, with the offer's names Ahrefs, Semrush, Google, volume, difficulty): engine 97 of 124 leads (73 with the generic nouns alone), human 0 of 842 openings, 4 of 6,572 held-out human paragraphs.",
+  },
   {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
@@ -699,6 +731,10 @@ interface Unit {
   faq: boolean;
   /** the block carried a ledger tag or NEEDS SOURCE mark (a quoted headline with one is a sourced quotation) */
   tagged: boolean;
+  /** the text as written, ledger tags included (the opening rules strip them the way the measurement did) */
+  raw: string;
+  /** the block it came from */
+  blockId: string;
 }
 
 export const DISPLAY_TYPES = new Set<Block["type"]>(["headline", "deck", "preheadline", "crosshead", "subject", "preview", "label", "button", "field"]);
@@ -728,10 +764,10 @@ function unitsOf(sections: Section[]): Unit[] {
       const faq = faqSection || FAQ_RE.test((b.meta?.role ?? "").replace(/_/g, " "));
       const tagged = (raw: string) => new RegExp(LEDGER_TAG.source).test(raw) || raw.includes(NEEDS_SOURCE_TAG);
       const t = clean(b.text);
-      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(b.text ?? "") });
+      if (t) out.push({ text: t, kind: DISPLAY_TYPES.has(b.type) ? "display" : "body", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(b.text ?? ""), raw: b.text ?? "", blockId: b.id });
       for (const i of b.items ?? []) {
         const it = clean(i);
-        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(i) });
+        if (it) out.push({ text: it, kind: "item", type: b.type, sectionId: s.section_id, item, faq, tagged: tagged(i), raw: i, blockId: b.id });
       }
     }
   }
@@ -1244,6 +1280,426 @@ function selfAnsweredQuestions(units: { text: string; kind: UnitKind; sectionId:
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// The opening (§7.1 hooks): four rules over the opening lines of each piece
+// ---------------------------------------------------------------------------------------------------------------
+//
+// Ported from the hook14 measurement (scratchpad hook14/measure.py): the engine's 45 hooks and 124 leads against 842
+// human openings from social posts, emails, opt-ins, sales pages and direct mail. The sentence split, the word count,
+// the regexes and the exemptions are measure.py's. Python's Unicode \w, \b, \s and \d are spelled out so the port
+// fires on the openings the measurement counted (the hook15 calibration runs both on its data and compares).
+
+const PY_W = String.raw`\p{L}\p{N}_`;
+const PW = `[${PY_W}]`;
+const PB = `(?:(?<=${PW})(?!${PW})|(?<!${PW})(?=${PW}))`;
+const PY_S = String.raw`\t-\r \x1c-\x1f\x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000`;
+const PS = `[${PY_S}]`;
+const PD = String.raw`\p{Nd}`;
+const py = (source: string, flags = "") => new RegExp(source, flags + "u");
+const PY_SPACE = new Set<string>(["\t", "\n", "\v", "\f", "\r", " ", "\x1c", "\x1d", "\x1e", "\x1f", "\x85", "\xa0", "\u1680", "\u2028", "\u2029", "\u202f", "\u205f", "\u3000"]);
+for (let c = 0x2000; c <= 0x200a; c++) PY_SPACE.add(String.fromCharCode(c));
+
+const PY_WS_RUN = py(`${PS}+`, "g");
+const PY_STRIP = py(`^${PS}+|${PS}+$`, "g");
+const pyStrip = (s: string) => s.replace(PY_STRIP, "");
+const ABBR_RE = py(String.raw`${PB}(?:Mr|Mrs|Ms|Dr|St|vs|etc|e\.g|i\.e|U\.S|Inc|Co|No|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.$`);
+const OPENING_SPLIT_RE = py(String.raw`(?<=[.!?…])["')\]]*${PS}+(?=["'(\[]?[A-Z0-9$])`);
+
+/** measure.py `sentences`: whitespace collapsed; a split after . ! ? or … before a capital, a digit or $ (closing quotes and brackets go with the split); an abbreviation joins the next part. */
+export function openingSentences(text: string): string[] {
+  const t = pyStrip((text ?? "").replace(PY_WS_RUN, " "));
+  if (!t) return [];
+  const out: string[] = [];
+  for (const p of t.split(OPENING_SPLIT_RE)) {
+    if (out.length && ABBR_RE.test(out[out.length - 1])) out[out.length - 1] += " " + p;
+    else out.push(p);
+  }
+  return out.map(pyStrip).filter(Boolean);
+}
+
+/** measure.py `words` and `wc`. */
+const PY_WORD_RE = /[A-Za-z0-9$%][A-Za-z0-9'$%.,-]*[A-Za-z0-9%]|[A-Za-z0-9]/g;
+const pyWordCount = (s: string) => (s.match(PY_WORD_RE) ?? []).length;
+
+/** measure.py `cap`: line 1 capped at its first three sentences, the unit the line-1 rules read. */
+export function openingHook(line1: string, n = 3): string {
+  return openingSentences(line1).slice(0, n).join(" ");
+}
+
+const IRREG_PAST = new Set(
+  "paid built bought sold spent got made picked sorted wrote ran took gave went saw did had sent signed set put found lost left kept told thought knew began chose hit quit cut let felt heard held brought caught taught fought won drove grew threw flew drew ate fell forgot been seen done gone given taken written chosen known grown shown begun read hired".split(" "),
+);
+const NOT_PAST = new Set("need needs feed seed bleed breed speed proceed exceed succeed embed shed bed red wed ted indeed".split(" "));
+
+function pyStripChars(s: string, chars: string): string {
+  let a = 0, b = s.length;
+  while (a < b && chars.includes(s[a])) a++;
+  while (b > a && chars.includes(s[b - 1])) b--;
+  return s.slice(a, b);
+}
+
+function isPast(word: string): boolean {
+  const w = pyStripChars((word ?? "").toLowerCase(), ",.;:");
+  return IRREG_PAST.has(w) || (w.endsWith("ed") && w.length > 4 && !NOT_PAST.has(w));
+}
+
+const FIRST_I_RE = py(`${PB}I${PB}|${PB}I'(?:m|ve|d|ll)${PB}`);
+const FIRST_CI_RE = py(`${PB}(?:me|my|mine|myself|we|we're|we've|we'd|we'll|our|ours)${PB}`, "i");
+const FIRST_US_RE = py(`${PB}us${PB}`);
+const hasFirstPerson = (s: string) => FIRST_I_RE.test(s) || FIRST_CI_RE.test(s) || FIRST_US_RE.test(s);
+
+/** A dated or placed moment: a reader action on record ("You signed up on Wednesday, November 26.") is not the scene. */
+const TIME_ANCHOR_RE = py(
+  `${PB}(?:yesterday|today|tonight|tomorrow|this (?:morning|afternoon|evening|week|weekend|month|year|past)|` +
+    `last (?:night|week|weekend|month|year|spring|summer|fall|autumn|winter|time|quarter)|` +
+    `${PD}+${PS}*(?:days?|weeks?|months?|years?|hours?)${PS}+ago|ago|recently|` +
+    `(?:in|since|back in|by) (?:19|20)${PD}${PD}|(?:19|20)${PD}${PD}|` +
+    `(?:january|february|march|april|june|july|august|september|october|november|december)|` +
+    `(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)|birthday|this past)${PB}`,
+  "i",
+);
+
+// ---- reader_scene_opener (R1): the reader's own life narrated back to them
+const PAST_WORD = `(?:(?!(?:${[...NOT_PAST].sort().join("|")})${PB})(?:${[...IRREG_PAST].sort().join("|")}|[A-Za-z]{3,}ed))${PB}`;
+/** A past-tense verb that takes an object or a complement. */
+const PAST_SLOT = `(?:(?:already|just|once|all|probably|still|even|finally)${PS}+)?(?<verb>${PAST_WORD})(?=${PS}+[${PY_W}$"'])`;
+/** "Your keyword tool", never "Your data is" or "Your body can be". */
+const YOUR_NP = `Your(?: (?!(?:is|are|was|were|has|have|had|can|could|will|would|should|may|might|must|be|been)${PB})[${PY_W}'-]+){1,3}`;
+const YOU_OPEN_RE = py(`^(?:You(?:'ve| have| had)?|${YOUR_NP})${PS}+${PAST_SLOT}`);
+const SCENE_PRESENT_VERBS = "(?:pay|pays|pick|picks|sort|sorts|buy|buys|spend|spends|send|sends|run|runs|choose|chooses|plan|plans|pull|pulls|hire|hires|brief|briefs|bill|bills|hand|hands|sell|sells|charge|charges)";
+const YOU_PRESENT_RE = py(`^(?:You|${YOUR_NP})${PS}+(?:(?:already|just|still|even|probably)${PS}+)?${SCENE_PRESENT_VERBS}${PB}`);
+/** "You've heard", "You've been told", "You've got": a belief the reader holds, not a scene. */
+const R1_EXEMPT_RE = py(`^You(?:'ve| have)(?: (?:probably|already|all|just|likely|surely|undoubtedly))? (?:got|heard|been told)${PB}`);
+const IF_SCENE_VERBS = "(?:pay|paid|pick|picked|sort|sorted|buy|bought|spend|spent|send|sent|run|ran|choose|chose|plan|planned|pull|pulled|hire|hired|brief|briefed|order|ordered|build|built|use|used)";
+const IF_SCENE_RE = py(`^If (?:you(?:'ve| have)?${PS}+(?!ever${PB})(?:(?:already|just|still)${PS}+)?${IF_SCENE_VERBS}${PB}|your [${PY_W}' -]{1,30}? (?:is|was|are|were) )`);
+
+const firstSentenceOf = (hook: string) => openingSentences(hook)[0] ?? "";
+
+/**
+ * A transaction on the seller's own record ("You bought the Pro plan.", "You left the plan in your cart.", "Your trial
+ * ends Friday."): what a thank-you page, an upsell or a cart, onboarding or win-back email opens on, said from the
+ * record, the way "You signed up for Slack back on Wednesday" is. Not a scene of the reader's past.
+ */
+const TRANSACTION_RE = py(
+  `^(?:You(?:'ve| have)?(?: just| already)? (?:bought|ordered|purchased|signed up|registered|joined|subscribed|upgraded|downgraded|downloaded|booked|reserved|enrolled|canceled|cancelled|renewed|claimed|redeemed|started your|left${PB}[^.!?]*${PB}in your cart)${PB}|` +
+    `Your (?:order|trial|payment|subscription|account|plan|download|booking|seat|spot|ticket|invoice|receipt|card|login|copy|report)${PB})`,
+  "i",
+);
+/** The reader's motive narrated after the action ("to make data-driven decisions", "hoping it would rank"): the scene, not the record. */
+const MOTIVE_RE = py(`${PB}(?:to (?!(?:your|the|my|our|this|that|these|those|a|an|it|us|me|them|him|her|you|page|step)${PB})[a-z]+|because|so (?:that|you)|hoping|thinking|expecting|believing|wanting|trying|figuring|assuming)${PB}`, "i");
+/** The reader's own transaction with the seller, stated as the record (a confirmation, a reminder, a cart), not as a scene with a motive. */
+const transactional = (s1: string) => TRANSACTION_RE.test(s1) && !MOTIVE_RE.test(s1);
+
+function youPastOpen(hook: string): string | null {
+  const s1 = firstSentenceOf(hook);
+  if (R1_EXEMPT_RE.test(s1) || TIME_ANCHOR_RE.test(s1) || transactional(s1)) return null;
+  const m = YOU_OPEN_RE.exec(s1);
+  return m && isPast(m.groups?.verb ?? "") ? m[0] : null;
+}
+
+function youPresentSceneOpen(hook: string): string | null {
+  const s1 = firstSentenceOf(hook);
+  if (TIME_ANCHOR_RE.test(s1) || transactional(s1)) return null;
+  return YOU_PRESENT_RE.exec(s1)?.[0] ?? null;
+}
+
+function ifSceneOpen(hook: string): string | null {
+  const s1 = firstSentenceOf(hook);
+  if (TIME_ANCHOR_RE.test(s1) || transactional(s1)) return null;
+  return IF_SCENE_RE.exec(s1)?.[0] ?? null;
+}
+
+/** R1 on the hook (line 1 capped at three sentences): what matched, or null. */
+export function readerSceneOpener(hook: string): string | null {
+  return youPastOpen(hook) || youPresentSceneOpen(hook) || ifSceneOpen(hook) || null;
+}
+
+// ---- closing_verdict (R2): the verdict that closes line 1
+const NEG = "(?:never|didn't|doesn't|hasn't|haven't|won't|can't|couldn't|wasn't|isn't|nothing|nobody|no one|a single|not one)";
+const NEG_RE = py(`${PB}${NEG}${PB}`, "i");
+const VERDICT_SUBJECT = `(?:and |but |then |so )?(?:it|they|that|this|those ${PW}+|the ${PW}+|each one|a lot of them|most of them|your(?: [${PY_W}']+){1,2}|nobody|nothing)${PB}`;
+const VERDICT_CLAUSE_RE = py(`(?:[,.;]${PS}+|${PB}and${PS}+|${PB}then${PS}+|${PB}but${PS}+)(${VERDICT_SUBJECT}[^,.;!?]{0,50}?${PB}${NEG}${PB}[^,.;!?]{0,60})[.!?]?$`, "id");
+const VERDICT_SENTENCE_RE = py(`^(${VERDICT_SUBJECT}[^.!?]{0,50}?${PB}${NEG}${PB}.*)$`, "i");
+const PRON_START_RE = py(`^(?:and |but |then |so )?(?:it|it's|they|they're|that|that's|this|those|then|nothing|nobody|none|neither|not one)${PB}`, "i");
+const ELLIPTIC_RE = py(`${PB}(?:are|is|was|were|did|does|do|can|will|won't|doesn't|didn't)\\.$`, "i");
+/** One thing presented as another, in measure.py's order. */
+const REFRAME_RES = [
+  py(`${PB}(?:feels|looks|sounds|seems) like${PB}[^.]*\\.${PS}+(?:it's|it is|that's|that is)${PB}`, "i"),
+  py(`${PB}(?:was|were) never${PB}`, "i"),
+  py(`${PB}(?:is|was|it's|that's) (?:how|where|why) [a-z]`, "i"),
+  py(`${PB}the (?:most|real|only|biggest|worst) [${PY_W}' ]+ is the one${PB}`, "i"),
+  py(`${PB}is half (?:of|the)${PB}|${PB}the missing half${PB}|${PB}only part of${PB}`, "i"),
+  py(`,${PS}*not (?:whether|what|how|who|the|a|an)${PB}`, "i"),
+  py(`${PB}(?:isn't|is not|wasn't|aren't)${PB}[^.]*[.;,]${PS}*(?:it's|it is|they're|that's)${PB}`, "i"),
+];
+
+/** The verdict closes line 1 after a setup: the last of two sentences or more, or a clause after ", and", ", then" or ", but" in the same sentence. */
+function negativeVerdictEnd(hook: string): string | null {
+  const ss = openingSentences(hook);
+  if (!ss.length) return null;
+  const last = ss[ss.length - 1];
+  if (ss.length >= 2 && VERDICT_SENTENCE_RE.test(last) && pyWordCount(last) <= 14) return last;
+  const m = VERDICT_CLAUSE_RE.exec(last);
+  if (m && pyWordCount(m[1]) <= 14 && (m.indices?.[1]?.[0] ?? 0) > 0) return m[1];
+  return null;
+}
+
+/**
+ * R2 on the hook: what matched, or null. A line that already gives a number or the speaker states facts ("We pour 40
+ * candles a week by hand. Each one is a soy blend that won't tunnel.", "I built the first version in 2019. It didn't
+ * sell."), and a transaction on record is the reader's own account: their negative clause is a fact, not a verdict.
+ * A reframe or an elliptic twist is the verdict whoever says it. (Measured: 0 of 45 engine hooks have a first person
+ * word and 1 has a numeral, so this keeps the rule's catch.)
+ */
+export function closingVerdict(hook: string): string | null {
+  const factual = /\p{Nd}/u.test(hook) || hasFirstPerson(hook) || transactional(firstSentenceOf(hook));
+  const v = factual ? null : negativeVerdictEnd(hook);
+  if (v) return v;
+  const ss = openingSentences(hook);
+  const last = ss[ss.length - 1] ?? "";
+  const short = ss.length >= 2 && pyWordCount(last) <= 8;
+  if (short && PRON_START_RE.test(last) && ((!factual && NEG_RE.test(last)) || REFRAME_RES.some((re) => re.test(hook)))) return last;
+  return short && ELLIPTIC_RE.test(last) ? last : null;
+}
+
+// ---- slogan_rehook (R3): a "You + benefit verb" tagline with no number and no speaker
+const BENEFIT_VERB = "(?:get|win|rank|find|keep|end up(?: with)?|land|grow|make|own|reach|beat|outrank)";
+const TAGLINE_RE = py(`^You ${BENEFIT_VERB}${PB}(?!.*${PD})[^.]*${PB}(?:that|who|where|you can|you can't|your [${PY_W}']+ can|your [${PY_W}']+ can't|can't|worth|never)${PB}[^.]*\\.$`);
+
+/** R3 on one sentence. */
+export function isSloganRehook(sentence: string): boolean {
+  return TAGLINE_RE.test(sentence) && !hasFirstPerson(sentence);
+}
+
+// ---- talking_tool (R4): a tool, score, list or export as the subject of a verb of saying, judging or giving
+const TOOL_NOUN = "score|scores|rating|ratings|number|numbers|estimate|estimates|graph|graphs|chart|charts|data|list|lists|export|exports|tool|tools|report|reports|dashboard|dashboards|metric|metrics|algorithm|algorithms|app|software|spreadsheet|label|forecast|column|step|platform|filter";
+const TOOL_GAP = `(?:${PS}+(?:in|on|from|of)${PS}+(?:[A-Z][${PY_W}-]*|your${PS}+${PW}+|the${PS}+${PW}+))?(?:${PS}+(?:that|which))?(?:${PS}+(?:still|already|never|also|only|just|even|always|often|really|probably))?`;
+const SAY_VERB =
+  "(?:said|says|told you|tells you|tell you|showed|shows|rated|rates|scored|decided|decides|decide|hides|hid|hide|" +
+  "left you|leaves you|leave you|leaves that|leaves the|pointed to|pointed at|promised|promises|claimed|" +
+  "picked|picks|chose|chooses|knows|knew|thinks|thought|wants|lied|lies|made it look|makes it look|" +
+  "hands you|handed you|hand you|gives you|gave you|give you|sold you|sells you|bills you|billed you|rationed|" +
+  "can't tell|cannot tell|can't pick|won't tell|doesn't tell|didn't tell|never looked|has never seen|never saw|" +
+  "stops at|stopped at|stop at|looked fine|looked off|makes that call|made that call|make that call|" +
+  "judges|judged|settles|warns|warned)";
+const TALKING_TOOL_CACHE = new Map<string, RegExp>();
+
+/** R4's pattern: the generic nouns, plus the offer's tool and metric names (the claims ledger's comparative rows) when given. */
+export function talkingToolPattern(toolNames: string[] = []): RegExp {
+  const key = toolNames.join("\u0000");
+  let re = TALKING_TOOL_CACHE.get(key);
+  if (!re) {
+    const nouns = [TOOL_NOUN, ...toolNames.filter(Boolean).map((n) => n.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&"))].join("|");
+    re = py(`${PB}(?:${nouns})${PB}(?:'s)?${TOOL_GAP}${PS}+${SAY_VERB}${PB}`, "i");
+    if (TALKING_TOOL_CACHE.size >= 64) TALKING_TOOL_CACHE.clear();
+    TALKING_TOOL_CACHE.set(key, re);
+  }
+  return re;
+}
+
+export type OpeningTell = "reader_scene_opener" | "closing_verdict" | "slogan_rehook" | "talking_tool";
+export const OPENING_TELLS: readonly OpeningTell[] = ["reader_scene_opener", "closing_verdict", "slogan_rehook", "talking_tool"];
+
+export interface OpeningMatch {
+  tell: OpeningTell;
+  /** the line of the opening it is on (0 is line 1) */
+  line: number;
+  /** what matched, as measure.py returns it */
+  match: string;
+  /** where the match starts in its line's text, or -1 when the rule read a sentence (find it) */
+  at: number;
+  /** the rule's first match in the opening, the one the detector counts; the others are more lines for the editor */
+  first: boolean;
+}
+
+/**
+ * measure.py's four rules on one opening, given as its lines from line 1 on (normalized text): R1 and R2 on line 1
+ * capped at three sentences, R3 on lines 1-5, R4 on lines 1-3. With `all`, every R3 sentence and every R4 line is
+ * returned, not only the first.
+ */
+export function openingMatches(lines: string[], opts: { toolNames?: string[]; all?: boolean } = {}): OpeningMatch[] {
+  const out: OpeningMatch[] = [];
+  const hook = openingHook(lines[0] ?? "");
+  const r1 = readerSceneOpener(hook);
+  if (r1) out.push({ tell: "reader_scene_opener", line: 0, match: r1, at: -1, first: true });
+  const r2 = closingVerdict(hook);
+  if (r2) out.push({ tell: "closing_verdict", line: 0, match: r2, at: -1, first: true });
+  let taglines = 0;
+  lines.slice(0, 5).forEach((ln, i) => {
+    for (const s of openingSentences(ln)) {
+      if (!isSloganRehook(s) || (taglines > 0 && !opts.all)) continue;
+      out.push({ tell: "slogan_rehook", line: i, match: s, at: -1, first: taglines++ === 0 });
+    }
+  });
+  const re = talkingToolPattern(opts.toolNames);
+  let tools = 0;
+  lines.slice(0, 3).forEach((ln, i) => {
+    const m = re.exec(ln);
+    if (!m || (tools > 0 && !opts.all)) return;
+    out.push({ tell: "talking_tool", line: i, match: m[0], at: m.index, first: tools++ === 0 });
+  });
+  return out;
+}
+
+/** Block types that are never a line of the opening: a preheadline, a label, a greeting, an email's subject and preview. */
+const NOT_AN_OPENING_LINE = new Set<Block["type"]>(["preheadline", "label", "greeting", "subject", "preview"]);
+/** A salutation written as a paragraph ("Hi Sam,", "Good morning Sam,", "Hey, quick one.", "Sam,"), skipped like a greeting block. */
+const SALUTATION_RE = py(`^(?:(?:hi|hello|hey|dear|greetings|howdy|morning|afternoon|evening|good (?:morning|afternoon|evening|day))${PB}[^.!?]{0,40}[,:!.…]*|\\p{Lu}[\\p{L}'-]+(?: \\p{Lu}[\\p{L}'-]+)?[,:!])$`, "i");
+/** Ledger tags and NEEDS SOURCE marks with the space before them (collect.py LEDGER). */
+const OPENING_TAG_RE = py(`${PS}*(?:\\[\\[L:[^\\]]*\\]\\]|\\[\\[NEEDS SOURCE\\]\\])`, "g");
+
+/** collect.py `norm_text` once the tags are out: curly quotes straightened, word joiners dropped, whitespace collapsed and stripped; with each character's index in the input. */
+function openingNorm(text: string): { text: string; at: number[] } {
+  let out = "";
+  const at: number[] = [];
+  let space = -1;
+  for (let i = 0; i < text.length; i++) {
+    let c = text[i];
+    if (c === "\u2060" || c === "\ufeff") continue;
+    if (c === "\u2019" || c === "\u2018") c = "'";
+    else if (c === "\u201c" || c === "\u201d") c = '"';
+    if (PY_SPACE.has(c)) {
+      if (space < 0) space = i;
+      continue;
+    }
+    if (space >= 0 && out) {
+      out += " ";
+      at.push(space);
+    }
+    space = -1;
+    out += c;
+    at.push(i);
+  }
+  return { text: out, at };
+}
+
+/** A unit's text as the opening rules read it: tags out, quotations blanked (their words are the speaker's or the customer's), normalized. A testimonial holds its place and is never read. */
+function openingLine(u: Unit): { base: string; text: string; at: number[] } {
+  if (u.type === "testimonial") return { base: "", text: "", at: [] };
+  const base = (u.raw ?? "").replace(OPENING_TAG_RE, "");
+  const scanned = u.kind === "display" && !u.tagged && WHOLE_QUOTE_RE.test(u.text) ? base : blankQuotes(base);
+  return { base, ...openingNorm(scanned) };
+}
+
+const isOpeningLine = (u: Unit) => u.kind !== "item" && u.type !== "testimonial" && !NOT_AN_OPENING_LINE.has(u.type) && !SALUTATION_RE.test(openingNorm((u.raw ?? "").replace(OPENING_TAG_RE, "")).text);
+
+/**
+ * The opening of each piece, as unit indexes from line 1 on: its first five lines in reading order and across
+ * sections, from the lead section's first line when the piece has one (a sales letter's or an advertorial's lead,
+ * never the headline above it; a social post's lead-in and the lines after it; a webinar presentation's open), else
+ * from the piece's first line (an email's first body lines, a landing page's headline and subhead), the way the hooks
+ * were measured (line 1 of every engine lead, the first five paragraphs of every human document). A preheadline, a
+ * label, a greeting, a salutation, an email's subject and preview, a list's items and a testimonial are not lines. One
+ * opening per piece (an email of a sequence, an ad of a set, a webinar's registration page, each reminder and the
+ * presentation). A format whose opening is a set of separate assets (Google RSA's headlines) has none.
+ */
+function openingsOf(units: Unit[], spec: FormatSpec): { piece: string; lines: number[] }[] {
+  if (itemShape(spec).kind === "blocks") return [];
+  const lead = leadSectionId(spec);
+  const byPiece = new Map<string, number[]>();
+  units.forEach((u, i) => {
+    if (!isOpeningLine(u)) return;
+    const p = pieceOf(u, spec);
+    byPiece.set(p, [...(byPiece.get(p) ?? []), i]);
+  });
+  return Array.from(byPiece, ([piece, all]) => {
+    const from = Math.max(0, all.findIndex((i) => sectionBaseId(units[i].sectionId) === lead));
+    return { piece, lines: all.slice(from, from + 5) };
+  });
+}
+
+/** The owner's regex rules other than the opening's own, by family: words one of them already counts are never counted again by closing_verdict. */
+function ownerRegexRules(spec: FormatSpec): TellRule[] {
+  return TELLS.filter((r) => r.owner && r.regex && !(OPENING_TELLS as readonly string[]).includes(r.name) && (!r.families || r.families.includes(spec.family)));
+}
+
+/** True when an owner regex rule matches words of `text` between `from` and `to`. */
+function claimedByOwnerRule(text: string, from: number, to: number, rules: TellRule[]): boolean {
+  for (const r of rules) {
+    const re = new RegExp(r.regex!.source, r.regex!.flags.includes("g") ? r.regex!.flags : r.regex!.flags + "g");
+    for (const m of text.matchAll(re)) {
+      const at = m.index ?? 0;
+      if (m[0].trim() && at < to && from < at + m[0].length) return true;
+    }
+  }
+  return false;
+}
+
+interface OpeningHit {
+  tell: OpeningTell;
+  /** the unit the match is on, and the opening's line 1 */
+  unit: number;
+  opening: number;
+  piece: string;
+  match: string;
+  example: string;
+  /** the hit the detector counts: the rule's first in its opening */
+  counted: boolean;
+}
+
+function openingHits(units: Unit[], spec: FormatSpec, toolNames: string[]): OpeningHit[] {
+  const out: OpeningHit[] = [];
+  const owned = ownerRegexRules(spec);
+  for (const o of openingsOf(units, spec)) {
+    const lines = o.lines.map((i) => openingLine(units[i]));
+    for (const m of openingMatches(lines.map((l) => l.text), { toolNames, all: true })) {
+      const l = lines[m.line];
+      const from = m.at >= 0 ? m.at : l.text.indexOf(m.match);
+      const example = from < 0 || !m.match.length
+        ? trimExamples([m.match])[0]
+        : snippet(l.base, l.at[from], l.at[from + m.match.length - 1] + 1 - l.at[from]);
+      // a reframe or a teaser that another owner rule already counts is one flaw, counted once (the editor still sees it)
+      const twice = m.tell === "closing_verdict" && from >= 0 && claimedByOwnerRule(l.text, from, from + m.match.length, owned);
+      out.push({ tell: m.tell, unit: o.lines[m.line], opening: o.lines[0], piece: o.piece, match: m.match, example, counted: m.first && !twice });
+    }
+  }
+  return out;
+}
+
+/**
+ * The opening tells of a draft for the tell edit: every line the four rules flag, on its block, with the opening's
+ * line 1 and whether the hit is the one the detector counts (the rule's first in that opening).
+ */
+export function openingTellsIn(sections: Section[], spec: FormatSpec, opts: { toolNames?: string[] } = {}): { tell: OpeningTell; blockId: string; opening: string; piece: string; match: string; example: string; counted: boolean }[] {
+  const units = unitsOf(sections);
+  return openingHits(units, spec, opts.toolNames ?? []).map((h) => ({ tell: h.tell, blockId: units[h.unit].blockId, opening: units[h.opening].blockId, piece: h.piece, match: h.match, example: h.example, counted: h.counted }));
+}
+
+/** The nouns after which the word before is a metric's name ("difficulty number", "volume column"). */
+const METRIC_HEADS = new Set("score scores rating ratings number numbers estimate estimates metric metrics column columns graph graphs chart charts forecast forecasts".split(" "));
+/** A capitalised word that opens its sentence and is joined to the next name ("Ahrefs and Semrush", "Ahrefs, Semrush"). */
+const LISTED_NAME_RE = /^(\p{Lu}[\p{L}\p{N}'’.&+-]*)\s*(?:,|&|\band\b|\bor\b)\s*\p{Lu}/u;
+
+/**
+ * The tools and metrics the offer's comparative ledger rows name, for R4's noun list: the capitalised names that do
+ * not open a sentence (or that open one in a list of names) and the word before a metric noun ("difficulty" in
+ * "a difficulty number"). Offer terms (role offer_term: plans compared with plans), dropped rows and the offer's own
+ * words are left out.
+ */
+export function toolNamesFrom(claims: { claim_type: string; claim_text?: string | null; role?: string | null; user_decision?: string | null }[], exemptTerms: string[] = []): string[] {
+  const exempt = new Set(exemptTerms.map(stem));
+  const out = new Map<string, string>();
+  const add = (w: string) => {
+    const t = w.replace(/['’]s$/, "").replace(/[.'’&+-]+$/, "");
+    if (t.length < 2 || t === "I" || STOP_WORDS.has(t.toLowerCase()) || exempt.has(stem(t)) || out.has(t.toLowerCase())) return;
+    out.set(t.toLowerCase(), t);
+  };
+  for (const c of claims) {
+    if (c.claim_type !== "comparative" || c.role === "offer_term" || c.user_decision === "drop" || !c.claim_text) continue;
+    for (const s of sentencesOf(clean(c.claim_text))) {
+      const toks = Array.from(s.matchAll(/[\p{L}\p{N}][\p{L}\p{N}'’.&+-]*/gu), (m) => m[0]);
+      const listed = LISTED_NAME_RE.exec(s);
+      if (listed) add(listed[1]);
+      toks.forEach((t, i) => {
+        if (i > 0 && /^\p{Lu}/u.test(t)) add(t);
+        const next = (toks[i + 1] ?? "").toLowerCase().replace(/[.,;:]+$/, "");
+        if (METRIC_HEADS.has(next) && /^\p{Ll}/u.test(t) && t.length >= 4) add(t);
+      });
+    }
+  }
+  return Array.from(out.values());
+}
+
+// ---------------------------------------------------------------------------------------------------------------
 // Scanning
 // ---------------------------------------------------------------------------------------------------------------
 
@@ -1311,8 +1767,12 @@ export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
   return `asset:${roles.find((r) => r.split("_")[0] === prefix) ?? "fixed"}`;
 }
 
-/** Run every rule over the units; returns flags (with allowances and density thresholds applied) and the score. */
-function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = []): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
+/**
+ * Run every rule over the units; returns flags (with allowances and density thresholds applied) and the score.
+ * `toolNames` extends the talking-tool rule's nouns with the offer's own (toolNamesFrom); `openings: false` leaves the
+ * four opening rules out, for a lone line that is no piece's opening (an idiom, a habit, a suggested rewrite).
+ */
+function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = [], opts: { toolNames?: string[]; openings?: boolean } = {}): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
   // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
@@ -1326,7 +1786,15 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
   const couplets = sloganCouplets(ownerUnits, pieces);
-  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText]]);
+  // the opening's four rules: each counts once per opening (as measured), on the text its first match is in
+  const opening = opts.openings === false ? [] : openingHits(units, spec, opts.toolNames ?? []);
+  const ownerAt = new Map(ownerUnits.map((u, i) => [u, i] as const));
+  const openingPerText = new Map<string, number[]>(OPENING_TELLS.map((t) => [t, ownerUnits.map(() => 0)]));
+  for (const h of opening) {
+    const at = ownerAt.get(units[h.unit]);
+    if (h.counted && at !== undefined) openingPerText.get(h.tell)![at] += 1;
+  }
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText], ...openingPerText]);
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -1355,6 +1823,14 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       case "slogan_couplet":
         hit = { rule, count: couplets.perText.reduce((a, b) => a + b, 0), examples: trimExamples(couplets.found) };
         break;
+      case "reader_scene_opener":
+      case "closing_verdict":
+      case "slogan_rehook":
+      case "talking_tool": {
+        const counted = opening.filter((h) => h.tell === rule.name && h.counted);
+        hit = { rule, count: counted.length, examples: trimExamples(counted.map((h) => h.example)) };
+        break;
+      }
       case "self_posed_question_header": {
         hit = scanRegex(rule, bodyTexts);
         const qHeads = units.filter((u) => (u.type === "crosshead" || u.type === "deck") && /\?\s*$/.test(u.text)).map((u) => u.text);
@@ -1699,14 +2175,19 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
 // Entry points
 // ---------------------------------------------------------------------------------------------------------------
 
-export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[] } = {}): MechanicalReport {
+/**
+ * `toolNames`: the tools and metrics the offer's comparative ledger rows name (toolNamesFrom), added to the talking-tool
+ * rule's generic nouns; without them the rule reads the generic nouns alone. `openings: false` leaves the four opening
+ * rules out, for a caller that reads the openings itself (the tell edit reads each lead in the lead section's place).
+ */
+export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[]; toolNames?: string[]; openings?: boolean } = {}): MechanicalReport {
   const units = unitsOf(sections);
   const wordCountAll = draftWordCount({ sections });
   const allText = units.map((u) => u.text).join("\n\n");
   const words = countWords(allText);
   const proseText = units.filter((u) => u.kind !== "display").map((u) => u.text).join("\n\n");
 
-  const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? []);
+  const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? [], { toolNames: opts.toolNames, openings: opts.openings });
   const gates = evaluateGates(sections, spec, opts);
 
   const cadence_cv = sentenceLengthCV(proseText);
@@ -1735,15 +2216,18 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
   };
 }
 
-/** The owner's tells and words in a short text (an idiom, a habit, an exemplar), em dashes, emojis and hashtags included. */
+/**
+ * The owner's tells and words in a short text (an idiom, a habit, an exemplar, a suggested rewrite), em dashes, emojis
+ * and hashtags included. The four opening rules read a piece's opening and are left out: a lone line is no opening.
+ */
 export function ownerTellsIn(text: string, exemptTerms: string[] = [], spec: FormatSpec = FORMATS.email_single): number {
-  const { owner } = detectTells(unitsOf(textToSections(text)), spec, countWords(text), exemptTerms);
+  const { owner } = detectTells(unitsOf(textToSections(text)), spec, countWords(text), exemptTerms, { openings: false });
   return owner;
 }
 
 /** Raw text (ledger tags are stripped here) treated as a run of paragraphs; only text-computable gates are evaluated. */
-export function analyzeText(text: string, opts: { format: FormatSpec; exemptTerms?: string[] }): MechanicalReport {
-  return analyzeDraft(textToSections(text), opts.format, { textOnly: true, exemptTerms: opts.exemptTerms });
+export function analyzeText(text: string, opts: { format: FormatSpec; exemptTerms?: string[]; toolNames?: string[] }): MechanicalReport {
+  return analyzeDraft(textToSections(text), opts.format, { textOnly: true, exemptTerms: opts.exemptTerms, toolNames: opts.toolNames });
 }
 
 /** Paragraphs split on blank lines become paragraph blocks of one `body` section. */

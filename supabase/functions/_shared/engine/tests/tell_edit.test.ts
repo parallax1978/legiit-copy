@@ -236,14 +236,15 @@ Deno.test("tell edit step: applies the editor's edits, backstops the rest, write
         { ref: "lead-a-1", before: "Here's the part the score hides.", after: "The score never looks at the pages that rank.", tell: "Here's the windup" },
         { ref: "lead-b-1", before: "Sorting by difficulty feels like research. It's where bad content gets made.", after: "Sorting by difficulty is guessing, and you pay a writer for the guess.", tell: "disguise frame" },
         { ref: "main-2::1", before: "Unlock the list", after: "Get the list", tell: "unlock" },
+        { ref: "lead-c-1", before: "You paid a writer", after: "I paid a writer", tell: "reader scene opener" },
       ],
-      what_changed: ["Cut the \"Here's the part\" windup", "Replaced a disguise frame with a plain claim", "Swapped \"unlock\" for \"get\""],
+      what_changed: ["Cut the \"Here's the part\" windup", "Replaced a disguise frame with a plain claim", "Swapped \"unlock\" for \"get\"", "Opened on the speaker"],
       already_clean: false,
     }), seen),
   });
   const out = TellEditOutput.parse(res.output);
   assert(out.new_version);
-  assertEquals(out.edits.filter((e) => e.by === "editor").length, 3);
+  assertEquals(out.edits.filter((e) => e.by === "editor").length, 4);
   assert(out.edits.some((e) => e.by === "backstop"), "the em dash, emoji and hashtag the editor left are fixed in code");
   assert(out.owner_tells_before > out.owner_tells_after, `${out.owner_tells_before} -> ${out.owner_tells_after}`);
   assertEquals(out.owner_tells_after, 0);
@@ -376,8 +377,9 @@ Deno.test("repeats: the chosen opening is read with the body; an unchosen openin
   // lead-c says what lead-a says: alternatives are never read against each other, only against the body
   assert(!found.some((f) => f.example.includes("[lead-a-1]") && f.ref === "lead-c-1"));
   assert(found.every((f) => f.tell === "repeated_phrase"));
-  // counted as the detector counts: one repeat per piece is free
-  assertEquals(ownerTellCount(draft, spec, []), found.length - 1);
+  // counted as the detector counts: one repeat per piece is free; lead-b opens on the reader's own past ("You paid
+  // for content..."), an opening tell of its own
+  assertEquals(ownerTellCount(draft, spec, []), found.length - 1 + 1);
   // a page is not checked: a long letter repeats its promise on purpose
   assertEquals(repeatFindings(units, draft, FORMATS.sales_letter, []), []);
   // the opening is shown where it is read: the chosen one first, the others as alternatives in its place
@@ -664,6 +666,7 @@ Deno.test("round 3 review: a listed line is reached when its words changed; a ta
           { ref: "main-1", line: "Our reviewers read every page that ranks.", kind: "said_again", keep: false },
         ],
         edits: [
+          { ref: "lead_in-1", before: "You paid a writer", after: "I paid a writer", tell: "reader scene opener" },
           { ref: "lead_in-2", before: "My rule: ", after: "", tell: "label windup" },
           { ref: "main-2", before: "Unlock", after: "Find", tell: "unlock" },
           { ref: "main-2", before: " actually", after: "", tell: "filler" },
@@ -766,7 +769,9 @@ Deno.test("round 4 review: couplets reach the editor per reading; a quoted testi
   const units = editableUnits(draft, spec);
   const found = coupletFindings(units, draft, spec);
   assertEquals(found.map((f) => f.ref), ["main-2"]);
-  assertEquals(ownerTellCount(draft, spec, []), 1);
+  // the couplet, line 1 opening on the reader's own past ("You paid a writer..."), and line 2's tool that settles
+  // nothing (the opening runs on from the lead-in, and talking_tool reads its lines 1-3)
+  assertEquals(ownerTellCount(draft, spec, []), 3);
   const quoted: EditUnit[] = [{ ref: "m-1", owner: "section", ownerId: "main", blockIndex: 0, item: null, type: "paragraph", text: `Dana Reyes at Bright Smile Dental: "We published 12 pages from the plan and 9 reached page one within 90 days." [[L:${A}]]` }];
   assertEquals(ledgerWordingFindings(quoted, [{ id: A, claim_type: "results_testimonial", claim_text: "We published 12 pages from the plan and 9 reached page one within 90 days.", user_decision: null }], spec), []);
 });

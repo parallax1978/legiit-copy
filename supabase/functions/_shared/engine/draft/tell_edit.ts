@@ -11,7 +11,7 @@ import type { Block, DraftOutput, Section } from "../schemas/draft.ts";
 import type { LeadType } from "../schemas/common.ts";
 import { LEDGER_TAG, NEEDS_SOURCE_TAG } from "../schemas/common.ts";
 import type { FormatSpec } from "../formats/spec.ts";
-import { analyzeDraft, blankQuotes, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, sloganCoupletPairs, TELLS } from "../tells.ts";
+import { analyzeDraft, blankQuotes, countWords, DISPLAY_TYPES, headlineLike, isTitleCaseLine, LINK_SOURCE, openingTellsIn, type OpeningTell, pieceOfSection, REPEAT_FAMILIES, REPEAT_SKIP, repeatedRuns, sloganCoupletPairs, TELLS } from "../tells.ts";
 import { ONE_LINE_OFFER_FAMILIES } from "./prompt_text.ts";
 import { stripNeverTells } from "./never_tells.ts";
 import { admissionsAdded } from "./admissions.ts";
@@ -734,20 +734,24 @@ const OWNER = new Set(TELLS.filter((t) => t.owner).map((t) => t.name));
 
 /**
  * The owner's tells and words in the whole piece, alternative leads included, counted as the detector counts them:
- * each opening's own tells, and the piece's repeats less the one repeat per piece the detector lets go.
+ * each opening's own tells (the opening rules once per rule for each lead in its place), and the piece's repeats
+ * less the one repeat per piece the detector lets go. `toolNames` extends the talking-tool rule (tells.ts toolNamesFrom).
  */
-export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms: string[]): number {
+export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms: string[], toolNames: string[] = []): number {
   const leadId = editsLeads(draft, spec);
   const sections = [
     ...draft.sections.filter((s) => s.section_id !== leadId),
     ...(leadId ? (draft.leads ?? []).map((l) => ({ section_id: l.id, title: null, blocks: l.blocks })) : []),
   ];
-  const r = analyzeDraft(sections, spec, { exemptTerms });
+  // the opening rules read each lead in the lead section's place (openingFindings), never the leads laid end to end
+  const r = analyzeDraft(sections, spec, { exemptTerms, openings: false });
+  const units = editableUnits(draft, spec);
+  const openings = new Set(openingFindings(units, draft, spec, toolNames).filter((f) => f.counted).map((f) => `${f.opening}\u0000${f.tell}`));
   // the alternative openings repeat each other by design: repeats are counted per reading (repeatFindings)
   const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet").reduce((n, f) => n + f.count, 0) +
-    coupletFindings(editableUnits(draft, spec), draft, spec).length;
+    coupletFindings(units, draft, spec).length + openings.size;
   const perPiece = new Map<string, number>();
-  for (const f of repeatFindings(editableUnits(draft, spec), draft, spec, exemptTerms)) perPiece.set(f.piece, (perPiece.get(f.piece) ?? 0) + 1);
+  for (const f of repeatFindings(units, draft, spec, exemptTerms)) perPiece.set(f.piece, (perPiece.get(f.piece) ?? 0) + 1);
   return own + Array.from(perPiece.values()).reduce((n, k) => n + Math.max(0, k - 1), 0);
 }
 
@@ -968,6 +972,59 @@ export function coupletFindings(units: EditUnit[], draft: DraftOutput, spec: For
   return out;
 }
 
+/** What each opening rule saw, said to the editor before the rule's fix (tells.ts carries the fix, with its example from another trade). */
+const OPENING_SEEN: Record<OpeningTell, string> = {
+  reader_scene_opener: "line 1 narrates the reader's own habit back to them",
+  closing_verdict: "line 1 ends on a verdict about the fact instead of the fact",
+  slogan_rehook: "a slogan line in the opening",
+  talking_tool: "a tool, score or list is the subject that says, judges or gives",
+};
+
+export interface OpeningFinding {
+  ref: string;
+  tell: OpeningTell;
+  example: string;
+  /** the ref of the opening's line 1 */
+  opening: string;
+  /** the hit the detector counts: the rule's first in its opening (every flagged line is still a finding) */
+  counted: boolean;
+}
+
+/**
+ * The opening tells (tells.ts reader_scene_opener, closing_verdict, slogan_rehook, talking_tool) as findings for the
+ * editor, on every line they flag, read the way the reader reads the piece: each lead in the lead section's place
+ * (the chosen lead and every alternative, never two together), or the sections as they stand when there are no leads.
+ * One opening per piece: an email of a sequence, an ad of a set, a webinar's page, reminders and presentation.
+ */
+export function openingFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, toolNames: string[] = []): OpeningFinding[] {
+  const leadId = editsLeads(draft, spec);
+  const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
+  const first = draft.chosen_lead_id && leadIds.includes(draft.chosen_lead_id) ? draft.chosen_lead_id : leadIds[0];
+  // with leads, every reading puts one in the lead section's place: the section is never read empty
+  const readings: (string | null)[] = leadId && leadIds.length ? [first, ...leadIds.filter((l) => l !== first)] : [null];
+  const blocksOf = (us: EditUnit[]): Block[] => us.filter((u) => u.item === null).map((u) => ({ id: u.ref, type: u.type, text: u.text, items: null, meta: null }));
+  const fix = new Map(TELLS.map((t) => [t.name, t.fix]));
+  const byRef = new Map(units.map((u) => [u.ref, u]));
+  const out: OpeningFinding[] = [];
+  const seen = new Set<string>();
+  for (const lead of readings) {
+    const sections: Section[] = draft.sections.map((s) => ({
+      section_id: s.section_id,
+      title: s.title,
+      // leads with no text leave the lead section as it stands: it is still the opening, never the body after it
+      blocks: s.section_id === leadId ? (lead ? blocksOf(units.filter((u) => u.owner === "lead" && u.ownerId === lead)) : s.blocks) : blocksOf(units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)),
+    }));
+    for (const h of openingTellsIn(sections, spec, { toolNames })) {
+      const key = `${h.blockId}\u0000${h.tell}\u0000${h.match}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const whole = byRef.get(h.blockId)?.owner === "lead" ? " (an opening is never cut whole)" : "";
+      out.push({ ref: h.blockId, tell: h.tell, example: `"${h.example}": ${OPENING_SEEN[h.tell]}${whole}. ${fix.get(h.tell) ?? ""}`, opening: h.opening, counted: h.counted });
+    }
+  }
+  return out;
+}
+
 /** The piece's sentence-length variation when it runs flat against the format's floor (§7.1 "vary sentence length"), else null. */
 export function flatCadence(draft: DraftOutput, spec: FormatSpec): { cv: number; floor: number } | null {
   // the piece as the reader sees it: the lead section carries the chosen (or provisional) lead
@@ -981,7 +1038,8 @@ export function unitFindings(units: EditUnit[], spec: FormatSpec, exemptTerms: s
   for (const u of units) {
     if (u.type === "testimonial") continue;
     const block: Block = { id: u.ref, type: u.item === null ? u.type : "paragraph", text: u.text, items: null, meta: null };
-    const r = analyzeDraft([{ section_id: "unit", title: null, blocks: [block] }], spec, { exemptTerms });
+    // the opening rules are the piece's (openingFindings): a text read alone would be its own opening
+    const r = analyzeDraft([{ section_id: "unit", title: null, blocks: [block] }], spec, { exemptTerms, openings: false });
     // repeats and couplets are piece-level findings (repeatFindings, coupletFindings)
     for (const f of r.flags) if (OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet") out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
   }
