@@ -477,14 +477,17 @@ Deno.test("SMS gates: character cap, STOP wording, one link, no dollar-off", () 
   assert(noStop.format_gate_failures.some((g) => g.startsWith("sms.stop_wording")));
 });
 
-Deno.test("cold email gates: 90 words, 3-word subject, no links in email one, one question", () => {
-  const body = Array.from({ length: 95 }, (_, i) => `w${i}`).join(" ");
-  const r = analyzeDraft([section("subject", [block("subject", "ohio tuesday orders")]), section("observation", [block("paragraph", body)]), section("question", [block("paragraph", "Worth a look? Or not?")])], FORMATS.cold_email);
-  assert(r.format_gate_failures.some((g) => g.startsWith("cold_email.words<=90")), r.format_gate_failures.join("; "));
+Deno.test("cold email gates: 100 words, 4-word subject, no links in email one, one question", () => {
+  const words = (n: number) => Array.from({ length: n }, (_, i) => `w${i}`).join(" ");
+  const r = analyzeDraft([section("subject", [block("subject", "ohio tuesday orders")]), section("observation", [block("paragraph", words(105))]), section("question", [block("paragraph", "Worth a look? Or not?")])], FORMATS.cold_email);
+  assert(r.format_gate_failures.some((g) => g.startsWith("cold_email.words<=100")), r.format_gate_failures.join("; "));
   assert(r.format_gate_failures.some((g) => g.startsWith("cold_email.questions<=1")));
+  // 95 words under a four-word subject sit inside the measured range (Gong: 50-100 words, subjects of 1-4 words)
+  const inside = analyzeDraft([section("subject", [block("subject", "the ohio tuesday orders")]), section("observation", [block("paragraph", words(95))])], FORMATS.cold_email);
+  assertEquals(inside.format_gate_failures, []);
 
-  const linked = analyzeDraft([section("subject", [block("subject", "a four word subject")]), section("observation", [block("paragraph", "Saw your post on the Tuesday orders at https://example.com/post.")]), section("followup#1", [block("paragraph", "One more thing: the Ohio bakery doubled its orders.")])], FORMATS.cold_email);
-  assert(linked.format_gate_failures.some((g) => g.startsWith("cold_email.subject_words<=3")));
+  const linked = analyzeDraft([section("subject", [block("subject", "a five word subject line")]), section("observation", [block("paragraph", "Saw your post on the Tuesday orders at https://example.com/post.")]), section("followup#1", [block("paragraph", "One more thing: the Ohio bakery doubled its orders.")])], FORMATS.cold_email);
+  assert(linked.format_gate_failures.some((g) => g.startsWith("cold_email.subject_words<=4")));
   assert(linked.format_gate_failures.some((g) => g.startsWith("cold_email.email_one_links==0")));
 });
 
@@ -776,8 +779,8 @@ Deno.test("self-answered questions: the owner's forms are caught; FAQ answers, b
     assertEquals(tells(analyzeText(t, { format: FORMATS.email_single }), "self_answered_question"), undefined, t);
   }
   const faq = analyzeDraft([section("body#7", [
-    block("paragraph", "Does it work on a new site? Yes. Two of the five case studies started under 40 pages.", null, { item: "7", role: "mid_cart_faq" }),
-    block("paragraph", "Is there a contract? No. You cancel from the billing page in one click.", null, { item: "7", role: "mid_cart_faq" }),
+    block("paragraph", "Does it work on a new site? Yes. Two of the five case studies started under 40 pages.", null, { item: "7", role: "mid_cart_questions_readers_asked" }),
+    block("paragraph", "Is there a contract? No. You cancel from the billing page in one click.", null, { item: "7", role: "mid_cart_questions_readers_asked" }),
   ])], FORMATS.email_sequence);
   assertEquals(tells(faq, "self_answered_question"), undefined, "an FAQ email answers the buyer's questions");
   const faqSection = analyzeDraft([section("faq", [block("paragraph", "Is there a contract? No. You cancel in one click.")])], FORMATS.pricing_page);
