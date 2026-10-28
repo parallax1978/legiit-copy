@@ -195,6 +195,8 @@ interface RunOpts {
   autoApprove: boolean;
   /** run on the prompt modules in this checkout (unpublished versions) with the published rows' model, effort and budget */
   modulePrompts: boolean;
+  /** stop once this step completes (a quick test of the draft and the tell edit); the generation is left cancelled */
+  to?: StepName;
 }
 
 async function runStepOnce(db: Db, generationId: string, step: StepName, opts: RunOpts, index: number): Promise<{ result: StepResult; applied: Awaited<ReturnType<typeof applyEffects>> }> {
@@ -275,6 +277,11 @@ async function runPipeline(db: Db, generationId: string, first: StepName[], stat
       state.factualFatal = false;
     }
     if (step === "research") state.hasActiveResearch = true;
+    if (opts.to === step) {
+      await db.from("generations").update({ status: "cancelled", progress_message: `stopped after ${step} (engine CLI --to)` }).eq("id", generationId);
+      log(`\nSTOPPED after ${step} (--to)`);
+      return "stopped" as const;
+    }
 
     if (result.pause) {
       if (step === "offer" && opts.autoApprove && applied.variantId) {
@@ -326,7 +333,9 @@ async function printCost(db: Db, generationId: string) {
 async function cmdRun(args: ReturnType<typeof parseArgs>) {
   requireEnv(["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "ANTHROPIC_API_KEY"]);
   const db = serviceClient();
-  const opts: RunOpts = { out: String(args.out ?? `engine-out/${new Date().toISOString().replace(/[:.]/g, "-")}`), autoApprove: !!args["auto-approve"], modulePrompts: !!args["module-prompts"] };
+  const to = args.to ? String(args.to) : undefined;
+  if (to && !(STEP_NAMES as readonly string[]).includes(to)) throw new Error(`--to must be one of ${STEP_NAMES.join(", ")}`);
+  const opts: RunOpts = { out: String(args.out ?? `engine-out/${new Date().toISOString().replace(/[:.]/g, "-")}`), autoApprove: !!args["auto-approve"], modulePrompts: !!args["module-prompts"], to: to as StepName | undefined };
   if (opts.modulePrompts) log("prompts: the system text of the modules in this checkout, with the published rows' model, effort and token budget");
 
   let generationId: string;
@@ -376,7 +385,7 @@ async function cmdRun(args: ReturnType<typeof parseArgs>) {
     await writeOut(opts.out, "00-setup.json", pretty({ offerId: setup.offerId, generationId, format, stepOrder, workspace: ws }));
   }
 
-  let status: "completed" | "paused" | "failed" = "failed";
+  let status: "completed" | "paused" | "stopped" | "failed" = "failed";
   try {
     status = await runPipeline(db, generationId, first, state, opts);
   } catch (e) {
@@ -445,6 +454,7 @@ function usage() {
 
   run       --brief <file.json> --format <id> [--out dir] [--workspace id] [--auto-approve] [--skip-offer]
             --generation <id> [--from <step>]            resume an existing generation
+            --to <step>                                  stop once that step completes (the generation is left cancelled)
             --module-prompts                             use this checkout's prompt modules, not the published rows
   baseline  --brief <file.json> --format <id> [--out dir] [--model id]
   plan      --format <id> [--items n] [--sequence welcome|launch|abandoned_cart|post_purchase|win_back]
@@ -456,7 +466,7 @@ Env for run: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, ANTHROPIC_API_KEY [ENGINE_
 
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
-    string: ["brief", "format", "out", "workspace", "generation", "from", "model", "items", "sequence"],
+    string: ["brief", "format", "out", "workspace", "generation", "from", "to", "model", "items", "sequence"],
     boolean: ["auto-approve", "skip-offer", "module-prompts", "help"],
   });
   const cmd = String(args._[0] ?? "");
