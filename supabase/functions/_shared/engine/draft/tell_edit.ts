@@ -1042,6 +1042,8 @@ export function unitFindings(units: EditUnit[], spec: FormatSpec, exemptTerms: s
     const r = analyzeDraft([{ section_id: "unit", title: null, blocks: [block] }], spec, { exemptTerms, openings: false });
     // repeats and couplets are piece-level findings (repeatFindings, coupletFindings)
     for (const f of r.flags) if (OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet") out.push({ ref: u.ref, tell: f.tell, example: f.examples[0] ?? "" });
+    // six words in a row from an example in the standard: the editor says it in the speaker's own words
+    for (const f of r.flags) if (f.tell === "copied_exemplar") out.push({ ref: u.ref, tell: f.tell, example: `"${f.examples[0] ?? ""}": six words in a row from an example in the standard; say it in the speaker's own words with the offer's facts` });
   }
   return out;
 }

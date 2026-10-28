@@ -4,7 +4,7 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, MechanicalReport } from "../schemas/review.ts";
-import { editorialPrompt, type EditorialArgs } from "../prompts/editorial.v13.ts";
+import { editorialPrompt, type EditorialArgs } from "../prompts/editorial.v14.ts";
 import { parseOptions } from "../draft/options.ts";
 import { targetAwareness } from "../draft/ledger.ts";
 import { dropNoteProblems, editorialFlags, noteProblems, validateEditorial } from "../draft/review.ts";

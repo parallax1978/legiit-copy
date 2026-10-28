@@ -30,6 +30,7 @@ import { FORMATS, sectionBaseId, sectionItemIndex } from "./formats/index.ts";
 import { draftWordCount } from "./render.ts";
 import { ADMISSION_TELL_RE } from "./draft/admissions.ts";
 import { itemShape, leadSectionId } from "./draft/plan.ts";
+import * as STANDARD_TEXT from "./prompts/standard.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rule table
@@ -175,6 +176,14 @@ export const TELLS: TellRule[] = [
     example: "#SEO #marketing",
     fix: "Remove it; never add one.",
     note: "The owner's rule (§7.1, tell 13). \"#1\", \"C#\", HTML entities, URL fragments, markdown anchors and hex colours with a digit are not hashtags.",
+  },
+
+  {
+    tier: 0, name: "copied_exemplar", weight: 10, scope: "structural",
+    regex: null,
+    example: "They laughed when I sat down at the piano",
+    fix: "Say it in the speaker's own words with the offer's facts: an example in the standard teaches a move, never its words.",
+    note: "Six or more words in a row from a quoted example in docs/04 Section 3 (the masters' openings and the owner's rejected lines) or Section 11, ignoring case and punctuation; a run of common short words alone does not count, and a testimonial is the customer's words. Teaching examples are studied, never reproduced (CLAUDE.md).",
   },
 
   // ---- Tier 1: weight 4 (phrases at 0.00-0.02 per 1,000 in 879k human words) ----
@@ -407,7 +416,7 @@ export const TELLS: TellRule[] = [
     tier: 1, name: "reader_scene_opener", weight: 4, scope: "structural", owner: {},
     regex: null,
     example: "You paid a writer for a page your keyword tool scored as easy. / You've paid... / Your keyword tool sold you... / If you pick keywords by...",
-    fix: "Open with the speaker, not the reader's past: say what the speaker did, counted or decided, in first person, with a date, number or name from the ledger or the story inventory, or state a plain fact the reader can check; the reader comes in as 'you' after the speaker has said something true, or through a real question. Example (a plumber): not 'You paid for a new water heater and it died inside a year.' but 'I replaced the same water heater on Elm Street twice this March.'",
+    fix: "Open on a fact with one of the masters' moves (docs/04 Section 3) instead of the reader's history: a test he can run on his own work now, a question he answers about it, a fact true of everyone in his trade, the loss told as it happened to someone else, or the speaker's own fact in the first person with a date, number or name from the ledger or the story inventory. Example (a plumber): not 'You paid for a new water heater and it died inside a year.' but 'A water heater shows rust at the drain valve months before it floods.' or 'I replaced the same water heater on Elm Street twice this March.'",
     note: "The first sentence of line 1 narrates the reader's own past or present habit back to them: \"You / You've / Your X\" with a past-tense verb that takes an object, \"You / Your X\" with a present verb of the problem (pay, pick, sort, buy, bills...), or \"If you + that verb\" / \"If your X is\". \"You've heard\", \"You've been told\", \"You've got\" and a sentence with a date or time anchor (a reader action on record: \"You signed up on Wednesday, November 26.\") are exempt. Measured (hook14): engine 31 of 45 hooks (21 of 32 hook families, 3 of the 6 the owner rejected), human 0 of 842 openings (0 of 144 social posts), 6 of 6,572 held-out human body paragraphs.",
   },
   {
@@ -1280,6 +1289,61 @@ function selfAnsweredQuestions(units: { text: string; kind: UnitKind; sectionId:
 }
 
 // ---------------------------------------------------------------------------------------------------------------
+// The standard's examples are studied, never reproduced (CLAUDE.md): six words in a row from one fail the piece
+
+/** Words as the copy guard compares them: lowercase, apostrophes straightened, punctuation dropped. */
+function exemplarWords(text: string): string[] {
+  return (text.toLowerCase().replace(/[\u2018\u2019\u201B\u2032]/g, "'").match(/[a-z0-9$%][a-z0-9$%']*/g) ?? []).map((w) => w.replace(/'+$/, ""));
+}
+const EXEMPLAR_RUN = 6;
+const EXEMPLAR_COMMON = new Set(["a", "an", "the", "to", "of", "and", "or", "in", "on", "at", "for", "with", "by", "from", "it", "is", "was", "be", "are", "that", "this", "you", "your", "i", "we", "my", "our", "he", "his", "him", "they", "their", "them", "as", "if", "so", "but", "not", "no", "do", "does", "did", "have", "has", "had", "will", "would", "can", "could", "just", "all", "one", "what", "when", "how", "who", "me", "us", "its", "it's", "i'm", "you're"]);
+/** The quoted examples a writer reads in docs/04: the Hooks paragraph of Section 3 and Section 11, each at most 40 words. */
+export function exemplarSources(): string[] {
+  const std = STANDARD_TEXT as unknown as Record<string, unknown>;
+  const lead = String(std.LEAD_SELECTION ?? "");
+  const texts = [lead.slice(Math.max(0, lead.indexOf("Hooks. Where the opening line"))), typeof std.EXEMPLARS === "string" ? std.EXEMPLARS : ""];
+  const out: string[] = [];
+  for (const t of texts) {
+    // quotes pair in order: a short quoted word ("we.") is a pair of its own, never the start of a long one
+    for (const m of t.matchAll(/"([^"\n]*)"/g)) {
+      const n = exemplarWords(m[1]).length;
+      if (n >= EXEMPLAR_RUN && n <= 40) out.push(m[1]);
+    }
+  }
+  return out;
+}
+const EXEMPLAR_GRAMS: Map<string, string> = (() => {
+  const grams = new Map<string, string>();
+  for (const ex of exemplarSources()) {
+    const w = exemplarWords(ex);
+    for (let i = 0; i + EXEMPLAR_RUN <= w.length; i++) {
+      const g = w.slice(i, i + EXEMPLAR_RUN);
+      if (g.every((x) => EXEMPLAR_COMMON.has(x))) continue;
+      if (!grams.has(g.join(" "))) grams.set(g.join(" "), ex);
+    }
+  }
+  return grams;
+})();
+
+/** Each run of six or more words in a row that the text shares with an example in the standard, with the example. */
+export function exemplarCopies(text: string): { words: string; exemplar: string }[] {
+  const w = exemplarWords(text);
+  const out: { words: string; exemplar: string }[] = [];
+  let i = 0;
+  while (i + EXEMPLAR_RUN <= w.length) {
+    const ex = EXEMPLAR_GRAMS.get(w.slice(i, i + EXEMPLAR_RUN).join(" "));
+    if (!ex) {
+      i++;
+      continue;
+    }
+    let j = i + EXEMPLAR_RUN;
+    while (j < w.length && EXEMPLAR_GRAMS.has(w.slice(j - EXEMPLAR_RUN + 1, j + 1).join(" "))) j++;
+    out.push({ words: w.slice(i, j).join(" "), exemplar: ex });
+    i = j;
+  }
+  return out;
+}
+
 // The opening (§7.1 hooks): four rules over the opening lines of each piece
 // ---------------------------------------------------------------------------------------------------------------
 //
@@ -1823,6 +1887,11 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       case "slogan_couplet":
         hit = { rule, count: couplets.perText.reduce((a, b) => a + b, 0), examples: trimExamples(couplets.found) };
         break;
+      case "copied_exemplar": {
+        const found = units.filter((u) => u.type !== "testimonial").flatMap((u) => exemplarCopies(u.text));
+        hit = { rule, count: found.length, examples: trimExamples(found.map((f) => f.words)) };
+        break;
+      }
       case "reader_scene_opener":
       case "closing_verdict":
       case "slogan_rehook":

@@ -10,7 +10,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v10.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v11.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -311,12 +311,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v13.ts";
-import { revisePrompt } from "../prompts/revise.v12.ts";
-import { editorialPrompt } from "../prompts/editorial.v13.ts";
-import { factualPrompt } from "../prompts/factual.v11.ts";
-import offerPrompt from "../prompts/offer.v12.ts";
-import intakePrompt from "../prompts/intake.v10.ts";
+import { draftPrompt } from "../prompts/draft.v14.ts";
+import { revisePrompt } from "../prompts/revise.v13.ts";
+import { editorialPrompt } from "../prompts/editorial.v14.ts";
+import { factualPrompt } from "../prompts/factual.v12.ts";
+import offerPrompt from "../prompts/offer.v13.ts";
+import intakePrompt from "../prompts/intake.v11.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -335,9 +335,9 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [13, 12, 13, 11, 10, 12, 10]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [14, 13, 14, 12, 11, 13, 11]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
-  assert(RULES.includes("the piece never lists or counts the product's steps"));
+  assert(RULES.includes("it is never a list or count of the product's steps or checks"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
   assert(editorialPrompt.system.includes("a direction never asks for the product's steps to be listed or counted"));
   for (const t of ["say each point once", "It takes seven steps."]) assert(OWNER_TELLS.includes(t), t);
