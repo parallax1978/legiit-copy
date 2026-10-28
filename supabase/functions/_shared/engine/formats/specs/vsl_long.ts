@@ -44,12 +44,12 @@ export const vsl_long: FormatSpec = {
     {
       id: "demonstration",
       name: "Demonstration",
-      job: "Show the mechanism working, in the first third, as the speaker does it. A dated, documented case from the ledger when it holds one. With none: the product doing the job on a real example from the brief, the maker's own test from the story inventory (what he did to it and what happened), the usual fix failing beside it, or what the viewer sees when he runs it on his own case, and how soon. Stage it as a small event: the doubt, the run, the result, then one sentence that hands it to the viewer.",
+      job: "Show the mechanism working, in the first third, as the speaker does it. A dated, documented case from the ledger when it holds one. With none: the product doing the job on a real example from the brief, the maker's own test from the story inventory (what he did to it and what happened), the usual fix failing beside it, or what the viewer sees when he runs it on his own case, and how soon when the time is a reason to act (rule 18). Stage it as a small event: the doubt, the run, the result, then one sentence that hands it to the viewer.",
       band_words: [150, 700],
       must: [
         "a case carries its date and its ledger ID, with the typical result beside it when the ledger holds one",
         "a result the ledger holds shown as its document (the statement, the message, the order), never a bare number on a slide",
-        "with no case on file, the product on a real example, the maker's own test, the usual fix failing beside it or the viewer's own run, told as what he will see and how soon",
+        "with no case on file, the product on a real example, the maker's own test, the usual fix failing beside it or the viewer's own run, told as what he will see, and how soon when the time is a reason to act (rule 18)",
         "said as it happens, in the speaker's words: what he does, what the viewer sees",
         "the reason it works, in one sentence beside it",
         "each beat adds a fact the script has not used (rule 34)",
@@ -120,12 +120,12 @@ export const vsl_long: FormatSpec = {
     {
       id: "transition_stack",
       name: "Transition and stack",
-      job: "The turn to the offer as a reason-why: why the deal is built this way. Then the core offer, named with the result it produces and when its first part arrives, and each bonus with the worry it answers, proven by what the ledger holds. The button drops at the price.",
+      job: "The turn to the offer as a reason-why: why the deal is built this way. Then the core offer, named with the result it produces and what arrives first, and each bonus with the worry it answers, proven by what the ledger holds. The button drops at the price.",
       band_words: [300, 800],
       must: [
         "turn states cause",
         "offer identical to the order form",
-        "the core offer named with the result it produces and when its first part arrives",
+        "the core offer named with the result it produces and what arrives first",
         "each bonus answers a named worry",
         "bonus values only with a ledger basis",
       ],
@@ -162,12 +162,12 @@ export const vsl_long: FormatSpec = {
     {
       id: "close",
       name: "Close with CTA repeated",
-      job: "Literal and long: the deal in one sentence, the step (where to click, what it costs), what happens after the click and what arrives when, and the last ask made small by the guarantee (what the viewer agrees to), with the speaker's own call. The CTA comes back with a new fact each time. It ends on the step and what arrives.",
+      job: "Literal and long: the deal in one sentence, the step (where to click, what it costs), what happens after the click and what arrives first (how long it takes only when the time is itself a reason to act, rule 18), and the last ask made small by the guarantee (what the viewer agrees to), with the speaker's own call. The CTA comes back with a new fact each time. It ends on the step and what arrives.",
       band_words: [300, 900],
       must: [
         "CTA at least three times across the script",
         "what happens after the click",
-        "what arrives first and when, from the offer block",
+        "what arrives first, from the offer block (how long it takes only when the time is itself a reason to act, rule 18)",
         "the last ask as the small step the guarantee makes it (what the viewer agrees to)",
         "each return to the promise brings a fact the script has not used (rule 35)",
       ],

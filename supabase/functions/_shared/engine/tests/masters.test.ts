@@ -10,16 +10,16 @@ import { analyzeDraft, exemplarCopies, exemplarSources, TELLS } from "../tells.t
 import { assembleDraft } from "../draft/assemble.ts";
 import { editableUnits, unitFindings } from "../draft/tell_edit.ts";
 import { EXEMPLARS, LEAD_SELECTION, OWNER_TELLS, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v15.ts";
-import { draftPrompt, leadsJob } from "../prompts/draft.v14.ts";
-import { tellEditPrompt, cadenceNote } from "../prompts/tell_edit.v11.ts";
-import { editorialPrompt } from "../prompts/editorial.v14.ts";
-import { revisePrompt } from "../prompts/revise.v13.ts";
+import argumentPrompt from "../prompts/argument.v16.ts";
+import { draftPrompt, leadsJob } from "../prompts/draft.v15.ts";
+import { tellEditPrompt, cadenceNote } from "../prompts/tell_edit.v12.ts";
+import { editorialPrompt } from "../prompts/editorial.v15.ts";
+import { revisePrompt } from "../prompts/revise.v14.ts";
 import { coldReadPrompt } from "../prompts/cold_read.v2.ts";
-import researchPrompt from "../prompts/research.v9.ts";
-import { factualPrompt } from "../prompts/factual.v12.ts";
-import offerPrompt from "../prompts/offer.v13.ts";
-import intakePrompt from "../prompts/intake.v11.ts";
+import researchPrompt from "../prompts/research.v10.ts";
+import { factualPrompt } from "../prompts/factual.v13.ts";
+import offerPrompt from "../prompts/offer.v14.ts";
+import intakePrompt from "../prompts/intake.v12.ts";
 
 const blk = (id: string, text: string, type: Block["type"] = "paragraph"): Block => ({ id, type, text, items: null, meta: null });
 const sec = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
@@ -56,9 +56,9 @@ Deno.test("copy guard: the tell edit gets a copied example as a line to say in t
 });
 
 Deno.test("prompts: the masters' hooks reach every step that writes, reviews or plans copy, in new versions", () => {
-  assertEquals([argumentPrompt.version, draftPrompt.version, tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version, intakePrompt.version, coldReadPrompt.version], [15, 14, 11, 13, 14, 12, 13, 9, 11, 2]);
+  assertEquals([argumentPrompt.version, draftPrompt.version, tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version, intakePrompt.version, coldReadPrompt.version], [16, 15, 12, 14, 15, 13, 14, 10, 12, 2]);
   // Section 3: fact first, three facts, the moves, line one and line two, the four shapes
-  for (const t of ["A hook is found in the facts, not phrased.", "three different facts and three different opening moves", "The masters' opening moves, by the lead type they serve:", "Line two pays it off at once", "A hook never tells the reader his own history or habit as a fact", "unless the credential is the surprise the hook turns on", "A hook never says what the reader's current tool does"]) assert(LEAD_SELECTION.includes(t), t);
+  for (const t of ["A hook is found in the facts, not phrased.", "three different facts and three different opening moves", "The masters' opening moves, by the lead type they serve:", "Line two pays it off at once", "A hook never tells the reader his own history or habit as a fact", "a credential is said only where rule 8 allows it", "A hook never says what the reader's current tool does"]) assert(LEAD_SELECTION.includes(t), t);
   for (const [name, system] of [["argument", argumentPrompt.system], ["draft", draftPrompt.system], ["editorial", editorialPrompt.system], ["research", researchPrompt.system]] as const) assert(system.includes("The masters' opening moves"), name);
   // Section 7.1 rows 14 to 17 reach every writer
   for (const [name, system] of [["draft", draftPrompt.system], ["revise", revisePrompt.system], ["tell_edit", tellEditPrompt.system], ["editorial", editorialPrompt.system], ["factual", factualPrompt.system]] as const) {
@@ -99,5 +99,6 @@ Deno.test("prompts: the tell edit, copy chief, reviser, cold read and research c
   assert(editorialPrompt.system.includes("Such a line is never in DO NOT TOUCH."));
   assert(revisePrompt.system.includes("## Hooks (docs/04 Section 3)\n\nHooks. Where the opening line is the whole lead"));
   assert(coldReadPrompt.system.includes("reads as an ad written about you"));
-  for (const t of ["read each competitor's own documentation", "Hunt for the facts a hook can stand on", "any stake he holds against his own interest"]) assert(researchPrompt.system.includes(t), t);
+  for (const t of ["read each competitor's own documentation", "Hunt for the facts a hook can stand on", "Look for the speaker's own record"]) assert(researchPrompt.system.includes(t), t);
+  assert(!researchPrompt.system.includes("any stake he holds against his own interest"), "the research no longer hunts a stake against the speaker's interest");
 });

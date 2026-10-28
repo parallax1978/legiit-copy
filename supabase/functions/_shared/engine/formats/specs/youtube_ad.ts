@@ -70,7 +70,7 @@ export const youtube_ad: FormatSpec = {
       name: "Proof",
       job: "One documented result from the ledger, with its typical result adjacent. With none on file, the demonstration on camera (the product on a real example, the maker's own test, the usual fix failing beside it) or the test the viewer runs on himself and what he will see. Staged as a small event: the doubt, the run, the result.",
       band_words: [20, 80],
-      must: ["a result carries its ledger ID, with the typical result beside it when the ledger holds one", "with no result on file, the demonstration or the viewer's own test, told as what he will see and how soon"],
+      must: ["a result carries its ledger ID, with the typical result beside it when the ledger holds one", "with no result on file, the demonstration or the viewer's own test, told as what he will see, and how soon when the time is a reason to act (rule 18)"],
       must_not: [
         "improbable-result claims (a dramatic change in health, money or circumstances promised as quick or certain; the result the product produces, said plainly, is not one)",
         "undated results",
