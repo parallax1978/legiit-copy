@@ -181,7 +181,7 @@ export const vsl_long: FormatSpec = {
       block_types: ["beat", "slide", "cta", "button", "paragraph"],
     },
   ],
-  draft_order: ["transition_stack", "price", "guarantee", "urgency", "close", "plan", "objections", "demonstration", "discovery_story", "catalyst", "lead"],
+  draft_order: ["transition_stack", "price", "guarantee", "urgency", "close", "plan", "demonstration", "discovery_story", "objections", "catalyst", "lead"],
   lead_variants: 3,
   lead_section_id: "lead",
   skim_path_block_types: ["slide", "crosshead", "recap", "price", "guarantee", "cta", "button"],

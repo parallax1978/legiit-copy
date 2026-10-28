@@ -517,7 +517,7 @@ Deno.test("Meta ad gates: fold text, headline, variation count, evaluated per va
   const ok = analyzeDraft([...variation(1, "40 jars left of the batch a dog opened."), ...variation(2, "The press still runs on its 1961 motor."), ...variation(3, "Thirty people came to the open house in a snowstorm.")], FORMATS.meta_ad);
   assertEquals(ok.format_gate_failures, []);
   const bad = analyzeDraft([...variation(1, "x".repeat(151)), ...variation(2, "fine")], FORMATS.meta_ad);
-  assert(bad.format_gate_failures.some((g) => g.startsWith("meta_ad.primary_text_chars<=150")));
+  assert(bad.format_gate_failures.some((g) => g.startsWith("meta_ad.primary_text_chars<=125")));
   assert(bad.format_gate_failures.some((g) => g.startsWith("meta_ad.variations>=3")));
 });
 

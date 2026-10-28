@@ -123,7 +123,7 @@ Deno.test("platform limits are present where the platform fixes them", () => {
   assertEquals(FORMATS.sms.platform_limits?.chars, 240);
   assertEquals(FORMATS.google_rsa.platform_limits?.headline_chars, 30);
   assertEquals(FORMATS.google_rsa.platform_limits?.description_chars, 90);
-  assertEquals(FORMATS.meta_ad.platform_limits?.primary_text_chars, 150);
+  assertEquals(FORMATS.meta_ad.platform_limits?.primary_text_chars, 125);
   assertEquals(FORMATS.tiktok_reels.platform_limits?.spoken_words, 90);
 });
 
