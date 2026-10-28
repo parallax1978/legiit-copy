@@ -29,7 +29,7 @@ const CATALOG: Record<FormatId, { name: string; family: FormatFamily; descriptio
   thank_you: { name: "Thank-you page", family: "page", description: "Confirm, set expectations, point to the next step." },
   email_single: { name: "Promotional email", family: "email", description: "One reader, one idea, one link." },
   email_sequence: { name: "Email sequence", family: "email", description: "A series that carries one argument across several sends." },
-  webinar_package: { name: "Webinar package", family: "video", description: "Registration, reminders, the presentation and the follow-up." },
+  webinar_package: { name: "Webinar package", family: "video", description: "Registration and confirmation pages, an invitation email, reminders, the presentation and the replay follow-up." },
   vsl_long: { name: "Long video sales letter", family: "video", description: "The sales letter, spoken." },
   vsl_short: { name: "Short video sales letter", family: "video", description: "A compact spoken pitch for warm traffic." },
   meta_ad: { name: "Meta ad set", family: "ad", description: "Primary text, headline and description variants." },

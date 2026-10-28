@@ -1098,7 +1098,7 @@ function scanOwnerRules(rules: TellRule[], texts: string[], exempt: Set<string>,
   return out;
 }
 
-const INSTRUCTION_START = /^(?:click|tap|call|read|open|get|grab|try|go|watch|see|join|book|reply|comment|hit|start|check|look|sign|download|scroll|send|text|e-?mail|visit|order|claim|pick|choose|write|count|ask|tell|keep|stop|take|use|put|find|add|make|do|don['’]t|let|please|contact|follow|subscribe|register|reach out|learn|discover|explore|as always)\b/i;
+const INSTRUCTION_START = /^(?:click|tap|call|read|open|get|grab|try|go|watch|see|join|book|reply|comment|hit|start|check|look|sign|download|scroll|send|text|e-?mail|visit|order|claim|pick|choose|write|count|ask|tell|keep|stop|take|use|put|find|add|make|do|don['’]t|let|please|contact|follow|subscribe|register|reach out|learn|discover|explore|type|drop|as always)\b/i;
 /** "..., okay?" and "..., right?" check in with the reader; they are not a question the copy then answers. */
 const TAG_QUESTION = /,\s*(?:okay|ok|right|huh|eh|yes|no|yeah|see|got it)\?+$/i;
 /** The buyer's own question in the first person ("Can I cancel?", "What if I hate it?"): objection handling, not the tell. */
@@ -1106,8 +1106,8 @@ const BUYER_FIRST_PERSON = /\b(?:I|I['’](?:m|d|ll|ve)|my|me|mine)\b/;
 const BUYER_QUESTION = /^(?:(?:and|but|so),?\s+)?(?:can|could|do|does|will|would|should|is|are|am|what if|how (?:do|much|long|soon|often|many)|when (?:do|will|can)|where (?:do|can))\b/i;
 /** The narrator's own past ("So what did I do?") is the tell, whoever asks. */
 const NARRATOR_PAST = /\b(?:did|was|had|were) I\b/i;
-/** A question put to the reader ("Ready?", "Want the list?", "How many of your posts rank?"). */
-const READER_DIRECTED = /\byou(?:r|rs|['’](?:re|ve|d|ll))?\b|^(?:ready|interested|curious|need|prefer|new to|looking for|still (?:here|with me|reading)|want|sound (?:good|fair)|make sense|deal|agreed|questions)\b/i;
+/** A question put to the reader ("Ready?", "Want the list?", "How many of your posts rank?", a trial close: "Is this making sense?"). */
+const READER_DIRECTED = /\byou(?:r|rs|['’](?:re|ve|d|ll))?\b|\bmak(?:e|es|ing) sense\b|^(?:ready|interested|curious|need|prefer|new to|looking for|still (?:here|with me|reading)|want|sound (?:good|fair)|make sense|deal|agreed|questions)\b/i;
 
 /** The copy asks and answers itself: "The result? More sales." "Why? Because..." "The fix? Use the score as a filter." */
 function selfAnswered(q: string, a: string): boolean {

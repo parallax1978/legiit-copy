@@ -75,7 +75,7 @@ Deno.test("groupUnits: tiny sections attach to neighbours, oversize sections sta
 Deno.test("item shape is derived from the spec: sequences and ad sets repeat every section, the webinar repeats replay emails, the RSA's items are blocks", () => {
   assertEquals(itemShape(email_sequence), { kind: "repeat_all" });
   assertEquals(itemShape(meta_ad), { kind: "repeat_all" });
-  assertEquals(itemShape(webinar_package), { kind: "repeat_section", sectionId: "replay_email", fixedAssets: 5 });
+  assertEquals(itemShape(webinar_package), { kind: "repeat_section", sectionId: "replay_email", fixedAssets: 9 });
   assertEquals(itemShape(google_rsa), { kind: "blocks" });
   assertEquals(itemShape(sales_letter), { kind: "none" });
 });
@@ -107,7 +107,7 @@ Deno.test("meta ad: three variations in one call; webinar: fixed assets once and
   assertEquals(ids.filter((id) => id.startsWith("replay_email")), ["replay_email#1", "replay_email#2", "replay_email#3", "replay_email#4", "replay_email#5"]);
   assertEquals(ids.filter((id) => !id.includes("#")).length, webinar_package.sections.length - 1, "every other asset once, unsuffixed");
   assertEquals(web.itemCount, 5);
-  assertEquals(planDraft(webinar_package, { itemCount: 12 }).itemCount, 7);
+  assertEquals(planDraft(webinar_package, { itemCount: 16 }).itemCount, 7);
   assertEquals(web.leadSectionId, webinar_package.lead_section_id ?? null, "the lead loop targets the spec's lead_section_id when it names one");
   if (webinar_package.lead_section_id) assertEquals(web.calls.find((c) => c.kind === "leads")?.units[0].id, webinar_package.lead_section_id);
   for (const c of web.calls) assert(c.units.length === 1 || c.maxWords <= Math.round(GROUP_SOFT_LIMIT_WORDS * (1 + GROUP_OVERFLOW)), c.units.map((u) => u.id).join(","));
