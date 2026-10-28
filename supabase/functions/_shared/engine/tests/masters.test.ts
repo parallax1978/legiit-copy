@@ -9,7 +9,7 @@ import { FORMATS } from "../formats/index.ts";
 import { analyzeDraft, exemplarCopies, exemplarSources, TELLS } from "../tells.ts";
 import { assembleDraft } from "../draft/assemble.ts";
 import { editableUnits, unitFindings } from "../draft/tell_edit.ts";
-import { LEAD_SELECTION, OWNER_TELLS, RULES } from "../prompts/standard.ts";
+import { EXEMPLARS, LEAD_SELECTION, OWNER_TELLS, RULES } from "../prompts/standard.ts";
 import argumentPrompt from "../prompts/argument.v15.ts";
 import { draftPrompt, leadsJob } from "../prompts/draft.v14.ts";
 import { tellEditPrompt, cadenceNote } from "../prompts/tell_edit.v11.ts";
@@ -73,6 +73,12 @@ Deno.test("prompts: the masters' hooks reach every step that writes, reviews or 
     for (const t of ["as something that happened to them", "as one concrete thing that happened to the reader", "pages you paid for that never earned back what they cost", "The page you paid a writer for never earned back what it cost.", "quotes you sent that nobody chased", "The score does not look at your site."]) assert(!system.includes(t), `${name}: ${t}`);
   }
   assert(!OWNER_TELLS.includes("I've wired houses here for twenty years"), "the credential example is described, never a sentence to copy");
+  // Section 11: the masters' exemplars for the jobs after the hook reach the drafter and the reviser, and the guard
+  assert(EXEMPLARS.startsWith("## 11. Exemplars from the masters") && !/[\u2013\u2014]/.test(EXEMPLARS));
+  for (const [name, system] of [["draft", draftPrompt.system], ["revise", revisePrompt.system]] as const) assert(system.includes("## 11. Exemplars from the masters"), name);
+  for (const [name, system] of [["argument", argumentPrompt.system], ["editorial", editorialPrompt.system], ["factual", factualPrompt.system]] as const) assert(!system.includes("## 11. Exemplars from the masters"), `${name} studies no exemplars`);
+  assert(exemplarSources().includes("I trust your judgment here. I wouldn't be writing to you otherwise."));
+  assertEquals(exemplarCopies("Okay, call me a foodie fussbudget, but I tasted every roof sealant on the market.").map((c) => c.words), ["okay call me a foodie fussbudget but"]);
 });
 
 Deno.test("prompts: the drafter's leads job is the masters' hook, for a hook and for a long lead", () => {

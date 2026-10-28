@@ -1297,7 +1297,7 @@ function exemplarWords(text: string): string[] {
 }
 const EXEMPLAR_RUN = 6;
 const EXEMPLAR_COMMON = new Set(["a", "an", "the", "to", "of", "and", "or", "in", "on", "at", "for", "with", "by", "from", "it", "is", "was", "be", "are", "that", "this", "you", "your", "i", "we", "my", "our", "he", "his", "him", "they", "their", "them", "as", "if", "so", "but", "not", "no", "do", "does", "did", "have", "has", "had", "will", "would", "can", "could", "just", "all", "one", "what", "when", "how", "who", "me", "us", "its", "it's", "i'm", "you're"]);
-/** The quoted examples a writer reads in docs/04: the Hooks paragraph of Section 3 and Section 11, each at most 40 words. */
+/** The quoted examples a writer reads in docs/04: the Hooks paragraph of Section 3 and Section 11, each at most 60 words. */
 export function exemplarSources(): string[] {
   const std = STANDARD_TEXT as unknown as Record<string, unknown>;
   const lead = String(std.LEAD_SELECTION ?? "");
@@ -1307,7 +1307,7 @@ export function exemplarSources(): string[] {
     // quotes pair in order: a short quoted word ("we.") is a pair of its own, never the start of a long one
     for (const m of t.matchAll(/"([^"\n]*)"/g)) {
       const n = exemplarWords(m[1]).length;
-      if (n >= EXEMPLAR_RUN && n <= 40) out.push(m[1]);
+      if (n >= EXEMPLAR_RUN && n <= 60) out.push(m[1]);
     }
   }
   return out;

@@ -4,7 +4,7 @@ import json, re, pathlib
 root = pathlib.Path(__file__).resolve().parents[1]
 md = (root / 'docs/04-copy-standard.md').read_text()
 parts = re.split(r'^## (\d+)\. (.+)$', md, flags=re.M)
-names = {'1':'RULES','2':'ARGUMENT_SELECTION','3':'LEAD_SELECTION','4':'PROOF_PLACEMENT','5':'OFFER_PRESENTATION','6':'COPY_CHIEF_RUBRIC','7':'AI_TELL_CHECKLIST','8':'CLAIMS_AND_FACTUAL_REVIEW','9':'FORMAT_SPECS','10':'VOICE_CAPTURE'}
+names = {'1':'RULES','2':'ARGUMENT_SELECTION','3':'LEAD_SELECTION','4':'PROOF_PLACEMENT','5':'OFFER_PRESENTATION','6':'COPY_CHIEF_RUBRIC','7':'AI_TELL_CHECKLIST','8':'CLAIMS_AND_FACTUAL_REVIEW','9':'FORMAT_SPECS','10':'VOICE_CAPTURE', '11': 'EXEMPLARS'}
 out = ['/** AUTO-GENERATED from docs/04-copy-standard.md by tools/gen-standard.py. Do not edit by hand; edit the doc and regenerate. */', '']
 keys = {}
 for i in range(1, len(parts), 3):

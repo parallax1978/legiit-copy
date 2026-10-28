@@ -406,7 +406,26 @@ From three to ten samples of the client's own writing, selling copy preferred:
 6. Write the profile as parameters, never adjectives.
 7. Validate: generate 500 words in the profile, re-measure against step 1, and have the client mark every line they would not have written. Adjust the profile, never the draft.
 8. Never penalize caps, fragments, exclamation marks or ellipses; human direct response uses all four at rates far above AI drafts.
-9. A voice profile never brings back what Section 7.1 bans: em dashes, emojis, hashtags and the 7.1 tells and words stay out even when the samples use them.`;
+9. A voice profile never brings back what Section 7.1 bans: em dashes, emojis, hashtags and the 7.1 tells and words stay out even when the samples use them.
+
+---`;
+
+export const EXEMPLARS = `## 11. Exemplars from the masters
+
+Study what each one does; never reuse its words. Six words in a row from an exemplar, or from an example in Section 3, fail the mechanical check. Section 3 shows the openings; these show the jobs after them.
+
+- The speaker named, with the reason he is writing (Gary Halbert, the Caddy model letter): "My name is John Stebbins and I am a dentist here in Massillon. I've got a 2-year-old Caddy and it is in almost perfect shape and I have to get rid of it for reasons I'll tell you later."
+- Story as proof, with a doubter to beat (Gary Halbert, the dollar-bill letter, 1990): "I was living in Ohio at the time and my friends laughed at my idea. They thought it was a big joke."
+- The mechanism as one person doing one thing (Porter Stansberry, 2014): "Let's say you're a German and you want to buy oil from Saudi Arabia. You can't just pay for your oil in German marks (or the new euro currency), because the oil is priced in dollars. So you have to buy dollars first, then buy your oil."
+- The reader's own test, told as what he will find (Pepsodent, the campaign Claude Hopkins began, 1927): "RUN your tongue across your teeth. You will feel film; a slippery sort of coating."
+- Proof staged as an event, with its numbers (John Carlton, the Cage Fighter ad, 2000): "Tom put them all down. Fast. That 284-pound Texan, six foot eight, undefeated in 8 cage fights... begging for mercy after just 37 seconds."
+- A bullet that promises a specific and keeps the how (Gary Bencivenga, the job-interviews ad, 1997): "The simple 12-word sentence that will make you the #1 candidate more often than you'd ever believe."
+- The reason the deal is this good (Gary Halbert, the family-crest plaque letter, Boron Letters ch. 21): "The reason we have the So & So wall plaque in stock is because we needed to take some pictures of our products for publicity purposes and So & So is one of the family crests we used when making our samples."
+- The speaker's own research as his stake (Gary Bencivenga, the Kurobuta ham letter, 2005): "Okay, call me a foodie fussbudget, but after months of research and tasting more than 100 hams, to my surprise, I couldn't find a single ham that satisfied me on every count."
+- The speaker's trust beside the guarantee (John Carlton, the Free Gun letter): "I trust your judgment here. I wouldn't be writing to you otherwise."
+- The close: the step, and the risk carried by the seller (John Carlton, the Cage Fighter ad): "Call. You risk nothing... because if you're not completely convinced, I will pay for your lesson."
+- What arrives and when (Gary Bencivenga, the Kurobuta ham letter): "Your Kurobuta ham will be shipped for guaranteed delivery during the week of Monday, March 21st. This means that if you're planning to serve your ham on Easter Sunday, which falls on March 27th this year, your ham is guaranteed to arrive in plenty of time."
+- A P.S. that adds a fact (Gary Halbert, the coat-of-arms letter): "P.S. If you are ordering only one report, send two dollars ($2.00). Additional reports ordered at the same time and sent to the same address are one dollar each."`;
 
 export const OWNER_TELLS = `### 7.1 The owner's tells and words
 
@@ -453,7 +472,7 @@ The tell edit. Every draft and every revision passes this edit before the cold r
 
 Scoring: tells 11-13 are Tier 0; every other 7.1 tell, word or windup is Tier 1 (weight 4) per hit (a repeated run of words counts from the second repeat in a piece, since one is common in human posts), and two or more in a piece are the stack the copy chief fails at Gate D and the mechanical pass sends back to revision.`;
 
-export const STANDARD = { RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, OFFER_PRESENTATION, COPY_CHIEF_RUBRIC, AI_TELL_CHECKLIST, CLAIMS_AND_FACTUAL_REVIEW, FORMAT_SPECS, VOICE_CAPTURE } as const;
+export const STANDARD = { RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, OFFER_PRESENTATION, COPY_CHIEF_RUBRIC, AI_TELL_CHECKLIST, CLAIMS_AND_FACTUAL_REVIEW, FORMAT_SPECS, VOICE_CAPTURE, EXEMPLARS } as const;
 export const STANDARD_TITLES: Record<string, string> = {
   "RULES": "The standard",
   "ARGUMENT_SELECTION": "Argument selection",
@@ -464,5 +483,6 @@ export const STANDARD_TITLES: Record<string, string> = {
   "AI_TELL_CHECKLIST": "AI tell checklist",
   "CLAIMS_AND_FACTUAL_REVIEW": "Claims taxonomy and factual review",
   "FORMAT_SPECS": "Per-format specs",
-  "VOICE_CAPTURE": "Voice capture"
+  "VOICE_CAPTURE": "Voice capture",
+  "EXEMPLARS": "Exemplars from the masters"
 };

@@ -2,12 +2,14 @@
  * Draft prompt, version 14: version 13's messages, with the leads job written from the masters' hooks (docs/04
  * Section 3): the three leads stand on three different facts with three different opening moves, line one holds one
  * thought and line two pays it off, and the four rejected opening shapes are named; a long lead opens the same way.
- * Ledger discipline 6 says the reader's state plainly, never in a hook as an account of what he did. The system text
+ * Ledger discipline 6 says the reader's state plainly, never in a hook as an account of what he did, and Section 11's
+ * exemplars from the masters sit before the voice rules, studied and never reproduced. The system text
  * carries the standard as of this version (Section 3's hooks and the masters' opening moves; rules 2, 7 and 11 say the
  * reader's state plainly as his situation, never in a hook as an account of what he did; Section 7.1 tells 14 to 17).
  */
 import { draftPrompt as draftPrev, type DraftArgs } from "./draft.v13.ts";
 import { amend, type PromptModule } from "./types.ts";
+import { EXEMPLARS } from "./standard.ts";
 
 export type { DraftArgs };
 
@@ -31,6 +33,8 @@ export function leadsJob(user: string): string {
 }
 
 const SYSTEM = amend(draftPrev.system, [
+  // the masters' exemplars for the jobs after the hook (docs/04 Section 11): studied, never reproduced
+  [`## Voice\n`, `${EXEMPLARS}\n\n## Voice\n`],
   [
     `The substance of the reader's state comes from the verbatims and the plain facts of the reader's work, said as one concrete thing that happened to the reader, at full strength, in the speaker's words (rule 11), never in a verbatim's survey wording and never sized down.`,
     `The substance of the reader's state comes from the verbatims and the plain facts of the reader's work, said plainly at full strength in the speaker's words (rule 11), never in a verbatim's survey wording and never sized down; a hook never recounts it as something the reader did, with or without what it cost him (Section 3).`,
