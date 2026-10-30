@@ -9,6 +9,8 @@ import { OWNER_TELLS } from "../prompts/standard.ts";
 import { SOCIAL_EXEMPLARS } from "../prompts/exemplars/social.ts";
 import { EMAIL_EXEMPLARS } from "../prompts/exemplars/email.ts";
 import { AD_EXEMPLARS } from "../prompts/exemplars/ad.ts";
+import { VIDEO_EXEMPLARS } from "../prompts/exemplars/video.ts";
+import { MESSAGE_EXEMPLARS } from "../prompts/exemplars/message.ts";
 import { allExemplarTexts, exemplarsText } from "../prompts/exemplars/index.ts";
 import { analyzeText, automatedReadabilityIndex, exemplarCopies, hemingwayGrade, GRADE_CEILING } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
@@ -47,12 +49,12 @@ Deno.test("every social exemplar passes the detector and reads at the social gra
     // the piece is the copy guard's own exemplar: six words in a row from it are caught
     assert(exemplarCopies(x.text.split("\n")[0]).length > 0, `${x.master}: its first line is known to the copy check`);
   }
-  assert(allExemplarTexts().length >= 17);
+  assert(allExemplarTexts().length >= 23);
   // the emails and the ads pass their own family's detector and grade
-  for (const [xs, spec, lo, hi] of [[EMAIL_EXEMPLARS, FORMATS.email_single, 150, 400], [AD_EXEMPLARS, FORMATS.meta_ad, 40, 120]] as const) {
+  for (const [xs, spec, lo, hi] of [[EMAIL_EXEMPLARS, FORMATS.email_single, 150, 400], [AD_EXEMPLARS, FORMATS.meta_ad, 40, 120], [VIDEO_EXEMPLARS, FORMATS.tiktok_reels, 40, 100], [MESSAGE_EXEMPLARS, FORMATS.sms, 12, 40]] as const) {
     assert(xs.length >= 3);
     for (const x of xs) {
-      const body = x.text.replace(/^(Subject|Primary text|Headline|Description|Button): ?/gm, "");
+      const body = x.text.replace(/^(Subject|Primary text|Headline|Description|Button): ?/gm, "").replace(/^\[[^\]]*\]\n/gm, "");
       const r = analyzeText(body, { format: spec });
       assertEquals(r.flags.filter((f) => f.tell !== "copied_exemplar").map((f) => `${f.tell}: ${f.examples.join(" | ")}`), [], `${spec.id} ${x.master}: tells`);
       const ari = automatedReadabilityIndex(body);

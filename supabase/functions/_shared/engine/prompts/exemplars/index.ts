@@ -8,6 +8,8 @@ import type { FormatSpec } from "../../formats/spec.ts";
 import { SOCIAL_EXEMPLARS } from "./social.ts";
 import { EMAIL_EXEMPLARS } from "./email.ts";
 import { AD_EXEMPLARS } from "./ad.ts";
+import { VIDEO_EXEMPLARS } from "./video.ts";
+import { MESSAGE_EXEMPLARS } from "./message.ts";
 
 export interface Exemplar {
   master: string;
@@ -23,6 +25,8 @@ export const EXEMPLARS_BY_FAMILY: Partial<Record<FormatSpec["family"], readonly 
   social: SOCIAL_EXEMPLARS,
   email: EMAIL_EXEMPLARS,
   ad: AD_EXEMPLARS,
+  video: VIDEO_EXEMPLARS,
+  message: MESSAGE_EXEMPLARS,
 };
 
 export function exemplarsFor(family: FormatSpec["family"]): readonly Exemplar[] {
