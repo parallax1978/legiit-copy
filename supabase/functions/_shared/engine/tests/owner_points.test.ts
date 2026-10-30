@@ -8,14 +8,14 @@
 import { assert, assertEquals } from "@std/assert";
 import { FORMATS } from "../formats/index.ts";
 import { ARGUMENT_SELECTION, COPY_CHIEF_RUBRIC, FORMAT_SPECS, LEAD_SELECTION, OWNER_TELLS, PROOF_PLACEMENT, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v18.ts";
-import { credentialJob, draftPrompt } from "../prompts/draft.v16.ts";
+import argumentPrompt from "../prompts/argument.v19.ts";
+import { credentialJob, draftPrompt } from "../prompts/draft.v17.ts";
 import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v17.ts";
-import { revisePrompt } from "../prompts/revise.v16.ts";
+import { editorialPrompt } from "../prompts/editorial.v18.ts";
+import { revisePrompt } from "../prompts/revise.v17.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
-import offerPrompt from "../prompts/offer.v16.ts";
-import intakePrompt from "../prompts/intake.v14.ts";
+import offerPrompt from "../prompts/offer.v17.ts";
+import intakePrompt from "../prompts/intake.v15.ts";
 import researchPrompt from "../prompts/research.v11.ts";
 
 const social = FORMATS.organic_social;
@@ -57,7 +57,7 @@ Deno.test("the namedrop: never a sentence of its own or an argument about the sp
   const v14 = "x The product's name waits for the body, and so does the speaker's credential unless it is the surprise the hook turns on. y";
   assertEquals(credentialJob(v14), "x The product's name and the speaker's credential wait for the body, and a credential goes only where rule 8 allows it. y");
   assertEquals(credentialJob("a sections call"), "a sections call");
-  assertEquals(draftPrompt.version, 16);
+  assertEquals(draftPrompt.version, 17);
   assert(!researchPrompt.system.includes("any stake he holds against his own interest"));
 });
 

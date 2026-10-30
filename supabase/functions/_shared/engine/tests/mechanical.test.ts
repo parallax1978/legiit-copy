@@ -63,7 +63,7 @@ Deno.test("mechanical step maps tiers to severities and gate failures to format_
 });
 
 Deno.test("Tier 2 flags are low severity; Tier 3 alone produces no draft flag", () => {
-  const base: Omit<MechanicalReport, "flags"> = { tell_score_per_300: 0, hard_fail: false, hard_fail_reasons: [], fk_grade: 6, cadence_cv: 0.8, cadence_flag: false, and_then_count: 0, format_gate_failures: [], word_count: 400 };
+  const base: Omit<MechanicalReport, "flags"> = { tell_score_per_300: 0, hard_fail: false, hard_fail_reasons: [], fk_grade: 6, ari_grade: null, cadence_cv: 0.8, cadence_flag: false, and_then_count: 0, format_gate_failures: [], word_count: 400 };
   const alone = flagsFromReport({ ...base, flags: [{ tier: 3, tell: "marketing_vocab", weight: 1, count: 2, examples: ["unlock"], fix: "cut" }] });
   assertEquals(alone, []);
   const mixed = flagsFromReport({ ...base, flags: [{ tier: 2, tell: "rule_of_three", weight: 2, count: 1, examples: ["a, b, and c."], fix: "break it" }, { tier: 3, tell: "marketing_vocab", weight: 1, count: 2, examples: ["unlock"], fix: "cut" }] });

@@ -311,12 +311,12 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
-import { draftPrompt } from "../prompts/draft.v16.ts";
-import { revisePrompt } from "../prompts/revise.v16.ts";
-import { editorialPrompt } from "../prompts/editorial.v17.ts";
+import { draftPrompt } from "../prompts/draft.v17.ts";
+import { revisePrompt } from "../prompts/revise.v17.ts";
+import { editorialPrompt } from "../prompts/editorial.v18.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
-import offerPrompt from "../prompts/offer.v16.ts";
-import intakePrompt from "../prompts/intake.v14.ts";
+import offerPrompt from "../prompts/offer.v17.ts";
+import intakePrompt from "../prompts/intake.v15.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -335,7 +335,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [16, 16, 17, 14, 14, 16, 14]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [17, 17, 18, 14, 14, 17, 15]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("it is never a list or count of the product's steps or checks"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));

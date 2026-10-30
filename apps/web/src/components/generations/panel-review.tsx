@@ -147,6 +147,7 @@ export function ReviewPanel({ detail }: { detail: GenerationDetail }) {
           <Heading icon={<Gauge className="h-3.5 w-3.5" />}>Mechanical passes</Heading>
           <div className="flex flex-wrap gap-2 text-xs">
             <Stat label="Tell score / 300 words" value={fmt(mech.tell_score_per_300)} warn={mech.tell_score_per_300 > 1} />
+            {mech.ari_grade != null && <Stat label="Reading grade (Hemingway)" value={String(Math.max(1, Math.round(mech.ari_grade)))} warn={mech.hard_fail_reasons.some((r) => r.startsWith("readability"))} />}
             {mech.fk_grade != null && <Stat label="FK grade" value={fmt(mech.fk_grade)} />}
             {mech.cadence_cv != null && <Stat label="Cadence CV" value={fmt(mech.cadence_cv)} warn={mech.cadence_flag} />}
             <Stat label="“And then” beats" value={String(mech.and_then_count)} />

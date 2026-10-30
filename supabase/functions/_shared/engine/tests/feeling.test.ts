@@ -6,23 +6,42 @@
  * spec written short and plain.
  */
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
-import { analyzeText, fleschKincaidGrade, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, metricNamePattern, TELLS } from "../tells.ts";
+import { analyzeText, automatedReadabilityIndex, fleschKincaidGrade, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, hemingwayGrade, metricNamePattern, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { COPY_CHIEF_RUBRIC, FORMAT_SPECS, OWNER_TELLS, RULES } from "../prompts/standard.ts";
-import { draftPrompt, plainJob, WRITERS_BRIEF } from "../prompts/draft.v16.ts";
+import { draftPrompt, plainJob, WRITERS_BRIEF } from "../prompts/draft.v17.ts";
 import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
-import { revisePrompt } from "../prompts/revise.v16.ts";
-import { editorialPrompt } from "../prompts/editorial.v17.ts";
+import { revisePrompt } from "../prompts/revise.v17.ts";
+import { editorialPrompt } from "../prompts/editorial.v18.ts";
 import { coldReadPrompt } from "../prompts/cold_read.v3.ts";
 import { ColdRead } from "../schemas/review.ts";
 import { TellEditAuditItem } from "../schemas/tell_edit.ts";
 
 const NAMES = ["Ahrefs", "Semrush", "Google", "volume", "difficulty"];
 
+/** The owner's rejected post of 30 October, as he pasted it (generation 756d3093, draft v4), the one Hemingway graded 7. */
+const OWNER_POST = `How many of your pages did someone pick off a difficulty number?
+
+Whoever picked them had a number to interpret and no idea what the pages already ranking there said.
+
+Then it reads the pages ranking for each group, and you get a build, improve or skip call on it. Your pages win rankings on keywords that bring paying customers, and your client sees the enquiries come in from the pages you built.
+
+Ahrefs and Semrush stop at the keyword list. Two thousand keywords with scores, and which page to write is still your call. So the call gets made from the column. A writer gets a brief built on a difficulty number, and the page goes live against ten results your site can't touch. The writer did the job he was given. The research stopped one step early.
+
+It makes both of those checks for you before it picks a page. Whether you can win sits in the ten pages already ranking. Thin pages, off-topic pages and pages on weak sites get passed. A top ten full of strong, on-point pages doesn't move for any brief you write. Whether it pays sits in what advertisers bid for the click. A business keeps bidding only on searches that turn into sales.
+
+So it keeps only the searches advertisers keep paying for, the ones that bring customers, using Google's cost per click on every keyword. Every page it tells you to build sits where people buy. You see the ranking pages behind every call, and the reason for every skip.
+
+For each page worth building you get the brief. And the page itself in one click, with title tag, meta description and internal links. Every claim on the page links to its source, and it never guesses at a number only you know.
+
+One run on Pull Shot Coffee, an espresso bean subscription, went through 12 keyword clusters and came back with 6 pages to launch and 6 skipped. Pages two and three on that plan were "Espresso Bean Subscription 2 x 250g Monthly" and "Espresso Bean Subscription from Rotating US Roasters". Those are searches typed by people ready to pay every month.
+
+Built that way, your pages rank on the searches where people pay, and those rankings bring in customers instead of a traffic line in a client report.`;
+
 Deno.test("the standard: feeling first and plain words are rules, gates and a row in the owner's list", () => {
   assertStringIncludes(RULES, "39. Feeling first. Copy cannot make a reader want something");
   assertStringIncludes(RULES, "A paragraph that informs and makes him feel nothing is a report, not copy");
-  assertStringIncludes(RULES, "40. Plain words. The reader is scrolling or skimming, cold. A short piece uses words a ten-year-old knows, at the sixth grade or below");
+  assertStringIncludes(RULES, "40. Plain words. The reader is scrolling or skimming, cold. A short piece uses words a ten-year-old knows, at Grade 6 or below as the Hemingway app grades it");
   assertStringIncludes(COPY_CHIEF_RUBRIC, "if the opening carries no feeling the reader recognizes (rule 39), or a word a cold reader would ask about (rule 40)");
   assertStringIncludes(COPY_CHIEF_RUBRIC, "a reading grade above the format's ceiling (rule 40; the mechanical report's grade), or a run of paragraphs that inform and make the reader feel nothing (rule 39)");
   assertStringIncludes(COPY_CHIEF_RUBRIC, "a direction for a flat line names the feeling it should carry and the moment from the research that carries it (rule 39)");
@@ -32,7 +51,7 @@ Deno.test("the standard: feeling first and plain words are rules, gates and a ro
 });
 
 Deno.test("the drafter reads the writer's brief before the rulebook, and line one asks for plain words and the feeling", () => {
-  assertEquals(draftPrompt.version, 16);
+  assertEquals(draftPrompt.version, 17);
   assert(draftPrompt.system.startsWith("## How to write this (read before the rules below)"), draftPrompt.system.slice(0, 80));
   assert(draftPrompt.system.indexOf(WRITERS_BRIEF) < draftPrompt.system.indexOf("## 1. The standard"));
   for (const t of ["Start inside his head. He is not thinking about the product.", "Then the product in one plain sentence with its name", "Every fact is there to make him feel something", "Words a ten-year-old knows; sentences short, with one long one where the feeling needs it.", "The rules below are the desk's checklist, checked after you write."]) assertStringIncludes(WRITERS_BRIEF, t);
@@ -45,18 +64,25 @@ Deno.test("the drafter reads the writer's brief before the rulebook, and line on
 });
 
 Deno.test("the reading grade is a ceiling by family, and a metric's name is the owner's tell 22", () => {
-  assertEquals([GRADE_CEILING.social, GRADE_CEILING.email, GRADE_CEILING.page], [6.5, 6.5, 8.0]);
-  assertEquals([GRADE_CEILING_BY_FORMAT.optin, GRADE_CEILING_BY_FORMAT.order_bump, GRADE_CEILING_BY_FORMAT.thank_you, GRADE_CEILING_BY_FORMAT.landing_page_short, GRADE_CEILING_BY_FORMAT.sales_letter], [6.5, 6.5, 6.5, 7.0, undefined]);
+  assertEquals([GRADE_CEILING.social, GRADE_CEILING.email, GRADE_CEILING.page], [6, 6, 8]);
+  assertEquals([GRADE_CEILING_BY_FORMAT.optin, GRADE_CEILING_BY_FORMAT.order_bump, GRADE_CEILING_BY_FORMAT.thank_you, GRADE_CEILING_BY_FORMAT.landing_page_short, GRADE_CEILING_BY_FORMAT.sales_letter], [6, 6, 6, 7, undefined]);
+  // the owner's rejected post of 30 October: Hemingway showed Grade 7 (the index 6.5, rounded) where Flesch-Kincaid read 5.7; the gate reads it as the owner does
+  const ownerAri = automatedReadabilityIndex(OWNER_POST)!;
+  assertEquals(hemingwayGrade(ownerAri), 7, ownerAri.toFixed(2));
+  assert(fleschKincaidGrade(OWNER_POST)! < 6, "the syllable formula undercounts what the owner sees");
+  const owner = analyzeText(OWNER_POST, { format: FORMATS.organic_social, toolNames: NAMES });
+  assert(owner.hard_fail_reasons.some((x) => x.startsWith("readability: Hemingway Grade 7 (index 6.5) is above the organic_social ceiling of Grade 6")), owner.hard_fail_reasons.join("; "));
+  assertEquals(owner.ari_grade, ownerAri);
   const lecture = "The determination of attainable rankings necessitates a comparative evaluation of the competitive landscape, incorporating authority metrics, relevance signals and the commercial intention underlying each individual query, before any editorial investment is authorised.";
   const prose = Array(3).fill(lecture).join(" ");
-  const grade = fleschKincaidGrade(prose)!;
+  const grade = hemingwayGrade(automatedReadabilityIndex(prose)!);
   assert(grade > 12, String(grade));
   const r = analyzeText(prose, { format: FORMATS.organic_social, toolNames: NAMES });
-  assert(r.hard_fail_reasons.some((x) => x.startsWith(`readability: grade ${grade.toFixed(1)} is above the organic_social ceiling of 6.5`)), r.hard_fail_reasons.join("; "));
-  assert(analyzeText(prose, { format: FORMATS.optin }).hard_fail_reasons.some((x) => x.includes("above the optin ceiling of 6.5")), "a short page keeps the sixth grade");
-  assert(!analyzeText(prose, { format: FORMATS.sales_letter, toolNames: NAMES }).hard_fail_reasons.some((x) => x.startsWith("readability")) || grade > 8, "a page has the eighth grade as its ceiling");
+  assert(r.hard_fail_reasons.some((x) => x.startsWith(`readability: Hemingway Grade ${grade} (index`) && x.includes("is above the organic_social ceiling of Grade 6")), r.hard_fail_reasons.join("; "));
+  assert(analyzeText(prose, { format: FORMATS.optin }).hard_fail_reasons.some((x) => x.includes("above the optin ceiling of Grade 6")), "a short page keeps Grade 6");
+  assert(analyzeText(prose, { format: FORMATS.sales_letter, toolNames: NAMES }).hard_fail_reasons.some((x) => x.includes("above the sales_letter ceiling of Grade 8")), "a page has Grade 8 as its ceiling");
   const plain = "Ever write ten pages for a client and watch eight of them go nowhere? I did, for years. The page went up. Nothing. Three months later the client asks where the traffic is, and you are the one explaining Google. Legiit Keywords is a keyword tool that looks at what is already ranking for each search, tells you which pages your site can win and which ones will pay, and then writes the page. Try it on your own site for a dollar.";
-  assert(fleschKincaidGrade(plain)! < 6.5);
+  assert(hemingwayGrade(automatedReadabilityIndex(plain)!) <= 6);
   assert(!analyzeText(plain, { format: FORMATS.organic_social, toolNames: NAMES }).hard_fail_reasons.some((x) => x.startsWith("readability")));
   // short text: the grade is noise and never a failure
   assert(!analyzeText(lecture.split(" ").slice(0, 20).join(" "), { format: FORMATS.organic_social }).hard_fail_reasons.some((x) => x.startsWith("readability")));
@@ -93,7 +119,7 @@ Deno.test("the social spec is short and plain: the lead-in feels and never names
 });
 
 Deno.test("the editors: the tell edit reads for jargon and never raises the grade, the reviser fixes the grade and the flat line, the copy chief reads for feeling, the cold read says what he felt", () => {
-  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, coldReadPrompt.version], [14, 16, 17, 3]);
+  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, coldReadPrompt.version], [14, 17, 18, 3]);
   assertStringIncludes(tellEditPrompt.system, `"jargon", a word a cold reader outside the trade would stop at`);
   assertStringIncludes(tellEditPrompt.system, "Every edit keeps the reading grade where it is or lowers it (rule 40)");
   assertEquals(TellEditAuditItem.parse({ ref: "lead-a-1", line: "x", kind: "jargon", keep: false }).kind, "jargon");

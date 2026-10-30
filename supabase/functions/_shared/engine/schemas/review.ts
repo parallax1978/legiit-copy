@@ -49,6 +49,8 @@ export const MechanicalReport = z.object({
   hard_fail: z.boolean(),
   hard_fail_reasons: z.array(z.string()),
   fk_grade: z.number().nullable(),
+  /** the Hemingway grade's index (automated readability index): the number the owner reads his copy by */
+  ari_grade: z.number().nullish(),
   cadence_cv: z.number().nullable(),
   cadence_flag: z.boolean(),
   and_then_count: z.number(),
