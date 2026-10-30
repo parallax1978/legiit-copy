@@ -197,7 +197,7 @@ export function dealText(variant: OfferVariantRow | null, brief: OfferBrief | nu
   if (!ONE_LINE_OFFER_FAMILIES.has(spec.family)) return offerBlockText(variant, brief, claims, spec);
   const rows = writerClaims(claims, spec).filter((c) => c.role === "offer_term" && DEAL_TYPES.has(c.claim_type)).sort((a, b) => rowFacts(a.claim_text).length - rowFacts(b.claim_text).length).slice(0, 8);
   return [
-    `THE DEAL (this ${spec.name.toLowerCase()} takes no payment, so it says the deal once, in one plain line where the piece puts it: the price, the trial and the action; the guarantee's conditions, the plan's credits and the cancel mechanics stay on the page that takes payment)`,
+    `THE DEAL (this ${spec.name.toLowerCase()} takes no payment, so it says the deal once, in one plain line where the piece puts it: the price, the trial and the action, in his words, never a plan's name or a term from the product ("$1 gets you 7 days and your first site read and written" is the shape); the guarantee's conditions, the plan's credits and the cancel mechanics stay on the page that takes payment)`,
     brief ? `Price: ${brief.price.text}` : "",
     ...rows.map((c) => `- [[L:${c.id}]] ${rowFacts(c.claim_text)}`),
     siteLink(brief) ? `The link (written out where the piece carries the link): ${siteLink(brief)}` : "The link: none on file; write the link line without a URL.",
