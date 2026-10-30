@@ -5,9 +5,8 @@
  * material said plainly once (draft/brief_text.ts), the notes, and the draft.
  */
 import { CACHE_BREAK, type PromptModule } from "./types.ts";
-import { OWNER_TELLS } from "./standard.ts";
 import type { ReviseArgs } from "./revise.v1.ts";
-import { NEVER, WRITER } from "./draft.v19.ts";
+import { NEVER, WRITER, writerTells } from "./draft.v19.ts";
 import { sectionsWithIds } from "../draft/prompt_text.ts";
 import { dealText, factsText, pieceText, voiceLine } from "../draft/brief_text.ts";
 import { parseOptions } from "../draft/options.ts";
@@ -27,7 +26,7 @@ Revision discipline (the desk checks these by machine after you return):
 6. Report every change in "changes": block_id, before, after, reason (which note), source (editorial | factual | mechanical | cold_read). List every DO NOT TOUCH line you confirmed unchanged in "untouched_confirmed".
 7. Return only the JSON with the complete sections array: every section, every block, changed or not.`;
 
-const SYSTEM = [WRITER, "", REVISION, "", NEVER, "", OWNER_TELLS].join("\n");
+const SYSTEM = [WRITER, "", REVISION, "", NEVER, "", writerTells()].join("\n");
 
 export const revisePrompt: PromptModule<ReviseArgs> = {
   step: "revise",

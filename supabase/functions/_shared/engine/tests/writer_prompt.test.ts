@@ -3,7 +3,7 @@
  * the detector passes, the material said plainly once, the facts deduped, short pieces written whole.
  */
 import { assert, assertEquals } from "@std/assert";
-import { draftPrompt, NEVER, WRITER, type DraftArgs } from "../prompts/draft.v19.ts";
+import { draftPrompt, NEVER, WRITER, writerTells, type DraftArgs } from "../prompts/draft.v19.ts";
 import { revisePrompt } from "../prompts/revise.v19.ts";
 import { OWNER_TELLS } from "../prompts/standard.ts";
 import { SOCIAL_EXEMPLARS } from "../prompts/exemplars/social.ts";
@@ -24,7 +24,9 @@ Deno.test("the drafter's system text is short, starts with how the masters wrote
   const s = draftPrompt.system;
   assert(words(s) < 4000, `system is ${words(s)} words`);
   assert(s.startsWith("You write direct response copy the way the masters wrote it: Schwartz, Halbert, Carlton, Makepeace, Bencivenga, Caples, Ogilvy, Sugarman, Collier and Hopkins."));
-  assert(s.indexOf(WRITER) < s.indexOf(NEVER) && s.indexOf(NEVER) < s.indexOf(OWNER_TELLS), "the writer first, then what sends a draft back, then the owner's list");
+  assert(s.indexOf(WRITER) < s.indexOf(NEVER) && s.indexOf(NEVER) < s.indexOf(writerTells()), "the writer first, then what sends a draft back, then the owner's list");
+  assert(OWNER_TELLS.startsWith(writerTells()) && writerTells().includes("Exempt: words inside a quotation") && !writerTells().includes("Structure:") && !s.includes("The tell edit.") && !s.includes("Scoring:"), "the owner's table and word lists, without the editor's structure notes and scoring");
+  assert(s.includes("a confession that a proof, a result, a review or a customer does not exist yet"), "no admissions");
   for (const row of ["| 18 |", "| 20 | A namedrop", "| 21 | A wait the reader would sit through", "| 22 |", "| 23 |"]) assert(s.includes(row), row);
   assert(!s.includes("accomplish: do;"), "the word table is the editor's, not the writer's");
   assert(!/[–—]/.test(WRITER + NEVER), "no dashes in the writer's text");

@@ -60,6 +60,7 @@ export const NEVER = `What sends a draft back:
 - An objection the reader did not raise, a story that is not on file, a description of him that is not in his words.
 - Anything added to the deal: a bonus, a discount, a deadline, a guarantee or a number the deal does not state. The deal is said as given, once, where the piece puts it.
 - Em dashes, emojis, hashtags, markdown headings, bold-label-colon bullets ("**Speed:** ..."), placeholders ("[Product Name]"), notes to the client, options, alternatives, stage directions, an explanation of what you did.
+- A windup ("Here's the thing", "In today's world"), a closer that restates the piece, a teaser that withholds nothing specific, a point said twice in new words, a line built to be quoted (a maxim, a slogan, a reframe, a moral in parentheses), a credential as a sentence of its own, a confession that a proof, a result, a review or a customer does not exist yet, or that the product or its example is new or unlaunched when the line is true without it.
 - Six words in a row from any exemplar or example you were shown.
 - The owner's tells below. Two in one piece fail it.`;
 
@@ -68,9 +69,16 @@ export const OUTPUT = `Output:
 - Return only the JSON the request names. The copy is the block text; nothing else is customer-facing.
 - Block ids are "<section_id>-<n>", numbered from 1 within each section. "items" is null except for bullets and numbered blocks. "meta" is null unless the request names a key.
 - Text blocks hold plain prose. Use only the block types the part allows. A crosshead is its own block of type "crosshead" and states something.
-- Keep each part inside its length band (words of copy, tags excluded). Write the parts in the order the request lists them; a later part may read the earlier ones.`;
+- Keep each part inside its length band (words of copy, tags excluded). Write the parts in the order the request lists them; a later part may read the earlier ones.
+- Work the way a copywriter on deadline works: decide the idea and the opening, write the whole piece in one pass, then check every fact and its tag. Thinking and writing share one budget; a piece written in one sitting beats one planned to death.`;
 
-const SYSTEM = [WRITER, "", NEVER, "", OWNER_TELLS, "", OUTPUT].join("\n");
+/** Section 7.1 as the writer reads it: the owner's table, the word lists and the exemptions; the structure notes, the tell edit's brief and the scoring belong to the editor and the detector. */
+export function writerTells(): string {
+  const cut = OWNER_TELLS.indexOf("\nStructure:");
+  return cut > 0 ? OWNER_TELLS.slice(0, cut).trimEnd() : OWNER_TELLS;
+}
+
+const SYSTEM = [WRITER, "", NEVER, "", writerTells(), "", OUTPUT].join("\n");
 
 const LEAD_TYPE_WORDS: Record<LeadType, string> = {
   offer: "the deal in line one",
