@@ -94,6 +94,8 @@ Deno.test("the writer's facts: the same fact once, the user's decided row kept, 
   const facts = factsText(rows, FORMATS.organic_social);
   assert(facts.startsWith("THE FACTS (every number, name, date, price, quote, result and credential the piece may use"));
   assert(facts.includes("- [[L:b2]] $1 for 7 days of Pro") && facts.includes("(the user decided: keep)") && !facts.includes("Premium:"), facts);
+  const planned = factsText([claim("p1", "A plan from one real run: Pull Shot Coffee, a planned espresso bean subscription. The full plan is public.", { claim_type: "narrative", role: "proof", evidence_grade: "E" })], FORMATS.organic_social);
+  assert(planned.includes("the words that say it is planned, new or without a site yet are this line's wording, not the fact"), planned);
   const deal = dealText(null, null, rows, FORMATS.organic_social, { cta: "Click the link for a $1 trial" });
   assert(deal.startsWith("THE DEAL (this organic social post takes no payment, so it says the deal once, in one plain line"));
   assert(deal.includes("[[L:b2]]") && deal.includes("The user's call to action: Click the link for a $1 trial") && !deal.includes("Agency"), deal);

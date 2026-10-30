@@ -14,6 +14,7 @@ import { provenanceNote } from "../prompts/intake.v1.ts";
 import { ONE_LINE_OFFER_FAMILIES, offerBlockText, rowFacts, verbatimLedgerTags, voiceText } from "./prompt_text.ts";
 import { verbatimKey } from "../research/answers.ts";
 import { GRADE_CEILING, GRADE_CEILING_BY_FORMAT } from "../tells.ts";
+import { ADMISSION_TELL_RE } from "./admissions.ts";
 import type { GenerationOptions } from "./options.ts";
 
 /** A ledger reference as the dossier may hold it ("L:<id>", "[[L:<id>]]" or the bare id) reduced to the id. */
@@ -180,6 +181,9 @@ export function factsText(claims: ClaimRow[], spec: FormatSpec | null = null): s
     const ev = (c.evidence ?? {}) as Record<string, unknown>;
     if (ev.quote && (c.claim_type === "statistic" || c.claim_type === "narrative" || c.claim_type === "testimonial")) notes.push(`source says: "${clip(String(ev.quote), 200)}"`);
     if (c.flag && c.user_decision !== "keep") notes.push("a note for the user is pending on this line; the copy says it at full strength and takes no rewrite from the note");
+    // "a planned subscription", "no website yet": the line's wording, which the piece never repeats (docs/04 rule 12)
+    ADMISSION_TELL_RE.lastIndex = 0;
+    if (ADMISSION_TELL_RE.test(rowFacts(c.claim_text))) notes.push("the words that say it is planned, new or without a site yet are this line's wording, not the fact: the piece names the thing as what it is");
     return `- [[L:${c.id}]] ${rowFacts(c.claim_text)}${notes.length ? ` (${notes.join("; ")})` : ""}`;
   });
   return `THE FACTS (every number, name, date, price, quote, result and credential the piece may use, each with its tag written right after it; a line is the fact, not the wording: keep its numbers and names and the words that bound a number, and say the rest in your own words to him; a sentence that repeats a line's phrasing is sent back; a "could", "may" or "can help" inside a line is the line's wording, not the fact, so the piece says what the product does in the indicative; nothing outside this list exists)\n${lines.join("\n")}`;
