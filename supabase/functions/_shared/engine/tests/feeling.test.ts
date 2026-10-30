@@ -6,7 +6,7 @@
  * spec written short and plain.
  */
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
-import { analyzeText, fleschKincaidGrade, GRADE_CEILING, metricNamePattern, TELLS } from "../tells.ts";
+import { analyzeText, fleschKincaidGrade, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, metricNamePattern, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { COPY_CHIEF_RUBRIC, FORMAT_SPECS, OWNER_TELLS, RULES } from "../prompts/standard.ts";
 import { draftPrompt, plainJob, WRITERS_BRIEF } from "../prompts/draft.v16.ts";
@@ -46,12 +46,14 @@ Deno.test("the drafter reads the writer's brief before the rulebook, and line on
 
 Deno.test("the reading grade is a ceiling by family, and a metric's name is the owner's tell 22", () => {
   assertEquals([GRADE_CEILING.social, GRADE_CEILING.email, GRADE_CEILING.page], [6.5, 6.5, 8.0]);
+  assertEquals([GRADE_CEILING_BY_FORMAT.optin, GRADE_CEILING_BY_FORMAT.order_bump, GRADE_CEILING_BY_FORMAT.thank_you, GRADE_CEILING_BY_FORMAT.landing_page_short, GRADE_CEILING_BY_FORMAT.sales_letter], [6.5, 6.5, 6.5, 7.0, undefined]);
   const lecture = "The determination of attainable rankings necessitates a comparative evaluation of the competitive landscape, incorporating authority metrics, relevance signals and the commercial intention underlying each individual query, before any editorial investment is authorised.";
   const prose = Array(3).fill(lecture).join(" ");
   const grade = fleschKincaidGrade(prose)!;
   assert(grade > 12, String(grade));
   const r = analyzeText(prose, { format: FORMATS.organic_social, toolNames: NAMES });
-  assert(r.hard_fail_reasons.some((x) => x.startsWith(`readability: grade ${grade.toFixed(1)} is above the social ceiling of 6.5`)), r.hard_fail_reasons.join("; "));
+  assert(r.hard_fail_reasons.some((x) => x.startsWith(`readability: grade ${grade.toFixed(1)} is above the organic_social ceiling of 6.5`)), r.hard_fail_reasons.join("; "));
+  assert(analyzeText(prose, { format: FORMATS.optin }).hard_fail_reasons.some((x) => x.includes("above the optin ceiling of 6.5")), "a short page keeps the sixth grade");
   assert(!analyzeText(prose, { format: FORMATS.sales_letter, toolNames: NAMES }).hard_fail_reasons.some((x) => x.startsWith("readability")) || grade > 8, "a page has the eighth grade as its ceiling");
   const plain = "Ever write ten pages for a client and watch eight of them go nowhere? I did, for years. The page went up. Nothing. Three months later the client asks where the traffic is, and you are the one explaining Google. Legiit Keywords is a keyword tool that looks at what is already ranking for each search, tells you which pages your site can win and which ones will pay, and then writes the page. Try it on your own site for a dollar.";
   assert(fleschKincaidGrade(plain)! < 6.5);

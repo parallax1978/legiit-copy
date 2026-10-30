@@ -2315,6 +2315,8 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
  */
 /** The reading grade a piece may not exceed, by family (rule 40): the sixth for a piece read on a phone, the eighth for a page. */
 export const GRADE_CEILING: Record<FormatSpec["family"], number> = { social: 6.5, email: 6.5, ad: 6.5, message: 6.5, audio: 6.5, video: 6.5, page: 8.0, commerce: 8.0 };
+/** Short pages read on a phone keep the sixth grade whatever their family; a short landing page and a product description the seventh. */
+export const GRADE_CEILING_BY_FORMAT: Partial<Record<FormatSpec["id"], number>> = { optin: 6.5, order_bump: 6.5, thank_you: 6.5, landing_page_short: 7.0, product_description: 7.0 };
 /** Fewer words than this and the grade is noise. */
 export const GRADE_MIN_WORDS = 40;
 
@@ -2336,8 +2338,8 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
   const hard_fail_reasons: string[] = [];
   for (const t of tier0) hard_fail_reasons.push(`tier0:${t.tell} x${t.count}`);
   // the reader is scrolling or skimming, cold (rule 40): a piece above its format's reading grade goes back to the writer
-  const ceiling = GRADE_CEILING[spec.family];
-  if (fk_grade !== null && words >= GRADE_MIN_WORDS && fk_grade > ceiling) hard_fail_reasons.push(`readability: grade ${fk_grade.toFixed(1)} is above the ${spec.family} ceiling of ${ceiling} (rule 40: words a ten-year-old knows and shorter sentences, with every fact kept)`);
+  const ceiling = GRADE_CEILING_BY_FORMAT[spec.id] ?? GRADE_CEILING[spec.family];
+  if (fk_grade !== null && words >= GRADE_MIN_WORDS && fk_grade > ceiling) hard_fail_reasons.push(`readability: grade ${fk_grade.toFixed(1)} is above the ${spec.id} ceiling of ${ceiling} (rule 40: words a ten-year-old knows and shorter sentences, with every fact kept)`);
   // Tier 0 owner tells already fail on their own; the stack is about the Tier 1 patterns and words, per piece
   if (ownerStack >= OWNER_STACK) hard_fail_reasons.push(`owner_stack: ${ownerStack} of the owner's tells or words in one piece (§7.1)`);
   if (score >= TELL_THRESHOLDS.hard_fail) hard_fail_reasons.push(`tell_score ${score} >= ${TELL_THRESHOLDS.hard_fail} per 300 words`);
