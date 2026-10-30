@@ -16,7 +16,7 @@ import { editableUnits, openingFindings, ownerTellCount, unitFindings } from "..
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { blocksQuoted } from "../draft/ledger.ts";
 import { runTellEdit } from "../steps/tell_edit.ts";
-import type { TellEditArgs } from "../prompts/tell_edit.v13.ts";
+import type { TellEditArgs } from "../prompts/tell_edit.v14.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -47,7 +47,7 @@ Deno.test("opening rules: the hooks the owner rejected are caught (rejected.txt,
     [["Here's the part the score hides. The keyword was never your competition. The pages ranking for it are."], ["talking_tool"], 3],
     // the panel 9 and panel 10 chosen hooks
     [["You've paid a writer for a page because Semrush rated the keyword easy. That rating still left you guessing whether anyone searching it would ever become a customer."], ["reader_scene_opener", "talking_tool"], 2],
-    [["You paid a writer for a page because the difficulty score said it was easy, and it never cracked page one."], ["closing_verdict", "reader_scene_opener", "talking_tool"], 3],
+    [["You paid a writer for a page because the difficulty score said it was easy, and it never cracked page one."], ["closing_verdict", "reader_scene_opener", "talking_tool"], 4], // "the difficulty score" is also a metric's name (tell 22)
     // round 6, "still reads like AI poetry": all four
     [ROUND_6, ["closing_verdict", "reader_scene_opener", "slogan_rehook", "talking_tool"], 4],
   ];
@@ -337,7 +337,7 @@ Deno.test("tell edit step: the opening tells reach the editor with the ledger's 
     call: editor((args, call) => {
       if (call === 1) return { edits: [], what_changed: [], already_clean: false };
       assert(args.retryNote?.includes("These opening lines still carry an opening tell") && args.retryNote.includes("[lead_in-1] reader_scene_opener") && args.retryNote.includes("[lead_in-1] talking_tool"), args.retryNote ?? "");
-      return { edits: [{ ref: "lead_in-1", before: hook, after: "I read the pages that rank before I trust a Semrush difficulty score.", tell: "reader scene opener, talking tool" }], what_changed: ["Opened on the speaker, not the reader's past"], already_clean: false };
+      return { edits: [{ ref: "lead_in-1", before: hook, after: "I read the pages that rank before I trust what Semrush calls easy.", tell: "reader scene opener, talking tool" }], what_changed: ["Opened on the speaker, not the reader's past"], already_clean: false };
     }, seen),
   });
   assertEquals(seen.length, 2);
@@ -346,7 +346,7 @@ Deno.test("tell edit step: the opening tells reach the editor with the ledger's 
   assert(seen[0].findings.some((f) => f.tell === "talking_tool" && f.example.includes("Example (a mechanic)")));
   const out = TellEditOutput.parse(res.output);
   assertEquals([out.owner_tells_before, out.owner_tells_after], [2, 0]);
-  assertEquals((res.effects!.newDraft!.blocks as DraftOutput).sections[0].blocks[0].text, "I read the pages that rank before I trust a Semrush difficulty score.");
+  assertEquals((res.effects!.newDraft!.blocks as DraftOutput).sections[0].blocks[0].text, "I read the pages that rank before I trust what Semrush calls easy.");
 
   // without the ledger's names the rating is the generic nouns' to find, and they do not
   const plain: TellEditArgs[] = [];

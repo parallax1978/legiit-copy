@@ -14,7 +14,7 @@ export const TellEditAuditItem = z.object({
   ref: z.string().describe("the reference of the text that holds the line"),
   line: z.string().describe("the line, copied from that text"),
   // the native grammar does not hold a model to the enum: an off-list label is read as "other", never a failed reply
-  kind: z.enum(["quote_card", "said_again", "windup", "survey_wording", "ledger_wording", "tool_tour", "lecture", "frame_pair", "other"]).catch("other"),
+  kind: z.enum(["quote_card", "said_again", "windup", "survey_wording", "ledger_wording", "tool_tour", "lecture", "frame_pair", "jargon", "other"]).catch("other"),
   keep: z.boolean().describe("true only when the line carries a fact the piece needs and a plainer sentence would lose it; every line with keep false gets an edit"),
 });
 export type TellEditAuditItem = z.infer<typeof TellEditAuditItem>;

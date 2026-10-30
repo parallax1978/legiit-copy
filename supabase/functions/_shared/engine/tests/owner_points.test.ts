@@ -8,14 +8,14 @@
 import { assert, assertEquals } from "@std/assert";
 import { FORMATS } from "../formats/index.ts";
 import { ARGUMENT_SELECTION, COPY_CHIEF_RUBRIC, FORMAT_SPECS, LEAD_SELECTION, OWNER_TELLS, PROOF_PLACEMENT, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v17.ts";
-import { credentialJob, draftPrompt } from "../prompts/draft.v15.ts";
-import { tellEditPrompt } from "../prompts/tell_edit.v13.ts";
-import { editorialPrompt } from "../prompts/editorial.v16.ts";
-import { revisePrompt } from "../prompts/revise.v15.ts";
+import argumentPrompt from "../prompts/argument.v18.ts";
+import { credentialJob, draftPrompt } from "../prompts/draft.v16.ts";
+import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
+import { editorialPrompt } from "../prompts/editorial.v17.ts";
+import { revisePrompt } from "../prompts/revise.v16.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
-import offerPrompt from "../prompts/offer.v15.ts";
-import intakePrompt from "../prompts/intake.v13.ts";
+import offerPrompt from "../prompts/offer.v16.ts";
+import intakePrompt from "../prompts/intake.v14.ts";
 import researchPrompt from "../prompts/research.v11.ts";
 
 const social = FORMATS.organic_social;
@@ -37,8 +37,8 @@ Deno.test("what the product does: said in the reader's words, introduced plainly
   assert(COPY_CHIEF_RUBRIC.includes("the reader sent to do by hand or to hire or pay someone for what the product does (rule 38)"));
   assert(COPY_CHIEF_RUBRIC.includes("never sends the reader to do by hand or to hire or pay someone for what the product does"));
   // the social post
-  assert(section("main").must.some((m) => m.startsWith("the product introduced in one plain sentence a friend would use")));
-  assert(section("main").must_not.some((m) => m.startsWith("the reader sent to do by hand, or to hire or pay someone for, what the product does itself")));
+  assert(section("main").must.some((m) => m.startsWith("the product introduced in one plain sentence with its name")));
+  assert(section("main").must_not.some((m) => m.includes("the reader sent to do by hand, or to hire or pay someone for, what the product does itself")));
 });
 
 Deno.test("the namedrop: never a sentence of its own or an argument about the speaker's business, never in a social post or a text ad", () => {
@@ -52,12 +52,12 @@ Deno.test("the namedrop: never a sentence of its own or an argument about the sp
   const all = social.sections.flatMap((s) => [s.job, ...s.must]);
   assert(all.every((t) => !/founder line|founder's line/.test(t)), "no must asks for a founder line");
   assert(section("main").must_not.some((m) => m.startsWith("a founder, credential or company line")));
-  assert(FORMAT_SPECS.includes("no founder, credential or company line (rule 8: the post already carries his name)"));
+  assert(FORMAT_SPECS.includes("a founder, credential or company line;"));
   // the leads job and the research no longer bring one in
   const v14 = "x The product's name waits for the body, and so does the speaker's credential unless it is the surprise the hook turns on. y";
   assertEquals(credentialJob(v14), "x The product's name and the speaker's credential wait for the body, and a credential goes only where rule 8 allows it. y");
   assertEquals(credentialJob("a sections call"), "a sections call");
-  assertEquals(draftPrompt.version, 15);
+  assertEquals(draftPrompt.version, 16);
   assert(!researchPrompt.system.includes("any stake he holds against his own interest"));
 });
 

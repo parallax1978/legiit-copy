@@ -8,6 +8,10 @@ export const ColdRead = z.object({
   disbelieved_claim: z.string().nullable(),
   promise_one_sentence: z.string(),
   lead_pick: z.object({ chosen_lead_id: z.string(), reason: z.string() }).nullable(),
+  /** what the reader felt at line one and at the turn, in a sentence, or "nothing" (cold read v3) */
+  felt: z.string().nullable().default(null),
+  /** the words a reader outside the trade stopped at, quoted (cold read v3) */
+  stumbled: z.array(z.string()).default([]),
 });
 export type ColdRead = z.infer<typeof ColdRead>;
 

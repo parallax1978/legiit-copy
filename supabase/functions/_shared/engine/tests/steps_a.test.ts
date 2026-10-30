@@ -5,10 +5,10 @@
 import { assert, assertEquals, assertRejects, assertStringIncludes } from "@std/assert";
 import { getFormat } from "../formats/index.ts";
 import { type callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v17.ts";
+import argumentPrompt from "../prompts/argument.v18.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
-import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v13.ts";
-import offerPrompt from "../prompts/offer.v15.ts";
+import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v14.ts";
+import offerPrompt from "../prompts/offer.v16.ts";
 import researchPrompt from "../prompts/research.v11.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";

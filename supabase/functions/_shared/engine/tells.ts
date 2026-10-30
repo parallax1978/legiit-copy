@@ -448,6 +448,13 @@ export const TELLS: TellRule[] = [
     note: "In lines 1-5 of the opening, before the product's name has appeared in it, \"it\" (or \"this tool\", \"the app\", \"the tool I use\") is the actor of a verb of doing (reads, checks, tells, gives, writes, decides...): the reader is told what \"it\" does before he is told what it is (§7.1 tell 18, rule 38). Read only when the caller passes the product's name. Found in the owner's rejected post of 30 October (\"Then it reads the pages ranking for each group\").",
   },
   {
+    tier: 1, name: "metric_name", weight: 4, scope: "all", owner: { tell: 22 }, families: ["social", "ad", "email", "message", "audio", "video"],
+    regex: null,
+    example: "a difficulty number / the volume column / a quality score",
+    fix: "Say the thing in plain words once, as what it is to him (\"the number your keyword tool gives each search\"), or cut it (rule 40). Example (a dentist): not 'your plaque index' but 'the film your toothbrush misses'.",
+    note: "A metric's name in a short piece: a word followed by a metric noun (score, number, rating, column, metric, estimate, index), or one of the metric words the offer's comparative ledger rows name (toolNamesFrom: the lowercase ones), which a cold reader outside the trade stops at (§7.1 tell 22). Everyday numbers (a phone number, an order number) are left alone.",
+  },
+  {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
       `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]["”’)]?\\s+)The truth is\\b`,
@@ -708,7 +715,7 @@ export const NON_TELLS: { name: string; why: string }[] = [
   { name: "ps", why: "A second headline for the skimmer." },
   { name: "genre_vocabulary", why: "\"transform\", \"empower\", \"effortless\", \"journey\": human self-development pages 3.65 per 1,000, AI 0.03. The owner's list (§7.1) scores \"unlock\", \"elevate\", \"next level\" and the rest anyway." },
   { name: "superlatives_with_proof", why: "A superlative with its carrier is a claim, not a tell." },
-  { name: "readability", why: "AI drafts read one to two grades easier than human copy; the FK grade is reported, never enforced." },
+  { name: "readability", why: "AI drafts read one to two grades easier than human copy on the corpus; the owner's reader is scrolling, so the FK grade is a format ceiling (rule 40: the sixth grade for a short piece, the eighth for a long one), not a tell." },
 ];
 
 /** §7 overrides and calibration exemptions by format. */
@@ -1867,6 +1874,22 @@ export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
  * `toolNames` extends the talking-tool rule's nouns with the offer's own (toolNamesFrom); `openings: false` leaves the
  * four opening rules out, for a lone line that is no piece's opening (an idiom, a habit, a suggested rewrite).
  */
+/** Words before "number", "score" and the rest that name no metric: everyday numbers, and function words, quantifiers and plain adjectives. */
+const NOT_A_METRIC = "phone|account|serial|order|tracking|part|model|card|room|flight|plate|pin|case|ticket|invoice|reference|confirmation|policy|member|customer|house|street|lot|unit|page|issue|version|episode|chapter|table|seat|gate|line|box|lucky|round|even|odd|whole|small|large|big|record|high|low|right|wrong|the|a|an|of|and|or|with|without|by|for|from|in|on|to|at|as|their|your|my|his|her|its|our|these|those|some|any|no|more|most|few|many|each|every|this|that|two|three|four|five|ten|hundred|thousand|several|all|both|same|other|new|old|good|bad|best|worst|first|last|next|one|single|only|real|true|exact|final|total|full|half|same|different|bigger|smaller|higher|lower|better|worse";
+
+/**
+ * A metric's name (§7.1 tell 22, rule 40): a modifier before a metric noun ("a difficulty number" in the singular after
+ * an article or a possessive, so "six numbers" and "his own numbers" stay plain; "volume column", "quality score"), or a
+ * metric word the offer's comparative ledger rows name (the lowercase entries of toolNamesFrom: "difficulty", "volume")
+ * next to what marks it as a metric ("search volume", "keyword difficulty", "volume column").
+ */
+export function metricNamePattern(toolNames: string[] = []): RegExp {
+  const metric = toolNames.filter((n) => n && n === n.toLowerCase() && /^[a-z][a-z-]+$/.test(n)).map((n) => n.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&"));
+  const head = `\\b(?:a|an|the|its|their|your|his|her|my|our) (?!(?:${NOT_A_METRIC})\\b)[a-z][a-z-]+ number\\b|\\b(?!(?:${NOT_A_METRIC})\\b)[a-z][a-z-]+ (?:score|rating|column|metric|estimate|index)s?\\b`;
+  const own = metric.length ? `|\\b(?:search|keyword|keywords|traffic|domain|page|backlink|link|ranking)s? (?:${metric.join("|")})\\b|\\b(?:${metric.join("|")}) (?:score|number|column|data|metric|estimate|figure|count|rating)s?\\b` : "";
+  return new RegExp(`${head}${own}`, "gi");
+}
+
 function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = [], opts: { toolNames?: string[]; openings?: boolean; productName?: string | null } = {}): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
@@ -1881,6 +1904,12 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const pieces = ownerUnits.map((u) => pieceOf(u, spec));
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
   const couplets = sloganCouplets(ownerUnits, pieces);
+  // a metric's name (§7.1 tell 22): built from the offer's metric words at scan time, per text, so the stack counts it; a quotation keeps its words
+  const metricRule = TELLS.find((r) => r.name === "metric_name")!;
+  const metricRe = metricNamePattern(opts.toolNames);
+  const metricOn = !metricRule.families || metricRule.families.includes(spec.family);
+  const metricMatches = ownerUnits.map((u, i) => (!metricOn || u.kind === "display" || u.type === "testimonial" || u.type === "disclosure") ? [] : (blankQuotes(ownerTexts[i]).match(metricRe) ?? []).map((m) => m.trim()));
+  const metricPerText = metricMatches.map((m) => m.length);
   // the opening's four rules: each counts once per opening (as measured), on the text its first match is in
   const opening = opts.openings === false ? [] : openingHits(units, spec, opts.toolNames ?? [], opts.productName ?? null);
   const ownerAt = new Map(ownerUnits.map((u, i) => [u, i] as const));
@@ -1889,7 +1918,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
     const at = ownerAt.get(units[h.unit]);
     if (h.counted && at !== undefined) openingPerText.get(h.tell)![at] += 1;
   }
-  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText], ...openingPerText]);
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText], ["metric_name", metricPerText], ...openingPerText]);
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -1923,6 +1952,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
         hit = { rule, count: found.length, examples: trimExamples(found.map((f) => f.words)) };
         break;
       }
+      case "metric_name":
+        hit = { rule, count: metricPerText.reduce((a, b) => a + b, 0), examples: trimExamples(metricMatches.flat()) };
+        break;
       case "reader_scene_opener":
       case "closing_verdict":
       case "slogan_rehook":
@@ -2281,6 +2313,11 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
  * rule's generic nouns; without them the rule reads the generic nouns alone. `openings: false` leaves the four opening
  * rules out, for a caller that reads the openings itself (the tell edit reads each lead in the lead section's place).
  */
+/** The reading grade a piece may not exceed, by family (rule 40): the sixth for a piece read on a phone, the eighth for a page. */
+export const GRADE_CEILING: Record<FormatSpec["family"], number> = { social: 6.5, email: 6.5, ad: 6.5, message: 6.5, audio: 6.5, video: 6.5, page: 8.0, commerce: 8.0 };
+/** Fewer words than this and the grade is noise. */
+export const GRADE_MIN_WORDS = 40;
+
 export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[]; toolNames?: string[]; openings?: boolean; productName?: string | null } = {}): MechanicalReport {
   const units = unitsOf(sections);
   const wordCountAll = draftWordCount({ sections });
@@ -2295,8 +2332,12 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
   const cadence_flag = words >= 300 && cadence_cv !== null && cadence_cv < spec.cadence_floor_cv;
   const and_then_count = (allText.match(/\band then\b/gi) ?? []).length;
 
+  const fk_grade = fleschKincaidGrade(proseText);
   const hard_fail_reasons: string[] = [];
   for (const t of tier0) hard_fail_reasons.push(`tier0:${t.tell} x${t.count}`);
+  // the reader is scrolling or skimming, cold (rule 40): a piece above its format's reading grade goes back to the writer
+  const ceiling = GRADE_CEILING[spec.family];
+  if (fk_grade !== null && words >= GRADE_MIN_WORDS && fk_grade > ceiling) hard_fail_reasons.push(`readability: grade ${fk_grade.toFixed(1)} is above the ${spec.family} ceiling of ${ceiling} (rule 40: words a ten-year-old knows and shorter sentences, with every fact kept)`);
   // Tier 0 owner tells already fail on their own; the stack is about the Tier 1 patterns and words, per piece
   if (ownerStack >= OWNER_STACK) hard_fail_reasons.push(`owner_stack: ${ownerStack} of the owner's tells or words in one piece (§7.1)`);
   if (score >= TELL_THRESHOLDS.hard_fail) hard_fail_reasons.push(`tell_score ${score} >= ${TELL_THRESHOLDS.hard_fail} per 300 words`);
@@ -2307,7 +2348,7 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
     flags,
     hard_fail: hard_fail_reasons.length > 0,
     hard_fail_reasons,
-    fk_grade: fleschKincaidGrade(proseText),
+    fk_grade,
     cadence_cv,
     cadence_flag,
     and_then_count,

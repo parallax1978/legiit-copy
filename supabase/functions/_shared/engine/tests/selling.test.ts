@@ -1,11 +1,11 @@
 import { assert, assertEquals } from "@std/assert";
 import { ARGUMENT_SELECTION, CLAIMS_AND_FACTUAL_REVIEW, COPY_CHIEF_RUBRIC, PROOF_PLACEMENT, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v17.ts";
-import { draftPrompt } from "../prompts/draft.v15.ts";
-import { revisePrompt } from "../prompts/revise.v15.ts";
-import { editorialPrompt } from "../prompts/editorial.v16.ts";
+import argumentPrompt from "../prompts/argument.v18.ts";
+import { draftPrompt } from "../prompts/draft.v16.ts";
+import { revisePrompt } from "../prompts/revise.v16.ts";
+import { editorialPrompt } from "../prompts/editorial.v17.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
-import offerPrompt from "../prompts/offer.v15.ts";
+import offerPrompt from "../prompts/offer.v16.ts";
 import researchPrompt from "../prompts/research.v11.ts";
 
 // The owner's rule: the copy sells the result (rankings, customers, sales, money) whether or not results are on file;
@@ -40,7 +40,7 @@ Deno.test("standard: the reviewers never treat an outcome promise, reasoning or 
 });
 
 Deno.test("prompts: every step that writes, reviews or plans copy carries the selling rules", () => {
-  assertEquals([argumentPrompt.version, draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version], [17, 15, 15, 16, 14, 15, 11]);
+  assertEquals([argumentPrompt.version, draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version], [18, 16, 16, 17, 14, 16, 11]);
   for (const [name, system] of [["argument", argumentPrompt.system], ["draft", draftPrompt.system], ["revise", revisePrompt.system], ["editorial", editorialPrompt.system], ["offer", offerPrompt.system]] as const) {
     assert(system.includes("8. Sell the result."), `${name} lacks rule 8`);
   }
@@ -344,7 +344,7 @@ Deno.test("standard: a common column stays as the reason-why, a named tool is de
   assert(editorialPrompt.system.includes("no note cuts the only line that carries part of the promise"));
   assert(!editorialPrompt.system.includes("is no reason: fail Gate A and point the do at what the reader's tool does not do."));
   const social = FORMATS.organic_social.sections.find((x) => x.id === "main")!;
-  assert(social.must_not.includes("a second call to action"));
+  assert(social.must_not.some((m) => m.includes("a second call to action")));
 });
 
 Deno.test("promise gate: a note, read only in sentences to the reader outside the offer, with the result noun as head", () => {

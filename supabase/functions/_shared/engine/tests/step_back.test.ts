@@ -13,9 +13,9 @@ import { analyzeDraft, openingMatches, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
 import { TellEditAuditItem } from "../schemas/tell_edit.ts";
-import { tellEditPrompt } from "../prompts/tell_edit.v13.ts";
-import { revisePrompt } from "../prompts/revise.v15.ts";
-import { editorialPrompt } from "../prompts/editorial.v16.ts";
+import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
+import { revisePrompt } from "../prompts/revise.v16.ts";
+import { editorialPrompt } from "../prompts/editorial.v17.ts";
 
 const blk = (id: string, text: string, type: Block["type"] = "paragraph"): Block => ({ id, type, text, items: null, meta: null });
 const sec = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
@@ -84,18 +84,19 @@ Deno.test("the social post: the lead-in never carries the product, the main poin
   const spec = FORMATS.organic_social;
   const lead = spec.sections.find((s) => s.id === "lead_in")!;
   const main = spec.sections.find((s) => s.id === "main")!;
-  assert(lead.must.some((m) => m.includes("never the product's work: the product, by name, by \"it\" or by its own terms, waits for the main points")));
+  assert(lead.must.some((m) => m.includes("never the product, its work or its words")));
   assert(lead.must_not.some((m) => m.startsWith("the product named, used or pointed at")));
-  assert(main.must.some((m) => m.includes("that sentence names the product, is the first sentence about it in the post, and survives every later edit")));
-  assert(main.must.some((m) => m.startsWith("the mechanism in at most two short sentences")));
-  assert(main.must.some((m) => m.startsWith("every paragraph stands on its own: the lead-in is chosen later from three")));
-  for (const t of ["a lesson in how the reader's trade works", "two sentences built on one frame", "a pair of short sentences that land a moral"]) assert(main.must_not.some((m) => m.startsWith(t)), t);
-  assertStringIncludes(FORMAT_SPECS, "in the main points, never in the lead-in, and that sentence survives every edit; the mechanism as one idea in the reader's words, in at most two short sentences (rule 1)");
-  assertStringIncludes(FORMAT_SPECS, "a lesson in how the reader's trade works; two sentences built on one frame; a pair of short sentences that land a moral; the product named or pointed at in the lead-in;");
+  assert(main.must.some((m) => m.includes("that sentence is the first sentence about the product in the post and survives every later edit")));
+  assert(main.must.some((m) => m.startsWith("how it works in at most two short sentences")));
+  assert(main.must.some((m) => m.includes("every paragraph stands on its own")));
+  for (const t of ["a lesson in how his trade works", "two sentences built on one frame", "a pair of short sentences that land a moral"]) assert(main.must_not.some((m) => m.includes(t)), t);
+  assertStringIncludes(FORMAT_SPECS, "with its name before anything else about it, and that sentence survives every edit; how it works in two short sentences at most");
+  assertStringIncludes(FORMAT_SPECS, "a lesson in how his trade works; the product named or pointed at in the lead-in;");
+  assertStringIncludes(FORMAT_SPECS, "two sentences built on one frame; a pair of short sentences that land a moral;");
 });
 
 Deno.test("prompts: the tell edit reads for the lecture and the frame pair and keeps the speaker's call; revise and the copy chief protect the introduction", () => {
-  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version], [13, 15, 16]);
+  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version], [14, 16, 17]);
   for (const t of [`"lecture", in a short piece, a lesson in how the reader's trade works or a mechanism told in more than two sentences`, `"frame_pair", two sentences built on one frame`, `a pair of short sentences that land a moral or a verdict on the reader's way: "The writer did the job he was given. The research stopped one step early."`, `A first-person call ("I think the research is done when...", "I'd rather", "I built it to") is the speaker's conviction (rule 8), never a hedge`, "never rewritten as an instruction to the reader", "the main points' introduction sentence is never cut"]) assertStringIncludes(tellEditPrompt.system, t);
   assertEquals(TellEditAuditItem.parse({ ref: "main-2", line: "x", kind: "lecture", keep: false }).kind, "lecture");
   assertEquals(TellEditAuditItem.parse({ ref: "main-2", line: "x", kind: "frame_pair", keep: false }).kind, "frame_pair");
