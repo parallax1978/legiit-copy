@@ -48,9 +48,11 @@ What they did, and what you do:
 - Know what he wants before you write a line (Schwartz). You cannot make him want something. You find the want he already has, in his words, and aim it at the product. The piece has one idea, and every line serves it.
 - Tell him what happened (Halbert, Carlton). A story he can see: a day, a place, a number, a person doing one thing. What you saw, what you tried, what you found. The turn to the product is a cause ("so I built", "then I found"), never a pitch.
 - Introduce the product in one plain sentence with its name: what it is and what it does for him, the way you would tell a friend across a table. No labels from its screens, no steps, no scores, no terms from the tools of his trade.
-- Prove it the way a friend proves it (Hopkins, Bencivenga, Ogilvy): one thing he can check himself with what he has at hand; one run or one case with its numbers, from the facts you are given; the reason it works, in one breath. Every fact is there to make him feel something (relief, hope, the dread of more waste, the picture of having it). A fact that only informs gets cut.
+- Prove it the way a friend proves it (Hopkins, Bencivenga, Ogilvy): one thing he can check himself with what he has at hand; one run or one case with its numbers, from the facts you are given; the reason it works, in one breath. Pick the fact that proves the idea: a number that argues against it (a huge search an information page could never win, when the idea is pages he can win that pay) stays out, however big it is. Every fact is there to make him feel something (relief, hope, the dread of more waste, the picture of having it). A fact that only informs gets cut.
 - Make it slide (Sugarman, Caples): a short first sentence, each line making him read the next, no windup, no summary, the specifics out in the open.
 - Ask once (every one of them): what to do, where, and what he gets.
+
+Talk to him as "you", about his pages, his clients, his money; "sites", "SEOs" and "we" are not him. In a post or an email, the first two lines are all that shows before he taps to read more: they carry the idea in his words, with no word he would ask about, and a line a reader with his tool open can answer "not me" to is the wrong line.
 
 The words: words a ten-year-old knows; short sentences, with one long one where the feeling needs it; a noun he can picture; a verb someone does; the short word for the thing (buy, not purchase; show, not demonstrate; read, not interpret); never the passive voice (a page is picked by nobody, so say who picked it); nothing a cold reader would stop and ask "what's that?" about. Sell at full strength: a fact you are given is said plainly, with no "may", "can help", "designed to", "aims to". The claim is never bigger than its fact, and never smaller.`;
 
@@ -61,7 +63,11 @@ export const NEVER = `What sends a draft back:
 - An objection the reader did not raise, a story that is not on file, a description of him that is not in his words.
 - Anything added to the deal: a bonus, a discount, a deadline, a guarantee or a number the deal does not state. The deal is said as given, once, where the piece puts it.
 - Em dashes, emojis, hashtags, markdown headings, bold-label-colon bullets ("**Speed:** ..."), placeholders ("[Product Name]"), notes to the client, options, alternatives, stage directions, an explanation of what you did.
-- A windup ("Here's the thing", "In today's world"), a closer that restates the piece, a teaser that withholds nothing specific, a point said twice in new words, a line built to be quoted (a maxim, a slogan, a reframe, a moral in parentheses), a credential as a sentence of its own, a confession that a proof, a result, a review or a customer does not exist yet, or that the product or its example is new or unlaunched when the line is true without it.
+- A windup ("Here's the thing", "In today's world"), a closer that restates the piece, a teaser that withholds nothing specific, a point said twice in new words, a line built to be quoted (a maxim, a slogan, a reframe, a moral in parentheses), a credential as a sentence of its own, a confession that a proof, a result, a review or a customer does not exist yet, or that the product or its example is new or unlaunched when the line is true without it (a fact line's "planned" business "with no website yet" is said as what it is: "an espresso bean subscription").
+- The reader sent to pay a writer, hire a writer or write by hand when the product writes the page: the page is written, and the writer's fee is the old way's cost, named once at most.
+- A word from the product's own screens or fact lines used as a label (its plan names, decision names, "brief", "evidence", "fetched", "claim", credits, clusters, groups, the steps of its process) or a metric's name from his tools ("score", "difficulty", "volume", "intent", "authority", "CPC"): say what he gets and what the old way gave him in his own words, and name the tool's number once at most, in plain words.
+- A denial that plants the doubt it denies ("nothing is made up", "no fluff", "not a gimmick") when no reader raised it.
+- A fact that argues a different problem than the idea names: every line serves the idea.
 - Six words in a row from any exemplar or example you were shown.
 - The owner's tells below. Two in one piece fail it.`;
 
@@ -86,7 +92,7 @@ const LEAD_TYPE_WORDS: Record<LeadType, string> = {
   promise: "the result he wants, with its reason beside it",
   problem_solution: "his trouble in his own words, then the way out",
   secret: "the thing he does not know that explains his trouble",
-  proclamation: "a flat claim he would argue with, then the proof",
+  proclamation: "a flat statement he would argue with, made of a fact (a number, a thing that happened), never a maxim or a slogan, then the proof",
   story: "what happened, with a day, a place and a number",
 };
 

@@ -16,6 +16,9 @@ import { verbatimKey } from "../research/answers.ts";
 import { GRADE_CEILING, GRADE_CEILING_BY_FORMAT } from "../tells.ts";
 import type { GenerationOptions } from "./options.ts";
 
+/** A ledger reference as the dossier may hold it ("L:<id>", "[[L:<id>]]" or the bare id) reduced to the id. */
+const ledgerId = (ref: string) => ref.replace(/^\[\[|\]\]$/g, "").replace(/^L:/, "");
+
 const clip = (s: string | null | undefined, n: number) => (s ? (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s) : "");
 
 export interface Speaker {
@@ -115,7 +118,7 @@ export function readerWordsText(d: Dossier | null, claims: Pick<ClaimRow, "id" |
     ...verbatims.map((v) => `  ${v.id}${tagOf(v.text)} [${v.tags.join(", ")}] "${clip(v.text, 320)}"`),
     d.objection_map.length ? `Objections he raises (the only ones the piece may raise or answer):\n${d.objection_map.map((o) => `  - ${o.text}`).join("\n")}` : `Objections he raises: none on file; raise none.`,
     d.story_inventory.length ? `Stories you may tell (the only ones):\n${d.story_inventory.map((s) => `  - ${s.event}${s.date ? ` (${s.date})` : ""}${s.numbers ? `; numbers: ${s.numbers}` : ""}${s.people ? `; people: ${s.people}` : ""}`).join("\n")}` : `Stories you may tell: none on file; tell none.`,
-    d.proof_inventory.length ? `Proof on file:\n${d.proof_inventory.map((p) => `  - ${p.claim}${p.ledger_ref ? ` [[L:${p.ledger_ref}]]` : " (no fact line: not usable as a fact)"}`).join("\n")}` : "",
+    d.proof_inventory.length ? `Proof on file:\n${d.proof_inventory.map((p) => `  - ${p.claim}${p.ledger_ref ? ` [[L:${ledgerId(p.ledger_ref)}]]` : " (no fact line: not usable as a fact)"}`).join("\n")}` : "",
     d.competitor_table.length ? `What the others say: ${d.competitor_table.map((c) => `${c.name}${c.headline_outcome ? ` ("${clip(c.headline_outcome, 90)}")` : ""}`).join("; ")}` : "",
   ].filter(Boolean).join("\n");
 }
@@ -179,7 +182,7 @@ export function factsText(claims: ClaimRow[], spec: FormatSpec | null = null): s
     if (c.flag && c.user_decision !== "keep") notes.push("a note for the user is pending on this line; the copy says it at full strength and takes no rewrite from the note");
     return `- [[L:${c.id}]] ${rowFacts(c.claim_text)}${notes.length ? ` (${notes.join("; ")})` : ""}`;
   });
-  return `THE FACTS (every number, name, date, price, quote, result and credential the piece may use, each with its tag written right after it; a line is the fact, not the wording: keep its numbers and names and the words that bound a number, and say the rest in your own words to him; a sentence that repeats a line's phrasing is sent back; nothing outside this list exists)\n${lines.join("\n")}`;
+  return `THE FACTS (every number, name, date, price, quote, result and credential the piece may use, each with its tag written right after it; a line is the fact, not the wording: keep its numbers and names and the words that bound a number, and say the rest in your own words to him; a sentence that repeats a line's phrasing is sent back; a "could", "may" or "can help" inside a line is the line's wording, not the fact, so the piece says what the product does in the indicative; nothing outside this list exists)\n${lines.join("\n")}`;
 }
 
 const DEAL_TYPES = new Set(["continuity_trial", "price_discount", "free", "guarantee"]);
