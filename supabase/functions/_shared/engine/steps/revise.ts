@@ -5,7 +5,7 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
-import { revisePrompt, type ReviseArgs } from "../prompts/revise.v14.ts";
+import { revisePrompt, type ReviseArgs } from "../prompts/revise.v15.ts";
 import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
@@ -44,16 +44,19 @@ export const reviseStep: StepFn = async (ctx) => {
   const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, retryNote: null };
   const run = async (retryNote: string | null) => {
     const res = await callStep(ctx, "revise", revisePrompt, { ...args, retryNote }, RevisionOutput, `revise ${cycle}${retryNote ? " (retry)" : ""}`);
-    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise);
+    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise, { productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null });
     const unknown = unknownLedgerRefs(rec.sections, known);
     return { res, rec, unknown };
   };
 
   let r = await run(null);
-  if (!r.rec.doNotTouch.ok || r.unknown.length) {
+  if (!r.rec.doNotTouch.ok || r.unknown.length || r.rec.sentencesLost.length || r.rec.productKept.length) {
+    // one retry with the desk's findings; a second miss keeps the reverted blocks (fix lost) and the pipeline goes on
     const note = [
       ...r.rec.doNotTouch.violated.map((q) => `This DO NOT TOUCH line changed or disappeared; return it exactly: "${q}"`),
       ...(r.unknown.length ? [`These ledger ids do not exist or were dropped by the user: ${r.unknown.join(", ")}. Use only ids shown in the ledger; cut the claim otherwise.`] : []),
+      ...r.rec.sentencesLost.map((x) => `In block ${x.block} you changed or cut sentences no note quotes, so the desk reverted the whole block and your fix with it. Change only the quoted sentence and return these exactly as they were: ${x.lost.map((q) => `"${q}"`).join(" ")}`),
+      ...r.rec.productKept.map((b) => `Block ${b} introduces the product by name (rule 38); your revision left the piece with no line that names it, so the desk kept the block as written. Keep the introduction and change only what the note quotes.`),
     ].join("\n");
     r = await run(note);
   }

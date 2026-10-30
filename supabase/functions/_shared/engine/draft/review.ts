@@ -10,7 +10,7 @@ import { ClaimType, LEDGER_TAG } from "../schemas/common.ts";
 import { blockText, blocksQuoted, droppedClaimIds, normalizeQuote, readerText, verifyDoNotTouch, type DoNotTouchResult } from "./ledger.ts";
 import { stripNeverTells } from "./never_tells.ts";
 import { admissionsAdded, admissionsIn } from "./admissions.ts";
-import { ownerTellsIn } from "../tells.ts";
+import { countWords, ownerTellsIn, sentences } from "../tells.ts";
 import { promiseOverlap, statesPromise } from "./tell_edit.ts";
 
 type Flag = NonNullable<StepEffects["flags"]>[number];
@@ -342,6 +342,10 @@ export interface Reconciled {
   sections: Section[];
   /** blocks the model changed without any note referencing them, or that gained a weakening admission; restored to the original */
   reverted: string[];
+  /** blocks reverted because a sentence no note quotes changed or vanished in them (revise discipline 1): the block and the sentences lost */
+  sentencesLost: { block: string; lost: string[] }[];
+  /** blocks that held the product's introduction and would have left the piece with no line that names it: kept as written, rule 38 */
+  productKept: string[];
   /** blocks a revision gave a weakening admission ("a planned subscription", "hasn't launched yet"): reverted or dropped, rule 12 */
   admissions: string[];
   /** blocks that carried the promise and would have left the piece with no line that states it: kept as written, rule 8 */
@@ -360,7 +364,73 @@ export interface Reconciled {
  * - Removed blocks are allowed only when referenced; otherwise restored in place.
  * - DO NOT TOUCH quotes present before must be present after; a violation is returned for the step to fail on.
  */
-export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[], promise?: Set<string>): Reconciled {
+/** Five words in a row of `a` that `b` also holds: a note's quote that cuts across a sentence still covers it. */
+function sharesRun(a: string, b: string, n = 5): boolean {
+  const w = a.split(" ");
+  for (let i = 0; i + n <= w.length; i++) if (b.includes(w.slice(i, i + n).join(" "))) return true;
+  return false;
+}
+
+/** The words of a normalized sentence or quote, punctuation off, for matching across a sentence boundary. */
+const wordsOf = (t: string) => t.toLowerCase().match(/[a-z0-9$%'’]+/g) ?? [];
+
+/** A quote that starts in the tail of sentence `n` or ends in its head (three words or more) covers it. */
+function overlapsEdge(n: string, q: string, min = 3): boolean {
+  const a = wordsOf(n);
+  const b = wordsOf(q);
+  for (let k = Math.min(a.length, b.length); k >= min; k--) {
+    if (a.slice(-k).join(" ") === b.slice(0, k).join(" ")) return true;
+    if (a.slice(0, k).join(" ") === b.slice(-k).join(" ")) return true;
+  }
+  return false;
+}
+
+/** The share of `orig`'s distinct words that one sentence of `after` holds: a sentence touched lightly (a pronoun made plain) is kept, a sentence replaced or cut in half is not. */
+function bestContainment(orig: string, after: string[]): number {
+  const w = Array.from(new Set(wordsOf(orig)));
+  if (!w.length) return 1;
+  let best = 0;
+  for (const s of after) {
+    const set = new Set(wordsOf(s));
+    const shared = w.filter((x) => set.has(x)).length / w.length;
+    if (shared > best) best = shared;
+  }
+  return best;
+}
+
+/** How much of an unquoted sentence's distinct words a revised sentence must keep for the sentence to count as returned. */
+export const SENTENCE_KEPT_SHARE = 0.75;
+
+/**
+ * The sentences of a block that no note quotes and that the revision did not return (revise discipline 1: change only
+ * the sentence a note quotes). A sentence is returned when it appears as it was, or when one revised sentence keeps
+ * at least SENTENCE_KEPT_SHARE of its words (a pronoun made plain after the sentence before it changed is a light
+ * touch; a sentence replaced is not). A fragment under three words is not a sentence.
+ */
+export function unquotedSentencesLost(before: Section["blocks"][number], after: Section["blocks"][number], quotes: string[]): string[] {
+  const qs = quotes.map(normalizeQuote).filter(Boolean);
+  const afterText = normalizeQuote(blockText(after));
+  const afterSentences = sentences(readerText(blockText(after))).map(normalizeQuote);
+  const lost: string[] = [];
+  for (const s of sentences(readerText(blockText(before)))) {
+    const n = normalizeQuote(s);
+    if (!n || countWords(n) < 3) continue;
+    if (qs.some((q) => n.includes(q) || q.includes(n) || sharesRun(n, q) || overlapsEdge(n, q))) continue;
+    if (afterText.includes(n) || bestContainment(n, afterSentences) >= SENTENCE_KEPT_SHARE) continue;
+    lost.push(s.trim());
+  }
+  return lost;
+}
+
+/** The first block whose text names the product: its introduction (rule 38). */
+function productBlock(sections: Section[], productName: string | null | undefined): string | null {
+  const name = normalizeQuote(productName ?? "");
+  if (!name) return null;
+  for (const s of sections) for (const b of s.blocks) if (normalizeQuote(blockText(b)).includes(name)) return b.id;
+  return null;
+}
+
+export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[], promise?: Set<string>, opts: { productName?: string | null } = {}): Reconciled {
   const beforeIds = new Set(before.map((s) => s.section_id));
   const afterIds = new Set(revision.sections.map((s) => s.section_id));
   const missing = [...beforeIds].filter((id) => !afterIds.has(id));
@@ -383,9 +453,16 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
     }
   }
 
+  // the product's introduction stays (rule 38): when the revision would leave no block that names the product, the
+  // block that introduced it keeps its words, whatever note asked to change or cut it
+  const productKept: string[] = [];
+  const intro = productBlock(before, opts.productName);
+  if (intro && !productBlock(revision.sections, opts.productName)) carried.add(intro);
+
   const diff = diffBlocks(before, revision.sections);
   const reverted: string[] = [];
   const admissions: string[] = [];
+  const sentencesLost: Reconciled["sentencesLost"] = [];
   const bySection = new Map(revision.sections.map((s) => [s.section_id, s]));
   // a new block that brings a weakening admission is dropped (rule 12): an edit cuts one, never writes one
   const keepNew = (b: Section["blocks"][number]) => {
@@ -410,7 +487,8 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
         const rb = rev.blocks[cursor++];
         if (diff.changed.includes(ob.id) && carried.has(ob.id)) {
           reverted.push(ob.id);
-          promiseKept.push(ob.id);
+          if (ob.id === intro) productKept.push(ob.id);
+          else promiseKept.push(ob.id);
           blocks.push(ob);
         } else if (diff.changed.includes(ob.id) && !referenced.has(ob.id)) {
           reverted.push(ob.id);
@@ -420,10 +498,15 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
           reverted.push(ob.id);
           admissions.push(ob.id);
           blocks.push(ob);
+        } else if (diff.changed.includes(ob.id) && unquotedSentencesLost(ob, rb, quotes).length) {
+          // a rewrite that reached past the quoted sentence into the rest of the block is reverted whole (discipline 1)
+          reverted.push(ob.id);
+          sentencesLost.push({ block: ob.id, lost: unquotedSentencesLost(ob, rb, quotes) });
+          blocks.push(ob);
         } else blocks.push(rb);
       } else if (!referenced.has(ob.id) || carried.has(ob.id)) {
         reverted.push(ob.id);
-        if (carried.has(ob.id)) promiseKept.push(ob.id);
+        if (carried.has(ob.id)) (ob.id === intro ? productKept : promiseKept).push(ob.id);
         blocks.push(ob);
       }
     }
@@ -436,7 +519,7 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
 
   const finalDiff = diffBlocks(before, sections);
   const dnt = verifyDoNotTouch(doNotTouch, before, sections);
-  return { sections, reverted, admissions, promiseKept, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
+  return { sections, reverted, sentencesLost, productKept, admissions, promiseKept, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
 }
 
 // ---------------------------------------------------------------- ship

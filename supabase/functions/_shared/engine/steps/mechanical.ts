@@ -113,7 +113,7 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
   // the offer's own words are exempt here exactly as in the tell edit, or the stack would loop revisions on them
   const exemptTerms = exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name);
   // the tools the comparative ledger rows name join the talking-tool rule's nouns, as in the tell edit
-  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms, toolNames: toolNamesFrom(ctx.claims ?? [], exemptTerms) }));
+  const report = MechanicalReport.parse(analyzeDraft(sections, ctx.format, { exemptTerms, toolNames: toolNamesFrom(ctx.claims ?? [], exemptTerms), productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null }));
   // the piece says the argument's promise (rule 8): a draft that only describes the product, or says half a promise of
   // two results, carries a note to the revision with the line to rewrite. A note, not a hard fail: the match is on
   // words, and a piece that says the promise in other words never costs a review cycle for it

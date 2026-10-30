@@ -737,7 +737,7 @@ const OWNER = new Set(TELLS.filter((t) => t.owner).map((t) => t.name));
  * each opening's own tells (the opening rules once per rule for each lead in its place), and the piece's repeats
  * less the one repeat per piece the detector lets go. `toolNames` extends the talking-tool rule (tells.ts toolNamesFrom).
  */
-export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms: string[], toolNames: string[] = []): number {
+export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms: string[], toolNames: string[] = [], productName: string | null = null): number {
   const leadId = editsLeads(draft, spec);
   const sections = [
     ...draft.sections.filter((s) => s.section_id !== leadId),
@@ -746,7 +746,7 @@ export function ownerTellCount(draft: DraftOutput, spec: FormatSpec, exemptTerms
   // the opening rules read each lead in the lead section's place (openingFindings), never the leads laid end to end
   const r = analyzeDraft(sections, spec, { exemptTerms, openings: false });
   const units = editableUnits(draft, spec);
-  const openings = new Set(openingFindings(units, draft, spec, toolNames).filter((f) => f.counted).map((f) => `${f.opening}\u0000${f.tell}`));
+  const openings = new Set(openingFindings(units, draft, spec, toolNames, productName).filter((f) => f.counted).map((f) => `${f.opening}\u0000${f.tell}`));
   // the alternative openings repeat each other by design: repeats are counted per reading (repeatFindings)
   const own = r.flags.filter((f) => OWNER.has(f.tell) && f.tell !== "repeated_phrase" && f.tell !== "slogan_couplet").reduce((n, f) => n + f.count, 0) +
     coupletFindings(units, draft, spec).length + openings.size;
@@ -978,6 +978,7 @@ const OPENING_SEEN: Record<OpeningTell, string> = {
   closing_verdict: "line 1 ends on a verdict about the fact instead of the fact",
   slogan_rehook: "a slogan line in the opening",
   talking_tool: "a tool, score or list is the subject that says, judges or gives",
+  unintroduced_product: "the product is pointed at (\"it\", \"this tool\") before the piece says what it is",
 };
 
 export interface OpeningFinding {
@@ -996,7 +997,7 @@ export interface OpeningFinding {
  * (the chosen lead and every alternative, never two together), or the sections as they stand when there are no leads.
  * One opening per piece: an email of a sequence, an ad of a set, a webinar's page, reminders and presentation.
  */
-export function openingFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, toolNames: string[] = []): OpeningFinding[] {
+export function openingFindings(units: EditUnit[], draft: DraftOutput, spec: FormatSpec, toolNames: string[] = [], productName: string | null = null): OpeningFinding[] {
   const leadId = editsLeads(draft, spec);
   const leadIds = Array.from(new Set(units.filter((u) => u.owner === "lead").map((u) => u.ownerId)));
   const first = draft.chosen_lead_id && leadIds.includes(draft.chosen_lead_id) ? draft.chosen_lead_id : leadIds[0];
@@ -1014,7 +1015,7 @@ export function openingFindings(units: EditUnit[], draft: DraftOutput, spec: For
       // leads with no text leave the lead section as it stands: it is still the opening, never the body after it
       blocks: s.section_id === leadId ? (lead ? blocksOf(units.filter((u) => u.owner === "lead" && u.ownerId === lead)) : s.blocks) : blocksOf(units.filter((u) => u.owner === "section" && u.ownerId === s.section_id)),
     }));
-    for (const h of openingTellsIn(sections, spec, { toolNames })) {
+    for (const h of openingTellsIn(sections, spec, { toolNames, productName })) {
       const key = `${h.blockId}\u0000${h.tell}\u0000${h.match}`;
       if (seen.has(key)) continue;
       seen.add(key);

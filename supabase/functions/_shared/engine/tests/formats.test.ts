@@ -127,11 +127,14 @@ Deno.test("platform limits are present where the platform fixes them", () => {
   assertEquals(FORMATS.tiktok_reels.platform_limits?.spoken_words, 90);
 });
 
-Deno.test("withLength: longer raises bands and their floors, shorter lowers them, tiny sections and platform-capped families stay", () => {
+Deno.test("withLength: longer raises ceilings and never floors (a social post by a quarter), shorter lowers both, tiny sections and platform-capped families stay", () => {
   const social = getFormat("organic_social");
   const longer = withLength(social, "longer");
-  assertEquals(longer.length_band_words, [280, 600]);
-  assertEquals(longer.sections.find((s) => s.id === "main")!.band_words, [196, 420]);
+  assertEquals(longer.length_band_words, [60, 500]);
+  assertEquals(longer.sections.find((s) => s.id === "main")!.band_words, [30, 350]);
+  const letter = withLength(getFormat("sales_letter"), "longer");
+  const body = getFormat("sales_letter").sections.find((s) => s.band_words[1] >= 40)!;
+  assertEquals(letter.sections.find((s) => s.id === body.id)!.band_words, [body.band_words[0], Math.round(body.band_words[1] * 1.5)]);
   assertEquals(longer.sections.find((s) => s.id === "cta")!.band_words, [4, 25]); // too small to scale
   assertEquals(social.sections.find((s) => s.id === "main")!.band_words, [30, 280]); // the spec itself is untouched
   const shorter = withLength(social, "shorter");

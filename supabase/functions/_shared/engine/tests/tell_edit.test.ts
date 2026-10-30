@@ -10,7 +10,7 @@ import { STEPS } from "../steps/index.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, factFreeSentenceCut, groupUnits, guardEdit, ledgerWordingFindings, openPoints, ownerTellCount, rebuildDraft, removeEmojis, removeHashtags, renderUnits, repeatFindings, replaceEmDashes, stripNeverTells, syncChosenLead, type EditUnit } from "../draft/tell_edit.ts";
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { runTellEdit, TELL_EDIT_CALL_ESTIMATE_MS } from "../steps/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v12.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v13.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -131,7 +131,7 @@ function socialDraft(chosen: string | null): DraftOutput {
     { id: "lead-c", lead_type: "proclamation" as const, reader_hypothesis: "r3", blocks: [blk("lead-c-1", "You paid a writer for a page that never ranked.", "hook")] },
   ];
   const leadSection = chosen ? { section_id: "lead_in", title: null, blocks: leads.find((l) => l.id === chosen)!.blocks.map((b) => ({ ...b, meta: { lead_id: chosen, lead_type: "secret" } })) } : provisionalLeadSection("lead_in", null, leads);
-  return assembleDraft({ spec, sections: [leadSection, sec("main", [blk("main-1", `It reads the pages that rank — then checks your links [[L:${A}]].`), blk("main-2", "", "bullets", ["Unlock the list ✅", "Build only the winners"])]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link. #SEO", "cta")])], leads, chosenLeadId: chosen, needsSource: [], keepOrder: true });
+  return assembleDraft({ spec, sections: [leadSection, sec("main", [blk("main-1", `Legiit Keywords reads the pages that rank — then checks your links [[L:${A}]].`), blk("main-2", "", "bullets", ["Unlock the list ✅", "Build only the winners"])]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link. #SEO", "cta")])], leads, chosenLeadId: chosen, needsSource: [], keepOrder: true });
 }
 
 Deno.test("units: with three leads the leads are edited and the lead section is rebuilt from them", () => {
@@ -165,7 +165,7 @@ Deno.test("backstop over units, and an emptied windup block is dropped", () => {
   const d = socialDraft(null);
   const units = editableUnits(d, FORMATS.organic_social);
   const b = backstopUnits(units);
-  assertEquals(b.units.find((u) => u.ref === "main-1")!.text, `It reads the pages that rank, then checks your links [[L:${A}]].`);
+  assertEquals(b.units.find((u) => u.ref === "main-1")!.text, `Legiit Keywords reads the pages that rank, then checks your links [[L:${A}]].`);
   assertEquals(b.units.find((u) => u.ref === "main-2::1")!.text, "Unlock the list");
   assertEquals(b.units.find((u) => u.ref === "cta-1")!.text, "Comment PLAN and I'll send the link.");
   assertEquals(b.edits.length, 3);
@@ -259,7 +259,7 @@ Deno.test("tell edit step: applies the editor's edits, backstops the rest, write
 
 Deno.test("tell edit step: clean copy comes back unchanged with no new version", async () => {
   const spec = FORMATS.organic_social;
-  const clean = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook")]), sec("main", [blk("main-1", `It reads the pages that rank and checks your links [[L:${A}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const clean = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook")]), sec("main", [blk("main-1", `Legiit Keywords reads the pages that rank and checks your links [[L:${A}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
   const res = await runTellEdit(ctxFor(clean), { call: editor(() => ({ edits: [], what_changed: [], already_clean: true })) });
   const out = TellEditOutput.parse(res.output);
   assertEquals(out.new_version, false);
@@ -275,7 +275,7 @@ Deno.test("tell edit step: edits the guards refuse are asked for once more, with
       calls++;
       if (calls === 1) {
         return { edits: [
-          { ref: "main-1", before: `It reads the pages that rank — then checks your links [[L:${A}]].`, after: "It reads the pages that rank, then checks your links.", tell: "em dash" },
+          { ref: "main-1", before: `Legiit Keywords reads the pages that rank — then checks your links [[L:${A}]].`, after: "Legiit Keywords reads the pages that rank, then checks your links.", tell: "em dash" },
           { ref: "lead-c-1", before: "never ranked", after: "ranked nowhere in 12 months", tell: "x" },
         ], what_changed: ["Removed an em dash"], already_clean: false };
       }
@@ -287,7 +287,7 @@ Deno.test("tell edit step: edits the guards refuse are asked for once more, with
   const out = TellEditOutput.parse(res.output);
   assertEquals(out.rejected.length, 2);
   const main = (res.effects!.newDraft!.blocks as DraftOutput).sections.find((s) => s.section_id === "main")!.blocks[0].text;
-  assertEquals(main, `It reads the pages that rank, then checks your links [[L:${A}]].`);
+  assertEquals(main, `Legiit Keywords reads the pages that rank, then checks your links [[L:${A}]].`);
 });
 
 Deno.test("tell edit step: a long piece edits part by part, checkpoints, and resumes from the checkpoint", async () => {
@@ -312,8 +312,8 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 // ---------------------------------------------------------------- the rules reach every prompt that writes copy
 
 import { draftPrompt } from "../prompts/draft.v15.ts";
-import { revisePrompt } from "../prompts/revise.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v15.ts";
+import { revisePrompt } from "../prompts/revise.v15.ts";
+import { editorialPrompt } from "../prompts/editorial.v16.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
 import offerPrompt from "../prompts/offer.v15.ts";
 import intakePrompt from "../prompts/intake.v13.ts";
@@ -335,7 +335,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [15, 14, 15, 14, 12, 15, 13]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [15, 15, 16, 14, 13, 15, 13]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("it is never a list or count of the product's steps or checks"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));
@@ -461,7 +461,7 @@ Deno.test("a lone dash span never lands on a hyphen; a line break matches only a
 Deno.test("rebuild keeps the runner-up leads' NEEDS SOURCE lines and follows a rewritten opening", () => {
   const d0 = socialDraft("lead-b");
   const d = { ...d0, needs_source: ["You paid a writer for a page that never ranked."] };
-  const units = editableUnits(d, FORMATS.organic_social).map((u) => (u.ref === "main-1" ? { ...u, text: "It reads the pages that rank and checks your links." } : u));
+  const units = editableUnits(d, FORMATS.organic_social).map((u) => (u.ref === "main-1" ? { ...u, text: "Legiit Keywords reads the pages that rank and checks your links." } : u));
   assertEquals(rebuildDraft(d, units, FORMATS.organic_social).needs_source, ["You paid a writer for a page that never ranked."], "lead-c's line is still in the piece");
   const rewritten = { ...d0, sections: d0.sections.map((s) => (s.section_id === "lead_in" ? { ...s, blocks: s.blocks.map((b) => ({ ...b, text: "A new opening the user wrote." })) } : s)) };
   const synced = syncChosenLead(rewritten, FORMATS.organic_social);
@@ -603,7 +603,7 @@ Deno.test("prompt: the tell edit request carries the cadence note only when the 
 Deno.test("tell edit step: a line the editor lists and leaves gets one more ask; a line it keeps on purpose stays", async () => {
   const seen: TellEditArgs[] = [];
   const spec = FORMATS.organic_social;
-  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook"), blk("lead_in-2", "A low difficulty score doesn't keep a keyword in.")]), sec("main", [blk("main-1", `It reads the pages that rank and checks your links [[L:${A}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const draft = assembleDraft({ spec, sections: [sec("lead_in", [blk("lead_in-1", "You paid a writer for a page that never ranked.", "hook"), blk("lead_in-2", "A low difficulty score doesn't keep a keyword in.")]), sec("main", [blk("main-1", `Legiit Keywords reads the pages that rank and checks your links [[L:${A}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
   const ctx = ctxFor(draft);
   let calls = 0;
   const res = await runTellEdit(ctx, {
@@ -613,7 +613,7 @@ Deno.test("tell edit step: a line the editor lists and leaves gets one more ask;
         return {
           audit: [
             { ref: "lead_in-2", line: "A low difficulty score doesn't keep a keyword in.", kind: "quote_card", keep: false },
-            { ref: "main-1", line: "It reads the pages that rank and checks your links", kind: "tool_tour", keep: true },
+            { ref: "main-1", line: "Legiit Keywords reads the pages that rank and checks your links", kind: "tool_tour", keep: true },
           ],
           edits: [],
           what_changed: [],

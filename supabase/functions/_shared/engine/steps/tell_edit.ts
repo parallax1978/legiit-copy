@@ -11,7 +11,7 @@
 import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v12.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v13.ts";
 import { exemptTermsFrom, toolNamesFrom } from "../tells.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, statesPromise, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { Candidate } from "../schemas/argument.ts";
@@ -90,7 +90,9 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const exemptTerms = exemptTermsFrom(ctx.offer.name, ctx.brief?.product_name);
   // the tools and metrics the comparative ledger rows name join the talking-tool rule's nouns (tells.ts toolNamesFrom)
   const toolNames = toolNamesFrom(ctx.claims ?? [], exemptTerms);
-  const before = ownerTellCount(source, spec, exemptTerms, toolNames);
+  // the product's name: the opening rule for a product pointed at before it is introduced (tells.ts unintroduced_product)
+  const productName = ctx.brief?.product_name ?? ctx.offer?.name ?? null;
+  const before = ownerTellCount(source, spec, exemptTerms, toolNames, productName);
   const cadence = flatCadence(source, spec);
   // the user's accepted wording for a ledger row ("rewrite") and, on a page that takes payment, the guarantee sentence
   // the offer block says to repeat are used as written: the editor leaves them alone
@@ -150,7 +152,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
     const mine = () => units.filter((u) => refs.has(u.ref));
     // the checker's list for this group: each text's own tells, what the whole piece says twice, and the opening tells
     // of each lead in its place (or of each piece's opening)
-    const openingsIn = (all: EditUnit[]) => openingFindings(all, source, spec, toolNames).filter((f) => refs.has(f.ref));
+    const openingsIn = (all: EditUnit[]) => openingFindings(all, source, spec, toolNames, productName).filter((f) => refs.has(f.ref));
     const findingsFor = (all: EditUnit[]) => {
       const mine = all.filter((u) => refs.has(u.ref));
       return [...unitFindings(mine, spec, exemptTerms), ...openingsIn(all).map(({ ref, tell, example }) => ({ ref, tell, example })), ...repeatFindings(all, source, spec, exemptTerms, promise).filter((f) => refs.has(f.ref)), ...coupletFindings(all, source, spec).filter((f) => refs.has(f.ref)), ...ledgerWordingFindings(mine, ctx.claims, spec)];
@@ -228,7 +230,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
   const rebuilt = rebuildDraft(source, units, spec);
   const changed = units.some((u, i) => u.text !== original[i].text) || JSON.stringify([rebuilt.sections, rebuilt.leads]) !== JSON.stringify([source.sections, source.leads]);
   const edited = changed ? rebuilt : source;
-  const after = changed ? ownerTellCount(edited, spec, exemptTerms, toolNames) : before;
+  const after = changed ? ownerTellCount(edited, spec, exemptTerms, toolNames, productName) : before;
   const lines = dedupe(whatChanged).slice(0, MAX_LIST);
   if (b.edits.length && !lines.some((l) => /dash|emoji|hashtag/i.test(l))) lines.push("Removed the em dashes, emojis and hashtags that were left");
   const output = TellEditOutput.parse({

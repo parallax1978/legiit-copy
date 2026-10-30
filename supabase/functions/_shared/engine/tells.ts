@@ -441,6 +441,13 @@ export const TELLS: TellRule[] = [
     note: "In lines 1-3 of the opening a tool, score, list or export is the subject of a verb of saying, judging, choosing or giving (said, rated, hides, hands you, left you, knows, picks, can't tell...). The nouns are the generic ones (score, rating, number, estimate, list, export, tool, report, dashboard, data...) plus the tools and metrics the offer's comparative ledger rows name, when the caller passes them. Measured (hook14, with the offer's names Ahrefs, Semrush, Google, volume, difficulty): engine 97 of 124 leads (73 with the generic nouns alone), human 0 of 842 openings, 4 of 6,572 held-out human paragraphs.",
   },
   {
+    tier: 1, name: "unintroduced_product", weight: 4, scope: "structural", owner: { tell: 18 },
+    regex: null,
+    example: "Then it reads the pages ranking for each group, and you get a build, improve or skip call on it. / In the tool I use, that price sits on every keyword.",
+    fix: "Say the promise with its reason or a number instead; the product waits for the body, which names it first in one plain sentence (rule 38). Example (a florist): not 'Then it texts the order to the driver, and you get a delivery slot.' but 'A bouquet ordered by noon is on the doorstep the same afternoon.'",
+    note: "In lines 1-5 of the opening, before the product's name has appeared in it, \"it\" (or \"this tool\", \"the app\", \"the tool I use\") is the actor of a verb of doing (reads, checks, tells, gives, writes, decides...): the reader is told what \"it\" does before he is told what it is (§7.1 tell 18, rule 38). Read only when the caller passes the product's name. Found in the owner's rejected post of 30 October (\"Then it reads the pages ranking for each group\").",
+  },
+  {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
       `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]["”’)]?\\s+)The truth is\\b`,
@@ -1560,8 +1567,15 @@ export function talkingToolPattern(toolNames: string[] = []): RegExp {
   return re;
 }
 
-export type OpeningTell = "reader_scene_opener" | "closing_verdict" | "slogan_rehook" | "talking_tool";
-export const OPENING_TELLS: readonly OpeningTell[] = ["reader_scene_opener", "closing_verdict", "slogan_rehook", "talking_tool"];
+export type OpeningTell = "reader_scene_opener" | "closing_verdict" | "slogan_rehook" | "talking_tool" | "unintroduced_product";
+export const OPENING_TELLS: readonly OpeningTell[] = ["reader_scene_opener", "closing_verdict", "slogan_rehook", "talking_tool", "unintroduced_product"];
+
+/**
+ * R5 (§7.1 tell 18, rule 38): in the opening, before the product's name has appeared in it, "it" (or "this tool", "the
+ * app", "the tool I use") is the actor of a verb of doing, or the product's work is pointed at: the reader is told what
+ * "it" does before he is told what it is.
+ */
+const UNINTRODUCED_RE = /(?:^|[,;:]\s+|\b(?:then|so|and|but|because|when)\s+)(?:it|this (?:tool|app|software|service|product|plan)|the (?:tool|app|software|service|product))\s+(?:reads?|checks?|tells?|gives?|makes?|keeps?|writes?|decides?|picks?|returns?|finds?|shows?|builds?|sends?|hands?|judges?|scores?|skips?|briefs?|runs?|does|takes?|looks?|puts?|pulls?|lists?|ranks?|sorts?|flags?|marks?|grades?|rates?|drafts?|plans?|maps?)\b|\b(?:the|this) (?:tool|app|software|service|product) (?:i|we) (?:use|built|made|run)\b/i;
 
 export interface OpeningMatch {
   tell: OpeningTell;
@@ -1580,7 +1594,7 @@ export interface OpeningMatch {
  * capped at three sentences, R3 on lines 1-5, R4 on lines 1-3. With `all`, every R3 sentence and every R4 line is
  * returned, not only the first.
  */
-export function openingMatches(lines: string[], opts: { toolNames?: string[]; all?: boolean } = {}): OpeningMatch[] {
+export function openingMatches(lines: string[], opts: { toolNames?: string[]; all?: boolean; productName?: string | null } = {}): OpeningMatch[] {
   const out: OpeningMatch[] = [];
   const hook = openingHook(lines[0] ?? "");
   const r1 = readerSceneOpener(hook);
@@ -1601,6 +1615,23 @@ export function openingMatches(lines: string[], opts: { toolNames?: string[]; al
     if (!m || (tools > 0 && !opts.all)) return;
     out.push({ tell: "talking_tool", line: i, match: m[0], at: m.index, first: tools++ === 0 });
   });
+  const name = (opts.productName ?? "").trim().toLowerCase();
+  if (name) {
+    let seenName = false;
+    let pointed = 0;
+    lines.slice(0, 5).forEach((ln, i) => {
+      if (seenName) return;
+      for (const s of openingSentences(ln)) {
+        if (s.toLowerCase().includes(name)) {
+          seenName = true;
+          break;
+        }
+        const m = UNINTRODUCED_RE.exec(s);
+        if (!m || (pointed > 0 && !opts.all)) continue;
+        out.push({ tell: "unintroduced_product", line: i, match: m[0].trim(), at: -1, first: pointed++ === 0 });
+      }
+    });
+  }
   return out;
 }
 
@@ -1700,12 +1731,12 @@ interface OpeningHit {
   counted: boolean;
 }
 
-function openingHits(units: Unit[], spec: FormatSpec, toolNames: string[]): OpeningHit[] {
+function openingHits(units: Unit[], spec: FormatSpec, toolNames: string[], productName: string | null = null): OpeningHit[] {
   const out: OpeningHit[] = [];
   const owned = ownerRegexRules(spec);
   for (const o of openingsOf(units, spec)) {
     const lines = o.lines.map((i) => openingLine(units[i]));
-    for (const m of openingMatches(lines.map((l) => l.text), { toolNames, all: true })) {
+    for (const m of openingMatches(lines.map((l) => l.text), { toolNames, all: true, productName })) {
       const l = lines[m.line];
       const from = m.at >= 0 ? m.at : l.text.indexOf(m.match);
       const example = from < 0 || !m.match.length
@@ -1723,9 +1754,9 @@ function openingHits(units: Unit[], spec: FormatSpec, toolNames: string[]): Open
  * The opening tells of a draft for the tell edit: every line the four rules flag, on its block, with the opening's
  * line 1 and whether the hit is the one the detector counts (the rule's first in that opening).
  */
-export function openingTellsIn(sections: Section[], spec: FormatSpec, opts: { toolNames?: string[] } = {}): { tell: OpeningTell; blockId: string; opening: string; piece: string; match: string; example: string; counted: boolean }[] {
+export function openingTellsIn(sections: Section[], spec: FormatSpec, opts: { toolNames?: string[]; productName?: string | null } = {}): { tell: OpeningTell; blockId: string; opening: string; piece: string; match: string; example: string; counted: boolean }[] {
   const units = unitsOf(sections);
-  return openingHits(units, spec, opts.toolNames ?? []).map((h) => ({ tell: h.tell, blockId: units[h.unit].blockId, opening: units[h.opening].blockId, piece: h.piece, match: h.match, example: h.example, counted: h.counted }));
+  return openingHits(units, spec, opts.toolNames ?? [], opts.productName ?? null).map((h) => ({ tell: h.tell, blockId: units[h.unit].blockId, opening: units[h.opening].blockId, piece: h.piece, match: h.match, example: h.example, counted: h.counted }));
 }
 
 /** The nouns after which the word before is a metric's name ("difficulty number", "volume column"). */
@@ -1836,7 +1867,7 @@ export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
  * `toolNames` extends the talking-tool rule's nouns with the offer's own (toolNamesFrom); `openings: false` leaves the
  * four opening rules out, for a lone line that is no piece's opening (an idiom, a habit, a suggested rewrite).
  */
-function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = [], opts: { toolNames?: string[]; openings?: boolean } = {}): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
+function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms: string[] = [], opts: { toolNames?: string[]; openings?: boolean; productName?: string | null } = {}): { flags: TellFlagOut[]; score: number; tier0: TellFlagOut[]; owner: number; ownerStack: number } {
   const ov = FORMAT_OVERRIDES[spec.id] ?? {};
   const allTexts = units.map((u) => u.text);
   // the owner's patterns and words skip quotations and testimonials (their words are kept as given)
@@ -1851,7 +1882,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const repeats = REPEAT_FAMILIES.has(spec.family) ? repeatedPhrases(ownerUnits, pieces, exempt) : { found: [], perText: ownerUnits.map(() => 0) };
   const couplets = sloganCouplets(ownerUnits, pieces);
   // the opening's four rules: each counts once per opening (as measured), on the text its first match is in
-  const opening = opts.openings === false ? [] : openingHits(units, spec, opts.toolNames ?? []);
+  const opening = opts.openings === false ? [] : openingHits(units, spec, opts.toolNames ?? [], opts.productName ?? null);
   const ownerAt = new Map(ownerUnits.map((u, i) => [u, i] as const));
   const openingPerText = new Map<string, number[]>(OPENING_TELLS.map((t) => [t, ownerUnits.map(() => 0)]));
   for (const h of opening) {
@@ -1895,7 +1926,8 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       case "reader_scene_opener":
       case "closing_verdict":
       case "slogan_rehook":
-      case "talking_tool": {
+      case "talking_tool":
+      case "unintroduced_product": {
         const counted = opening.filter((h) => h.tell === rule.name && h.counted);
         hit = { rule, count: counted.length, examples: trimExamples(counted.map((h) => h.example)) };
         break;
@@ -2249,14 +2281,14 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
  * rule's generic nouns; without them the rule reads the generic nouns alone. `openings: false` leaves the four opening
  * rules out, for a caller that reads the openings itself (the tell edit reads each lead in the lead section's place).
  */
-export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[]; toolNames?: string[]; openings?: boolean } = {}): MechanicalReport {
+export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; exemptTerms?: string[]; toolNames?: string[]; openings?: boolean; productName?: string | null } = {}): MechanicalReport {
   const units = unitsOf(sections);
   const wordCountAll = draftWordCount({ sections });
   const allText = units.map((u) => u.text).join("\n\n");
   const words = countWords(allText);
   const proseText = units.filter((u) => u.kind !== "display").map((u) => u.text).join("\n\n");
 
-  const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? [], { toolNames: opts.toolNames, openings: opts.openings });
+  const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? [], { toolNames: opts.toolNames, openings: opts.openings, productName: opts.productName });
   const gates = evaluateGates(sections, spec, opts);
 
   const cadence_cv = sentenceLengthCV(proseText);

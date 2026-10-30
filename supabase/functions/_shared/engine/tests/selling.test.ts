@@ -2,8 +2,8 @@ import { assert, assertEquals } from "@std/assert";
 import { ARGUMENT_SELECTION, CLAIMS_AND_FACTUAL_REVIEW, COPY_CHIEF_RUBRIC, PROOF_PLACEMENT, RULES } from "../prompts/standard.ts";
 import argumentPrompt from "../prompts/argument.v17.ts";
 import { draftPrompt } from "../prompts/draft.v15.ts";
-import { revisePrompt } from "../prompts/revise.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v15.ts";
+import { revisePrompt } from "../prompts/revise.v15.ts";
+import { editorialPrompt } from "../prompts/editorial.v16.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
 import offerPrompt from "../prompts/offer.v15.ts";
 import researchPrompt from "../prompts/research.v11.ts";
@@ -40,7 +40,7 @@ Deno.test("standard: the reviewers never treat an outcome promise, reasoning or 
 });
 
 Deno.test("prompts: every step that writes, reviews or plans copy carries the selling rules", () => {
-  assertEquals([argumentPrompt.version, draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version], [17, 15, 14, 15, 14, 15, 11]);
+  assertEquals([argumentPrompt.version, draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version], [17, 15, 15, 16, 14, 15, 11]);
   for (const [name, system] of [["argument", argumentPrompt.system], ["draft", draftPrompt.system], ["revise", revisePrompt.system], ["editorial", editorialPrompt.system], ["offer", offerPrompt.system]] as const) {
     assert(system.includes("8. Sell the result."), `${name} lacks rule 8`);
   }

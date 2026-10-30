@@ -16,7 +16,7 @@ import { editableUnits, openingFindings, ownerTellCount, unitFindings } from "..
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { blocksQuoted } from "../draft/ledger.ts";
 import { runTellEdit } from "../steps/tell_edit.ts";
-import type { TellEditArgs } from "../prompts/tell_edit.v12.ts";
+import type { TellEditArgs } from "../prompts/tell_edit.v13.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 
@@ -78,7 +78,8 @@ Deno.test("opening rules: the hooks the owner rejected are caught (rejected.txt,
   MechanicalReport.parse(r);
   assertEquals(r.owner_tells, 4);
   assert(r.hard_fail && r.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 4")), r.hard_fail_reasons.join("; "));
-  for (const t of OPENING_TELLS) {
+  // the fifth opening rule (a product pointed at before its name) is read only with the product's name, which this text has none of
+  for (const t of OPENING_TELLS.filter((x) => x !== "unintroduced_product")) {
     const f = r.flags.find((x) => x.tell === t)!;
     assertEquals([f.tier, f.weight, f.count], [1, 4, 1], t);
     assert(f.examples[0].length > 0 && ROUND_6.join(" ").includes(f.examples[0].replace(/^…|…$/g, "")), `${t}: ${f.examples[0]}`);
@@ -329,7 +330,7 @@ function editor(reply: (args: TellEditArgs, call: number) => z.input<typeof Tell
 
 Deno.test("tell edit step: the opening tells reach the editor with the ledger's tool names, and one left standing gets one more ask", async () => {
   const hook = "You paid a writer because Semrush rated the keyword easy.";
-  const draft = assembleDraft({ spec: FORMATS.organic_social, sections: [sec("lead_in", [blk("lead_in-1", hook, "hook")]), sec("main", [blk("main-1", `It reads the pages that rank and checks your links [[L:${L}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
+  const draft = assembleDraft({ spec: FORMATS.organic_social, sections: [sec("lead_in", [blk("lead_in-1", hook, "hook")]), sec("main", [blk("main-1", `Legiit Keywords reads the pages that rank and checks your links [[L:${L}]].`)]), sec("cta", [blk("cta-1", "Comment PLAN and I'll send the link.", "cta")])], leads: null, chosenLeadId: null, needsSource: [], keepOrder: true });
   const claims = [{ id: L, claim_type: "comparative", claim_text: "Ahrefs and Semrush hand you a keyword list and leave the decision to you.", role: "mechanism", user_decision: null, precision: null }] as unknown as StepContext["claims"];
   const seen: TellEditArgs[] = [];
   const res = await runTellEdit(ctxFor(draft, { claims }), {

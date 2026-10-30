@@ -14,7 +14,7 @@ import argumentPrompt from "../prompts/argument.v17.ts";
 import researchPrompt from "../prompts/research.v11.ts";
 import { draftPrompt } from "../prompts/draft.v15.ts";
 import { factualPrompt } from "../prompts/factual.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v15.ts";
+import { editorialPrompt } from "../prompts/editorial.v16.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW } from "../prompts/standard.ts";
 import { ledgerText } from "../draft/prompt_text.ts";
 import { ClaimRowInput, IntakeOutput, OfferSetup } from "../schemas/brief.ts";
@@ -190,7 +190,7 @@ Deno.test("every later step sees where a row's fact came from", () => {
 });
 
 Deno.test("prompts: the intake reads each source for what it is, the argument and research never build on a sample, the standard says where a fact comes from", () => {
-  assertEquals([intakePrompt.version, argumentPrompt.version, researchPrompt.version, draftPrompt.version, factualPrompt.version, editorialPrompt.version], [13, 17, 11, 15, 14, 15]);
+  assertEquals([intakePrompt.version, argumentPrompt.version, researchPrompt.version, draftPrompt.version, factualPrompt.version, editorialPrompt.version], [13, 17, 11, 15, 14, 16]);
   for (const t of [
     "Where a fact comes from (Section 8.1)",
     "A <source> tag that carries provenance= is already decided by the app; decide the rest yourself.",
