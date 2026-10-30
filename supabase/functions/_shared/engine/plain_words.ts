@@ -45,7 +45,7 @@ export const PLAIN_WORDS: readonly (readonly [string, string])[] = [
   ["therefore", "so"], ["transmit", "send"], ["transpire", "happen"], ["until such time as", "until"], ["utilization", "use"],
   ["utilize", "use"], ["validate", "confirm"], ["viable", "workable"], ["whereas", "since"], ["with reference to", "about"],
   ["with the exception of", "except for"], ["witnessed", "saw"], ["enquiries", "calls or emails"], ["inquiries", "calls or emails"],
-  ["enquiry", "a call or an email"], ["inquiry", "a call or an email"], ["commercial", "paying or for sale"], ["advertisers", "people who pay for ads"],
+  ["enquiry", "a call or an email"], ["inquiry", "a call or an email"], ["commercial", "paying or for sale"],
   // from the plain-language research
   ["a number of", "some"], ["abundance", "plenty"], ["accelerate", "speed up"], ["accompany", "go with"], ["accrue", "add up"],
   ["accumulate", "pile up"], ["acquire", "get or buy"], ["adversely impact", "hurt"], ["afford an opportunity", "let"], ["aforementioned", "cut it"],
