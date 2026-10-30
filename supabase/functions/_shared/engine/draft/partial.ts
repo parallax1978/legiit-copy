@@ -15,7 +15,7 @@ export const DRAFT_PARTIAL_VERSION = 1 as const;
 
 export const CompletedGroup = z.object({
   index: z.number().int().min(0),
-  kind: z.enum(["sections", "leads", "headline"]),
+  kind: z.enum(["sections", "leads", "headline", "whole"]),
   unit_ids: z.array(z.string()),
   sections: z.array(Section),
   leads: z.array(LeadVariant).nullable(),

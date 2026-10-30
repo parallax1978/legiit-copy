@@ -5,7 +5,7 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
-import { revisePrompt, type ReviseArgs } from "../prompts/revise.v18.ts";
+import { revisePrompt, type ReviseArgs } from "../prompts/revise.v19.ts";
 import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";

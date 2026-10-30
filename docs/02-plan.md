@@ -114,6 +114,8 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 3. Teaching set and eval briefs (1.9–1.12) in parallel with prompt tuning.
 4. The blind comparison admin page (1.13) and the first scored eval round.
 
+- [x] The writing steps rebuilt around what the masters did: a short writer's prompt (draft v19, revise v19), the material said plainly once with the facts deduped, whole exemplar pieces per format family, short pieces written whole in one call with the three openings written to the same body; the rulebook stays with the reviewers. The plain-words research merged into the detector and the tell edit (v16).
+
 ## Open decisions (user)
 
 | Decision | Default if not decided |

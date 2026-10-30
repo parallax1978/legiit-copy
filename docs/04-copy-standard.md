@@ -429,6 +429,8 @@ From three to ten samples of the client's own writing, selling copy preferred:
 
 Study what each one does; never reuse its words. Six words in a row from an exemplar, or from an example in Section 3, fail the mechanical check. Section 3 shows the openings; these show the jobs after them.
 
+The writer also reads whole pieces before it writes one: original posts, emails and ads from other trades, one per master's move, each named for the move it makes (`supabase/functions/_shared/engine/prompts/exemplars/`, one file per format family). They are the register the piece is written in; every fact in them belongs to its own made-up business, and six words in a row from one of them fail the mechanical check like the quotations below.
+
 - The speaker named, with the reason he is writing (Gary Halbert, the Caddy model letter): "My name is John Stebbins and I am a dentist here in Massillon. I've got a 2-year-old Caddy and it is in almost perfect shape and I have to get rid of it for reasons I'll tell you later."
 - Story as proof, with a doubter to beat (Gary Halbert, the dollar-bill letter, 1990): "I was living in Ohio at the time and my friends laughed at my idea. They thought it was a big joke."
 - The mechanism as one person doing one thing (Porter Stansberry, 2014): "Let's say you're a German and you want to buy oil from Saudi Arabia. You can't just pay for your oil in German marks (or the new euro currency), because the oil is priced in dollars. So you have to buy dollars first, then buy your oil."

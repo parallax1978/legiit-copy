@@ -32,6 +32,7 @@ import { draftWordCount } from "./render.ts";
 import { ADMISSION_TELL_RE } from "./draft/admissions.ts";
 import { itemShape, leadSectionId } from "./draft/plan.ts";
 import * as STANDARD_TEXT from "./prompts/standard.ts";
+import { allExemplarTexts } from "./prompts/exemplars/index.ts";
 
 // ---------------------------------------------------------------------------------------------------------------
 // Rule table
@@ -1356,6 +1357,13 @@ export function exemplarSources(): string[] {
       if (n >= EXEMPLAR_RUN && n <= 60) out.push(m[1]);
     }
   }
+  // the whole pieces the writer studies (prompts/exemplars), one sentence at a time
+  for (const t of allExemplarTexts()) {
+    for (const sentence of t.split(/(?<=[.!?])\s+|\n+/)) {
+      const n = exemplarWords(sentence).length;
+      if (n >= EXEMPLAR_RUN && n <= 60) out.push(sentence.trim());
+    }
+  }
   return out;
 }
 const EXEMPLAR_GRAMS: Map<string, string> = (() => {
@@ -1913,7 +1921,7 @@ const NOT_A_METRIC = "phone|account|serial|order|tracking|part|model|card|room|f
 const escapeWord = (w: string) => w.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 
 /** The long words and the report words as one pattern, longest phrase first so "in order to" wins over "order". */
-export const LONG_WORD_RE: RegExp = new RegExp(`(?<![\\w-])(?:${[...PLAIN_WORDS.map(([w]) => w), ...REPORT_WORDS].sort((a, b) => b.length - a.length).map(escapeWord).join("|")})(?![\\w-])`, "gi");
+export const LONG_WORD_RE: RegExp = new RegExp(`(?<![\\w-])(?:${[...PLAIN_WORDS.map(([w]) => w), ...REPORT_WORDS].sort((a, b) => b.length - a.length).map((w) => escapeWord(w) + (w.includes(" ") ? "" : "(?:s|es|d|ed|ing)?")).join("|")})(?![\\w-])`, "gi");
 
 /**
  * A metric's name (§7.1 tell 22, rule 40): a modifier before a metric noun ("a difficulty number" in the singular after

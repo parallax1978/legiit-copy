@@ -2,7 +2,9 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import { sales_letter } from "../formats/specs/sales_letter.ts";
 import { email_single } from "../formats/specs/email_single.ts";
-import { describePlan, GROUP_OVERFLOW, GROUP_SOFT_LIMIT_WORDS, groupUnits, itemCount, itemShape, planDraft, sectionUnit } from "../draft/plan.ts";
+import { describePlan, GROUP_OVERFLOW, GROUP_SOFT_LIMIT_WORDS, groupUnits, itemCount, itemShape, planDraft, sectionUnit, wholePiece } from "../draft/plan.ts";
+import { tiktok_reels } from "../formats/specs/tiktok_reels.ts";
+import { draftPrompt as draftV19 } from "../prompts/draft.v19.ts";
 import { email_sequence, SEQUENCE_ROLES } from "../formats/specs/email_sequence.ts";
 import { meta_ad } from "../formats/specs/meta_ad.ts";
 import { google_rsa } from "../formats/specs/google_rsa.ts";
@@ -27,14 +29,16 @@ const sec = (section_id: string, blocks: Block[], title: string | null = null): 
 
 // ---------------------------------------------------------------- planning
 
-Deno.test("social post plan: the body first, then three hooks in their own call, no headline call", () => {
+Deno.test("social post plan: the whole piece in one call, the opening written as lead A with two more openings, no headline call", () => {
   const plan = planDraft(organic_social);
   assertEquals(plan.leadSectionId, "lead_in");
   assertEquals(plan.headlineSectionId, null);
-  const last = plan.calls.at(-1)!;
-  assertEquals([last.kind, last.units.map((u) => u.id), last.maxWords], ["leads", ["lead_in"], 70 * 3]);
-  const ids = plan.calls.flatMap((c) => c.units.map((u) => u.id));
-  assertEquals(new Set(ids), new Set(organic_social.sections.map((s) => s.id)), "every section planned once");
+  assertEquals(plan.calls.length, 1);
+  const only = plan.calls[0];
+  assertEquals([only.kind, only.lead?.id, only.units.map((u) => u.id)], ["whole", "lead_in", ["main", "cta", "first_comment"]], "reading order, the opening apart");
+  assertEquals(only.maxWords, 280 + 25 + 30 + 70 * 3);
+  assert(wholePiece(organic_social) && wholePiece(tiktok_reels) && !wholePiece(sales_letter) && !wholePiece(advertorial) && !wholePiece(email_sequence), "short pieces with three openings are written whole; long formats and sequences keep the section plan");
+  assertEquals(describePlan(plan), ["1. whole: lead_in, main, cta, first_comment (≤545 words, three openings)"]);
 });
 
 Deno.test("sales letter plan: offer block first, grouped small sections, leads then headline last", () => {
@@ -418,6 +422,8 @@ function fakeCaller(made: string[], tick: () => void = () => {}): typeof callSte
     let output: unknown;
     if (a.call.kind === "leads") {
       output = { leads: a.leadTypes!.map((t, i) => ({ id: `model-${i}`, lead_type: t, reader_hypothesis: `reader ${i}`, blocks: [blk("x", `Lead of type ${t}: a doubtable claim [[L:${A}]].`)] })), ledger_refs_used: [A], needs_source: [] };
+    } else if (a.call.kind === "whole") {
+      output = { sections: a.call.units.map((u) => ({ section_id: u.id, title: null, blocks: blocksFor(u) })), leads: a.leadTypes!.map((t, i) => ({ id: `model-${i}`, lead_type: t, reader_hypothesis: `reader ${i}`, blocks: [blk("x", `Opening of type ${t}: a doubtable claim [[L:${A}]].`)] })), ledger_refs_used: [A], needs_source: [] };
     } else if (a.call.units.length === 1) {
       output = { section: { section_id: a.call.units[0].id, title: null, blocks: blocksFor(a.call.units[0]) }, ledger_refs_used: [A], needs_source: [] };
     } else {
@@ -427,23 +433,27 @@ function fakeCaller(made: string[], tick: () => void = () => {}): typeof callSte
   }) as typeof callStep;
 }
 
-Deno.test("draft step: a social post's three hooks get the hook instructions, not the long-lead speaker rule", async () => {
+Deno.test("draft step: a social post is written whole in one call, with three openings, and the job reads as a writer's job", async () => {
   const made: string[] = [];
-  let leadsArgs: DraftArgs | null = null;
+  let wholeArgs: DraftArgs | null = null;
   const base = fakeCaller(made);
   const capture = ((c, step, mod, args, schema, purpose, over) => {
     const a = args as unknown as DraftArgs;
-    if (a.call.kind === "leads") leadsArgs = a;
+    if (a.call.kind === "whole") wholeArgs = a;
     return base(c, step, mod, args, schema, purpose, over);
   }) as typeof callStep;
   const ctx = fakeCtx({ format: organic_social });
   const result = await runDraft(ctx, { call: capture });
-  assertEquals(made.at(-1), "leads:lead_in");
-  assertEquals(DraftOutput.parse(result.output).leads?.length, 3);
-  const text = draftPrompt.user(ctx, leadsArgs!);
-  assert(text.includes("Each lead is a hook"), "hook instructions");
-  assert(!text.includes("the speaker identified by word 150"), "no long-lead speaker rule in a hook");
-  assert(text.includes("a number about the product's own output is proof for the next line, never the hook"));
+  assertEquals(made, ["whole:main,cta,first_comment"]);
+  const out = DraftOutput.parse(result.output);
+  assertEquals(out.leads?.length, 3);
+  assertEquals(out.sections.map((s) => s.section_id), ["lead_in", "main", "cta", "first_comment"], "the opening (lead A) leads the assembled draft");
+  assertEquals(ctx.saves.length, 1, "one savePartial for the one group");
+  const text = draftV19.user(ctx, wholeArgs!);
+  assert(text.includes("Write the whole piece now, start to finish, as one piece of talk"), "one piece of talk");
+  assert(text.includes(`"lead_in", is lead lead-a`) && text.includes("lead-b and lead-c: two other openings to the same body"), "the openings are written to the body");
+  assert(!text.includes("the speaker identified by word 150"), "no long-lead speaker rule in a short piece");
+  assert(text.indexOf("HOW THIS KIND OF PIECE READS WHEN IT IS RIGHT") < text.indexOf("<<<cache-break>>>") && text.indexOf("<<<cache-break>>>") < text.indexOf("YOUR JOB NOW"), "material, exemplars, break, job");
 });
 
 Deno.test("draft step: a full run makes one call per group, saves a partial after every group, assembles the draft", async () => {

@@ -6,7 +6,14 @@
  * belong in a sentence to one reader. The detector counts them in a short piece and the tell edit swaps them.
  */
 
-/** [the long word or phrase, the short one or ones], lowercase; a phrase matches as written. */
+/**
+ * [the long word or phrase, the short one or ones], lowercase; a phrase matches as written, a word with its plain
+ * inflections (-s, -es, -d, -ed, -ing). The second block came from the research of the plain-language lists
+ * (plainlanguage.gov, the Hemingway app's "simpler alternative" list, Zinsser's clutter pairs, Ogilvy's 1982 memo);
+ * words with an everyday sense of their own (address, content, data, results, research, process, option, select,
+ * however, previous) and the trade's metric names (search volume, difficulty score: the metric_name tell reads those)
+ * are left out on purpose, because a word that is right in good copy must never count against it.
+ */
 export const PLAIN_WORDS: readonly (readonly [string, string])[] = [
   ["accomplish", "do"], ["accordingly", "so"], ["accurate", "right"], ["additional", "more"], ["adjacent to", "next to"],
   ["advantageous", "helpful"], ["advise", "tell"], ["aggregate", "total"], ["allocate", "give"], ["anticipate", "expect"],
@@ -39,6 +46,30 @@ export const PLAIN_WORDS: readonly (readonly [string, string])[] = [
   ["utilize", "use"], ["validate", "confirm"], ["viable", "workable"], ["whereas", "since"], ["with reference to", "about"],
   ["with the exception of", "except for"], ["witnessed", "saw"], ["enquiries", "calls or emails"], ["inquiries", "calls or emails"],
   ["enquiry", "a call or an email"], ["inquiry", "a call or an email"], ["commercial", "paying or for sale"], ["advertisers", "people who pay for ads"],
+  // from the plain-language research
+  ["a number of", "some"], ["abundance", "plenty"], ["accelerate", "speed up"], ["accompany", "go with"], ["accrue", "add up"],
+  ["accumulate", "pile up"], ["acquire", "get or buy"], ["adversely impact", "hurt"], ["afford an opportunity", "let"], ["aforementioned", "cut it"],
+  ["alleviate", "ease"], ["along the lines of", "like"], ["already existing", "existing"], ["an absence of", "no"], ["and/or", "or"],
+  ["approximate", "about"], ["as a means of", "to"], ["as a result of", "because of"], ["as of yet", "yet"], ["as yet", "yet"],
+  ["at no charge", "free"], ["at no cost", "free"], ["at the present time", "now"], ["at this point in time", "now"], ["at this time", "now"],
+  ["attain", "reach"], ["attributable to", "because of"], ["be advised", "cut it"], ["because of the fact that", "because"], ["beneficial", "helpful"],
+  ["by means of", "by"], ["caveat", "warning"], ["close proximity", "near"], ["complimentary", "free"], ["comprehend", "understand"],
+  ["deem", "think"], ["despatch", "send"], ["dispatch", "send"], ["detrimental", "harmful"], ["documentation", "papers"],
+  ["due to the fact that", "because"], ["duration", "how long"], ["during the period", "during"], ["each and every", "each"], ["economical", "cheap"],
+  ["erroneous", "wrong"], ["excessive", "too much"], ["expenditure", "spending"], ["expiration", "end"], ["factual evidence", "facts"],
+  ["first and foremost", "first"], ["for a period of", "for"], ["for the purpose of", "to"], ["forfeit", "lose"], ["formulate", "plan"],
+  ["free of charge", "free"], ["fundamental", "basic"], ["gratis", "free"], ["has the ability to", "can"], ["honest truth", "the truth"],
+  ["if and when", "if"], ["in a timely manner", "on time"], ["in all likelihood", "probably"], ["in excess of", "more than"], ["in light of the fact that", "because"],
+  ["in many cases", "often"], ["in order that", "so"], ["in relation to", "about"], ["in some instances", "sometimes"], ["in spite of the fact that", "although"],
+  ["in terms of", "cut it"], ["in the amount of", "for"], ["in the event of", "if"], ["in the process of", "cut it"], ["initially", "at first"],
+  ["innovative", "new"], ["is able to", "can"], ["is applicable to", "applies to"], ["is responsible for", "handles"], ["it is essential", "you must"],
+  ["next-generation", "new"], ["no-cost", "free"], ["not later than", "by"], ["on a regular basis", "every week (say when)"], ["on the contrary", "but"],
+  ["owing to the fact that", "because"], ["particulars", "details"], ["per annum", "a year"], ["personnel", "people"], ["persons", "people"],
+  ["peruse", "read"], ["point in time", "time"], ["presently", "now"], ["promptly", "at once"], ["provided that", "if"],
+  ["put simply", "cut it"], ["readily apparent", "clear"], ["reconceptualize", "rethink"], ["referred to as", "called"], ["reimburse", "pay back"],
+  ["relative to", "about"], ["residence", "home"], ["should you wish", "if you want"], ["successfully complete", "finish"], ["supplementary", "extra"],
+  ["take action to", "act"], ["the majority of", "most"], ["this day and age", "today"], ["time period", "time"], ["utilise", "use"],
+  ["various different", "different"], ["whether or not", "whether"], ["with regard to", "about"], ["with respect to", "about"], ["with the possible exception of", "except"],
 ] as const;
 
 /** Abstract words of a report or a slide: never in a sentence to one reader; the concrete thing goes in their place. */

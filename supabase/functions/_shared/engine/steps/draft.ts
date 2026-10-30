@@ -15,7 +15,7 @@ import { DraftOutput, LeadVariant, Section, SectionDraft } from "../schemas/draf
 import type { LeadType } from "../schemas/common.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
-import { draftPrompt, type DraftArgs } from "../prompts/draft.v18.ts";
+import { draftPrompt, type DraftArgs } from "../prompts/draft.v19.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
 import { SEQUENCE_ROLES, sectionBaseId } from "../formats/index.ts";
 import { evaluateGates } from "../tells.ts";
@@ -30,6 +30,8 @@ import { type DraftPartial, emptyPartial, restoreState, resumePartial, withGroup
 export const SectionGroupDraft = z.object({ sections: z.array(Section), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
 /** Three leads in one call. */
 export const LeadsDraft = z.object({ leads: z.array(LeadVariant), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
+/** A whole short piece in one call: every part but the opening, and the three openings. */
+export const WholeDraft = z.object({ sections: z.array(Section), leads: z.array(LeadVariant), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
 
 /** Wall-clock estimate for one model call; the budget check uses it for the next group. */
 export const DRAFT_CALL_ESTIMATE_MS = 75_000;
@@ -172,7 +174,7 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     argumentText,
     drafted: orderSections(spec, drafted),
     leads: call.kind === "headline" ? leads : null,
-    leadTypes: call.kind === "leads" ? leadTypes : null,
+    leadTypes: call.kind === "leads" || call.kind === "whole" ? leadTypes : null,
     examplesText,
     retryNote: null,
   });
@@ -214,6 +216,25 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     }
   };
 
+  /** The whole piece in one call: the parts matched like a sections call, the openings like a leads call; one retry on a code-side rejection. */
+  const runWhole = async (call: DraftCall, i: number, extraNote: string | null): Promise<{ sections: Section[]; leads: LeadVariantT[]; needs: string[]; calls: number }> => {
+    const args = baseArgs(call, i);
+    let attempt = 0;
+    let note: string | null = extraNote;
+    for (;;) {
+      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, WholeDraft, `draft whole piece${attempt ? " (retry)" : ""}`);
+      callsThisInvocation++;
+      model = res.model;
+      const matched = matchSections(res.output.sections, call);
+      const problems = matched ? validateSections(matched, call, known) : [`return exactly ${call.units.length} section(s) with section_id ${call.units.map((u) => `"${u.id}"`).join(", ")}, and the opening in the leads.`];
+      const normalized = normalizeLeads(res.output.leads, leadTypes!);
+      problems.push(...validateLeads(normalized, leadTypes!, known));
+      if (matched && problems.length === 0) return { sections: matched, leads: normalized, needs: res.output.needs_source, calls: attempt + 1 };
+      if (attempt++ >= 1) throw new Error(`whole-piece draft call rejected twice: ${problems.join(" ")}`);
+      note = [extraNote, ...problems].filter(Boolean).join("\n");
+    }
+  };
+
   const remaining = plan.calls.map((c, i) => [c, i] as const).filter(([, i]) => !state.done.has(i));
   for (const [call, i] of remaining) {
     // (4) budget: the next group must fit in what is left of this invocation; the first group of an invocation always runs
@@ -225,10 +246,16 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
       return { output: partial, model, summary: "drafting continues", continueLater: { reason } };
     }
 
-    const label = call.kind === "leads" ? "three leads" : call.units.map((u) => u.title).join(", ");
+    const label = call.kind === "leads" ? "three leads" : call.kind === "whole" ? "the whole piece, with three openings" : call.units.map((u) => u.title).join(", ");
     await ctx.progress(`Drafting ${label} (${i + 1}/${plan.calls.length})`);
 
-    if (call.kind === "leads") {
+    if (call.kind === "whole") {
+      const r = await runWhole(call, i, null);
+      drafted.push(...r.sections);
+      leads = r.leads;
+      needsSource.push(...r.needs);
+      partial = withGroup(partial, { index: i, kind: call.kind, unit_ids: [call.lead!.id, ...call.units.map((u) => u.id)], sections: r.sections, leads: r.leads, needs_source: r.needs, model: model ?? null, calls_made: r.calls });
+    } else if (call.kind === "leads") {
       const r = await runLeads(call, i);
       leads = r.leads;
       needsSource.push(...r.needs);
@@ -244,19 +271,30 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     await ctx.savePartial(partial);
   }
 
-  // single-call formats (ads, SMS, RSA, short emails): run the format's hard gates now and give the writer one shot at them
-  if (plan.calls.length === 1 && plan.calls[0].kind === "sections" && groupsThisInvocation > 0) {
+  // single-call formats (ads, SMS, RSA, short emails, whole short pieces): run the format's hard gates now and give the writer one shot at them
+  const only = plan.calls.length === 1 ? plan.calls[0] : null;
+  if (only && (only.kind === "sections" || only.kind === "whole") && groupsThisInvocation > 0) {
+    const leadSpec = only.kind === "whole" ? spec.sections.find((s) => s.id === only.lead!.id) : undefined;
+    const withOpening = (sections: Section[], ls: LeadVariantT[] | null) => orderSections(spec, only.kind === "whole" && ls ? [...sections, provisionalLeadSection(only.lead!.id, leadSpec?.name ?? null, ls)] : sections);
     let failures: string[] = [];
     try {
-      failures = evaluateGates(orderSections(spec, drafted), spec).failures;
+      failures = evaluateGates(withOpening(drafted, leads), spec).failures;
     } catch (e) {
       console.warn("hard gates skipped:", e instanceof Error ? e.message : e);
     }
     if (failures.length) {
       await ctx.progress(`Hard gates failed (${failures.join("; ")}); redrafting once`);
-      const r = await runSections(plan.calls[0], 0, `The format's machine-checked hard gates failed on your draft: ${failures.join("; ")}. Fix exactly these and return the whole draft again.`);
-      drafted.splice(0, drafted.length, ...r.sections);
-      needsSource.splice(0, needsSource.length, ...r.needs);
+      const note = `The format's machine-checked hard gates failed on your draft: ${failures.join("; ")}. Fix exactly these and return the whole draft again.`;
+      if (only.kind === "whole") {
+        const r = await runWhole(only, 0, note);
+        drafted.splice(0, drafted.length, ...r.sections);
+        leads = r.leads;
+        needsSource.splice(0, needsSource.length, ...r.needs);
+      } else {
+        const r = await runSections(only, 0, note);
+        drafted.splice(0, drafted.length, ...r.sections);
+        needsSource.splice(0, needsSource.length, ...r.needs);
+      }
     }
   }
 

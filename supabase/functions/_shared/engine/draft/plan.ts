@@ -25,6 +25,8 @@ import type { FormatSpec, SectionSpec } from "../formats/spec.ts";
 
 export const GROUP_SOFT_LIMIT_WORDS = 1200;
 export const GROUP_OVERFLOW = 0.15;
+/** A piece whose parts sum to this many words or fewer is written in one call, start to finish, openings included. */
+export const WHOLE_PIECE_MAX_WORDS = 700;
 
 export interface DraftUnit {
   /** section_id the model must use (`base#n` for a repeated section) */
@@ -40,10 +42,12 @@ export interface DraftUnit {
 }
 
 export interface DraftCall {
-  kind: "sections" | "leads" | "headline";
+  kind: "sections" | "leads" | "headline" | "whole";
   units: DraftUnit[];
   /** sum of band maximums; the prompt's length budget */
   maxWords: number;
+  /** a whole-piece call: the opening section, written as lead A with two more openings to the same body */
+  lead?: DraftUnit;
 }
 
 export type ItemShape = { kind: "none" } | { kind: "repeat_all" } | { kind: "repeat_section"; sectionId: string; fixedAssets: number } | { kind: "blocks" };
@@ -63,6 +67,19 @@ export function leadSectionId(spec: FormatSpec): string | null {
   if (byId) return byId.id;
   const byName = spec.sections.find((s) => /\blead\b/i.test(s.name));
   return byName?.id ?? null;
+}
+
+/**
+ * A short piece with three openings (a social post, a short video script, a short ad) is written whole: one call
+ * writes it in reading order and the two other openings to the same body, so the piece is one piece of talk and
+ * not parts written apart. Long formats keep the section plan.
+ */
+export function wholePiece(spec: FormatSpec): boolean {
+  if (spec.multi_item || spec.lead_variants !== 3) return false;
+  const leadId = leadSectionId(spec);
+  if (!leadId) return false;
+  const total = spec.sections.reduce((n, s) => n + s.band_words[1], 0);
+  return total <= WHOLE_PIECE_MAX_WORDS;
 }
 
 export function headlineSectionId(spec: FormatSpec): string | null {
@@ -173,6 +190,14 @@ export function planDraft(spec: FormatSpec, opts: PlanOptions = {}): DraftPlan {
     expanded = sections.flatMap((s) => (s.id === shape.sectionId ? Array.from({ length: repeats }, (_, i) => sectionUnit(s, { index: i + 1, role: opts.roles?.[i] ?? shape.sectionId, name: mi.item_name, count: repeats })) : [sectionUnit(s)]));
   }
 
+  if (shape.kind === "none" && wholePiece(spec)) {
+    const leadId = leadSectionId(spec)!;
+    const lead = sectionUnit(spec.sections.find((s) => s.id === leadId)!);
+    const units = spec.sections.filter((s) => s.id !== leadId).map((s) => sectionUnit(s));
+    const maxWords = units.reduce((n, u) => n + u.maxWords, 0) + lead.maxWords * 3;
+    return { calls: [{ kind: "whole", units, maxWords, lead }], leadSectionId: leadId, headlineSectionId: null, shape, itemCount: 1 };
+  }
+
   const withLeads = spec.lead_variants === 3;
   const leadId = withLeads ? leadSectionId(spec) : null;
   const headId = withLeads && leadId ? headlineSectionId(spec) : null;
@@ -191,5 +216,5 @@ export function planDraft(spec: FormatSpec, opts: PlanOptions = {}): DraftPlan {
 
 /** One line per call, for the CLI and the progress timeline. */
 export function describePlan(plan: DraftPlan): string[] {
-  return plan.calls.map((c, i) => `${i + 1}. ${c.kind}: ${c.units.map((u) => u.id).join(", ")} (≤${c.maxWords} words${c.kind === "leads" ? ", three variants" : ""})`);
+  return plan.calls.map((c, i) => `${i + 1}. ${c.kind}: ${[...(c.lead ? [c.lead.id] : []), ...c.units.map((u) => u.id)].join(", ")} (≤${c.maxWords} words${c.kind === "leads" ? ", three variants" : c.kind === "whole" ? ", three openings" : ""})`);
 }
