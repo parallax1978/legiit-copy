@@ -147,7 +147,7 @@ Deno.test("the drafter's user message: the material said once in plain headers, 
   assert(u.includes("WHAT HE HAS SAID: nothing on file."), "no dossier is said plainly");
 });
 
-Deno.test("an opening over the reading grade loses to one under it before the cold reader sees them; all three go when every one is over", () => {
+Deno.test("an opening two grades over the ceiling loses to one within a grade of it before the cold reader sees them; all three go when every one is over", () => {
   const plain = { id: "lead-a", text: "Half the pages I ever paid writers for never earned a dime. I picked them off a list, easy ones first, sent the brief, and waited. The pages that made money sat where the site could win." };
   const dense = { id: "lead-b", text: "The determination of attainable rankings necessitates a comparative evaluation of the competitive landscape, incorporating authority metrics and the commercial intention underlying each individual query before any editorial investment is authorised." };
   const tiny = { id: "lead-c", text: "Count your stars." };

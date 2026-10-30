@@ -53,10 +53,11 @@ export function runnerUpLead(leads: DraftOutput["leads"], chosenId: string | nul
 export const LEAD_IDS = ["lead-a", "lead-b", "lead-c"] as const;
 
 /**
- * The openings a cold reader may pick from: the ones at or under the piece's reading grade (docs/04 rule 40), when
- * any is; an opening a grade above the ceiling loses to one under it before a reader sees them, because the piece
- * ships with the chosen opening on top and the machine reads the whole piece's grade. When every opening is over,
- * all three go to the reader. A very short opening (under 25 words) is not graded.
+ * The openings a cold reader may pick from: the ones within a grade of the piece's reading ceiling (docs/04 rule 40),
+ * when any is; an opening two grades over loses to one under before a reader sees them, because the piece ships with
+ * the chosen opening on top and the machine reads the whole piece's grade (a body under the ceiling carries an
+ * opening one grade over it). When every opening is over, all three go to the reader. A very short opening (under
+ * 25 words) is not graded.
  */
 export function leadsWithinGrade<L extends { id: string; text: string }>(leads: L[], spec: FormatSpec): L[] {
   const ceiling = GRADE_CEILING_BY_FORMAT[spec.id] ?? GRADE_CEILING[spec.family];
@@ -65,6 +66,7 @@ export function leadsWithinGrade<L extends { id: string; text: string }>(leads: 
     const ari = words >= 25 ? automatedReadabilityIndex(l.text) : null;
     return { lead: l, grade: ari === null ? null : hemingwayGrade(ari) };
   });
-  const within = graded.filter((g) => g.grade === null || g.grade <= ceiling).map((g) => g.lead);
+  // one grade of margin: the gate reads the whole piece, and a body under the ceiling carries an opening a grade over it
+  const within = graded.filter((g) => g.grade === null || g.grade <= ceiling + 1).map((g) => g.lead);
   return within.length ? within : leads;
 }
