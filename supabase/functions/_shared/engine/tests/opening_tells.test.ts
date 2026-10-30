@@ -42,7 +42,7 @@ Deno.test("opening rules: the hooks the owner rejected are caught (rejected.txt,
   const rejected: [string[], string[], number][] = [
     // rejected.txt 2, "AI poetry and not good either": the reframe that closes on a short pronoun verdict; the
     // disguise frame already counts those words, so the verdict is the same flaw and is not counted twice
-    [["Sorting your Ahrefs export by keyword difficulty feels like research. It's where bad content gets made."], [], 2],
+    [["Sorting your Ahrefs export by keyword difficulty feels like research. It's where bad content gets made."], [], 3], // "keyword difficulty" is a metric's name (tell 22) besides the disguise frame and the "was never" reveal
     // rejected.txt 3, the same run: the score that hides, and the elliptic twist (the disguise frame's words again)
     [["Here's the part the score hides. The keyword was never your competition. The pages ranking for it are."], ["talking_tool"], 3],
     // the panel 9 and panel 10 chosen hooks

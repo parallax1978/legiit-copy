@@ -1917,6 +1917,11 @@ export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
 /** Words before "number", "score" and the rest that name no metric: everyday numbers, and function words, quantifiers and plain adjectives. */
 const NOT_A_METRIC = "phone|account|serial|order|tracking|part|model|card|room|flight|plate|pin|case|ticket|invoice|reference|confirmation|policy|member|customer|house|street|lot|unit|page|issue|version|episode|chapter|table|seat|gate|line|box|lucky|round|even|odd|whole|small|large|big|record|high|low|right|wrong|the|a|an|of|and|or|with|without|by|for|from|in|on|to|at|as|their|your|my|his|her|its|our|these|those|some|any|no|more|most|few|many|each|every|this|that|two|three|four|five|ten|hundred|thousand|several|all|both|same|other|new|old|good|bad|best|worst|first|last|next|one|single|only|real|true|exact|final|total|full|half|same|different|bigger|smaller|higher|lower|better|worse";
 
+/** The measures of the trade that make "number", "score" or "column" a metric's name. */
+const METRIC_MODIFIERS = "difficulty|authority|competition|seo|domain|click|clicks|cpc|ctr|intent|relevance|quality|trust|spam|opportunity|potential|visibility|health|performance|engagement|conversion|bounce|density|popularity|citation|readability|serp|kd|da|dr|pa";
+/** The trade's own names for its measures, which a cold reader would ask about. */
+const METRIC_PHRASES = "search volume|keyword difficulty|domain authority|domain rating|page authority|url rating|trust flow|citation flow|click-through rate|clickthrough rate|conversion rate|bounce rate|cost per click|search intent|keyword intent|traffic potential|keyword density";
+
 /** A word or phrase escaped for a pattern of its own. */
 const escapeWord = (w: string) => w.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 
@@ -1931,7 +1936,9 @@ export const LONG_WORD_RE: RegExp = new RegExp(`(?<![\\w-])(?:${[...PLAIN_WORDS.
  */
 export function metricNamePattern(toolNames: string[] = []): RegExp {
   const metric = toolNames.filter((n) => n && n === n.toLowerCase() && /^[a-z][a-z-]+$/.test(n)).map((n) => n.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&"));
-  const head = `\\b(?:a|an|the|its|their|your|his|her|my|our) (?!(?:${NOT_A_METRIC})\\b)[a-z][a-z-]+ number\\b|\\b(?!(?:${NOT_A_METRIC})\\b)[a-z][a-z-]+ (?:score|rating|column|metric|estimate|index)s?\\b`;
+  // a metric's name: a measure of the trade before the noun ("a difficulty number", "a quality score"), or the trade's
+  // own phrase ("search volume", "keyword difficulty"); never a plain adjective ("the biggest number", "an ugly score")
+  const head = `\\b(?:${METRIC_MODIFIERS}) (?:number|score|rating|column|metric|estimate|index|figure|count|data)s?\\b|\\b(?:${METRIC_PHRASES})\\b`;
   const own = metric.length ? `|\\b(?:search|keyword|keywords|traffic|domain|page|backlink|link|ranking)s? (?:${metric.join("|")})\\b|\\b(?:${metric.join("|")}) (?:score|number|column|data|metric|estimate|figure|count|rating)s?\\b` : "";
   return new RegExp(`${head}${own}`, "gi");
 }

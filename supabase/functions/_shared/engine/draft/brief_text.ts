@@ -13,6 +13,7 @@ import type { Awareness } from "../schemas/common.ts";
 import { provenanceNote } from "../prompts/intake.v1.ts";
 import { ONE_LINE_OFFER_FAMILIES, offerBlockText, rowFacts, verbatimLedgerTags, voiceText } from "./prompt_text.ts";
 import { verbatimKey } from "../research/answers.ts";
+import { GRADE_CEILING, GRADE_CEILING_BY_FORMAT } from "../tells.ts";
 import type { GenerationOptions } from "./options.ts";
 
 const clip = (s: string | null | undefined, n: number) => (s ? (s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s) : "");
@@ -72,14 +73,23 @@ export function ideaText(winner: AngleRow | null, angles: AngleRow[], thesis: st
   ].filter(Boolean).join("\n");
 }
 
+/** The page the piece sends him to: the first source URL that is the site itself, not its terms, help, login or a shared report. */
+export function siteLink(brief: OfferBrief | null): string | null {
+  const urls = brief?.urls ?? [];
+  const site = urls.find((u) => !/\/(terms|help|login|share|privacy|pricing|docs|blog)\b/i.test(u) && !/[?#]/.test(u)) ?? urls[0] ?? null;
+  return site ? site.replace(/\/+$/, "") : null;
+}
+
 /** The product in plain words, what to leave out, who it is up against, what nobody knows. */
 export function productText(brief: OfferBrief | null, offer: OfferRow, config: OfferConfigRow | null): string {
   const setup = parseSetup(offer.setup);
   const name = brief?.product_name ?? offer.name;
+  const link = siteLink(brief);
   const humor = config?.humor_policy && typeof config.humor_policy === "object" && (config.humor_policy as { allowed?: boolean }).allowed === false;
   return [
     `THE PRODUCT`,
     `${name}: ${setup.product_sentence ?? brief?.one_line ?? offer.positioning ?? "(no plain sentence on file)"}`,
+    link ? `The site: ${link}` : "",
     brief?.positioning && brief.positioning !== setup.product_sentence ? `Against the others: ${brief.positioning}` : "",
     setup.leave_out ? `Leave out of every piece: ${setup.leave_out}` : "",
     brief?.competitors.length ? `What he uses or compares now: ${brief.competitors.join(", ")}` : "",
@@ -169,7 +179,7 @@ export function factsText(claims: ClaimRow[], spec: FormatSpec | null = null): s
     if (c.flag && c.user_decision !== "keep") notes.push("a note for the user is pending on this line; the copy says it at full strength and takes no rewrite from the note");
     return `- [[L:${c.id}]] ${rowFacts(c.claim_text)}${notes.length ? ` (${notes.join("; ")})` : ""}`;
   });
-  return `THE FACTS (every number, name, date, price, quote, result and credential the piece may use, each with its tag written right after it; a line is the fact, not the wording: keep its numbers and names and the words that bound a number, and say the rest as the speaker would; nothing outside this list exists)\n${lines.join("\n")}`;
+  return `THE FACTS (every number, name, date, price, quote, result and credential the piece may use, each with its tag written right after it; a line is the fact, not the wording: keep its numbers and names and the words that bound a number, and say the rest in your own words to him; a sentence that repeats a line's phrasing is sent back; nothing outside this list exists)\n${lines.join("\n")}`;
 }
 
 const DEAL_TYPES = new Set(["continuity_trial", "price_discount", "free", "guarantee"]);
@@ -182,6 +192,7 @@ export function dealText(variant: OfferVariantRow | null, brief: OfferBrief | nu
     `THE DEAL (this ${spec.name.toLowerCase()} takes no payment, so it says the deal once, in one plain line where the piece puts it: the price, the trial and the action; the guarantee's conditions, the plan's credits and the cancel mechanics stay on the page that takes payment)`,
     brief ? `Price: ${brief.price.text}` : "",
     ...rows.map((c) => `- [[L:${c.id}]] ${rowFacts(c.claim_text)}`),
+    siteLink(brief) ? `The link (written out where the piece carries the link): ${siteLink(brief)}` : "The link: none on file; write the link line without a URL.",
     options.cta ? `The user's call to action: ${options.cta.trim()}` : "",
   ].filter(Boolean).join("\n");
 }
@@ -203,11 +214,13 @@ export function pieceText(spec: FormatSpec, options: GenerationOptions): string 
     : options.length === "shorter"
     ? `Length: the user asked for a shorter piece. Each part stays in the lower half of its band; cut setup, keep claims and their proof.`
     : "";
+  const grade = GRADE_CEILING_BY_FORMAT[spec.id] ?? GRADE_CEILING[spec.family];
   return [
-    `THE PIECE: ${spec.name}, ${spec.length_band_words[0]} to ${spec.length_band_words[1]} words. ${spec.description}`,
+    `THE PIECE: ${spec.name}, ${spec.length_band_words[0]} to ${spec.length_band_words[1]} words in all. ${spec.description}`,
     `Its parts, in reading order:`,
     ...spec.sections.map((s) => partText(s)),
     length,
+    `Reading grade: ${grade} or below, as the Hemingway app grades it (a machine checks it): short words, most sentences under fifteen words, one long one where the feeling needs it. A sentence over thirty words is two sentences.`,
     spec.hard_gates.length ? `Checked by machine: ${spec.hard_gates.join("; ")}` : "",
     spec.platform_limits ? `Platform limits: ${Object.entries(spec.platform_limits).map(([k, v]) => `${k}=${v}`).join(", ")}` : "",
     `${spec.allow_markdown_headings ? "Markdown headings allowed" : "No markdown headings"}; ${spec.allow_caps ? "caps at human rates" : "no caps"}; no em dashes, emojis or hashtags.`,

@@ -10,6 +10,7 @@
 import { CACHE_BREAK, type PromptModule } from "./types.ts";
 import { OWNER_TELLS } from "./standard.ts";
 import type { DraftCall } from "../draft/plan.ts";
+import type { FormatSpec } from "../formats/spec.ts";
 import type { Awareness, LeadType } from "../schemas/common.ts";
 import type { Section } from "../schemas/draft.ts";
 import type { LeadVariantT } from "../draft/assemble.ts";
@@ -100,13 +101,13 @@ function openingLines(awareness: Awareness): string {
 
 const RETURN_LEADS = `"leads":[{"id":"${LEAD_IDS[0]}","lead_type":"...","reader_hypothesis":"one sentence: the reader this opening is written for","blocks":[{"id":"${LEAD_IDS[0]}-1","type":"...","text":"...","items":null,"meta":null}]}, ...three in all...]`;
 
-function wholeJob(args: DraftArgs, speaker: string): string {
+function wholeJob(args: DraftArgs, speaker: string, spec: FormatSpec): string {
   const call = args.call;
   const lead = call.lead!;
   const parts = [lead, ...call.units];
   const types = args.leadTypes ?? [];
   return [
-    `Write the whole piece now, start to finish, as one piece of talk from ${speaker} to this reader: ${parts.map((u) => `${u.id} (${u.minWords} to ${u.maxWords} words)`).join(", ")}, in that order. ${openingLines(args.awareness)}`,
+    `Write the whole piece now, start to finish, as one piece of talk from ${speaker} to this reader: ${parts.map((u) => `${u.id} (${u.minWords} to ${u.maxWords} words)`).join(", ")}, in that order, ${spec.length_band_words[0]} to ${spec.length_band_words[1]} words in all. ${openingLines(args.awareness)}`,
     `The opening part, "${lead.id}", is lead ${LEAD_IDS[0]}. Then write ${LEAD_IDS[1]} and ${LEAD_IDS[2]}: two other openings to the same body, each a different way in, each inside the opening's band, each one the body follows without a change. The ways in: ${leadTypeLines(types)}. Line one of each: one thought, in words a ten-year-old knows, about twelve words, the moment he recognizes or a fact with its tag, said as the speaker would say it across a table.`,
     `Return {"sections":[${call.units.map((u) => `{"section_id":"${u.id}","title":null,"blocks":[{"id":"${u.id}-1","type":"...","text":"...","items":null,"meta":null}]}`).join(",")}],${RETURN_LEADS},"ledger_refs_used":["<every tag you used>"],"needs_source":["<every sentence marked [[NEEDS SOURCE]]>"]}. The sections hold every part but the opening; the opening is in the leads.`,
   ].join("\n");
@@ -156,7 +157,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
     const sp = speakerOf(ctx.brief, ctx.offer);
     const speaker = sp.name ?? "the speaker";
     const exempt = exemptTermsFrom(ctx.offer?.name, ctx.brief?.product_name);
-    const job = args.call.kind === "whole" ? wholeJob(args, speaker) : args.call.kind === "leads" ? leadsJob(args) : args.call.kind === "headline" ? headlineJob(args) : sectionsJob(args);
+    const job = args.call.kind === "whole" ? wholeJob(args, speaker, spec) : args.call.kind === "leads" ? leadsJob(args) : args.call.kind === "headline" ? headlineJob(args) : sectionsJob(args);
     const leadsText = args.leads?.length ? `THE THREE OPENINGS (written; the headline sits above whichever is chosen):\n${args.leads.map((l) => `--- ${l.id} (${l.lead_type}; reader: ${l.reader_hypothesis}) ---\n${sectionsWithIds([{ section_id: l.id, title: null, blocks: l.blocks }])}`).join("\n\n")}` : "";
     return [
       whoAndWhatText({ brief: ctx.brief, offer: ctx.offer, dossier: ctx.dossier, options, awareness: args.awareness, segment: args.segment }),
