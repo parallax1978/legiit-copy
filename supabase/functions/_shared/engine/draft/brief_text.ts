@@ -84,6 +84,11 @@ export function siteLink(brief: OfferBrief | null): string | null {
   return site ? site.replace(/\/+$/, "") : null;
 }
 
+/** A shared report among the sources (a public plan, a sample run): the link a piece may point at when it calls the proof public. */
+export function publicPlanLink(brief: OfferBrief | null): string | null {
+  return (brief?.urls ?? []).find((u) => /\/share\//i.test(u)) ?? null;
+}
+
 /** The product in plain words, what to leave out, who it is up against, what nobody knows. */
 export function productText(brief: OfferBrief | null, offer: OfferRow, config: OfferConfigRow | null): string {
   const setup = parseSetup(offer.setup);
@@ -201,6 +206,7 @@ export function dealText(variant: OfferVariantRow | null, brief: OfferBrief | nu
     brief ? `Price: ${brief.price.text}` : "",
     ...rows.map((c) => `- [[L:${c.id}]] ${rowFacts(c.claim_text)}`),
     siteLink(brief) ? `The link (written out where the piece carries the link): ${siteLink(brief)}` : "The link: none on file; write the link line without a URL.",
+    publicPlanLink(brief) ? `A public report the facts may call public: ${publicPlanLink(brief)} (when the piece says the plan is public, this link goes beside the other one where the piece carries links; otherwise the plan is told, not called public)` : "",
     options.cta ? `The user's call to action: ${options.cta.trim()}` : "",
   ].filter(Boolean).join("\n");
 }
