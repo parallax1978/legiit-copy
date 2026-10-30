@@ -5,6 +5,8 @@
  */
 import type { Awareness, LeadType } from "../schemas/common.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
+import type { FormatSpec } from "../formats/spec.ts";
+import { automatedReadabilityIndex, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, hemingwayGrade } from "../tells.ts";
 
 export const DIRECT_LEADS: LeadType[] = ["offer", "promise", "problem_solution"];
 export const INDIRECT_LEADS: LeadType[] = ["story", "proclamation", "secret"];
@@ -49,3 +51,20 @@ export function runnerUpLead(leads: DraftOutput["leads"], chosenId: string | nul
 
 /** Stable ids for the three lead variants. */
 export const LEAD_IDS = ["lead-a", "lead-b", "lead-c"] as const;
+
+/**
+ * The openings a cold reader may pick from: the ones at or under the piece's reading grade (docs/04 rule 40), when
+ * any is; an opening a grade above the ceiling loses to one under it before a reader sees them, because the piece
+ * ships with the chosen opening on top and the machine reads the whole piece's grade. When every opening is over,
+ * all three go to the reader. A very short opening (under 25 words) is not graded.
+ */
+export function leadsWithinGrade<L extends { id: string; text: string }>(leads: L[], spec: FormatSpec): L[] {
+  const ceiling = GRADE_CEILING_BY_FORMAT[spec.id] ?? GRADE_CEILING[spec.family];
+  const graded = leads.map((l) => {
+    const words = l.text.split(/\s+/).filter(Boolean).length;
+    const ari = words >= 25 ? automatedReadabilityIndex(l.text) : null;
+    return { lead: l, grade: ari === null ? null : hemingwayGrade(ari) };
+  });
+  const within = graded.filter((g) => g.grade === null || g.grade <= ceiling).map((g) => g.lead);
+  return within.length ? within : leads;
+}

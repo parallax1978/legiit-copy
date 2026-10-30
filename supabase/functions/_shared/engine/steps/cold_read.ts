@@ -12,6 +12,7 @@ import { STEP_DEFAULTS } from "../config.ts";
 import { coldReadPrompt, type ColdReadArgs } from "../prompts/cold_read.v3.ts";
 import { draftPrompt } from "../prompts/draft.v8.ts";
 import { leadSectionId } from "../draft/plan.ts";
+import { leadsWithinGrade } from "../draft/leads.ts";
 import { readerText } from "../draft/ledger.ts";
 import { sectionsPlain } from "../draft/prompt_text.ts";
 import { applyLeadPick, toDraftEffect } from "../draft/assemble.ts";
@@ -31,23 +32,26 @@ export const cold_readStep: StepFn = async (ctx) => {
   const picking = !!draft.leads?.length && draft.chosen_lead_id === null && !!leadSection;
   const body = picking ? draft.sections.filter((s) => s.section_id !== leadSection) : draft.sections;
 
+  // an opening over the piece's reading grade loses to one under it before the reader sees them (rule 40)
+  const candidates = picking ? leadsWithinGrade(draft.leads!.map((l) => ({ id: l.id, text: sectionsPlain([{ section_id: l.id, title: null, blocks: l.blocks }]) })), spec) : null;
   const args: ColdReadArgs = {
     skimPath: draft.skim_path.map(readerText).filter(Boolean),
     fullText: sectionsPlain(body),
-    leads: picking ? draft.leads!.map((l) => ({ id: l.id, text: sectionsPlain([{ section_id: l.id, title: null, blocks: l.blocks }]) })) : null,
+    leads: candidates,
     formatName: spec.name,
   };
 
-  await ctx.progress(`Cold read on ${coldModel}: skim path, then the full draft${picking ? ", then the three leads" : ""}`);
+  await ctx.progress(`Cold read on ${coldModel}: skim path, then the full draft${picking ? `, then the ${candidates!.length === draft.leads!.length ? "three openings" : `${candidates!.length} opening${candidates!.length === 1 ? "" : "s"} at the reading grade (${draft.leads!.length - candidates!.length} over it)`}` : ""}`);
   let res = await callStep(ctx, "cold_read", coldReadPrompt, args, ColdRead, "cold read", { model: coldModel === STEP_DEFAULTS.cold_read.model ? undefined : coldModel });
   let out = res.output;
 
   if (picking) {
-    const valid = (o: ColdRead) => !!o.lead_pick && draft.leads!.some((l) => l.id === o.lead_pick!.chosen_lead_id);
+    const ids = candidates!.map((l) => l.id);
+    const valid = (o: ColdRead) => !!o.lead_pick && ids.includes(o.lead_pick!.chosen_lead_id);
     if (!valid(out)) {
-      res = await callStep(ctx, "cold_read", coldReadPrompt, { ...args, fullText: `${args.fullText}\n\n(Your previous answer named no valid lead. lead_pick.chosen_lead_id must be one of: ${draft.leads!.map((l) => l.id).join(", ")}.)` }, ColdRead, "cold read (retry: lead pick)");
+      res = await callStep(ctx, "cold_read", coldReadPrompt, { ...args, fullText: `${args.fullText}\n\n(Your previous answer named no valid lead. lead_pick.chosen_lead_id must be one of: ${ids.join(", ")}.)` }, ColdRead, "cold read (retry: lead pick)");
       out = res.output;
-      if (!valid(out)) throw new Error(`cold read did not pick a lead from ${draft.leads!.map((l) => l.id).join(", ")}`);
+      if (!valid(out)) throw new Error(`cold read did not pick a lead from ${ids.join(", ")}`);
     }
   } else {
     out = { ...out, lead_pick: null };

@@ -15,6 +15,7 @@ import { allExemplarTexts, exemplarsText } from "../prompts/exemplars/index.ts";
 import { analyzeText, automatedReadabilityIndex, exemplarCopies, hemingwayGrade, GRADE_CEILING } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { planDraft } from "../draft/plan.ts";
+import { leadsWithinGrade } from "../draft/leads.ts";
 import { dealText, factsText, SAME_FACT_SHARE, writerClaims } from "../draft/brief_text.ts";
 import type { ClaimRow, StepContext } from "../steps/types.ts";
 
@@ -142,4 +143,13 @@ Deno.test("the drafter's user message: the material said once in plain headers, 
   for (const lecture of ["CLAIMS LEDGER (", "rule 11", "rule 20", "docs/04", "RESEARCH DOSSIER", "APPROVED OFFER BLOCK", "OFFER CONFIG", "TARGET SEGMENT"]) assert(!u.includes(lecture), `lecture in the writer's material: ${lecture}`);
   assert(words(u) < 4000, `user message is ${words(u)} words with one fact and no dossier`);
   assert(u.includes("WHAT HE HAS SAID: nothing on file."), "no dossier is said plainly");
+});
+
+Deno.test("an opening over the reading grade loses to one under it before the cold reader sees them; all three go when every one is over", () => {
+  const plain = { id: "lead-a", text: "Half the pages I ever paid writers for never earned a dime. I picked them off a list, easy ones first, sent the brief, and waited. The pages that made money sat where the site could win." };
+  const dense = { id: "lead-b", text: "The determination of attainable rankings necessitates a comparative evaluation of the competitive landscape, incorporating authority metrics and the commercial intention underlying each individual query before any editorial investment is authorised." };
+  const tiny = { id: "lead-c", text: "Count your stars." };
+  assertEquals(leadsWithinGrade([plain, dense, tiny], FORMATS.organic_social).map((l) => l.id), ["lead-a", "lead-c"], "the dense opening is dropped, the tiny one is not graded");
+  assertEquals(leadsWithinGrade([dense, { ...dense, id: "lead-d" }], FORMATS.organic_social).map((l) => l.id), ["lead-b", "lead-d"], "every opening over the grade: all go to the reader");
+  assertEquals(leadsWithinGrade([plain, dense], FORMATS.sales_letter).length, 1, "a page has Grade 8 as its ceiling; the dense opening is still over it");
 });
