@@ -80,6 +80,25 @@ const USER_DECISION_NOTE: Record<string, string> = {
   rewrite: "user_decision=rewrite (claim_text is already the user's rewritten text)",
 };
 
+/** Where a row's fact comes from (docs/04 8.1), as every prompt shows it; null when the row does not say. */
+export function provenanceNote(evidence: unknown): string | null {
+  const p = evidence && typeof evidence === "object" ? (evidence as { provenance?: unknown }).provenance : null;
+  switch (p) {
+    case "sample_output":
+      return "provenance: an example of the product's output (one run's facts: cite it as what that run showed for its subject, never as what the product does, checks or uses)";
+    case "terms":
+      return "provenance: the terms (a condition or a data provider, never a selling fact)";
+    case "third_party":
+      return "provenance: a third party";
+    case "user":
+      return "provenance: the user's own words";
+    case "seller":
+      return "provenance: the seller describing the product";
+    default:
+      return null;
+  }
+}
+
 /** One block per row, headed by the handle the model must cite: [[L:<id>]]. Dropped rows are left out. */
 export function renderClaims(claims: ClaimLike[]): string {
   const rows = claims
@@ -91,6 +110,8 @@ export function renderClaims(claims: ClaimLike[]): string {
         `  claim: ${neutralizeTags(c.claim_text)}`,
       ];
       const extras: string[] = [];
+      const prov = provenanceNote(c.evidence);
+      if (prov) extras.push(prov);
       if (c.precision) extras.push(`precision: ${c.precision}`);
       if (c.typical_result) extras.push(`typical_result: ${c.typical_result}`);
       if (c.material_connection) extras.push("material_connection: true");
@@ -205,6 +226,8 @@ export interface IntakeSource {
   title: string | null;
   text: string;
   truncated: boolean;
+  /** What the app could tell from the URL or title (docs/04 8.1); null leaves the call to the model. */
+  provenance?: "seller" | "sample_output" | "terms" | "third_party" | "user" | null;
 }
 
 export interface IntakeArgs {
@@ -254,7 +277,7 @@ Output only the JSON object in the requested structure. No commentary.`;
 export const INTAKE_SYSTEM = [ROLE, RULES, CLAIMS_AND_FACTUAL_REVIEW].join("\n\n---\n\n");
 
 function renderSource(s: IntakeSource): string {
-  return xml("source", neutralizeTags(s.text), { id: s.id, kind: s.kind, url: s.url, title: s.title, chars: s.text.length, truncated: s.truncated ? "true" : null });
+  return xml("source", neutralizeTags(s.text), { id: s.id, kind: s.kind, url: s.url, title: s.title, provenance: s.provenance ?? null, chars: s.text.length, truncated: s.truncated ? "true" : null });
 }
 
 /** The ledger budget: fewer, shorter rows than the sources could fill, nothing softened, the shortfall recorded. */
@@ -284,6 +307,8 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
   const hasSetup = setupHasAnswers(setup);
   if (hasSetup) {
     const lines = [
+      setup.product_sentence ? `What the product is and does for the buyer, in the user's words: ${neutralizeTags(setup.product_sentence)}` : null,
+      setup.leave_out ? `Not the product (the user says these are examples of its output, old features or things to leave out; never a row, never in the brief): ${neutralizeTags(setup.leave_out)}` : null,
       setup.speaker_name ? `Who signs the copy: ${neutralizeTags(setup.speaker_name)}${setup.speaker_role ? `, ${neutralizeTags(setup.speaker_role)}` : ""}` : null,
       setup.reader ? `Who the reader is: ${neutralizeTags(setup.reader)}` : null,
       setup.lead_offer ? `The offer every asset leads with: ${neutralizeTags(setup.lead_offer)}` : null,
@@ -307,7 +332,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
         "task",
         [
           `Call 1 of 2 for "${ctx.offer.name}": produce the brief, the config and the questions. No claims in this call: the ledger is call 2, with the whole output budget to itself, so return claims as an empty list.`,
-          hasSetup ? "The answers in <setup> are the user's own word and settle the matter: copy who signs the copy into brief.speaker and the lead offer into brief.lead_offer exactly as given, use the reader as brief.audience.who when the sources do not name one more precisely, and never ask a question <setup> answers." : "brief.speaker and brief.lead_offer come from the sources when they name a person or lead with one offer; null otherwise.",
+          hasSetup ? "The answers in <setup> are the user's own word and settle the matter: the product sentence, when given, is brief.one_line (completed from the deliverables only where it leaves something out) and overrules any source that says otherwise about what the product does; what the user says is not the product never enters the brief; copy who signs the copy into brief.speaker and the lead offer into brief.lead_offer exactly as given, use the reader as brief.audience.who when the sources do not name one more precisely, and never ask a question <setup> answers." : "brief.speaker and brief.lead_offer come from the sources when they name a person or lead with one offer; null otherwise.",
           args.truncatedCount ? `${args.truncatedCount} source(s) were cut at the character budget; note in unknowns what their tails might hold.` : null,
           ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Never re-ask a question the user answered in <questions>." : null,
           "Blocking is rare: with a price, terms, deliverables, a mechanism and an identifiable reader on file, no question is blocking; a choice the source's own page already makes (the offer its calls to action lead with) is recorded as the default and asked as non-blocking. Never ask what the sources answer; when the sources answer half of a question, ask only the unsettled half.",
@@ -324,7 +349,7 @@ export function intakeUser(ctx: StepContext, args: IntakeArgs): string {
       "task",
       [
         `Call 2 of 2 for "${ctx.offer.name}": the claims ledger, one row per fact in the sources (typed and graded, flagged where Section 8.1 or 8.2 says so, never omitted or softened). The brief in <brief> is already written; rows must agree with it. Return only claims.`,
-        hasSetup ? "Every fact the user stated in <setup> becomes a ledger row with evidence.source_ref \"user_setup\" and status unverified: a credential row for who signs the copy, a guarantee row for refund or guarantee terms, a results_testimonial or experience_testimonial row for each piece of proof on hand, an offer_term row for the lead offer." : null,
+        hasSetup ? "Every fact the user stated in <setup> becomes a ledger row with evidence.source_ref \"user_setup\", evidence.provenance \"user\" and status unverified: a feature row for what the product is and does in the user's words, a credential row for who signs the copy, a guarantee row for refund or guarantee terms, a results_testimonial or experience_testimonial row for each piece of proof on hand, an offer_term row for the lead offer; nothing the user said is not the product becomes a row." : null,
         ctx.claims.length ? "Emit only rows not already in <existing_ledger>." : null,
         ctx.questions.some((q) => (q.answer ?? "").trim()) ? "Facts the user stated in <questions> answers become ledger rows with evidence.source_ref \"user_answer\" and status unverified." : null,
         "A suggested_rewrite keeps every alternative the source states (plan A or plan B, both prices, both terms); it never picks one for the user.",

@@ -92,7 +92,7 @@ function blank(claim_text: string, claim_type: ClaimRowInput["claim_type"], role
     claim_type,
     role,
     evidence_grade: null,
-    evidence: { source_ref: source_ref ?? "research", quote, endpoint: null, population: null, dose: null, duration: null, effect_size: null },
+    evidence: { source_ref: source_ref ?? "research", quote, endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null },
     precision: null,
     typical_result: null,
     earnings_context: null,

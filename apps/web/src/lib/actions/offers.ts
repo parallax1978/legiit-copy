@@ -77,6 +77,8 @@ export type SourcesInput = z.input<typeof SourcesInput>;
 
 /** Step 1 of the new-offer flow: create the shell so files can be uploaded under its id. */
 const SetupInput = z.object({
+  product_sentence: z.string().trim().max(500).default(""),
+  leave_out: z.string().trim().max(1000).default(""),
   speaker_name: z.string().trim().max(120).default(""),
   speaker_role: z.string().trim().max(120).default(""),
   reader: z.string().trim().max(500).default(""),

@@ -314,9 +314,9 @@ Deno.test("tell edit step: a long piece edits part by part, checkpoints, and res
 import { draftPrompt } from "../prompts/draft.v15.ts";
 import { revisePrompt } from "../prompts/revise.v14.ts";
 import { editorialPrompt } from "../prompts/editorial.v15.ts";
-import { factualPrompt } from "../prompts/factual.v13.ts";
-import offerPrompt from "../prompts/offer.v14.ts";
-import intakePrompt from "../prompts/intake.v12.ts";
+import { factualPrompt } from "../prompts/factual.v14.ts";
+import offerPrompt from "../prompts/offer.v15.ts";
+import intakePrompt from "../prompts/intake.v13.ts";
 import { OWNER_TELLS, RULES, LEAD_SELECTION } from "../prompts/standard.ts";
 
 Deno.test("prompts: the owner's list is in the system text of every step that writes or rewrites a buyer's words", () => {
@@ -335,7 +335,7 @@ Deno.test("prompts: the owner's list is in the system text of every step that wr
   assert(factualPrompt.system.includes("it follows Section 7.1"));
   for (const t of ["My rule:", "in my view", "the same filler in other words", "built to be quoted"]) assert(OWNER_TELLS.includes(t), t);
   for (const t of ["A label or a count is a windup too", "read its last line on its own", "whatever a voice profile or default in the request says"]) assert(tellEditPrompt.system.includes(t), t);
-  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [15, 14, 15, 13, 12, 14, 12]);
+  assertEquals([draftPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, tellEditPrompt.version, offerPrompt.version, intakePrompt.version], [15, 14, 15, 14, 12, 15, 13]);
   // round 2: steps never listed in a short piece, unsourced verbatims never quoted, each point said once
   assert(RULES.includes("it is never a list or count of the product's steps or checks"));
   assert(RULES.includes("A verbatim with no ledger row is never quoted or attributed"));

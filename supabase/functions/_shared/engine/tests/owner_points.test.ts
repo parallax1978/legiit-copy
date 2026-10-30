@@ -8,15 +8,15 @@
 import { assert, assertEquals } from "@std/assert";
 import { FORMATS } from "../formats/index.ts";
 import { ARGUMENT_SELECTION, COPY_CHIEF_RUBRIC, FORMAT_SPECS, LEAD_SELECTION, OWNER_TELLS, PROOF_PLACEMENT, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v16.ts";
+import argumentPrompt from "../prompts/argument.v17.ts";
 import { credentialJob, draftPrompt } from "../prompts/draft.v15.ts";
 import { tellEditPrompt } from "../prompts/tell_edit.v12.ts";
 import { editorialPrompt } from "../prompts/editorial.v15.ts";
 import { revisePrompt } from "../prompts/revise.v14.ts";
-import { factualPrompt } from "../prompts/factual.v13.ts";
-import offerPrompt from "../prompts/offer.v14.ts";
-import intakePrompt from "../prompts/intake.v12.ts";
-import researchPrompt from "../prompts/research.v10.ts";
+import { factualPrompt } from "../prompts/factual.v14.ts";
+import offerPrompt from "../prompts/offer.v15.ts";
+import intakePrompt from "../prompts/intake.v13.ts";
+import researchPrompt from "../prompts/research.v11.ts";
 
 const social = FORMATS.organic_social;
 const section = (id: string) => social.sections.find((s) => s.id === id)!;

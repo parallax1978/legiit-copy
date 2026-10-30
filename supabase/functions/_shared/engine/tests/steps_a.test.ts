@@ -5,11 +5,11 @@
 import { assert, assertEquals, assertRejects, assertStringIncludes } from "@std/assert";
 import { getFormat } from "../formats/index.ts";
 import { type callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v16.ts";
+import argumentPrompt from "../prompts/argument.v17.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
-import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v12.ts";
-import offerPrompt from "../prompts/offer.v14.ts";
-import researchPrompt from "../prompts/research.v10.ts";
+import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v13.ts";
+import offerPrompt from "../prompts/offer.v15.ts";
+import researchPrompt from "../prompts/research.v11.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { type IntakeOutput, type OfferBrief } from "../schemas/brief.ts";
 import { type OfferConstruction } from "../schemas/offer.ts";
@@ -224,7 +224,7 @@ const INTAKE_OUTPUT: IntakeOutput = {
       claim_type: "statistic",
       role: "feature",
       evidence_grade: "F",
-      evidence: { source_ref: "s1", quote: "75 ingredients", endpoint: null, population: null, dose: null, duration: null, effect_size: null },
+      evidence: { source_ref: "s1", quote: "75 ingredients", endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null },
       precision: "75",
       typical_result: null,
       earnings_context: null,
@@ -244,7 +244,7 @@ const INTAKE_OUTPUT: IntakeOutput = {
       claim_type: "specific_health_benefit",
       role: "promise",
       evidence_grade: "D",
-      evidence: { source_ref: "s2", quote: "cures fatigue", endpoint: null, population: null, dose: null, duration: null, effect_size: null },
+      evidence: { source_ref: "s2", quote: "cures fatigue", endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null },
       precision: null,
       typical_result: null,
       earnings_context: null,

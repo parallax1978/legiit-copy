@@ -3,6 +3,8 @@ import { Field, TextInput, TextArea } from "./fields";
 
 /** What only the client knows. Asked at offer setup, kept on the offer, never asked again. */
 export interface SetupValues {
+  product_sentence: string;
+  leave_out: string;
   speaker_name: string;
   speaker_role: string;
   reader: string;
@@ -11,18 +13,24 @@ export interface SetupValues {
   proof_on_hand: string;
 }
 
-export const EMPTY_SETUP: SetupValues = { speaker_name: "", speaker_role: "", reader: "", lead_offer: "", refund_policy: "", proof_on_hand: "" };
+export const EMPTY_SETUP: SetupValues = { product_sentence: "", leave_out: "", speaker_name: "", speaker_role: "", reader: "", lead_offer: "", refund_policy: "", proof_on_hand: "" };
 
 export function setupFromJson(raw: unknown): SetupValues {
   const o = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
   const s = (k: keyof SetupValues) => (typeof o[k] === "string" ? (o[k] as string) : "");
-  return { speaker_name: s("speaker_name"), speaker_role: s("speaker_role"), reader: s("reader"), lead_offer: s("lead_offer"), refund_policy: s("refund_policy"), proof_on_hand: s("proof_on_hand") };
+  return { product_sentence: s("product_sentence"), leave_out: s("leave_out"), speaker_name: s("speaker_name"), speaker_role: s("speaker_role"), reader: s("reader"), lead_offer: s("lead_offer"), refund_policy: s("refund_policy"), proof_on_hand: s("proof_on_hand") };
 }
 
 export function SetupFields({ value, onChange, disabled }: { value: SetupValues; onChange: (v: SetupValues) => void; disabled?: boolean }) {
   const set = (k: keyof SetupValues) => (v: string) => onChange({ ...value, [k]: v });
   return (
     <div className="grid gap-4 md:grid-cols-2">
+      <Field label="What is it, and what does it do for the buyer?" htmlFor="setup-product" hint="One sentence, the way you would tell a customer. Your words win over anything on your site. Include everything it makes for them." className="md:col-span-2">
+        <TextInput id="setup-product" value={value.product_sentence} onChange={set("product_sentence")} placeholder="A keyword tool that finds the pages your site can rank for, decides which to build, and writes them" disabled={disabled} />
+      </Field>
+      <Field label="Anything on your site that is not the product?" htmlFor="setup-leave-out" hint="Sample output, example reports, old features, a thing to leave out. The copy never treats these as what the product does." className="md:col-span-2">
+        <TextInput id="setup-leave-out" value={value.leave_out} onChange={set("leave_out")} placeholder="The Pull Shot Coffee plan on the homepage is an example of the output" disabled={disabled} />
+      </Field>
       <Field label="Who signs the copy?" htmlFor="setup-speaker" hint="The person the reader hears from. Emails and posts carry this name.">
         <TextInput id="setup-speaker" value={value.speaker_name} onChange={set("speaker_name")} placeholder="Chris M. Walker" disabled={disabled} />
       </Field>

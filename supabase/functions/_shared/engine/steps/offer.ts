@@ -5,7 +5,7 @@
  */
 import { type Effort, lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import offerPrompt from "../prompts/offer.v14.ts";
+import offerPrompt from "../prompts/offer.v15.ts";
 import { RETRY_MIN_BUDGET_MS } from "../draft/step_util.ts";
 import { remainingBudgetMs } from "./budget.ts";
 import { resolvePrompt } from "../prompts/types.ts";
@@ -32,7 +32,7 @@ function blankRow(claim_text: string, claim_type: ClaimRowInput["claim_type"], r
     claim_type,
     role,
     evidence_grade: null,
-    evidence: { source_ref: "offer construction", quote: null, endpoint: null, population: null, dose: null, duration: null, effect_size: null },
+    evidence: { source_ref: "offer construction", quote: null, endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null },
     precision: null,
     typical_result: null,
     earnings_context: null,

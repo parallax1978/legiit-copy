@@ -13,6 +13,10 @@ export const Price = z.object({
  * user's own word: it goes into the brief and the ledger and is never asked again.
  */
 export const OfferSetup = z.object({
+  /** What the product is and does for the buyer, in the user's words: wins over anything the sources say. */
+  product_sentence: z.string().nullable().default(null),
+  /** What on the sources is not the product (sample output, an old feature, a thing to leave out): never a row. */
+  leave_out: z.string().nullable().default(null),
   speaker_name: z.string().nullable().default(null),
   speaker_role: z.string().nullable().default(null),
   reader: z.string().nullable().default(null),
@@ -66,6 +70,14 @@ const nstr = () => z.string().nullable().default(null);
 const nnum = () => z.number().nullable().default(null);
 const nbool = () => z.boolean().default(false);
 
+/**
+ * The kind of source a row came from (docs/04 8.1, where a fact comes from): the seller describing the product, an
+ * example of the product's output (one run's facts, never what the product does), the terms, a third party, or the
+ * user's own words. The app sets it for sources it can classify from the URL or title; the model classifies the rest.
+ */
+export const Provenance = z.enum(["seller", "sample_output", "terms", "third_party", "user"]);
+export type Provenance = z.infer<typeof Provenance>;
+
 export const ClaimRowInput = z.object({
   claim_text: z.string(),
   claim_type: ClaimType,
@@ -74,6 +86,7 @@ export const ClaimRowInput = z.object({
   evidence: z
     .object({
       source_ref: nstr(),
+      provenance: Provenance.nullable().default(null),
       quote: nstr(),
       endpoint: nstr(),
       population: nstr(),

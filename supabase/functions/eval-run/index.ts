@@ -202,7 +202,7 @@ function claimsFromBrief(offerId: string, workspaceId: string, b: OfferBrief | n
     const claim = str(r.claim);
     if (!claim) continue;
     const row = base(claim, guessType(claim), "proof");
-    row.evidence = { source_ref: str(r.source), quote: str(r.evidence), endpoint: null, population: null, dose: null, duration: null, effect_size: null };
+    row.evidence = { source_ref: str(r.source), quote: str(r.evidence), endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null };
     row.precision = /\d/.test(claim) ? claim.match(/[\d.,%$]+(?:\s?(?:%|x|days?|weeks?|months?|years?))?/)?.[0] ?? null : null;
     out.push(row);
   }

@@ -33,7 +33,7 @@ Deno.test("prompt-described schema: ledger rows require only the identifying key
 
 Deno.test("ClaimRowInput fills omitted keys so consumers see the complete row", () => {
   const row = ClaimRowInput.parse({ claim_text: "$49/mo", claim_type: "price_discount", role: "offer_term", status: "unverified", evidence: { quote: "$49/mo" } });
-  assertEquals(row.evidence, { source_ref: null, quote: "$49/mo", endpoint: null, population: null, dose: null, duration: null, effect_size: null });
+  assertEquals(row.evidence, { source_ref: null, quote: "$49/mo", endpoint: null, population: null, dose: null, duration: null, effect_size: null, provenance: null });
   assertEquals([row.evidence_grade, row.flag, row.earnings_context, row.guarantee_terms, row.former_price, row.scarcity, row.deadline, row.trial_terms], [null, null, null, null, null, null, null, null]);
   assertEquals([row.material_connection, row.story_claim, row.establishment_signal], [false, false, false]);
   assertEquals(row.precision, null);

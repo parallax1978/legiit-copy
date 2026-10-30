@@ -11,6 +11,7 @@ import type { Section } from "../schemas/draft.ts";
 import { renderBlock } from "../render.ts";
 import { verbatimKey, verbatimWords } from "../research/answers.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
+import { provenanceNote } from "../prompts/intake.v1.ts";
 import { readerText } from "./ledger.ts";
 import { stripNeverTells } from "./never_tells.ts";
 import { ownerTellsIn } from "../tells.ts";
@@ -46,6 +47,8 @@ export function ledgerText(claims: ClaimRow[], opts: { includeDropped?: boolean 
       : "";
     const parts = [`[[L:${c.id}]] (${c.claim_type}${c.role ? `, role ${c.role}` : ""}, grade ${c.evidence_grade ?? "none"}, ${c.status}${decision})`];
     parts.push(`  claim: ${rowFacts(c.claim_text)}`);
+    const prov = provenanceNote(c.evidence);
+    if (prov) parts.push(`  ${prov}`);
     if (c.precision) parts.push(`  precision: ${c.precision}`);
     const ev = (c.evidence ?? {}) as Record<string, unknown>;
     const evParts = ["source_ref", "endpoint", "population", "dose", "duration", "effect_size"].filter((k) => ev[k]).map((k) => `${k}=${j(ev[k])}`);
