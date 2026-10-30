@@ -10,16 +10,16 @@ import { analyzeDraft, exemplarCopies, exemplarSources, TELLS } from "../tells.t
 import { assembleDraft } from "../draft/assemble.ts";
 import { editableUnits, unitFindings } from "../draft/tell_edit.ts";
 import { EXEMPLARS, LEAD_SELECTION, OWNER_TELLS, RULES } from "../prompts/standard.ts";
-import argumentPrompt from "../prompts/argument.v19.ts";
-import { draftPrompt, leadsJob } from "../prompts/draft.v17.ts";
-import { tellEditPrompt, cadenceNote } from "../prompts/tell_edit.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v18.ts";
-import { revisePrompt } from "../prompts/revise.v17.ts";
+import argumentPrompt from "../prompts/argument.v20.ts";
+import { draftPrompt, leadsJob } from "../prompts/draft.v18.ts";
+import { tellEditPrompt, cadenceNote } from "../prompts/tell_edit.v15.ts";
+import { editorialPrompt } from "../prompts/editorial.v19.ts";
+import { revisePrompt } from "../prompts/revise.v18.ts";
 import { coldReadPrompt } from "../prompts/cold_read.v3.ts";
 import researchPrompt from "../prompts/research.v11.ts";
-import { factualPrompt } from "../prompts/factual.v14.ts";
-import offerPrompt from "../prompts/offer.v17.ts";
-import intakePrompt from "../prompts/intake.v15.ts";
+import { factualPrompt } from "../prompts/factual.v15.ts";
+import offerPrompt from "../prompts/offer.v18.ts";
+import intakePrompt from "../prompts/intake.v16.ts";
 
 const blk = (id: string, text: string, type: Block["type"] = "paragraph"): Block => ({ id, type, text, items: null, meta: null });
 const sec = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
@@ -56,7 +56,7 @@ Deno.test("copy guard: the tell edit gets a copied example as a line to say in t
 });
 
 Deno.test("prompts: the masters' hooks reach every step that writes, reviews or plans copy, in new versions", () => {
-  assertEquals([argumentPrompt.version, draftPrompt.version, tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version, intakePrompt.version, coldReadPrompt.version], [19, 17, 14, 17, 18, 14, 17, 11, 15, 3]);
+  assertEquals([argumentPrompt.version, draftPrompt.version, tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, factualPrompt.version, offerPrompt.version, researchPrompt.version, intakePrompt.version, coldReadPrompt.version], [20, 18, 15, 18, 19, 15, 18, 11, 16, 3]);
   // Section 3: fact first, three facts, the moves, line one and line two, the four shapes
   for (const t of ["A hook is found in the facts, not phrased.", "three different facts and three different opening moves", "The masters' opening moves, by the lead type they serve:", "Line two pays it off at once", "A hook never tells the reader his own history or habit as a fact", "a credential is said only where rule 8 allows it", "A hook never says what the reader's current tool does"]) assert(LEAD_SELECTION.includes(t), t);
   for (const [name, system] of [["argument", argumentPrompt.system], ["draft", draftPrompt.system], ["editorial", editorialPrompt.system], ["research", researchPrompt.system]] as const) assert(system.includes("The masters' opening moves"), name);

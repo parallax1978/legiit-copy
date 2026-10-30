@@ -13,9 +13,9 @@ import { analyzeDraft, openingMatches, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
 import { TellEditAuditItem } from "../schemas/tell_edit.ts";
-import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
-import { revisePrompt } from "../prompts/revise.v17.ts";
-import { editorialPrompt } from "../prompts/editorial.v18.ts";
+import { tellEditPrompt } from "../prompts/tell_edit.v15.ts";
+import { revisePrompt } from "../prompts/revise.v18.ts";
+import { editorialPrompt } from "../prompts/editorial.v19.ts";
 
 const blk = (id: string, text: string, type: Block["type"] = "paragraph"): Block => ({ id, type, text, items: null, meta: null });
 const sec = (section_id: string, blocks: Block[]): Section => ({ section_id, title: null, blocks });
@@ -96,7 +96,7 @@ Deno.test("the social post: the lead-in never carries the product, the main poin
 });
 
 Deno.test("prompts: the tell edit reads for the lecture and the frame pair and keeps the speaker's call; revise and the copy chief protect the introduction", () => {
-  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version], [14, 17, 18]);
+  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version], [15, 18, 19]);
   for (const t of [`"lecture", in a short piece, a lesson in how the reader's trade works or a mechanism told in more than two sentences`, `"frame_pair", two sentences built on one frame`, `a pair of short sentences that land a moral or a verdict on the reader's way: "The writer did the job he was given. The research stopped one step early."`, `A first-person call ("I think the research is done when...", "I'd rather", "I built it to") is the speaker's conviction (rule 8), never a hedge`, "never rewritten as an instruction to the reader", "the main points' introduction sentence is never cut"]) assertStringIncludes(tellEditPrompt.system, t);
   assertEquals(TellEditAuditItem.parse({ ref: "main-2", line: "x", kind: "lecture", keep: false }).kind, "lecture");
   assertEquals(TellEditAuditItem.parse({ ref: "main-2", line: "x", kind: "frame_pair", keep: false }).kind, "frame_pair");

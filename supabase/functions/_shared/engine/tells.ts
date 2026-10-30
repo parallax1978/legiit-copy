@@ -22,6 +22,7 @@
  *    line is what the model emitted and counts as a Tier 0 artifact.
  */
 import type { Block, Section } from "./schemas/draft.ts";
+import { PLAIN_WORDS, REPORT_WORDS } from "./plain_words.ts";
 import type { MechanicalReport } from "./schemas/review.ts";
 import type { FormatSpec } from "./formats/spec.ts";
 import type { FormatId } from "./schemas/common.ts";
@@ -455,6 +456,13 @@ export const TELLS: TellRule[] = [
     note: "A metric's name in a short piece: a word followed by a metric noun (score, number, rating, column, metric, estimate, index), or one of the metric words the offer's comparative ledger rows name (toolNamesFrom: the lowercase ones), which a cold reader outside the trade stops at (§7.1 tell 22). Everyday numbers (a phone number, an order number) are left alone.",
   },
   {
+    tier: 1, name: "long_word", weight: 4, scope: "all", owner: { tell: 23 }, families: ["social", "ad", "email", "message", "audio", "video"],
+    regex: null,
+    example: "purchase / demonstrate / interpret / enquiries / a solution / performance",
+    fix: "The short word for the thing (buy, show, read, calls) or the concrete thing in place of the report word (rule 40). Example (a baker): not 'purchase a sufficient quantity' but 'buy enough'.",
+    note: "A word from the plain-words table (plain_words.ts: the government's plain-language list, Hemingway's simpler alternatives, the masters' own swaps) or a report word, in a short piece, outside a quotation (§7.1 tell 23). The owner on the post of 30 October: not only the grade, \"the type of words\".",
+  },
+  {
     tier: 1, name: "hard_truth", weight: 4, scope: "all", owner: { tell: 9 },
     regex: new RegExp(
       `\\b(?:uncomfortable|hard|harsh|brutal|ugly|cold|painful|inconvenient|sobering) truths?\\b|\\btruth (?:nobody|no one|few people) (?:wants|likes|talks|tells|admits)\\b|\\btruth bombs?\\b|(?:^|[.!?]["”’)]?\\s+)The truth is\\b`,
@@ -580,6 +588,13 @@ export const TELLS: TellRule[] = [
     example: ", giving you more time with your family.",
     fix: "A new sentence with a subject.",
     note: "Human p90 1.7-2.5 across long formats (AI 0.78). analyze.py required eight letters and missed \", giving you\"; the port accepts five and keeps a stop list of -ing nouns and prepositions.",
+  },
+  {
+    tier: 2, name: "passive_voice", weight: 2, scope: "body", density_per_1000: 10,
+    regex: /\b(?:am|is|are|was|were|be|been|being|get|gets|got|getting)\s+(?:(?:not|never|already|still|also|often|usually|just|then)\s+)?(?:[a-z]{3,}(?:ed|en)|built|made|done|given|taken|written|chosen|picked|paid|sold|bought|found|left|kept|put|set|sent|shown|told|seen|known|read|won|lost|hit|cut|led|met|held|run|begun|brought|caught|taught|thought|fought|spent|lent|torn|worn|driven|hidden|forgotten|beaten|broken|frozen|stolen|thrown|grown|blown|drawn|flown)\b(?!\s+(?:to|for|with|about|by)\b)/gi,
+    example: "the page gets picked / the brief was given to a writer",
+    fix: "Say who does it: a person as the subject, the verb he does (rule 40; Hemingway counts these).",
+    note: "A form of be or get and a past participle with no actor after it (Hemingway's passive count): the actor is hidden, and copy that hides the actor reads like a report; \"opened by her dog\" names him and passes. Counted past about one sentence in five (ten per thousand words, Hemingway's tolerance); a testimonial keeps its words.",
   },
   {
     tier: 2, name: "hedge", weight: 2, scope: "body", density_per_1000: 2,
@@ -1894,6 +1909,12 @@ export function pieceOfSection(sectionId: string, spec: FormatSpec): string {
 /** Words before "number", "score" and the rest that name no metric: everyday numbers, and function words, quantifiers and plain adjectives. */
 const NOT_A_METRIC = "phone|account|serial|order|tracking|part|model|card|room|flight|plate|pin|case|ticket|invoice|reference|confirmation|policy|member|customer|house|street|lot|unit|page|issue|version|episode|chapter|table|seat|gate|line|box|lucky|round|even|odd|whole|small|large|big|record|high|low|right|wrong|the|a|an|of|and|or|with|without|by|for|from|in|on|to|at|as|their|your|my|his|her|its|our|these|those|some|any|no|more|most|few|many|each|every|this|that|two|three|four|five|ten|hundred|thousand|several|all|both|same|other|new|old|good|bad|best|worst|first|last|next|one|single|only|real|true|exact|final|total|full|half|same|different|bigger|smaller|higher|lower|better|worse";
 
+/** A word or phrase escaped for a pattern of its own. */
+const escapeWord = (w: string) => w.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+
+/** The long words and the report words as one pattern, longest phrase first so "in order to" wins over "order". */
+export const LONG_WORD_RE: RegExp = new RegExp(`(?<![\\w-])(?:${[...PLAIN_WORDS.map(([w]) => w), ...REPORT_WORDS].sort((a, b) => b.length - a.length).map(escapeWord).join("|")})(?![\\w-])`, "gi");
+
 /**
  * A metric's name (§7.1 tell 22, rule 40): a modifier before a metric noun ("a difficulty number" in the singular after
  * an article or a possessive, so "six numbers" and "his own numbers" stay plain; "volume column", "quality score"), or a
@@ -1927,6 +1948,11 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
   const metricOn = !metricRule.families || metricRule.families.includes(spec.family);
   const metricMatches = ownerUnits.map((u, i) => (!metricOn || u.kind === "display" || u.type === "testimonial" || u.type === "disclosure") ? [] : (blankQuotes(ownerTexts[i]).match(metricRe) ?? []).map((m) => m.trim()));
   const metricPerText = metricMatches.map((m) => m.length);
+  // a long word where the short one does (§7.1 tell 23): the plain-words table and the report words, per text, outside quotations
+  const longRule = TELLS.find((r) => r.name === "long_word")!;
+  const longOn = !longRule.families || longRule.families.includes(spec.family);
+  const longMatches = ownerUnits.map((u, i) => (!longOn || u.kind === "display" || u.type === "testimonial" || u.type === "disclosure") ? [] : (blankQuotes(ownerTexts[i]).match(LONG_WORD_RE) ?? []).map((m) => m.toLowerCase()));
+  const longPerText = longMatches.map((m) => m.length);
   // the opening's four rules: each counts once per opening (as measured), on the text its first match is in
   const opening = opts.openings === false ? [] : openingHits(units, spec, opts.toolNames ?? [], opts.productName ?? null);
   const ownerAt = new Map(ownerUnits.map((u, i) => [u, i] as const));
@@ -1935,7 +1961,7 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
     const at = ownerAt.get(units[h.unit]);
     if (h.counted && at !== undefined) openingPerText.get(h.tell)![at] += 1;
   }
-  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText], ["metric_name", metricPerText], ...openingPerText]);
+  const ownerPerText = new Map<string, number[]>([...Array.from(ownerScan, ([name, o]) => [name, o.perText] as [string, number[]]), ["self_answered_question", questions.perText], ["repeated_phrase", repeats.perText], ["slogan_couplet", couplets.perText], ["metric_name", metricPerText], ["long_word", longPerText], ...openingPerText]);
   const bodyTexts = units.filter((u) => u.kind !== "display").map((u) => u.text);
   const paragraphTexts = units.filter((u) => u.kind === "body" && u.type === "paragraph").map((u) => u.text);
   const hedgeTexts = units.filter((u) => u.kind !== "display" && u.type !== "testimonial" && u.type !== "disclosure").map((u) => u.text);
@@ -1971,6 +1997,9 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       }
       case "metric_name":
         hit = { rule, count: metricPerText.reduce((a, b) => a + b, 0), examples: trimExamples(metricMatches.flat()) };
+        break;
+      case "long_word":
+        hit = { rule, count: longPerText.reduce((a, b) => a + b, 0), examples: trimExamples(longMatches.flat()) };
         break;
       case "reader_scene_opener":
       case "closing_verdict":

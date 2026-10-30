@@ -9,12 +9,12 @@
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import { classifySource, droppedNote, enforceProvenance, makeIntakeStep, prepareSources, proofWithoutTerms, sourceOf, type RawSource } from "../steps/intake.ts";
 import { type IntakeSource, provenanceNote, renderClaims } from "../prompts/intake.v1.ts";
-import intakePrompt from "../prompts/intake.v15.ts";
-import argumentPrompt from "../prompts/argument.v19.ts";
+import intakePrompt from "../prompts/intake.v16.ts";
+import argumentPrompt from "../prompts/argument.v20.ts";
 import researchPrompt from "../prompts/research.v11.ts";
-import { draftPrompt } from "../prompts/draft.v17.ts";
-import { factualPrompt } from "../prompts/factual.v14.ts";
-import { editorialPrompt } from "../prompts/editorial.v18.ts";
+import { draftPrompt } from "../prompts/draft.v18.ts";
+import { factualPrompt } from "../prompts/factual.v15.ts";
+import { editorialPrompt } from "../prompts/editorial.v19.ts";
 import { CLAIMS_AND_FACTUAL_REVIEW } from "../prompts/standard.ts";
 import { ledgerText } from "../draft/prompt_text.ts";
 import { ClaimRowInput, IntakeOutput, OfferSetup } from "../schemas/brief.ts";
@@ -190,7 +190,7 @@ Deno.test("every later step sees where a row's fact came from", () => {
 });
 
 Deno.test("prompts: the intake reads each source for what it is, the argument and research never build on a sample, the standard says where a fact comes from", () => {
-  assertEquals([intakePrompt.version, argumentPrompt.version, researchPrompt.version, draftPrompt.version, factualPrompt.version, editorialPrompt.version], [15, 19, 11, 17, 14, 18]);
+  assertEquals([intakePrompt.version, argumentPrompt.version, researchPrompt.version, draftPrompt.version, factualPrompt.version, editorialPrompt.version], [16, 20, 11, 18, 15, 19]);
   for (const t of [
     "Where a fact comes from (Section 8.1)",
     "A <source> tag that carries provenance= is already decided by the app; decide the rest yourself.",

@@ -16,7 +16,7 @@ import { editableUnits, openingFindings, ownerTellCount, unitFindings } from "..
 import { assembleDraft, provisionalLeadSection } from "../draft/assemble.ts";
 import { blocksQuoted } from "../draft/ledger.ts";
 import { runTellEdit } from "../steps/tell_edit.ts";
-import type { TellEditArgs } from "../prompts/tell_edit.v14.ts";
+import type { TellEditArgs } from "../prompts/tell_edit.v15.ts";
 import type { callStep } from "../draft/step_util.ts";
 import type { StepContext } from "../steps/types.ts";
 

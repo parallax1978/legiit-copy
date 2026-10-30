@@ -9,10 +9,10 @@ import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import { analyzeText, automatedReadabilityIndex, fleschKincaidGrade, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, hemingwayGrade, metricNamePattern, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { COPY_CHIEF_RUBRIC, FORMAT_SPECS, OWNER_TELLS, RULES } from "../prompts/standard.ts";
-import { draftPrompt, plainJob, WRITERS_BRIEF } from "../prompts/draft.v17.ts";
-import { tellEditPrompt } from "../prompts/tell_edit.v14.ts";
-import { revisePrompt } from "../prompts/revise.v17.ts";
-import { editorialPrompt } from "../prompts/editorial.v18.ts";
+import { draftPrompt, plainJob, WRITERS_BRIEF } from "../prompts/draft.v18.ts";
+import { tellEditPrompt } from "../prompts/tell_edit.v15.ts";
+import { revisePrompt } from "../prompts/revise.v18.ts";
+import { editorialPrompt } from "../prompts/editorial.v19.ts";
 import { coldReadPrompt } from "../prompts/cold_read.v3.ts";
 import { ColdRead } from "../schemas/review.ts";
 import { TellEditAuditItem } from "../schemas/tell_edit.ts";
@@ -51,7 +51,7 @@ Deno.test("the standard: feeling first and plain words are rules, gates and a ro
 });
 
 Deno.test("the drafter reads the writer's brief before the rulebook, and line one asks for plain words and the feeling", () => {
-  assertEquals(draftPrompt.version, 17);
+  assertEquals(draftPrompt.version, 18);
   assert(draftPrompt.system.startsWith("## How to write this (read before the rules below)"), draftPrompt.system.slice(0, 80));
   assert(draftPrompt.system.indexOf(WRITERS_BRIEF) < draftPrompt.system.indexOf("## 1. The standard"));
   for (const t of ["Start inside his head. He is not thinking about the product.", "Then the product in one plain sentence with its name", "Every fact is there to make him feel something", "Words a ten-year-old knows; sentences short, with one long one where the feeling needs it.", "The rules below are the desk's checklist, checked after you write."]) assertStringIncludes(WRITERS_BRIEF, t);
@@ -119,7 +119,7 @@ Deno.test("the social spec is short and plain: the lead-in feels and never names
 });
 
 Deno.test("the editors: the tell edit reads for jargon and never raises the grade, the reviser fixes the grade and the flat line, the copy chief reads for feeling, the cold read says what he felt", () => {
-  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, coldReadPrompt.version], [14, 17, 18, 3]);
+  assertEquals([tellEditPrompt.version, revisePrompt.version, editorialPrompt.version, coldReadPrompt.version], [15, 18, 19, 3]);
   assertStringIncludes(tellEditPrompt.system, `"jargon", a word a cold reader outside the trade would stop at`);
   assertStringIncludes(tellEditPrompt.system, "Every edit keeps the reading grade where it is or lowers it (rule 40)");
   assertEquals(TellEditAuditItem.parse({ ref: "lead-a-1", line: "x", kind: "jargon", keep: false }).kind, "jargon");
@@ -133,4 +133,36 @@ Deno.test("the editors: the tell edit reads for jargon and never raises the grad
   const parsed = ColdRead.parse({ skim_readback: { what_sold: "x", to_whom: "y", price: "z", why_believe: "w" }, attention_drop_line: null, disbelieved_claim: null, promise_one_sentence: "p", lead_pick: null });
   assertEquals([parsed.felt, parsed.stumbled], [null, []]);
   assertEquals(ColdRead.parse({ ...parsed, felt: "a pang", stumbled: ["difficulty number"] }).stumbled, ["difficulty number"]);
+});
+
+Deno.test("the type of word: a long word where the short one does, a report word, and the passive voice are caught; the editors carry the table", async () => {
+  const { LONG_WORD_RE, TELLS: rules } = await import("../tells.ts");
+  const { PLAIN_WORDS, REPORT_WORDS, plainWordsText } = await import("../plain_words.ts");
+  const { tellEditPrompt: te } = await import("../prompts/tell_edit.v15.ts");
+  const { draftPrompt: dr } = await import("../prompts/draft.v18.ts");
+  assert(PLAIN_WORDS.length >= 140 && REPORT_WORDS.length >= 40, `${PLAIN_WORDS.length} pairs, ${REPORT_WORDS.length} report words`);
+  assert(!PLAIN_WORDS.some(([w]) => ["previous", "however", "portion"].includes(w)), "everyday words stay out of the table");
+  assertEquals("post-purchase emails and the purchase".match(LONG_WORD_RE), ["purchase"], "a hyphenated word is one word");
+  assertEquals("We purchase in order to demonstrate the solution.".match(LONG_WORD_RE)!.map((m) => m.toLowerCase()), ["purchase", "in order to", "demonstrate", "solution"]);
+  assertEquals("I buy the order and show the page.".match(LONG_WORD_RE), null, "short words and 'order' inside 'in order to' only");
+  // the owner's post: the words he called the wrong type
+  const owner = analyzeText(OWNER_POST, { format: FORMATS.organic_social, toolNames: NAMES });
+  const long = owner.flags.find((f) => f.tell === "long_word")!;
+  assert(long.count >= 2 && long.examples.some((e) => e === "interpret") && long.examples.some((e) => e === "enquiries"), `${long.count}: ${long.examples.join(", ")}`);
+  const pvRule = rules.find((x) => x.name === "passive_voice")!;
+  const passives = OWNER_POST.match(new RegExp(pvRule.regex!.source, "gi")) ?? [];
+  assert(passives.length >= 3 && passives.some((e) => /gets made|get passed|was given/.test(e)), passives.join(" | "));
+  assertEquals("The first batch shipped on a Tuesday. We refunded her on the spot. The dog opened the box.".match(new RegExp(pvRule.regex!.source, "gi")), null);
+  // a quotation keeps its words; a long page is not read for the long word by machine
+  assert(!analyzeText(`"We purchase in order to demonstrate," one client said.`, { format: FORMATS.organic_social }).flags.some((f) => f.tell === "long_word"));
+  assert(!analyzeText("We purchase in order to demonstrate.", { format: FORMATS.sales_letter }).flags.some((f) => f.tell === "long_word"));
+  const rule = rules.find((x) => x.name === "long_word")!;
+  assertEquals([rule.tier, rule.owner?.tell, rule.families?.includes("email")], [1, 23, true]);
+  assertEquals([pvRule.tier, pvRule.density_per_1000], [2, 10]);
+  assertStringIncludes(OWNER_TELLS, "| 23 | A long word where the short one does the job, or a word from a report or a slide");
+  assertStringIncludes(RULES, "The type of word matters as much as the grade: the short word for the thing (buy, not purchase; show, not demonstrate");
+  assertStringIncludes(te.system, "a word in the table below is swapped for its short one on sight, the sense kept");
+  assertStringIncludes(te.system, `Long words and the short ones (rule 40): ${plainWordsText().slice(0, 60)}`);
+  assertStringIncludes(dr.system, "Long words and the short ones to use instead: accomplish: do;");
+  assert(dr.system.indexOf("Long words and the short ones") < dr.system.indexOf("## 1. The standard"));
 });
