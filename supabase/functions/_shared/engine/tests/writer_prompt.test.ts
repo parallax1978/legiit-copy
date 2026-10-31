@@ -155,3 +155,33 @@ Deno.test("an opening two grades over the ceiling loses to one within a grade of
   assertEquals(leadsWithinGrade([dense, { ...dense, id: "lead-d" }], FORMATS.organic_social).map((l) => l.id), ["lead-b", "lead-d"], "every opening over the grade: all go to the reader");
   assertEquals(leadsWithinGrade([plain, dense], FORMATS.sales_letter).length, 1, "a page has Grade 8 as its ceiling; the dense opening is still over it");
 });
+
+Deno.test("the engine writes the product sentence itself: the argument step returns it once, the drafter prefers the user's, then the argument's, then the brief's", async () => {
+  const { default: argumentV21, PRODUCT_SENTENCE_RULE, productSentenceJob } = await import("../prompts/argument.v21.ts");
+  const { default: argumentV20 } = await import("../prompts/argument.v20.ts");
+  const { ArgumentOutput } = await import("../schemas/argument.ts");
+  const { CandidatesOutput } = await import("../argument/candidates.ts");
+  const { productText } = await import("../draft/brief_text.ts");
+  assertEquals(argumentV21.version, 21);
+  assert(argumentV21.system.includes(PRODUCT_SENTENCE_RULE) && argumentV21.system.indexOf(PRODUCT_SENTENCE_RULE) < argumentV21.system.indexOf("- Each candidate carries: id (A01, A02, ...);"));
+  assert(PRODUCT_SENTENCE_RULE.includes(`software is a tool or an app, never "a service"`) && PRODUCT_SENTENCE_RULE.includes("When <setup> gives a product sentence, product_sentence is that sentence as given"));
+  assert(!argumentV20.system.includes("product_sentence"), "version 20 is as it was");
+  assertEquals(productSentenceJob("x Return cluster_vocabulary_used and candidates. y"), "x Return cluster_vocabulary_used, product_sentence and candidates. y");
+  assertEquals(productSentenceJob("a scoring call"), "a scoring call");
+  // old rows parse; the field defaults to null
+  const parsed = CandidatesOutput.parse({ cluster_vocabulary_used: [], candidates: [] });
+  assertEquals(parsed.product_sentence, null);
+  assertEquals(ArgumentOutput.shape.product_sentence.parse(undefined), null);
+  const offer = (setup: Record<string, unknown>) => ({ id: "o", name: "Legiit Keywords", setup, audience: null, positioning: null } as unknown as Parameters<typeof productText>[1]);
+  const brief = { product_name: "Legiit Keywords", one_line: "A keyword research service that reads a website and returns a ranked plan of pages to build, improve or skip.", urls: [], competitors: [], unknowns: [], positioning: null } as unknown as Parameters<typeof productText>[0];
+  assert(productText(brief, offer({ product_sentence: "Legiit Keywords is a tool that reads page one and writes the pages you can win." }), null, "the argument's sentence").includes("Legiit Keywords: Legiit Keywords is a tool that reads page one"), "the user's sentence first");
+  assert(productText(brief, offer({}), null, "Legiit Keywords is a tool that tells you which pages to write and writes them.").includes("Legiit Keywords: Legiit Keywords is a tool that tells you which pages"), "then the argument's");
+  assert(productText(brief, offer({}), null, null).includes("Legiit Keywords: A keyword research service that reads a website"), "then the brief's one line");
+});
+
+Deno.test("the intake writes the one line as a friend would say it and one row per decision an example shows", async () => {
+  const { default: intakeV17 } = await import("../prompts/intake.v17.ts");
+  assertEquals(intakeV17.version, 17);
+  assert(intakeV17.system.includes(`software is a tool or an app, never "a service", and a service is people doing the work`));
+  assert(intakeV17.system.includes("one row per decision for up to three decisions (role proof, story_claim true): the thing decided, the verdict, what it read or compared"));
+});

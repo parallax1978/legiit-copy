@@ -89,15 +89,18 @@ export function publicPlanLink(brief: OfferBrief | null): string | null {
   return (brief?.urls ?? []).find((u) => /\/share\//i.test(u)) ?? null;
 }
 
-/** The product in plain words, what to leave out, who it is up against, what nobody knows. */
-export function productText(brief: OfferBrief | null, offer: OfferRow, config: OfferConfigRow | null): string {
+/**
+ * The product in plain words, what to leave out, who it is up against, what nobody knows. The sentence is the user's
+ * when the setup has one, else the argument step's (written once per run as a friend would say it), else the brief's.
+ */
+export function productText(brief: OfferBrief | null, offer: OfferRow, config: OfferConfigRow | null, argumentSentence: string | null = null): string {
   const setup = parseSetup(offer.setup);
   const name = brief?.product_name ?? offer.name;
   const link = siteLink(brief);
   const humor = config?.humor_policy && typeof config.humor_policy === "object" && (config.humor_policy as { allowed?: boolean }).allowed === false;
   return [
     `THE PRODUCT`,
-    `${name}: ${setup.product_sentence ?? brief?.one_line ?? offer.positioning ?? "(no plain sentence on file)"}`,
+    `${name}: ${setup.product_sentence ?? argumentSentence ?? brief?.one_line ?? offer.positioning ?? "(no plain sentence on file)"}`,
     link ? `The site: ${link}` : "",
     brief?.positioning && brief.positioning !== setup.product_sentence ? `Against the others: ${brief.positioning}` : "",
     setup.leave_out ? `Leave out of every piece: ${setup.leave_out}` : "",

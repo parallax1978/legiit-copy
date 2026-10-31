@@ -116,6 +116,8 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 
 - [x] The writing steps rebuilt around what the masters did: a short writer's prompt (draft v19, revise v19), the material said plainly once with the facts deduped, whole exemplar pieces per format family, short pieces written whole in one call with the three openings written to the same body; the rulebook stays with the reviewers. The plain-words research merged into the detector and the tell edit (v16).
 
+- [x] The engine writes the product sentence itself (argument v21 returns it once per run; the setup's sentence overrides it) and the intake (v17) writes the one line as a friend would say it and one row per decision an example report shows, so a user who fills nothing in still gets the product said plainly and a proof told as one decision.
+
 ## Open decisions (user)
 
 | Decision | Default if not decided |

@@ -38,6 +38,8 @@ export const ArgumentOutput = z.object({
   winner_id: z.string(),
   thesis: z.string().describe('"This draft exists to prove that [mechanism] is a different and superior way to get [promise] for [reader], and the proof is [carrier]."'),
   losers_kept_ids: z.array(z.string()).max(2),
+  /** the product introduced in one plain sentence with its name, written once by the candidates call (null on rows from before it) */
+  product_sentence: z.string().nullable().default(null),
   tie_break_note: z.string().nullable(),
 });
 export type ArgumentOutput = z.infer<typeof ArgumentOutput>;

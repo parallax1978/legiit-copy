@@ -20,6 +20,8 @@ import { dealText, factsText, ideaText, pieceText, productText, readerWordsText,
 import { exemplarsText } from "./exemplars/index.ts";
 import { parseOptions } from "../draft/options.ts";
 import { exemptTermsFrom } from "../tells.ts";
+import { ArgumentOutput } from "../schemas/argument.ts";
+import type { StepContext } from "../steps/types.ts";
 
 export interface DraftArgs {
   call: DraftCall;
@@ -73,6 +75,7 @@ export const NEVER = `What sends a draft back:
 - A product limit or an internal number as a feature (how many pages it reads, how many credits a run costs): nobody asked, and it makes the product smaller.
 - A denial that plants the doubt it denies ("nothing is made up", "no fluff", "not a gimmick") when no reader raised it, and a warning in the sell that the product may come back with nothing ("when nothing is worth building, it says so"): it tells him no, with the reason; it never warns him it may find nothing.
 - A daydream ("Picture...", "Imagine...") where a fact belongs.
+- A promise of reasons ("each with its reason", "with the reason for every no") when the piece shows none: show one, or say what he gets without promising the reasons.
 - A proof called public, open or there to read without its link in reach: in a post the only link is in the first comment, so the proof is told, not pointed at.
 - A fact that argues a different problem than the idea names: every line serves the idea.
 - Six words in a row from any exemplar or example you were shown.
@@ -158,6 +161,12 @@ function sectionsJob(args: DraftArgs): string {
   ].filter(Boolean).join("\n");
 }
 
+/** The product sentence the argument step wrote for this run, when the step ran a version that writes one. */
+function argumentSentence(ctx: StepContext): string | null {
+  const r = ArgumentOutput.safeParse(ctx.stepOutputs.argument);
+  return r.success ? r.data.product_sentence ?? null : null;
+}
+
 export const draftPrompt: PromptModule<DraftArgs> = {
   step: "draft",
   version: 19,
@@ -175,7 +184,7 @@ export const draftPrompt: PromptModule<DraftArgs> = {
     return [
       whoAndWhatText({ brief: ctx.brief, offer: ctx.offer, dossier: ctx.dossier, options, awareness: args.awareness, segment: args.segment }),
       ideaText(ctx.winningAngle, ctx.angles, args.thesis),
-      productText(ctx.brief, ctx.offer, ctx.config),
+      productText(ctx.brief, ctx.offer, ctx.config, argumentSentence(ctx)),
       readerWordsText(ctx.dossier, ctx.claims),
       factsText(ctx.claims, spec),
       dealText(ctx.variant, ctx.brief, ctx.claims, spec, options),

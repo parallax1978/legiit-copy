@@ -12,6 +12,7 @@ export type CandidateT = z.infer<typeof Candidate>;
 /** Output schema of the candidate-generation call. */
 export const CandidatesOutput = z.object({
   cluster_vocabulary_used: z.array(z.string()).describe("every cluster token used, each exactly as it appears in <cluster_table>"),
+  product_sentence: z.string().nullable().default(null).describe("the product introduced in one plain sentence with its name, twenty words or fewer, as a friend would say it to the reader"),
   candidates: z.array(Candidate),
 });
 export type CandidatesOutput = z.infer<typeof CandidatesOutput>;

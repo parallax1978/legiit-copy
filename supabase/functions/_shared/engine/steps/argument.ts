@@ -18,7 +18,7 @@ import { CandidatesOutput, isExcluded, normalizeCandidates, readExclusions } fro
 import { computeClusterTable, renderClusterTable } from "../argument/magnitude.ts";
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v20.ts";
+import argumentPrompt from "../prompts/argument.v21.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { formatExamplesForPrompt, retrieve } from "../retrieval.ts";
 import { ArgumentOutput, Candidate } from "../schemas/argument.ts";
@@ -43,6 +43,8 @@ export const ArgumentPartial = z.object({
   dropped: z.array(z.string()).optional(),
   /** candidates missing: retry candidate generation with fewer; candidates present: retry scoring compact. */
   retry: z.boolean().optional(),
+  /** the product in one plain sentence, from the candidates call, carried across a scoring retry */
+  product_sentence: z.string().nullable().optional(),
 });
 export type ArgumentPartial = z.infer<typeof ArgumentPartial>;
 
@@ -109,6 +111,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const stale = (partial.candidates ?? []).filter((c) => isExcluded(c, exclusions));
     let candidates = (partial.candidates ?? []).filter((c) => !isExcluded(c, exclusions));
     let droppedReasons = [...(partial.dropped ?? []), ...stale.map((c) => `${c.id} excluded: ${c.big_idea}`)];
+    let productSentence: string | null = partial.product_sentence ?? null;
     let model: string | undefined;
     if (!candidates.length) {
       const retry = !!partial.retry;
@@ -130,6 +133,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
         await ctx.savePartial(next);
         return { output: next, summary: "candidate generation ran past the output budget; retrying with fewer candidates", continueLater: { reason: CANDIDATES_RETRY_REASON } };
       }
+      productSentence = gen.output.product_sentence?.trim() || null;
       const norm = normalizeCandidates(gen.output.candidates, table, exclusions);
       if (!norm.candidates.length) {
         throw new Error(`the model returned no usable candidates (${norm.dropped.length} dropped: ${norm.dropped.map((x) => x.reason).join("; ") || "none"})`);
@@ -137,7 +141,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
       candidates = norm.candidates;
       droppedReasons = norm.dropped.map((x) => x.reason);
       model = gen.model;
-      const checkpoint: ArgumentPartial = { candidates, dropped: droppedReasons };
+      const checkpoint: ArgumentPartial = { candidates, dropped: droppedReasons, product_sentence: productSentence };
       await ctx.savePartial(checkpoint);
       if (remainingBudgetMs(ctx) < SCORING_ESTIMATE_MS) {
         return { output: checkpoint, model, summary: `${candidates.length} candidates generated; scoring continues in the next invocation`, continueLater: { reason: `${candidates.length} candidates generated; scoring them next` } };
@@ -163,7 +167,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
         });
       } catch (e) {
         if (!(e instanceof TruncatedError) || compact) throw e;
-        const next: ArgumentPartial = { candidates, dropped: droppedReasons, retry: true };
+        const next: ArgumentPartial = { candidates, dropped: droppedReasons, retry: true, product_sentence: productSentence };
         await ctx.savePartial(next);
         return { output: next, model, summary: "scoring ran past the output budget; retrying with one-sentence rationales", continueLater: { reason: SCORING_RETRY_REASON } };
       }
@@ -172,7 +176,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     }
 
     const asm = assembleArgument({ gated, judged, reader: brief.audience.who, purposeGiven });
-    const output = ArgumentOutput.parse(asm.output);
+    const output = ArgumentOutput.parse({ ...asm.output, product_sentence: productSentence });
     const winner = output.candidates.find((c) => c.id === output.winner_id)!;
     const droppedNote = droppedReasons.length ? `; ${droppedReasons.length} dropped (${droppedReasons.join("; ")})` : "";
 
