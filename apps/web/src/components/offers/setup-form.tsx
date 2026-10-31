@@ -29,8 +29,12 @@ export function SetupForm({ offerId, setup, editable, extracted }: { offerId: st
   const stored = JSON.stringify(setupFromJson(setup));
   const answered = Object.values(value).filter((v) => v.trim()).length;
 
-  // the stored answers replace the form only while nothing typed is unsaved
+  // the stored answers replace the form only when they change on the server and nothing typed is unsaved;
+  // a save finishing (dirty going false) never pulls the old props back over what was just saved
+  const lastStored = useRef(stored);
   useEffect(() => {
+    if (stored === lastStored.current) return;
+    lastStored.current = stored;
     if (!dirty) setValue(JSON.parse(stored) as SetupValues);
   }, [stored, dirty]);
 
@@ -51,7 +55,10 @@ export function SetupForm({ offerId, setup, editable, extracted }: { offerId: st
       return false;
     }
     // typing went on while the save was in flight: those keystrokes are still unsaved
-    if (JSON.stringify(latest.current) === JSON.stringify(snapshot)) setDirty(false);
+    if (JSON.stringify(latest.current) === JSON.stringify(snapshot)) {
+      lastStored.current = JSON.stringify(snapshot); // the server now holds this; the next props carry the same
+      setDirty(false);
+    }
     setState("saved");
     return true;
   }

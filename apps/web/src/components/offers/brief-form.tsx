@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
@@ -24,7 +24,10 @@ export function BriefForm({ offerId, name: initialName, brief: initial, editable
   const ro = !editable;
   // the page refreshes underneath when the offer changes (a status, a source): the stored brief replaces the form only while nothing typed is unsaved
   const stored = JSON.stringify({ initialName, initial });
+  const lastStored = useRef(stored);
   useEffect(() => {
+    if (stored === lastStored.current) return;
+    lastStored.current = stored;
     if (dirty) return;
     const s = JSON.parse(stored) as { initialName: string; initial: OfferBrief };
     setName(s.initialName);
