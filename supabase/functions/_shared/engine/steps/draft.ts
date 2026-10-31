@@ -15,7 +15,7 @@ import { DraftOutput, LeadVariant, Section, SectionDraft } from "../schemas/draf
 import type { LeadType } from "../schemas/common.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
-import { draftPrompt, type DraftArgs } from "../prompts/draft.v20.ts";
+import { draftPrompt, type DraftArgs } from "../prompts/draft.v21.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
 import { SEQUENCE_ROLES, sectionBaseId } from "../formats/index.ts";
 import { evaluateGates } from "../tells.ts";

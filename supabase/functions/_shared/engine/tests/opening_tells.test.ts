@@ -78,8 +78,9 @@ Deno.test("opening rules: the hooks the owner rejected are caught (rejected.txt,
   MechanicalReport.parse(r);
   assertEquals(r.owner_tells, 4);
   assert(r.hard_fail && r.hard_fail_reasons.some((x) => x.startsWith("owner_stack: 4")), r.hard_fail_reasons.join("; "));
-  // the fifth opening rule (a product pointed at before its name) is read only with the product's name, which this text has none of
-  for (const t of OPENING_TELLS.filter((x) => x !== "unintroduced_product")) {
+  // the fifth opening rule (a product pointed at before its name) is read only with the product's name, which this text has none of;
+  // the sixth (a thing leaned on before it is named) has nothing to catch in these hooks
+  for (const t of OPENING_TELLS.filter((x) => x !== "unintroduced_product" && x !== "unnamed_thing")) {
     const f = r.flags.find((x) => x.tell === t)!;
     assertEquals([f.tier, f.weight, f.count], [1, 4, 1], t);
     assert(f.examples[0].length > 0 && ROUND_6.join(" ").includes(f.examples[0].replace(/^…|…$/g, "")), `${t}: ${f.examples[0]}`);
@@ -352,4 +353,18 @@ Deno.test("tell edit step: the opening tells reach the editor with the ledger's 
   const plain: TellEditArgs[] = [];
   await runTellEdit(ctxFor(draft), { call: editor(() => ({ edits: [], what_changed: [], already_clean: false }), plain) });
   assertEquals(plain[0].findings.filter((f) => f.ref === "lead_in-1").map((f) => f.tell), ["reader_scene_opener"]);
+});
+
+Deno.test("unnamed thing: an opening that leans on 'the list' or 'those ten pages' before naming them is caught; a named thing is not", () => {
+  const vague = ["Pick the easiest keyword on your last list and Google it right now.", "You'll see ten pages already sitting there. Nobody read a single one of them before that keyword went on the list you pay for every month."];
+  assert(opened(vague).includes("unnamed_thing"), opened(vague).join(","));
+  const r = analyzeText(vague.join("\n\n"), { format: FORMATS.organic_social });
+  const f = r.flags.find((x) => x.tell === "unnamed_thing")!;
+  assertEquals(f.count, 1, "counted once per opening");
+  assert(f.examples[0].toLowerCase().includes("your last list"), f.examples.join(" | "));
+  const named = ["Open Ahrefs. Take the easiest keyword on the list it gives you and Google it right now.", "Ten pages are already sitting there, and nobody read one of them before that keyword went on the list."];
+  assert(!opened(named).includes("unnamed_thing"), "the tool named first makes 'the list' plain");
+  const plain = ["Your keyword list has two thousand rows and not one word about the pages on page one.", "The number of pages that ever earned a dime is the only number that matters.", "The ten pages already on page one decide whether your page ever ranks."];
+  assert(!opened(plain).includes("unnamed_thing"), opened(plain).join(","));
+  assert(!opened(["Count the stars under your company's name on Google.", "If it says 4.2 and 31 reviews, that is what every new customer sees."]).includes("unnamed_thing"));
 });

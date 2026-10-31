@@ -450,6 +450,13 @@ export const TELLS: TellRule[] = [
     note: "In lines 1-5 of the opening, before the product's name has appeared in it, \"it\" (or \"this tool\", \"the app\", \"the tool I use\") is the actor of a verb of doing (reads, checks, tells, gives, writes, decides...): the reader is told what \"it\" does before he is told what it is (§7.1 tell 18, rule 38). Read only when the caller passes the product's name. Found in the owner's rejected post of 30 October (\"Then it reads the pages ranking for each group\").",
   },
   {
+    tier: 1, name: "unnamed_thing", weight: 4, scope: "structural", owner: { tell: 22 },
+    regex: null,
+    example: "Pick the easiest keyword on your last list and Google it. / Nobody read one of them before that keyword went on the list you pay for every month. / Once you know what those ten pages get wrong",
+    fix: "Name the thing the first time: 'the keyword list Ahrefs gives you', 'the list your keyword tool hands you', 'the ten pages already on page one'; only then 'the list' (rule 40). Example (a plumber): not 'Check the gauge before the next one.' but 'Check the pressure gauge on the boiler before the next call.'",
+    note: "In lines 1-5 of the opening a definite phrase (the list, your last list, those ten pages, the top ten) appears before the opening has named the thing (a tool's name, 'keyword list', 'page one', the product). The reader asks 'what list?' and leaves (the owner's note on the 31 October post). Counted once per opening.",
+  },
+  {
     tier: 1, name: "metric_name", weight: 4, scope: "all", owner: { tell: 22 }, families: ["social", "ad", "email", "message", "audio", "video"],
     regex: null,
     example: "a difficulty number / the volume column / a quality score",
@@ -1614,8 +1621,25 @@ export function talkingToolPattern(toolNames: string[] = []): RegExp {
   return re;
 }
 
-export type OpeningTell = "reader_scene_opener" | "closing_verdict" | "slogan_rehook" | "talking_tool" | "unintroduced_product";
-export const OPENING_TELLS: readonly OpeningTell[] = ["reader_scene_opener", "closing_verdict", "slogan_rehook", "talking_tool", "unintroduced_product"];
+export type OpeningTell = "reader_scene_opener" | "closing_verdict" | "slogan_rehook" | "talking_tool" | "unintroduced_product" | "unnamed_thing";
+export const OPENING_TELLS: readonly OpeningTell[] = ["reader_scene_opener", "closing_verdict", "slogan_rehook", "talking_tool", "unintroduced_product", "unnamed_thing"];
+
+/**
+ * A thing referred to as if the reader already knew it, in the opening, before it is named (rule 40): "the list",
+ * "your last list", "those ten pages", "the top ten". The determiner sits right on the noun (an optional everyday
+ * adjective between); "your keyword list", "the list Semrush gave you" and "the ten pages that rank for it" name the thing (a naming word or a
+ * defining clause) and never match. "The
+ * number", "the score", "the report", "the export" and "the tool" belong to the metric, talking-tool and
+ * unintroduced-product rules, and "the number" has too many plain uses ("before the number finished printing").
+ */
+const UNNAMED_RE = /\b(?:the|your|that|this|those|these) (?:(?:last|latest|same|whole|old|new|first|next|current|usual|monthly|weekly) )?(?:lists?|ten pages|top ten)\b(?! of\b)(?!['’]s)(?!\s+(?:that|which|already|ranking|sitting|on page one|on the first page|google|ahrefs|semrush|it gives|your (?:keyword )?tool))/gi;
+/** Words that name the thing: the offer's own tool names (the caller's), the trade's plain names and the product. */
+function namesTheThing(before: string, toolNames: string[], productName: string | null): boolean {
+  const t = before.toLowerCase();
+  if (productName && t.includes(productName.toLowerCase())) return true;
+  if (/\bkeyword (?:lists?|tools?|research|export)\b|\bseo tools?\b|\bresearch tools?\b|\b(?:ahrefs|semrush|ubersuggest|moz|google)\b|\bpage one\b|\bfirst page of google\b|\btop (?:ten|10) (?:results?|pages)\b/.test(t)) return true;
+  return toolNames.some((n) => n && t.includes(n.toLowerCase()));
+}
 
 /**
  * R5 (§7.1 tell 18, rule 38): in the opening, before the product's name has appeared in it, "it" (or "this tool", "the
@@ -1661,6 +1685,20 @@ export function openingMatches(lines: string[], opts: { toolNames?: string[]; al
     const m = re.exec(ln);
     if (!m || (tools > 0 && !opts.all)) return;
     out.push({ tell: "talking_tool", line: i, match: m[0], at: m.index, first: tools++ === 0 });
+  });
+  // a thing leaned on before it is named: the text of the opening before the match must name it
+  let unnamed = 0;
+  let before = "";
+  lines.slice(0, 5).forEach((ln, i) => {
+    UNNAMED_RE.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = UNNAMED_RE.exec(ln)) !== null) {
+      const soFar = before + " " + ln.slice(0, m.index);
+      if (namesTheThing(soFar, opts.toolNames ?? [], opts.productName ?? null)) continue;
+      if (unnamed > 0 && !opts.all) break;
+      out.push({ tell: "unnamed_thing", line: i, match: m[0], at: m.index, first: unnamed++ === 0 });
+    }
+    before += " " + ln;
   });
   const name = (opts.productName ?? "").trim().toLowerCase();
   if (name) {
@@ -2020,7 +2058,8 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       case "closing_verdict":
       case "slogan_rehook":
       case "talking_tool":
-      case "unintroduced_product": {
+      case "unintroduced_product":
+      case "unnamed_thing": {
         const counted = opening.filter((h) => h.tell === rule.name && h.counted);
         hit = { rule, count: counted.length, examples: trimExamples(counted.map((h) => h.example)) };
         break;

@@ -979,6 +979,7 @@ const OPENING_SEEN: Record<OpeningTell, string> = {
   slogan_rehook: "a slogan line in the opening",
   talking_tool: "a tool, score or list is the subject that says, judges or gives",
   unintroduced_product: "the product is pointed at (\"it\", \"this tool\") before the piece says what it is",
+  unnamed_thing: "a thing is leaned on (\"the list\", \"that number\", \"those ten pages\") before the opening has named it",
 };
 
 export interface OpeningFinding {

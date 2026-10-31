@@ -212,3 +212,20 @@ Deno.test("spoken order: the writer (draft v20) reads each sentence aloud, the c
   const quiet = reviseV20.user(c, { draft, editorial: null, factual: [], mechanical: null, coldRead: old, cycle: 1, retryNote: null });
   assert(!quiet.includes("SENTENCES A COLD READER HAD TO READ TWICE"));
 });
+
+Deno.test("a thing is named the first time it appears: rule 40, the writer (draft v21), the reviser (v21), the cold reader (v5), and the rulebook readers bumped", async () => {
+  const { RULES } = await import("../prompts/standard.ts");
+  assert(RULES.includes(`A thing is named the first time it appears, never referred to as if he already knew it: "the list", "your last list", "that number"`));
+  const { draftPrompt: d21, NAME_IT_FIRST, WRITER: W21 } = await import("../prompts/draft.v21.ts");
+  const { revisePrompt: r21, REVISION_V21 } = await import("../prompts/revise.v21.ts");
+  const { coldReadPrompt: c5 } = await import("../prompts/cold_read.v5.ts");
+  assertEquals([d21.version, r21.version, c5.version], [21, 21, 5]);
+  assert(d21.system.includes(NAME_IT_FIRST) && d21.system.startsWith(W21) && NAME_IT_FIRST.includes(`"Pick the easiest keyword on your last list" leaves him asking "what list?"`));
+  assert(r21.system.startsWith(W21) && REVISION_V21.includes(`a line he could not place ("what list?") is rewritten naming the thing the first time`));
+  assert(c5.system.includes(`a thing spoken of as if you already knew it ("the list", "your last list", "that number", "those ten pages")`));
+  for (const [file, name, version] of [["argument.v22", "default", 22], ["editorial.v20", "editorialPrompt", 20], ["factual.v16", "factualPrompt", 16], ["intake.v18", "default", 18], ["offer.v19", "default", 19], ["research.v12", "default", 12], ["tell_edit.v17", "tellEditPrompt", 17]] as const) {
+    const mod = await import(`../prompts/${file}.ts`);
+    const p = mod[name] as { version: number; system: string };
+    assertEquals(p.version, version, file);
+  }
+});
