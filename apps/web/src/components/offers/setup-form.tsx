@@ -36,10 +36,18 @@ export function SetupForm({ offerId, setup, editable, extracted }: { offerId: st
 
   async function persist(snapshot: SetupValues, reextract: boolean): Promise<boolean> {
     setState("saving");
-    const r = await saveSetup(offerId, snapshot, reextract);
+    let r: Awaited<ReturnType<typeof saveSetup>>;
+    try {
+      r = await saveSetup(offerId, snapshot, reextract);
+    } catch (e) {
+      // a thrown error (a lost connection, the app redeployed under an open tab) used to vanish without a word
+      setState("failed");
+      toast.error(`Not saved: ${e instanceof Error ? e.message : String(e)}. Your answers are still in the form; try Save again or reload.`);
+      return false;
+    }
     if (!r.ok) {
       setState("failed");
-      toast.error(r.error);
+      toast.error(`Not saved: ${r.error}`);
       return false;
     }
     // typing went on while the save was in flight: those keystrokes are still unsaved
