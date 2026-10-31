@@ -335,6 +335,7 @@ export function revisionQuotes(input: { editorial: EditorialVerdict | null; fact
   for (const t of input.mechanical?.flags ?? []) if (t.tier <= 1) q.push(...t.examples);
   for (const r of input.mechanical?.hard_fail_reasons ?? []) q.push(r);
   if (input.coldRead?.attention_drop_line) q.push(input.coldRead.attention_drop_line);
+  for (const r of input.coldRead?.reread ?? []) q.push(r.line);
   return q.filter((x) => normalizeQuote(x).length > 0);
 }
 

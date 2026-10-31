@@ -185,3 +185,30 @@ Deno.test("the intake writes the one line as a friend would say it and one row p
   assert(intakeV17.system.includes(`software is a tool or an app, never "a service", and a service is people doing the work`));
   assert(intakeV17.system.includes("one row per decision for up to three decisions (role proof, story_claim true): the thing decided, the verdict, what it read or compared"));
 });
+
+Deno.test("spoken order: the writer (draft v20) reads each sentence aloud, the cold reader (v4) reports lines read twice, and the revision (v20) rewrites them as spoken", async () => {
+  const { draftPrompt: draftV20, SPOKEN_ORDER, WRITER: WRITER_V20 } = await import("../prompts/draft.v20.ts");
+  const { revisePrompt: reviseV20, REVISION_V20 } = await import("../prompts/revise.v20.ts");
+  const { coldReadPrompt: coldV4, rereadShape } = await import("../prompts/cold_read.v4.ts");
+  const { ColdRead } = await import("../schemas/review.ts");
+  const { revisionQuotes } = await import("../draft/review.ts");
+  assertEquals([draftV20.version, reviseV20.version, coldV4.version], [20, 20, 4]);
+  assert(draftV20.system.includes(SPOKEN_ORDER) && draftV20.system.startsWith(WRITER_V20), "the spoken-order rule sits in the writer's words");
+  assert(SPOKEN_ORDER.includes(`"You have to decide that yourself" is how a person says it; "You decide alone" is not.`));
+  assert(!draftPrompt.system.includes("Every sentence in the order a person speaks it"), "version 19 is as it was");
+  assert(reviseV20.system.startsWith(WRITER_V20) && reviseV20.system.includes(REVISION_V20) && REVISION_V20.includes("(f) every sentence a cold reader had to read twice"));
+  assert(coldV4.system.includes("- reread: up to five sentences you had to read twice"));
+  assertEquals(rereadShape(`x "promise_one_sentence":"", y`), `x "promise_one_sentence":"","felt":"","stumbled":[],"reread":[{"line":"","say_it":""}], y`);
+  // old cold reads parse; the new field defaults to empty
+  const old = ColdRead.parse({ skim_readback: { what_sold: "a", to_whom: "b", price: "c", why_believe: "d" }, attention_drop_line: null, disbelieved_claim: null, promise_one_sentence: "p", lead_pick: null });
+  assertEquals(old.reread, []);
+  const cold = ColdRead.parse({ ...old, reread: [{ line: "You decide alone which pages beat page one.", say_it: "You have to decide yourself which pages can beat page one." }] });
+  assert(revisionQuotes({ editorial: null, factual: [], mechanical: null, coldRead: cold }).includes("You decide alone which pages beat page one."), "a line read twice may be changed");
+  const c = ctx();
+  const draft = { format: "organic_social", sections: [{ section_id: "main", title: null, blocks: [{ id: "main-1", type: "paragraph", text: "You decide alone which pages beat page one.", items: null, meta: null }] }], leads: null, chosen_lead_id: null, skim_path: [], ledger_refs_used: [], needs_source: [], word_count: 8 } as unknown as Parameters<typeof reviseV20.user>[1]["draft"];
+  const u = reviseV20.user(c, { draft, editorial: null, factual: [], mechanical: null, coldRead: cold, cycle: 1, retryNote: null });
+  assert(u.includes("SENTENCES A COLD READER HAD TO READ TWICE") && u.includes(`1. "You decide alone which pages beat page one."`) && u.includes("the reader would say: You have to decide yourself"), u.slice(u.indexOf("SENTENCES"), u.indexOf("SENTENCES") + 300));
+  assert(u.indexOf("SENTENCES A COLD READER HAD TO READ TWICE") < u.indexOf("THE DRAFT (block ids in brackets"), "the lines come before the draft");
+  const quiet = reviseV20.user(c, { draft, editorial: null, factual: [], mechanical: null, coldRead: old, cycle: 1, retryNote: null });
+  assert(!quiet.includes("SENTENCES A COLD READER HAD TO READ TWICE"));
+});

@@ -247,7 +247,7 @@ Deno.test("revisionQuotes gathers every note source; diffBlocks reports changed,
     editorial: verdict(),
     factual: [flag()],
     mechanical: mech,
-    coldRead: { skim_readback: { what_sold: "", to_whom: "", price: "", why_believe: "" }, attention_drop_line: "The usual fix", disbelieved_claim: null, promise_one_sentence: "", lead_pick: null, felt: null, stumbled: [] },
+    coldRead: { skim_readback: { what_sold: "", to_whom: "", price: "", why_believe: "" }, attention_drop_line: "The usual fix", disbelieved_claim: null, promise_one_sentence: "", lead_pick: null, felt: null, stumbled: [], reread: [] },
   });
   assertEquals(q, ["The usual fix is a bigger spreadsheet.", "most of them took a week", `I ran 212 audits [[L:${A}]] last year`, "designed to help busy founders", "bracket placeholder: [Product Name]", "The usual fix"]);
 

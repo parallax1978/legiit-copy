@@ -5,7 +5,7 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
-import { revisePrompt, type ReviseArgs } from "../prompts/revise.v19.ts";
+import { revisePrompt, type ReviseArgs } from "../prompts/revise.v20.ts";
 import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
@@ -27,11 +27,12 @@ export const reviseStep: StepFn = async (ctx) => {
   const promise = promiseStems(angle.success ? angle.data.promise : null);
   const factualPending = pendingFactualFlags(factual, ctx.claims, promise);
   const tier01 = mechanical?.flags.filter((f) => f.tier <= 1) ?? [];
-  const hasWork = (editorial !== null && editorial.verdict !== "APPROVE") || factualPending.length > 0 || (mechanical?.hard_fail ?? false) || tier01.length > 0;
+  const reread = coldRead?.reread.filter((r) => r.line.trim()) ?? [];
+  const hasWork = (editorial !== null && editorial.verdict !== "APPROVE") || factualPending.length > 0 || (mechanical?.hard_fail ?? false) || tier01.length > 0 || reread.length > 0;
   const doNotTouch = editorial?.do_not_touch ?? [];
 
   if (!hasWork) {
-    const summary = "Nothing to revise: the verdict is APPROVE, no factual flag is pending and no Tier 0/1 tell remains";
+    const summary = "Nothing to revise: the verdict is APPROVE, no factual flag is pending, no Tier 0/1 tell remains and the cold reader read every sentence once";
     await ctx.progress(summary);
     return { output: RevisionOutput.parse({ sections: draft.sections, changes: [], untouched_confirmed: doNotTouch }), summary };
   }
@@ -39,7 +40,7 @@ export const reviseStep: StepFn = async (ctx) => {
   const cycle = ctx.revisionCycles + 1;
   const quotes = revisionQuotes({ editorial, factual: factualPending, mechanical, coldRead });
   const known = knownClaimIds(usableClaims(ctx.claims)); // a dropped row may not be cited by the revision either
-  await ctx.progress(`Revision ${cycle}: ${editorial?.one_thing ? "the one thing, " : ""}${factualPending.length} factual rewrite(s), ${tier01.length} Tier 0/1 tell(s), ${doNotTouch.length} DO NOT TOUCH line(s)`);
+  await ctx.progress(`Revision ${cycle}: ${editorial?.one_thing ? "the one thing, " : ""}${factualPending.length} factual rewrite(s), ${tier01.length} Tier 0/1 tell(s), ${reread.length} sentence(s) read twice, ${doNotTouch.length} DO NOT TOUCH line(s)`);
 
   const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, retryNote: null };
   const run = async (retryNote: string | null) => {

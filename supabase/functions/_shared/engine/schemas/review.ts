@@ -12,6 +12,8 @@ export const ColdRead = z.object({
   felt: z.string().nullable().default(null),
   /** the words a reader outside the trade stopped at, quoted (cold read v3) */
   stumbled: z.array(z.string()).default([]),
+  /** sentences the reader had to read twice for their word order or build, each with how he would say it aloud (cold read v4) */
+  reread: z.array(z.object({ line: z.string(), say_it: z.string() })).default([]),
 });
 export type ColdRead = z.infer<typeof ColdRead>;
 

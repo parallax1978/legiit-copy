@@ -9,7 +9,7 @@
 import type { StepFn } from "./types.ts";
 import { ColdRead } from "../schemas/review.ts";
 import { STEP_DEFAULTS } from "../config.ts";
-import { coldReadPrompt, type ColdReadArgs } from "../prompts/cold_read.v3.ts";
+import { coldReadPrompt, type ColdReadArgs } from "../prompts/cold_read.v4.ts";
 import { draftPrompt } from "../prompts/draft.v8.ts";
 import { leadSectionId } from "../draft/plan.ts";
 import { leadsWithinGrade } from "../draft/leads.ts";
@@ -64,9 +64,13 @@ export const cold_readStep: StepFn = async (ctx) => {
   if (out.disbelieved_claim) {
     flags.push({ source: "cold_read", kind: "disbelieved_claim", severity: "medium", quote: out.disbelieved_claim, rule: null, issue: "A cold reader believed this least: put its carrier within two sentences (the mechanism, the reader's own run in the trial, the reason-why) and keep the promise at full strength (rule 8)", suggestedRewrite: null });
   }
+  for (const r of out.reread.slice(0, 5)) {
+    if (!r.line.trim()) continue;
+    flags.push({ source: "cold_read", kind: "reread", severity: "low", quote: r.line, rule: "rule 40", issue: "A cold reader had to read this twice for its word order: the revision says it the way a person speaks it, same facts and tags", suggestedRewrite: r.say_it || null });
+  }
 
   const effects: NonNullable<Awaited<ReturnType<StepFn>>["effects"]> = { flags };
-  let summary = `Skim path sells: ${out.skim_readback.what_sold} to ${out.skim_readback.to_whom} for ${out.skim_readback.price}; attention ${out.attention_drop_line ? "dropped" : "held"}; disbelieved: ${out.disbelieved_claim ?? "nothing"}`;
+  let summary = `Skim path sells: ${out.skim_readback.what_sold} to ${out.skim_readback.to_whom} for ${out.skim_readback.price}; attention ${out.attention_drop_line ? "dropped" : "held"}; disbelieved: ${out.disbelieved_claim ?? "nothing"}${out.reread.length ? `; ${out.reread.length} sentence${out.reread.length === 1 ? "" : "s"} read twice` : ""}`;
   if (out.lead_pick && leadSection) {
     const chosen = applyLeadPick(draft, spec, leadSection, out.lead_pick.chosen_lead_id);
     effects.newDraft = toDraftEffect(chosen, "system", "lead chosen");
