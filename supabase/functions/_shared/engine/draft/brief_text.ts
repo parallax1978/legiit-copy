@@ -129,7 +129,7 @@ export function readerWordsText(d: Dossier | null, claims: Pick<ClaimRow, "id" |
     d.story_inventory.length ? `Stories you may tell (the only ones):\n${d.story_inventory.map((s) => `  - ${s.event}${s.date ? ` (${s.date})` : ""}${s.numbers ? `; numbers: ${s.numbers}` : ""}${s.people ? `; people: ${s.people}` : ""}`).join("\n")}` : `Stories you may tell: none on file; tell none.`,
     d.proof_inventory.length ? `Proof on file:\n${d.proof_inventory.map((p) => `  - ${p.claim}${p.ledger_ref ? ` [[L:${ledgerId(p.ledger_ref)}]]` : " (no fact line: not usable as a fact)"}`).join("\n")}` : "",
     d.competitor_table.length ? `What the others say: ${d.competitor_table.map((c) => `${c.name}${c.headline_outcome ? ` ("${clip(c.headline_outcome, 90)}")` : ""}`).join("; ")}` : "",
-    d.unsourced_hypotheses.length ? `Not his words (the research found no reader saying these; none is his problem, none opens the piece, and a fact line that says one is the seller's framing):\n${d.unsourced_hypotheses.slice(0, 8).map((h) => `  - ${clip(h, 200)}`).join("\n")}` : "",
+    d.unsourced_hypotheses.length ? `The seller's framing (the research found no reader saying these in these words; a fact line that says one is still a fact to use, said in the reader's words, and the reader's own words come first in the opening):\n${d.unsourced_hypotheses.slice(0, 8).map((h) => `  - ${clip(h, 200)}`).join("\n")}` : "",
   ].filter(Boolean).join("\n");
 }
 
