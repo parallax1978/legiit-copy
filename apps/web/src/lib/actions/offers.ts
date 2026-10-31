@@ -76,21 +76,16 @@ const SourcesInput = z.object({
 export type SourcesInput = z.input<typeof SourcesInput>;
 
 /** Step 1 of the new-offer flow: create the shell so files can be uploaded under its id. */
-const SetupInput = z.object({
-  product_sentence: z.string().trim().max(500).default(""),
-  leave_out: z.string().trim().max(1000).default(""),
-  speaker_name: z.string().trim().max(120).default(""),
-  speaker_role: z.string().trim().max(120).default(""),
-  reader: z.string().trim().max(500).default(""),
-  lead_offer: z.string().trim().max(500).default(""),
-  refund_policy: z.string().trim().max(1000).default(""),
-  proof_on_hand: z.string().trim().max(4000).default(""),
-});
-export type SetupInput = z.input<typeof SetupInput>;
+/** The setup answers and the most characters each keeps; an over-long answer is cut to its limit, never refused. */
+const SETUP_LIMITS = { product_sentence: 500, leave_out: 1000, speaker_name: 120, speaker_role: 120, reader: 500, lead_offer: 500, refund_policy: 1000, proof_on_hand: 4000 } as const;
+export type SetupInput = Partial<Record<keyof typeof SETUP_LIMITS, string>>;
+/** The answers as stored: each trimmed and cut to its limit, blank ones null. A bad value in one field never empties the others. */
 function setupJson(raw: unknown): J {
-  const r = SetupInput.safeParse(raw ?? {});
-  const s = r.success ? r.data : SetupInput.parse({});
-  return Object.fromEntries(Object.entries(s).map(([k, v]) => [k, v || null])) as J;
+  const o = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return Object.fromEntries(Object.entries(SETUP_LIMITS).map(([k, max]) => {
+    const v = typeof o[k] === "string" ? (o[k] as string).trim().slice(0, max) : "";
+    return [k, v || null];
+  })) as J;
 }
 
 /** The setup answers (who signs, the reader, the lead offer, refunds, proof). Optionally reads the sources again so the brief and ledger use them. */

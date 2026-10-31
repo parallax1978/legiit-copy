@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
@@ -22,6 +22,14 @@ export function BriefForm({ offerId, name: initialName, brief: initial, editable
   const [dirty, setDirty] = useState(false);
   const [pending, start] = useTransition();
   const ro = !editable;
+  // the page refreshes underneath when the offer changes (a status, a source): the stored brief replaces the form only while nothing typed is unsaved
+  const stored = JSON.stringify({ initialName, initial });
+  useEffect(() => {
+    if (dirty) return;
+    const s = JSON.parse(stored) as { initialName: string; initial: OfferBrief };
+    setName(s.initialName);
+    setB(s.initial);
+  }, [stored, dirty]);
 
   function patch(p: Partial<OfferBrief>) {
     setB((prev) => ({ ...prev, ...p }));
