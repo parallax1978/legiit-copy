@@ -8,7 +8,7 @@
 import type { FormatSpec } from "../formats/spec.ts";
 import type { LeadType } from "../schemas/common.ts";
 
-export const MANNER_IDS = ["halbert", "carlton", "hopkins", "schwartz", "bencivenga", "sugarman", "ogilvy", "caples", "collier"] as const;
+export const MANNER_IDS = ["halbert", "carlton", "hopkins", "schwartz", "bencivenga", "sugarman", "ogilvy", "caples", "collier", "makepeace", "palmer", "fladlien", "brunson", "aagaard", "harmon", "dubin", "settle"] as const;
 export type MannerId = (typeof MANNER_IDS)[number];
 
 export interface Manner {
@@ -71,9 +71,64 @@ export const MANNERS: Record<MannerId, Manner> = {
     way_in: "where his mind already is: the night he dreads, the call he cannot answer, in the words he would use",
     move: "Start where the reader's mind already is: the night he dreads, the call he cannot answer, in the words he would use; the want he already has said back to him; the product as the natural next thought, in one plain sentence; the count from last season; a real reason the window closes.",
   },
+  makepeace: {
+    id: "makepeace", master: "Makepeace", lead_type: "proclamation", companions: ["bencivenga", "halbert"],
+    way_in: "the thing he already fears or resents, named in his words in the first line, with its date and its source, and the reason it is happening",
+    move: "The threat first: the thing he already fears or resents, named in his words in the first line, with its date and its source; the reason it is happening, told plainly by someone who has been inside it; the product as what the speaker built against it; proof right behind every claim, from his own files, the failures left in; the promise no bigger than the proof under it. The voice is urgent and specific, never loud.",
+  },
+  palmer: {
+    id: "palmer", master: "Palmer", lead_type: "secret", companions: ["bencivenga", "carlton"],
+    way_in: "a warning with a date on it, from a speaker who says what his record is and what he is not sure of, then the fact the reader has not been told",
+    move: "The warning with a date on it, from a speaker who says what his record is and what he is not sure of; the thing the reader has not been told, laid out as a chain of facts he can check himself; the advice he can use before any product is named; the product as the way to be ready, in one plain sentence, after the case is complete; the voice calm and reasoned, with the alarm in the facts, not in the words.",
+  },
+  fladlien: {
+    id: "fladlien", master: "Fladlien", lead_type: "promise", companions: ["halbert", "schwartz"],
+    way_in: "the promise of what he will have by the end, with the time it takes and the even if that names his reason to doubt it",
+    move: "The promise first: what he will have by the end, the time it takes and the even if that names his doubt; one piece of the method taught whole, so he can use it tonight before he buys; the product as what does that piece from then on; the offer as a stack, each part answering one objection, then the part that pays; a guarantee he earns by doing the work; a deadline kept. The voice is a teacher who sells by teaching.",
+  },
+  brunson: {
+    id: "brunson", master: "Brunson", lead_type: "story", companions: ["bencivenga", "hopkins"],
+    way_in: "where he was, the wall he hit and the moment he saw it differently, told the way a friend tells you what happened to him",
+    move: "The epiphany bridge: where he was, the wall he hit, the moment he saw it differently, and the new way told as a different thing, never a better version of the old one; the product in one plain sentence, then the offer read out piece by piece, each piece with what it does for him; the count from his own list; the ask in the buyer's words, a yes and a no. The voice is a friend telling you what happened to him.",
+  },
+  aagaard: {
+    id: "aagaard", master: "Aagaard", lead_type: "offer", companions: ["hopkins", "caples"],
+    way_in: "what the click gets, in the words of the thing he clicked, with the button in his own first person finishing the headline",
+    move: "What the click gets, in the words of the thing he clicked; the button in his own first person, finishing the headline; beside it the lines that settle what happens next: who it is for, what arrives first, when, what it costs; the proof is the thing itself spelled out item by item, so the claim is never larger than the list; nothing on the page he did not come for. The voice is plain and exact, no adjective in it.",
+  },
+  harmon: {
+    id: "harmon", master: "Harmon Brothers", lead_type: "proclamation", companions: ["hopkins", "halbert"],
+    way_in: "the blunt line nobody says out loud about the problem, said flat over one picture that is absurd and on message, then the stand-in that shows why it works",
+    move: "The blunt line: the thing nobody says out loud about the problem, said flat over one absurd picture that sells; one stand-in carries the mechanism, so he sees why it works; the demonstration on camera, real and a bit extreme; every joke carries a selling point, lands deadpan and never on the buyer; the product in one plain sentence; the price and the guarantee said straight at the end, with the first picture back.",
+  },
+  dubin: {
+    id: "dubin", master: "Dubin", lead_type: "offer", companions: ["carlton", "hopkins"],
+    way_in: "the offer and the price in the first breath, from the man who makes it, with his shop behind him",
+    move: "The offer and the price in the first breath, from the man who makes it, with his shop behind him; each objection the viewer has taken in turn and put down with one dry line, no joke that does not sell; nothing claimed that is not in frame, the thing working once, the wall, the box; the product named in one plain sentence; a flat close with one step.",
+  },
+  settle: {
+    id: "settle", master: "Settle", lead_type: "story", companions: ["ogilvy", "hopkins"],
+    way_in: "a reader's question, or the speaker's own interest said straight, answered from what he does himself",
+    move: "A daily note: line one is a reader's question, or the speaker's own interest said straight; the proof is his own practice, what he does and what it got him, with the year and the count, never what others say; one opinion stated as a rule; a one-line bridge to the product, named plainly, then one bare link; a P.S. only when it sells nothing. The voice is blunt and unhurried and does not mind who leaves.",
+  },
 };
 
-/** The family's default manner when the user leaves it blank. */
+/**
+ * The format's own default when the user leaves the manner blank: the master the research ranked first for that
+ * exact format (research/format-masters). A format not listed here takes its family's default.
+ */
+export const DEFAULT_MANNER_BY_FORMAT: Partial<Record<FormatSpec["id"], MannerId>> = {
+  sales_letter: "makepeace",
+  vsl_long: "palmer",
+  webinar_package: "fladlien",
+  upsell: "brunson",
+  order_bump: "brunson",
+  optin: "aagaard",
+  vsl_short: "harmon",
+  youtube_ad: "harmon",
+};
+
+/** The family's default manner when the user leaves it blank and the format has no default of its own. */
 export const DEFAULT_MANNER_BY_FAMILY: Record<FormatSpec["family"], MannerId> = {
   social: "halbert",
   email: "halbert",
@@ -89,10 +144,10 @@ export function isMannerId(x: unknown): x is MannerId {
   return typeof x === "string" && (MANNER_IDS as readonly string[]).includes(x);
 }
 
-/** The manner for a piece: the user's when given, else the family's default. */
+/** The manner for a piece: the user's when given, else the format's default, else the family's. */
 export function pickManner(spec: FormatSpec, chosen: unknown): { manner: Manner; chosenBy: "user" | "engine" } {
   if (isMannerId(chosen)) return { manner: MANNERS[chosen], chosenBy: "user" };
-  return { manner: MANNERS[DEFAULT_MANNER_BY_FAMILY[spec.family]], chosenBy: "engine" };
+  return { manner: MANNERS[DEFAULT_MANNER_BY_FORMAT[spec.id] ?? DEFAULT_MANNER_BY_FAMILY[spec.family]], chosenBy: "engine" };
 }
 
 /** The three openings as three ways in: the manner's, then its two companions; their lead types differ. */

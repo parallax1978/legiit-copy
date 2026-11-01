@@ -95,4 +95,86 @@ Carter Heating
 
 P.S. We stop booking tune-ups when the first cold front hits, because after that the trucks are all on breakdowns.`,
   },
+  {
+    master: "Makepeace",
+    move: "The threat with its date and its source on the speaker's desk; the reason it is happening, from someone who ran it; the company in one plain sentence; the count from his own files with the failures left in; the promise no bigger than it; a P.S. with the one line that cost the most.",
+    text: `Subject: $58,000 for a kitchen I do not have
+
+On October 3 the county raised the value it puts on my house by $58,000.
+
+Nobody from the county has set foot in it since I bought it in 2011. The notice is on my desk. The appraiser took the spring sales on my street, two of them flipped houses with new kitchens, and gave every house the same lift. My kitchen is the one the house had in 1994.
+
+At this year's rate that is about $1,000 more on my tax bill, for three years, before the county looks again. $3,000 for a kitchen that is not there.
+
+I know how it happened because I did it for nine years as an appraiser in that office. Every third year we ran a computer over the sales and mailed the notices. The computer does not know your roof is 22 years old or that your basement takes water in April. It finds out when an owner files an appeal. Few do, because the form reads like a tax return and the hearing is on a weekday morning downtown.
+
+So I left and started Plumb Line Appeals, and we file the appeal for you and sit at the hearing in your place. We pull the county's card on your house, the one page it keeps with the year of your roof, kitchen and baths, mark every wrong line on it, and pull the three sales that match your house instead of the flipped ones.
+
+Last cycle we filed 212 appeals in this county. The board cut the value on 164 of them, by $31,000 on average, about $540 a year off the bill. The other 48 got nothing, and those owners paid us nothing.
+
+I have not seen your card, so I will not tell you what the board will cut. Every one of those 164 started with someone reading the card.
+
+We charge 35% of the first year's saving, and nothing if the board cuts nothing. Appeals close November 14. After that, this year's value sits on your bill until 2029.
+
+Reply with your address and I will pull your card today and tell you tomorrow what is wrong on it, free.
+
+Carl Reyes
+Plumb Line Appeals
+
+P.S. My own card lists my kitchen as 2019. It is from 1994. That one line was $19,000 of the $58,000.`,
+  },
+  {
+    master: "Palmer",
+    move: "A warning with a date on it; the speaker's record with the miss left in; the chain of facts the reader checks on his own log; the advice before the product; the company in one plain sentence; the ask after the case is complete.",
+    text: `Subject: The summer your well runs dry
+
+I can tell you the summer your well runs dry.
+
+Not the week. I called the week wrong in 2019, and three families on Ridge Road had water hauled in before they needed it. But I have called the summer right on 31 of the 34 wells I have warned about since 2016. The three I missed ran dry a year later than I said. None ran dry sooner.
+
+Every well in this county has a log, and the owner got a copy at closing. It holds two numbers. One is how deep the water sat the day it was drilled. The other is how deep the pump was set.
+
+I have dropped a sounder down 212 wells on the east side since 2014 and written down the level each time. On that side the water has gone down about three feet a year, wet winter or dry.
+
+The answer is on your log. Say your well was drilled 14 years ago, with the water at 100 feet and the pump set at 150. That was 50 feet over the pump. Fourteen years of drop takes 42 of it. You have about eight feet left, and the pump pulls air in the dry weeks of August, two summers from now.
+
+You do not need me for that part. Pull the log, subtract, and divide by three.
+
+If the number is under ten feet, run the sprinklers and the washer at different hours, so the pump never pulls on a low column. And listen at the pressure tank at night. A pump close to air spits before it fills.
+
+Sandstone Well Service is my company, and a well check is me at your wellhead with a sounder, measuring the water against your pump depth and leaving a sheet that says how many summers you have and what it costs to lower the pump. $95, and it comes off the job if we lower the pump.
+
+Reply with your address and the two numbers off your log. I will tell you whether you need me this year. If you do not, I will say so.
+
+Walt
+Sandstone Well Service
+
+P.S. I measure in June, before the sprinklers start. A pump lowered in June is a planned morning. In August it is a rush call and a week with no water.`,
+  },
+  {
+    master: "Settle",
+    move: "A reader's question in line one, answered with the speaker's own interest said straight; his own knives as the proof, with the year and the count; one opinion stated as a rule; the shop in one plain sentence; the deal once; a bridge line and one bare link, no P.S.",
+    text: `Subject: The hardware store does it for $8
+
+A man who gets these emails wrote me last night. He asked why he should pay me five times what the hardware store on Fifth charges to sharpen a knife.
+
+I told him I want his money. I said that first so he would believe the rest.
+
+The rest is the wheel. The cheap job is a grinding wheel. It takes steel off fast and it gets the edge hot. A hot edge goes soft, and a soft edge folds the first week you use it. So the knife goes back to the wheel, and back again, and in two years there is no knife left. Then you buy a new one for $90 and start over.
+
+I cook on the same three knives I bought in 2014. I sharpen them once a year, on the stones in my shop, by hand, at the angle the maker put on them. Twelve years on, I have not replaced one. The big one still goes through a tomato skin without me pushing.
+
+A knife that needs the wheel every month was not used hard. It was ground wrong. I have sharpened knives for nineteen years and I have not seen that rule break.
+
+If you are happy with the wheel, keep going to it. No hard feelings, and you can stop reading here.
+
+Marsh Edge Works is my shop, and the sharpening is me at the bench with the stones, one knife at a time, set back to the edge it came with. You bring a knife in once a year and you stop buying knives. $40 a knife, three for $100, and it comes back wrapped, with the date on the paper so you know when it is due.
+
+Book a slot below and drop the knives at the shop any morning before noon. They are ready the next day.
+
+marshedgeworks.com/bench
+
+Pete
+Marsh Edge Works`,
+  },
 ];

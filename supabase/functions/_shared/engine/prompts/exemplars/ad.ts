@@ -38,4 +38,15 @@ Description: Skip any week from your phone
 
 Button: Order now`,
   },
+  {
+    master: "Aagaard",
+    move: "What the click gets in the first line, with what is in it listed as plain nouns; who it is for and how often it comes beside the ask; the headline the two nouns the page will show; the description the cost and the hour; nothing the reader did not come for.",
+    text: `Primary text: One email every Friday with the river as it is that morning: the flow at the dam, the water temp, the flies that worked. Cutbank Fly Shop at the bridge in Bend Fork sends it, and I write it in the lot at the dam before we open. It is for people who fish the four miles below the dam. You get one email a week. Sign up with your email and this Friday's report is the first thing you get.
+
+Headline: The Friday river report
+
+Description: Free. Comes Fridays at 6 a.m.
+
+Button: Sign up`,
+  },
 ];

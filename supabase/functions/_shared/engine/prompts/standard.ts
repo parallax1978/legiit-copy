@@ -425,7 +425,7 @@ export const EXEMPLARS = `## 11. Exemplars from the masters
 
 Study what each one does; never reuse its words. Six words in a row from an exemplar, or from an example in Section 3, fail the mechanical check. Section 3 shows the openings; these show the jobs after them.
 
-The writer also reads whole pieces before it writes one: original posts, emails and ads from other trades, one per master's move, each named for the move it makes (\`supabase/functions/_shared/engine/prompts/exemplars/\`, one file per format family). They are the register the piece is written in; every fact in them belongs to its own made-up business, and six words in a row from one of them fail the mechanical check like the quotations below.
+The writer also reads whole pieces before it writes one: original posts, emails and ads from other trades, one per master's move, each named for the move it makes (\`supabase/functions/_shared/engine/prompts/exemplars/\`, one file per format family). They are the register the piece is written in; every fact in them belongs to its own made-up business, and six words in a row from one of them fail the mechanical check like the quotations below. One call reads at most five of them: the piece's manner first (Section 12), then the family's in file order, so the prompt stays the same size as the library grows.
 
 - The speaker named, with the reason he is writing (Gary Halbert, the Caddy model letter): "My name is John Stebbins and I am a dentist here in Massillon. I've got a 2-year-old Caddy and it is in almost perfect shape and I have to get rid of it for reasons I'll tell you later."
 - Story as proof, with a doubter to beat (Gary Halbert, the dollar-bill letter, 1990): "I was living in Ohio at the time and my friends laughed at my idea. They thought it was a big joke."
@@ -444,19 +444,27 @@ export const MANNER = `## 12. Manner
 
 A piece is written in one master's manner: his way in, his shape of proof and his voice, with his exemplar first among the pieces the writer studies (Section 11). The case keeps its order under every manner (Gate B: the moment, the cost, the discovery, the product as the answer, the proof, the ask); the manner decides how the piece gets in, what the proof looks like and how it sounds. Mixing the masters inside one piece produced copy that belonged to no one; one manner per piece is the rule.
 
-The user chooses the manner on the piece ("Written like" in the wizard, \`options.manner\`) or leaves it blank and the engine picks the family's default. The three openings are three ways in: the piece's manner and two companions, each a different lead type (Section 3), each written in the manner it is given, with the body in the piece's manner under every one; the cold read picks and the runner-up is the challenger. When the reader is most aware or product aware, or skeptical, the openings follow the awareness table of Section 3 instead, because those states decide the opening themselves (the deal, the promise, an indirect lead).
+The user chooses the manner on the piece ("Written like" in the wizard, \`options.manner\`) or leaves it blank and the engine picks the format's default: the master the format research (\`research/format-masters\`) ranked first for that exact format, else the family's default. The three openings are three ways in: the piece's manner and two companions, each a different lead type (Section 3), each written in the manner it is given, with the body in the piece's manner under every one; the cold read picks and the runner-up is the challenger. When the reader is most aware or product aware, or skeptical, the openings follow the awareness table of Section 3 instead, because those states decide the opening themselves (the deal, the promise, an indirect lead).
 
 | Manner | The way in | Lead type | Companions | Engine's default for |
 |---|---|---|---|---|
-| Halbert | A letter from one person: a day, a place, a dollar figure, what happened and what it cost, and why he is writing | story | Hopkins, Schwartz | Social, email, audio |
-| Carlton | The event: a thing that happened at a named time, with the clock on it and the number off the speaker's own records, then a flat claim he would argue with | proclamation | Hopkins, Bencivenga | Video and webinar |
-| Hopkins | A test he runs on himself in the first lines, on what he has open right now, and what he will find | problem_solution | Halbert, Carlton | |
-| Schwartz | The want he already has, in his words, aimed at the thing he does not know that explains why the usual way fails him | secret | Bencivenga, Halbert | Pages |
-| Bencivenga | The speaker's own count first, with the number and the average, and the promise made only as large as it | promise | Carlton, Schwartz | |
-| Sugarman | A short first sentence that makes him read the second, the day it went wrong told in small pieces | secret | Halbert, Bencivenga | Messaging |
-| Ogilvy | The one specific that says it all, in the first line, as a fact with no adjective | promise | Hopkins, Carlton | Commerce |
-| Caples | A specific result with its time, told as what changed and what did not, with his self-interest and the news in the first line | promise | Halbert, Schwartz | Paid ads |
-| Collier | Where his mind already is: the night he dreads, the call he cannot answer, in the words he would use | problem_solution | Halbert, Ogilvy | |
+| Halbert | A letter from one person: a day, a place, a dollar figure, what happened and what it cost, and why he is writing | story | Hopkins, Schwartz | Cold email, Email sequence, Organic social post, Podcast and audio read, Promotional email, TikTok and Reels script |
+| Carlton | The event: a thing that happened at a named time, with the clock on it and the number off the speaker's own records, then a flat claim he would argue with | proclamation | Hopkins, Bencivenga |  |
+| Hopkins | A test he runs on himself in the first lines, on what he has open right now, and what he will find | problem_solution | Halbert, Carlton |  |
+| Schwartz | The want he already has, in his words, aimed at the thing he does not know that explains why the usual way fails him | secret | Bencivenga, Halbert | Advertorial and native landing page, B2B pricing page, Short landing page, Thank-you page |
+| Bencivenga | The speaker's own count first, with the number and the average, and the promise made only as large as it | promise | Carlton, Schwartz |  |
+| Sugarman | A short first sentence that makes him read the second, the day it went wrong told in small pieces | secret | Halbert, Bencivenga | SMS |
+| Ogilvy | The one specific that says it all, in the first line, as a fact with no adjective | promise | Hopkins, Carlton | Order form and checkout, Product description |
+| Caples | A specific result with its time, told as what changed and what did not, with his self-interest and the news in the first line | promise | Halbert, Schwartz | Google responsive search ad, Meta and Instagram ad |
+| Collier | Where his mind already is: the night he dreads, the call he cannot answer, in the words he would use | problem_solution | Halbert, Ogilvy |  |
+| Makepeace | The thing he already fears or resents, named in his words in the first line, with its date and its source, and the reason it is happening | proclamation | Bencivenga, Halbert | Long-form sales letter |
+| Palmer | A warning with a date on it, from a speaker who says what his record is and what he is not sure of, then the fact the reader has not been told | secret | Bencivenga, Carlton | Long video sales letter |
+| Fladlien | The promise of what he will have by the end, with the time it takes and the even if that names his reason to doubt it | promise | Halbert, Schwartz | Webinar package |
+| Brunson | Where he was, the wall he hit and the moment he saw it differently, told the way a friend tells you what happened to him | story | Bencivenga, Hopkins | Order bump, Upsell / one-time offer |
+| Aagaard | What the click gets, in the words of the thing he clicked, with the button in his own first person finishing the headline | offer | Hopkins, Caples | Opt-in page |
+| Harmon Brothers | The blunt line nobody says out loud about the problem, said flat over one picture that is absurd and on message, then the stand-in that shows why it works | proclamation | Hopkins, Halbert | Short video sales letter, YouTube ad script |
+| Dubin | The offer and the price in the first breath, from the man who makes it, with his shop behind him | offer | Carlton, Hopkins |  |
+| Settle | A reader's question, or the speaker's own interest said straight, answered from what he does himself | story | Ogilvy, Hopkins |  |
 
 The full move of each manner (the way in, the proof and the voice, in the writer's words) is in \`supabase/functions/_shared/engine/prompts/manners.ts\`; the writer reads the piece's as a WRITTEN LIKE line in the material and the companions' as the ways in of the other two openings. A manner with no exemplar in the piece's family borrows the master's exemplar from another family, marked as such: the move carries over, the shape of the piece does not.`;
 

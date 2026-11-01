@@ -1,6 +1,6 @@
 import { FORMAT_IDS, type FormatId } from "@engine/schemas/common.ts";
 import { FORMATS, listFormats, type FormatSpec } from "@engine/formats/index.ts";
-import { DEFAULT_MANNER_BY_FAMILY, MANNER_IDS, MANNERS, type MannerId } from "@engine/prompts/manners.ts";
+import { DEFAULT_MANNER_BY_FAMILY, MANNER_IDS, MANNERS, pickManner, type MannerId } from "@engine/prompts/manners.ts";
 export { FORMAT_IDS, MANNER_IDS, DEFAULT_MANNER_BY_FAMILY };
 export type { FormatId, FormatSpec, MannerId };
 
@@ -126,6 +126,14 @@ const MANNER_BLURBS: Record<MannerId, string> = {
   ogilvy: "The one specific that says it all, facts as facts, no adjectives.",
   caples: "A specific result with its time; the body pays off the first line exactly.",
   collier: "Start where his mind already is, in the words he would use.",
+  makepeace: "The threat he already lives with, dated and sourced, then proof behind every claim.",
+  palmer: "A warning with a date on it, the speaker's record and doubts, then facts he can check.",
+  fladlien: "Teach first: the promise with its even if, one step he can use tonight, then the offer.",
+  brunson: "The story of the wall he hit and what he saw, then the offer read out piece by piece.",
+  aagaard: "What the click gets, in his words, then who it is for, what arrives, when and the cost.",
+  harmon: "The blunt line said flat over one absurd picture; a stand-in shows why it works.",
+  dubin: "The deal and the price first, from the man who makes it; each objection put down dry.",
+  settle: "A reader's question answered from his own practice; one opinion as a rule, one link.",
 };
 
 /** The masters a piece can be written like ("Written like" in the wizard); blank lets the engine pick the format's default. */
@@ -135,9 +143,10 @@ export function isMannerId(value: string): value is MannerId {
   return (MANNER_IDS as readonly string[]).includes(value);
 }
 
-/** The master the engine writes like when the user leaves the manner blank. */
-export function defaultMannerName(family: FormatFamily): string {
-  return MANNERS[DEFAULT_MANNER_BY_FAMILY[family]].master;
+/** The master the engine writes like when the user leaves the manner blank: the format's own default, else its family's. */
+export function defaultMannerName(id: FormatId): string {
+  const spec = FORMATS[id];
+  return spec ? pickManner(spec, undefined).manner.master : MANNERS[DEFAULT_MANNER_BY_FAMILY[CATALOG[id].family]].master;
 }
 
 export { listFormats };

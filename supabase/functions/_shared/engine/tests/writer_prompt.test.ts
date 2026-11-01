@@ -289,7 +289,17 @@ Deno.test("a piece is written in one master's manner: the user's choice or the f
   assertEquals(parseOptions({ manner: "carlton" }).manner, "carlton");
   assertEquals(parseOptions({ manner: "nobody" }).manner, undefined, "an unknown manner is no manner");
   const { exemplarInManner } = await import("../prompts/exemplars/index.ts");
-  for (const master of ["Halbert", "Carlton", "Hopkins", "Schwartz", "Bencivenga", "Sugarman", "Caples", "Collier"]) assert(exemplarInManner("social", master), `${master}: a piece to study`);
+  for (const id of MANNER_IDS) if (id !== "ogilvy") assert(exemplarInManner("social", MANNERS[id].master), `${MANNERS[id].master}: a piece to study`);
+  // the format's own default when it has one, else the family's: the master the format research ranked first
+  const { DEFAULT_MANNER_BY_FORMAT } = await import("../prompts/manners.ts");
+  for (const [format, id] of Object.entries(DEFAULT_MANNER_BY_FORMAT)) assert(isMannerId(id), `${format}: a default manner`);
+  assertEquals(pickManner(FORMATS.sales_letter, undefined), { manner: MANNERS.makepeace, chosenBy: "engine" });
+  assertEquals(pickManner(FORMATS.webinar_package, undefined).manner.master, "Fladlien");
+  assertEquals(pickManner(FORMATS.vsl_long, undefined).manner.master, "Palmer");
+  assertEquals(pickManner(FORMATS.youtube_ad, undefined).manner.master, "Harmon Brothers");
+  assertEquals(pickManner(FORMATS.landing_page_short, undefined), { manner: MANNERS.schwartz, chosenBy: "engine" }, "a format without its own default takes the family's");
+  assertEquals(pickManner(FORMATS.sales_letter, "settle").manner.master, "Settle", "the user's choice wins over the format's default");
+  assertEquals(MANNER_IDS.length, 17);
   const { STANDARD_TITLES } = await import("../prompts/standard.ts");
   assertEquals(STANDARD_TITLES.MANNER, "Manner");
 
@@ -316,7 +326,7 @@ Deno.test("a piece is written in one master's manner: the user's choice or the f
   assert(u2.includes("WRITTEN LIKE Schwartz (the user's choice): The want he already has"));
   assert(u2.includes("lead-a: secret, Schwartz's way in") && u2.includes("lead-b: promise, Bencivenga's way in") && u2.includes("lead-c: story, Halbert's way in"));
   const borrowed = exemplarInManner("social", "Schwartz")!;
-  assert(u2.includes(borrowed.family === "social" ? "--- 1. In Schwartz's manner (the manner this piece is written in). The move:" : `--- 1. In Schwartz's manner (the manner this piece is written in, shown on a ${borrowed.family} piece: the move carries over, the shape of this piece does not). The move:`), "the chosen master's exemplar first, marked when borrowed");
+  assert(u2.includes(borrowed.family === "social" ? "--- 1. In Schwartz's manner (the manner this piece is written in). The move:" : `--- 1. In Schwartz's manner (the manner this piece is written in, shown on a piece from the ${borrowed.family} family: the move carries over, the shape of this piece does not). The move:`), "the chosen master's exemplar first, marked when borrowed");
   assert(!u2.includes("--- 2. In Schwartz's manner"), "his exemplar once");
 
   // the openings follow the awareness table when the reader is most aware: lead types without a manner, the body still in the piece's manner
@@ -330,8 +340,18 @@ Deno.test("a piece is written in one master's manner: the user's choice or the f
   const sectionsCall = long.calls.find((c) => c.kind === "sections")!;
   const c4 = ctx();
   c4.format = FORMATS.sales_letter;
-  const u4 = d24.user(c4, { ...base, call: leadsCall, leadTypes: openingManners(MANNERS.schwartz).map((m) => m.lead_type) });
-  assert(u4.includes("WRITTEN LIKE Schwartz (the engine's pick for this kind of piece)") && u4.includes("lead-a: secret, Schwartz's way in") && u4.includes("The body that follows is in Schwartz's manner, and every one of the three leads into it."));
+  const u4 = d24.user(c4, { ...base, call: leadsCall, leadTypes: openingManners(MANNERS.makepeace).map((m) => m.lead_type) });
+  assert(u4.includes("WRITTEN LIKE Makepeace (the engine's pick for this kind of piece)") && u4.includes("lead-a: proclamation, Makepeace's way in") && u4.includes("The body that follows is in Makepeace's manner, and every one of the three leads into it."), "a sales letter's engine pick is the format's own default");
+  assert(u4.includes("--- 1. In Makepeace's manner (the manner this piece is written in, shown on a piece from the email family: the move carries over, the shape of this piece does not)."), "his exemplar borrowed from the email family, since pages have none");
   const u5 = d24.user(c4, { ...base, call: sectionsCall, leadTypes: null });
-  assert(u5.includes("in Schwartz's manner: "), "the sections job names the manner");
+  assert(u5.includes("in Makepeace's manner: "), "the sections job names the manner");
+
+  // the writer reads at most EXEMPLARS_SHOWN whole pieces: the manner's first, then the family's in file order
+  const { EXEMPLARS_SHOWN, exemplarsFor } = await import("../prompts/exemplars/index.ts");
+  assert(exemplarsFor("social").length > EXEMPLARS_SHOWN && exemplarsFor("email").length > EXEMPLARS_SHOWN, "the library is larger than what one call reads");
+  const shown = (t: string) => (t.match(/^--- \d+\. In /gm) ?? []).length;
+  assertEquals(shown(exemplarsText("social", "Organic social post", "Brunson")), EXEMPLARS_SHOWN);
+  assert(exemplarsText("social", "Organic social post", "Brunson").includes("--- 1. In Brunson's manner (the manner this piece is written in)"), "the last in the file leads when it is the manner");
+  assert(!exemplarsText("social", "Organic social post", "Halbert").includes("In Brunson's manner"), "and sits out when it is not");
+  assertEquals(shown(exemplarsText("ad", "Meta ad")), exemplarsFor("ad").length, "a small family shows all of its pieces");
 });

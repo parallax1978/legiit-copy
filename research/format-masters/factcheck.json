@@ -1,0 +1,1769 @@
+{
+ "results": [
+  {
+   "formats": [
+    {
+     "format_id": "sales_letter",
+     "picks": [
+      {
+       "name": "Clayton Makepeace",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Bencivenga puts Makepeace at the top of the five or six writers he would least want to compete against, and calls his Health and Healing launch a grand slam",
+         "status": "confirmed",
+         "source_url": "https://www.scottmartincopywriter.com/gary-bencivenga-interview",
+         "correction": "Confirmed word for word ('certainly at the top of that list'; 'a grand slam World Series winning blast in the bottom of the ninth inning'). The interviewer was Makepeace himself, on his own blog, around 2005, so the praise was given to its subject's face."
+        },
+        {
+         "claim": "AWAI's first Copywriter of the Year; Kurtz calls his controls 'monster hits'",
+         "status": "confirmed",
+         "source_url": "https://awai.com/bio/clayton-makepeace",
+         "correction": "Both appear on the AWAI tribute page. Sandy Franks speaks of 'AWAI's first-ever Copywriter of the Year Award', and Kurtz says 'Monster hits, game-changers'. The Copywriter Club interview listed under Bencivenga does not contain the 'monster hits' phrase."
+        },
+        {
+         "claim": "Bly names him one of the three greatest copywriters",
+         "status": "confirmed",
+         "source_url": "https://www.awai.com/2010/03/agora-founder-bill-bonner-to-speak-at-bootcamp/",
+         "correction": "The 2010 AWAI article quotes Bly calling Bonner 'one of the three greatest copywriters around today'. The other two, Masterson and Makepeace, are named in AWAI's parenthetical, not in Bly's quoted words. In Bly's own 2005 post (https://www.bly.com/blog/general/the-copywriters-hall-of-fame/), Makepeace is one of ten names listed 'in no particular order'."
+        },
+        {
+         "claim": "Health and Healing: 90 million pieces and 2 million subscriptions; every new Weiss package from 1998 to 2003 beat his old control (self-reported)",
+         "status": "confirmed",
+         "source_url": "https://www.awai.com/2005/04/banishing-writers-block/",
+         "correction": "Confirmed as self-reported: '90 million pieces in three years and sold over 2 million subscriptions'. The Weiss claim ('I didn't have a single bomb for Weiss Research' between 1998 and 2003) is also his own, in the Levis interview (https://www.daniellevis.com/tribute-clayton-makepeace/)."
+        }
+       ],
+       "reason": "Every load-bearing claim checks out at the cited sources. The results are self-reported, as the research already says. Peer recognition comes from Bencivenga, Kurtz, Bly and AWAI, independently of each other. Keep him at #1 as the new persona for this format."
+      },
+      {
+       "name": "Gary Bencivenga",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Kurtz would not challenge his and Rutz's controls for six months to a year",
+         "status": "confirmed",
+         "source_url": "https://thecopywriterclub.com/direct-response-expert-brian-kurtz/",
+         "correction": "Kurtz: 'the Rutzes and the Bencivengas... I wouldn't find another copywriter to go beat them for like six months or a year'. These were guaranteed-royalty agreements."
+        },
+        {
+         "claim": "He claims he never lost to Schwartz or the other top names",
+         "status": "confirmed",
+         "source_url": "https://www.scottmartincopywriter.com/gary-bencivenga-interview",
+         "correction": "The claim is narrower than stated. It covers split-run tests at Rodale's book division ('I competed against Gene Schwartz and most of the top names out there, and I never lost'), and it is his own claim."
+        },
+        {
+         "claim": "Settle swipes his magalog",
+         "status": "confirmed",
+         "source_url": "https://bensettle.com/blog/top-10-swipe-file-ads",
+         "correction": "Settle's top-10 swipe list has two Bencivenga pieces: the 'Lies Lies Lies' magalog and the 'Interviews That Win Jobs' print ad. He lists them without comment."
+        }
+       ],
+       "reason": "Already in the set. The claims hold, but the never-lost claim should be scoped to Rodale's split runs. No new persona is needed."
+      },
+      {
+       "name": "Jim Rutz",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Boardroom mailed his controls to 20 million pieces and he usually won the control; Kurtz calls him 'the copywriter closest to God'",
+         "status": "confirmed",
+         "source_url": "https://www.briankurtz.net/jimrutz/",
+         "correction": "Kurtz's own estimate ('to the tune of 20 million pieces... could have easily been 30 million'), so company-reported, not audited. 'The Copywriter closest to God' is the title of the post (Dec 19, 2014)."
+        },
+        {
+         "claim": "Carlton calls him 'one of the most skilled pure writers I ever met'",
+         "status": "confirmed",
+         "source_url": "https://www.briankurtz.net/jimrutz/",
+         "correction": "Carlton is quoted in Kurtz's post, not in a source of his own."
+        },
+        {
+         "claim": "Bencivenga credits him with the first magalog",
+         "status": "confirmed",
+         "source_url": "https://www.scottmartincopywriter.com/gary-bencivenga-interview",
+         "correction": "Bencivenga gives the credit to Rutz (copy) and Ed Elliott (design), for Personal Finance. He says his own magalog was the second, and that it beat theirs."
+        }
+       ],
+       "reason": "Recognition from several peers, and Boardroom's results as estimated by Kurtz, confirm the ranking. Bly also puts him on his 2005 best-in-the-business list. The research already notes the caveats on availability and magalog length."
+      }
+     ],
+     "final_order": [
+      "Clayton Makepeace",
+      "Gary Bencivenga",
+      "Jim Rutz"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "advertorial",
+     "picks": [
+      {
+       "name": "Gary Halbert",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "He set out the method in his own words: 'Make Your Ad Look Like A News Story' and 'You Be That Reporter!'",
+         "status": "confirmed",
+         "source_url": "https://www.thegaryhalbertletter.com/newsletters/zkkj_advertising_more_profitable.htm",
+         "correction": "Both phrases appear in The Gary Halbert Letter (copyright 2003). 'Make Your Ad Look Like A News Story' is his second 'big secret'."
+        },
+        {
+         "claim": "'Million Dollar Smile' (1998, porcelain veneers) is an advertorial he wrote",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/million-dollar-smile-gary-halbert/",
+         "correction": "Swiped.co credits Halbert, dates it to 1998, and gives no results. It is written in a satisfied customer's voice, which the spec's narrator rule has to remove."
+        },
+        {
+         "claim": "The BerryTrim diet ad grossed over $40M (family-reported)",
+         "status": "confirmed",
+         "source_url": "https://halbertising.com/ad-breakdowns/berrytrimdetailstestimonials/",
+         "correction": "The sons' sales page says 'this ad gross over $40,000,000' of 'our father's record-breaking' diet ad. The main BerryTrim breakdown page (https://halbertising.com/ad-breakdowns/berrytrim/) gives no figure, only that the marketer 'made millions and millions'. The figure is self-interested and unaudited."
+        }
+       ],
+       "reason": "He is the only practitioner with a written method, attributable pieces and stated results for this exact format. He is already in the set, so the gain is an advertorial-specific manner line."
+      },
+      {
+       "name": "Louis Engel",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Engel wrote 'What everybody ought to know... About This Stock And Bond Business' (NYT, Oct 19, 1948)",
+         "status": "confirmed",
+         "source_url": "https://awealthofcommonsense.com/2018/08/the-first-modern-investing-advertisement/",
+         "correction": "The date and the Merrill Lynch ad are confirmed. Secondary sources credit Engel, Merrill's advertising head from 1946, and say Charles Merrill wanted it long (the source is the Bloomberg Odd Lots episode, Aug 10, 2018). The word count varies by source: 6,450, 6,540, or 'close to 7,000'."
+        },
+        {
+         "claim": "It drew more than 10,000 booklet requests",
+         "status": "unverifiable",
+         "source_url": "https://swiped.co/about-this-stock-bond-louis-engel",
+         "correction": "Swiped.co cites no source. Other sources disagree: Boomer & Echo says more than 5,000 requests for the first insertion and over 3 million responses across later reruns, and A Wealth of Common Sense says more than 3 million. No primary figure was found."
+        },
+        {
+         "claim": "It ran until about 1965 (a de facto long-running control)",
+         "status": "unverifiable",
+         "source_url": "https://swiped.co/about-this-stock-bond-louis-engel",
+         "correction": "Swiped.co gives both '1948-1965' and 'into the mid 60s' with no source. The secondary accounts say only that it was rerun nationally 'for years'."
+        }
+       ],
+       "reason": "Authorship holds, but both result figures are unsourced and contradicted. Keep him second only as a provisional persona built on one ad. Drop the '10,000 requests' and '1965' claims from the persona's rationale, or replace them with 'rerun for years; response counts reported between 5,000 and 3 million'. Read the full NYT page before building."
+      }
+     ],
+     "final_order": [
+      "Gary Halbert",
+      "Louis Engel"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "product_description",
+     "picks": [
+      {
+       "name": "Donald Staley (J. Peterman Company catalog)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Staley wrote the founding 1987 New Yorker duster ad and the catalog copy",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/J._Peterman_Company",
+         "correction": "Wikipedia (citing Retail Dive) says Don Staley wrote the 1987 ad, which sold 70 coats. InsideHook and Mental Floss say Staley wrote the product descriptions."
+        },
+        {
+         "claim": "Sales went from about $300,000 in year one to nearly $20 million in 1990 and a $75 million peak",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/J._Peterman_Company",
+         "correction": "Retail Dive (via Wikipedia) gives $300,000 in the first year, $4.8M in 1989, almost $20M in 1990 and $75M at peak. A 1996 Roanoke Times piece puts 1987 at $585,000 and the peak at about $70M, so give the figures as approximate and company-reported."
+        },
+        {
+         "claim": "Seinfeld parodied it for about three years; Linderman at 37signals cites it as the model",
+         "status": "unverifiable",
+         "source_url": "https://en.wikipedia.org/wiki/J._Peterman_Company",
+         "correction": "The Seinfeld parody (1995 to 1998) is confirmed. No Signal v. Noise post by Matt Linderman on Peterman could be found, so drop that citation or supply its URL. The pick also lists no source URLs in the research file; add the Wikipedia/Retail Dive and InsideHook links."
+        }
+       ],
+       "reason": "The authorship and the trade-press revenue arc hold. The fixes are to name him as Don Staley, give the figures as approximate, and drop or source the Linderman citation. He stays the clear #1 and the new persona."
+      },
+      {
+       "name": "Joseph Sugarman",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "JS&A had about $12 million in revenue by 1979, and he was named Direct Marketer of the Year in 1979",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Joseph_Sugarman",
+         "correction": "Wikipedia cites a 1982 Inc. article for the revenue and his obituaries for the award. It does not name the organization that gave the award."
+        },
+        {
+         "claim": "BluBlocker sold 20 million pairs",
+         "status": "confirmed",
+         "source_url": "https://www.blublocker.com/pages/story",
+         "correction": "This is the company's own claim ('over 20 million pairs throughout the world'). No independent source was found, so it stays self-reported, as the research says."
+        }
+       ],
+       "reason": "Already in the set. The claims hold, with the self-reported caveat already given. He serves this format without a new persona."
+      },
+      {
+       "name": "Leon Leonwood Bean (L.L.Bean)",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "He wrote his early catalogs himself and tested the products (per the company archivist)",
+         "status": "confirmed",
+         "source_url": "http://bangordailynews.com/2012/02/26/business/l-l-bean-it-all-started-with-a-boot/",
+         "correction": "The article says he 'tested them for the early catalogs that he wrote himself'. The archivist is Ruth Porter."
+        },
+        {
+         "claim": "He refunded 90 of the first 100 pairs under an unconditional guarantee",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Leon_Leonwood_Bean",
+         "correction": "Porter: 'Ninety came back' (Bangor Daily News). Wikipedia phrases it as a refund of '90% of the costs of the first 100 sets'. The two accounts agree in substance."
+        }
+       ],
+       "reason": "The proof claims hold. He stays third, behind Sugarman, until a facsimile of his 1912 circular or an early catalog is obtained and read."
+      }
+     ],
+     "final_order": [
+      "Donald Staley (J. Peterman Company catalog)",
+      "Joseph Sugarman",
+      "Leon Leonwood Bean (L.L.Bean)"
+     ],
+     "missing_stronger_candidate": {}
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "landing_page_short",
+     "picks": [
+      {
+       "name": "Joanna Wiebe",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Crazy Egg rewrite beat a control already optimized by Conversion Rate Experts by 13%",
+         "status": "confirmed",
+         "source_url": "https://copyhackers.com/2014/02/optimized-crazy-egg-home-page/",
+         "correction": "Confirmed as a 'statistically confident lift of 13%' over CRE's winning challenger. Hiten Shah hired her to rewrite it. The page does not name the metric, and the page tested was the Crazy Egg home page."
+        },
+        {
+         "claim": "Dressipi button copy change gave +123.9% clicks",
+         "status": "confirmed",
+         "source_url": "https://copyhackers.com/2014/09/buttons-vs-headlines/?amp=1",
+         "correction": "Self-reported: 'Sign up now' became 'Show me outfits I'll love', reported as a 123.9% lift in clicks on that button 'with 100% confidence'. The test was on a single element."
+        },
+        {
+         "claim": "SweatBlock +49% paid conversions at 99% confidence",
+         "status": "confirmed",
+         "source_url": "https://copyhackers.com/2016/06/great-home-page-copy/",
+         "correction": "The source in the list is wrong: copyhackers.com/conversion-copywriting-case-study/ is the Crazy Egg study. The SweatBlock result is in the 2016 great-home-page-copy post. She wrote the top roughly 800px of a home page using PAS. The 49% paid lift at 99% confidence was among female users; male users showed 46%."
+        },
+        {
+         "claim": "Unbounce calls her 'the original conversion copywriter'",
+         "status": "confirmed",
+         "source_url": "https://webinar.unbounce.com/copywriting-for-conversion-hubspot",
+         "correction": "An Unbounce webinar page uses the label, and her Copyhackers bio uses it too. The Unbounce article in the list (smart-people-talk-conversion-copy) does not. She coined the title herself, so it is a self-applied label that Unbounce repeated, not independent peer recognition."
+        }
+       ],
+       "reason": "Every number checks out at Copyhackers and is attributed to her own writing. Two corrections: one source URL is wrong, and the 'original conversion copywriter' label is her own, which Unbounce repeated. Her wins are on home pages and single elements, as the caveat in the list already says. She is still the strongest documented writer of this format."
+      },
+      {
+       "name": "Michael Aagaard",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "250+ copy tests",
+         "status": "confirmed",
+         "source_url": "https://unbounce.com/conversion-rate-optimization/smart-people-talk-conversion-copy/",
+         "correction": "Unbounce says he 'has conducted more than 250 A/B tests focused on copywriting'. The figure is his own count, repeated by Unbounce."
+        },
+        {
+         "claim": "Saxo Bank free-trial PPC page roughly doubled conversions and cut cost per conversion 48.2%, written up by MarketingExperiments",
+         "status": "confirmed",
+         "source_url": "https://marketingexperiments.com/?p=8215",
+         "correction": "The MarketingExperiments write-up (Paul Cheney, 2011) reports 99.4% more conversions and a 48.2% lower cost per conversion. The exact rates appear only in an image."
+        },
+        {
+         "claim": "CTA tests 'Start my free trial' and 'Get Information and Prices' are widely cited",
+         "status": "confirmed",
+         "source_url": "https://unbounce.com/copywriting/landing-page-copy-hack-get/",
+         "correction": "'Get Information and Prices' against 'Order Information and Prices' is a single test with a 14.79% lift. For the your-to-my free-trial button change, he reports lifts of 30% to 90% across several sites in a 2013 talk (https://marketingexperiments.com/?p=12262), not one controlled test."
+        },
+        {
+         "claim": "Taught landing page copy for CXL Institute and was Unbounce's Senior Conversion Optimizer",
+         "status": "confirmed",
+         "source_url": "https://unbounce.com/ama/",
+         "correction": "Unbounce's 2015 AMA introduces him as Senior Conversion Optimizer. At CXL he teaches the Landing Page Optimization course, which includes landing page copywriting lessons, not a course on copy alone."
+        }
+       ],
+       "reason": "The load-bearing claims hold: high test volume, the Saxo Bank result through MarketingExperiments, and his roles at Unbounce and CXL. The only change is that the 'my' button result is a range he reported across sites, not one test. His evidence is element-level, as the caveat in the list says."
+      },
+      {
+       "name": "Flint McGlaughlin (MECLABS / MarketingExperiments)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "'Clarity trumps persuasion', the first seven seconds, and the questions Where am I? What can I do here? Why should I do it?",
+         "status": "confirmed",
+         "source_url": "https://marketingexperiments.com/?p=22039",
+         "correction": "The phrase and the three questions appear in a MarketingExperiments clinic write-up credited to him as Editor-in-Chief. Its '201% gain' figure has no test details."
+        },
+        {
+         "claim": "Value proposition as appeal, exclusivity, clarity and credibility",
+         "status": "confirmed",
+         "source_url": "https://marketingsherpa.com/article/how-to/value-proposition-assessment-framework",
+         "correction": "This is the MECLABS methodology, documented at MarketingSherpa (a MECLABS publication). The cited page marketingexperiments.com/?p=2984 does not contain it: it is a Daniel Burstein article about clarity."
+        },
+        {
+         "claim": "He is a strategist whose lab ran the tests, not a writer",
+         "status": "confirmed",
+         "source_url": "https://marketingexperiments.com/?p=22070",
+         "correction": "The page credits him with analysis and critique of other companies' pages, not with copy he wrote."
+        }
+       ],
+       "reason": "The facts are right, but he fails the persona bar: he did not write the pages. He works better as a framework the app already reflects than as a 'written like' voice. Keep him as an alternate only."
+      }
+     ],
+     "final_order": [
+      "Joanna Wiebe",
+      "Michael Aagaard"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "optin",
+     "picks": [
+      {
+       "name": "Michael Aagaard",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "+83.75% sign-ups from bullets saying what arrives, and +31.54% from a benefit headline and button",
+         "status": "confirmed",
+         "source_url": "https://www.duncanjonesnz.com/michael-aagaard-how-to-write-high-converting-sign-up-form-copy/",
+         "correction": "The +83.75% was on the ContentVerve newsletter sign-up, and the +31.54% was on the BettingExpert sign-up headline and button. Both figures come from a secondary write-up of his talk, so they are self-reported."
+        },
+        {
+         "claim": "-18.70% and -24% from 'never spam' privacy lines",
+         "status": "confirmed",
+         "source_url": "https://unbounce.com/a-b-testing/failed-ab-test-results/",
+         "correction": "In his own Unbounce post, -18.70% is the BettingExpert sign-up form and -24% is downloads on his CRO e-book page."
+        },
+        {
+         "claim": "CXL repeated the results, one of them with significance",
+         "status": "confirmed",
+         "source_url": "https://cxl.com/blog/ab-testing-forms/",
+         "correction": "CXL reports the -18.70% result as significant at 96%, credited to Content Verve."
+        }
+       ],
+       "reason": "All the numbers trace to his own published tests on opt-in and sign-up forms, and CXL repeated one with a significance level. He has the best-documented evidence in this format."
+      },
+      {
+       "name": "Dean Jackson",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "His 'one decision webpage' from about 1997 is called the first opt-in page",
+         "status": "confirmed",
+         "source_url": "https://ilovemarketing.com/episode-001/",
+         "correction": "The date is his own recollection ('like 1997 I think', for a Winter Haven real estate site). The peer credit comes from a podcast host: Igor Kheifets introduces him as 'the inventor of the squeeze page' (https://www.listbuildinglifestyleshow.com/how-to-create-exponential-growth-with-dean-jackson/)."
+        },
+        {
+         "claim": "His Cosmo table-of-contents layout 'became the standard'",
+         "status": "confirmed",
+         "source_url": "https://www.listbuildinglifestyleshow.com/how-to-create-exponential-growth-with-dean-jackson/",
+         "correction": "Jackson's words are 'that became the standard of what I would do for everything', meaning his own standard. The host is the one who said 'it still is the standard' for the field."
+        },
+        {
+         "claim": "Reports 68% opt-in from cold magazine traffic",
+         "status": "confirmed",
+         "source_url": "https://www.listbuildinglifestyleshow.com/how-to-create-exponential-growth-with-dean-jackson/",
+         "correction": "Self-reported, for one page offering his email book with full-page ads in Success Magazine. The figure is not in episode-001, which gives no percentages."
+        },
+        {
+         "claim": "He set up the Double Your Dating opt-in",
+         "status": "confirmed",
+         "source_url": "https://ilovemarketing.com/episode-001/",
+         "correction": "This is his own account ('the copy that we setup then is almost identical to the copy that they still use today'). The transcript garbles the client's name."
+        }
+       ],
+       "reason": "Each claim is accurately sourced, but more of it is self-reported than the list says, and the 'became the standard' line needs the correction above. The originator credit and the magazine-cover manner hold up as his own account plus host recognition. He keeps his place."
+      },
+      {
+       "name": "Eben Pagan (David DeAngelo)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "The Double Your Dating opt-in ran from 2001 to about 2009 per a swipe archive",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/double-your-dating-lead-magnet-eben-pagan/",
+         "correction": "Swiped.co gives 2001 to about 2009 with no performance data. Miles Beckler (https://www.milesbeckler.com/great-optin-pages/) dates the page to 2004 and claims about $20M, which is unverified."
+        },
+        {
+         "claim": "Brunson's book calls it the foundation of his company",
+         "status": "confirmed",
+         "source_url": "https://www.goodreads.com/notes/53504694-dotcom-secrets/123802880-rory-o-brien/cd3b1968-2373-40db-9b03-73dd7ca2a672",
+         "correction": "Seen only as a reader highlight of DotCom Secrets ('the foundation for Eben's entire company'), not checked against the book itself."
+        },
+        {
+         "claim": "Co-written with Dean Jackson",
+         "status": "confirmed",
+         "source_url": "https://ilovemarketing.com/episode-001/",
+         "correction": "Jackson says he set it up. Swiped.co and Beckler credit Pagan alone, so the split of authorship is unclear."
+        }
+       ],
+       "reason": "The facts mostly check out, but his only evidence in this format is the same page Jackson says he set up. No numbers for it are documented, and it survives only as screenshots. Jackson already covers it, so Pagan belongs as an alternate."
+      }
+     ],
+     "final_order": [
+      "Michael Aagaard",
+      "Dean Jackson"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "pricing_page",
+     "picks": [
+      {
+       "name": "Conversion Rate Experts (Karl Blanks, Ben Jesson)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Smart Insights +157% from anchoring against the expensive alternative",
+         "status": "confirmed",
+         "source_url": "https://conversion-rate-experts.com/smart-insights-case-study/",
+         "correction": "The 157% (more paid memberships) came from a new sales-letter page inserted before the pricing page, not from a pricing page itself. The anchor was the cost of a personal consultation with the Smart Insights experts in your office, which fits 'expensive alternative'."
+        },
+        {
+         "claim": "Earth Class Mail +57% from restating the value argument above the price",
+         "status": "confirmed",
+         "source_url": "https://conversion-rate-experts.com/earth-class-mail-case-study/",
+         "correction": "The challenger pricing page produced 57% more leads. It restated the value proposition and future-pacing above the price, and it also added answers to pricing objections and a money-back guarantee."
+        },
+        {
+         "claim": "Founded by Karl Blanks and Ben Jesson",
+         "status": "confirmed",
+         "source_url": "https://bdaily.co.uk/articles/2017/04/21/conversion-rate-experts-wins-queens-award-for-enterprise",
+         "correction": "Founded in 2006, with Blanks as chairman and Jesson as CEO. The agency also won a Queen's Award for Enterprise (Innovation) in 2017."
+        }
+       ],
+       "reason": "This is the only pick with documented pricing-page tests the firm wrote itself. One correction: the 157% win was a page placed before the pricing page. It is an agency persona, not a single writer, and the results are self-published."
+      },
+      {
+       "name": "Joanna Wiebe (Copyhackers)",
+       "verdict": "drop",
+       "claims_checked": [
+        {
+         "claim": "Value headline over the price, e.g. 'Cheaper than downtime.'",
+         "status": "wrong",
+         "source_url": "https://copyhackers.com/2025/03/saas-pricing-page-checklist/",
+         "correction": "'Cheaper than downtime' is incident.io's own pricing headline. It is quoted as an example in a 2025 Copyhackers article written by Vesna Mirosavljev, with Wiebe as editor."
+        },
+        {
+         "claim": "Plans named 'Best for [persona]' and FAQ headings written as the objection",
+         "status": "wrong",
+         "source_url": "https://copyhackers.com/2025/03/saas-pricing-page-checklist/",
+         "correction": "Both come from Mirosavljev's article, not from Wiebe. It calls 'Best for X' 'the bare-minimum formula' and recommends 'For X looking to do Y' instead."
+        },
+        {
+         "claim": "Wiebe wrote and tested pricing pages",
+         "status": "unverifiable",
+         "source_url": "https://copyhackers.com/?p=26966",
+         "correction": "Her 2020 pricing-table tutorial gives advice and reports no test results. She teaches a Copy School pricing-page course, but I found no attributed, tested pricing page of hers."
+        }
+       ],
+       "reason": "Every move this pick credits to her comes from another writer's article quoting another company's page. She has teaching material on pricing pages but no documented pricing-page work, so she does not clear the bar for this format. Keep her for landing pages only."
+      },
+      {
+       "name": "37signals (Jason Fried)",
+       "verdict": "drop",
+       "claims_checked": [
+        {
+         "claim": "Highrise long form +37.5% net signups",
+         "status": "confirmed",
+         "source_url": "https://signalvnoise.com/posts/2977-behind-the-scenes-highrise-marketing-site-ab-testing-part-1",
+         "correction": "Confirmed number, but the test was on the Highrise home page, not a sign-up or pricing page. Jamie wrote the post and built the page with Ryan Singer. Jason Fried is not named."
+        },
+        {
+         "claim": "A later shorter page +47% paid signups",
+         "status": "confirmed",
+         "source_url": "https://signalvnoise.com/posts/2991-behind-the-scenes-ab-testing-part-3-final",
+         "correction": "The shorter 'Person Page' had a 47% increase in paid signups over Long Form. This was also a home-page test, posted by Jamie in 2011."
+        },
+        {
+         "claim": "These are pricing or sign-up page tests by Fried",
+         "status": "wrong",
+         "source_url": "https://signalvnoise.com/svn3/behind-the-scenes-a-b-testing-at-highrise/",
+         "correction": "Highrise's actual plans-page result came in 2016, after the spin-off, under Nathan Kontny: reverting to a simpler plans page brought paid signups back up 51.4% and new revenue up 67.6%. It was not Fried's work."
+        }
+       ],
+       "reason": "The load-bearing claim is wrong. The two numbers come from home-page tests that Fried did not write, and the one true plans-page result belongs to Highrise under Nathan Kontny. That is a single company data point, not a practitioner with a manner to imitate."
+      }
+     ],
+     "final_order": [
+      "Conversion Rate Experts (Karl Blanks, Ben Jesson)"
+     ],
+     "missing_stronger_candidate": {}
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "upsell",
+     "picks": [
+      {
+       "name": "Russell Brunson",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "His OTO script (confirm the decision, sell the next thing, the one thing, guarantee, a reason for now, testimonials) can be read in DotCom Secrets",
+         "status": "confirmed",
+         "source_url": "https://archive.org/download/DotComSecretsByRussellBrunson/DotCom%20Secrets%20by%20Russell%20Brunson.pdf",
+         "correction": "The book's 'THE OTO SCRIPT' section says 'my team wrote our script' and describes it as a 3 to 5 minute OTO video, not a written page. The step list matches the dansilvestre.com summary (13 steps, ending with Testimonial Rush)."
+        },
+        {
+         "claim": "Self-reported result: 1 in 3 DVD buyers took the $200 kit",
+         "status": "confirmed",
+         "source_url": "https://www.success.com/russell-brunson-success-story",
+         "correction": "Success magazine reports it as his story ('one out of three people who bought the DVD bought the $200 kit'). It is not audited."
+        },
+        {
+         "claim": "The script includes Yes/No buttons in the buyer's voice",
+         "status": "unverifiable",
+         "source_url": "https://archive.org/download/DotComSecretsByRussellBrunson/DotCom%20Secrets%20by%20Russell%20Brunson.pdf",
+         "correction": "The book's OTO script and the summary do not include button wording. It may come from the Cookbook wireframe, which I did not read."
+        }
+       ],
+       "reason": "The load-bearing claims hold: the script is in print and the result appears in a third-party profile, though as his own account. He is the strategist whose structure the format uses, not a copywriter with controls, and per his own book the script was written by his team for video. He stays first as the structural persona."
+      },
+      {
+       "name": "Ezra Firestone",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "One unit beat a bundle, 8.2% vs 3.25%",
+         "status": "confirmed",
+         "source_url": "https://zipify.com/winners-losers-split-testing-upsells-w-ezra-firestone-episode-1/",
+         "correction": "The winner was decided on revenue per visit ($5.32 vs $3.91), not on conversion alone."
+        },
+        {
+         "claim": "Dollar-off beat percent-off, 13.59% vs 10.3%",
+         "status": "confirmed",
+         "source_url": "https://zipify.com/winning-upsell-split-test-discounting-dollar-amount-vs-percentage/"
+        },
+        {
+         "claim": "A fixed size beat a size choice, and long copy made no difference",
+         "status": "confirmed",
+         "source_url": "https://zipify.com/winners-losers-split-testing-upsells-w-ezra-firestone-episode-1/",
+         "correction": "The fixed size won by 26 cents per visit with conversion 'very close'. Long-form won by 2 cents and he called the test 'a wash'. Neither test gives conversion figures."
+        },
+        {
+         "claim": "BOOM!: $1M of $10M in revenue came from post-purchase upsells",
+         "status": "confirmed",
+         "source_url": "https://zipify.com/lessons-learned-from-1000000-in-upsells/",
+         "correction": "The page also reports a 28% upsell rate on the Boom Clean launch. It notes the tool it describes (OCU Legacy) is no longer supported."
+        }
+       ],
+       "reason": "Every figure checks out at the source he published. They are company-published and the copywriter is unnamed, as the research already says. He has the most split tests on upsell wording that anyone has published, and his manner (a one-line add-more, dollar savings) differs from Brunson's."
+      },
+      {
+       "name": "Perry Belcher",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "A personalized premium lifted a post-purchase continuity upsell from 7.7% to 32%",
+         "status": "confirmed",
+         "source_url": "https://perrybelcher.com/tripwire-offer",
+         "correction": "This is self-published on his own site and reads like a talk transcript. The page contradicts itself on the middle step: the plain knife is given as 23% in one place and 7.5% in another."
+        },
+        {
+         "claim": "Moving the close up to right after the premium doubled conversion",
+         "status": "confirmed",
+         "source_url": "https://perrybelcher.com/tripwire-offer",
+         "correction": "He gives it only qualitatively ('an immediate double'), with no before or after rates."
+        }
+       ],
+       "reason": "The two figures appear on his own page, but it is one unaudited, internally inconsistent case, and the lever is offer design (a premium) more than copy. The research entry contradicts itself: it says 'Left off the list' yet ranks him third.He fits as an alternate at most. Stefan Georgi, already in 'also considered', has evidence of the same strength: one self-reported upsell test on his blog, 14% to 32% (https://www.stefanpaulgeorgi.com/blog/an-upsell-test-that-increased-conversions-by-over-100). That test changed offer structure and design, and the writer is unnamed."
+      }
+     ],
+     "final_order": [
+      "Russell Brunson",
+      "Ezra Firestone"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "order_bump",
+     "picks": [
+      {
+       "name": "Russell Brunson",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "His company started the checkbox bump around 2010 to 2011 and shipped it as a ClickFunnels feature in April 2015",
+         "status": "confirmed",
+         "source_url": "https://www.clickfunnels.com/blog/order-form-bump/",
+         "correction": "The post is dated 2015-04-15 and says 'We started this in our company four or five years ago' and 'now it's finally live'. Being first is his own claim, not established independently."
+        },
+        {
+         "claim": "34% took a $37 bump (DotCom Secrets); 38% and a 30%+ front-end revenue lift (ClickFunnels blog)",
+         "status": "confirmed",
+         "source_url": "https://archive.org/download/DotComSecretsByRussellBrunson/DotCom%20Secrets%20by%20Russell%20Brunson.pdf",
+         "correction": "The book says 'about 34%' on the thirty-seven dollar product, calls it 'forty-seven dollar' a paragraph later, and elsewhere says 'up to 40%'. The 38% and 'over 30%' come from the ClickFunnels post. All are self-reported and inconsistent, as the research notes."
+        },
+        {
+         "claim": "The whole Conversion Krusher bump (Fig 11.12, about 45 words) can be read in the book",
+         "status": "confirmed",
+         "source_url": "https://archive.org/download/DotComSecretsByRussellBrunson/DotCom%20Secrets%20by%20Russell%20Brunson.pdf",
+         "correction": "I rendered the figure. Text: arrow, checkbox, 'Yes, I'll Take It!', 'ONE TIME OFFER: Want our \"Conversion Krusher\" Video Sales Letter template? It's proven to work and easy to install. Click YES to add this to your order now for just $37! (This offer not available at ANY other time or place)'. That is about 44 words and matches the manner described."
+        }
+       ],
+       "reason": "Every load-bearing claim holds at the primary source. He is the only candidate with a whole bump readable in print, his own take rates and an origin claim. He ranks as the strategist whose structure became the standard, not as a proven bump writer. I found no published test of bump copy by a named writer."
+      }
+     ],
+     "final_order": [
+      "Russell Brunson"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "order_form",
+     "picks": [
+      {
+       "name": "Joe Karbo",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Time, 1973: 139,000 copies in six months and 10% returns",
+         "status": "confirmed",
+         "source_url": "https://time.com/archive/6844735/business-rich-and-lazy/",
+         "correction": "The figures cover the whole ad and book, not the coupon."
+        },
+        {
+         "claim": "The guarantee is the buyer's uncashed check, which comes back",
+         "status": "confirmed",
+         "source_url": "https://time.com/archive/6844735/business-rich-and-lazy/",
+         "correction": "Time says he would 'hold the buyer's check or money order uncashed for one month'. A 2021 Substack quotes the ad as 31 days."
+        },
+        {
+         "claim": "The ad carries a sworn accountant's statement where the money changes hands",
+         "status": "unverifiable",
+         "source_url": "https://theessence.substack.com/p/the-secrets-behind-the-incredible",
+         "correction": "Only a 2021 Substack, a secondary source, confirms the sworn statement, added for credibility. Time does not mention it, and nothing I read places it at the coupon."
+        },
+        {
+         "claim": "The coupon's acceptance line concedes the skeptic's doubt",
+         "status": "unverifiable",
+         "source_url": "https://time.com/archive/6844735/business-rich-and-lazy/",
+         "correction": "Neither source nor a targeted search turned up the coupon's wording. The research already flags this."
+        }
+       ],
+       "reason": "The third-party figures and the uncashed-check guarantee hold. Where the accountant's statement sits and the coupon's wording are unverified, so the persona must not assume them. Karbo is still the best-evidenced order device, though not a recognized master of order forms."
+      },
+      {
+       "name": "Dan Kennedy",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "He wrote his own order forms to the standard of the best mail-order forms' 'completeness and clarity'",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/why-giving-clear-instructions-can-increase-your-marketing/313316"
+        },
+        {
+         "claim": "More than $1 million a year for 10+ years from the stage using those forms",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/why-giving-clear-instructions-can-increase-your-marketing/313316",
+         "correction": "This is his own claim, and the forms' share is not separated from his selling on stage."
+        }
+       ],
+       "reason": "Accurately reported, with the self-reported caveat already in place. He wrote his own forms and argued for them in print."
+      },
+      {
+       "name": "Michael Aagaard",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "'My' beat 'your' on the button by 90%, judged on final conversion",
+         "status": "confirmed",
+         "source_url": "https://marketingexperiments.com/?p=12262",
+         "correction": "The 90% was measured in sign-ups, with no sample size, baseline or confidence given. It is a free sign-up button, not a paid order form."
+        },
+        {
+         "claim": "30% to 90% lifts across his sites",
+         "status": "confirmed",
+         "source_url": "https://marketingexperiments.com/?p=12262",
+         "correction": "This is his statement, with no per-site data."
+        },
+        {
+         "claim": "He wrote the tested copy himself",
+         "status": "unverifiable",
+         "source_url": "https://marketingexperiments.com/?p=12262",
+         "correction": "The write-up calls him a copywriter but does not say who wrote the variant."
+        }
+       ],
+       "reason": "The numbers hold as reported, but the test is a sign-up button rather than a checkout, and the persona is narrow (the button and the line beside it). He fits third."
+      }
+     ],
+     "final_order": [
+      "Joe Karbo",
+      "Dan Kennedy",
+      "Michael Aagaard"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "thank_you",
+     "picks": [
+      {
+       "name": "Harry's prelaunch referral page (Jeff Raider's account; writer unnamed)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "Over 85K valid emails in one week, 77% via referral, about 20K referrers bringing about 65K friends",
+         "status": "confirmed",
+         "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/",
+         "correction": "The post gives these as estimates and also reports over 100K emails in total."
+        },
+        {
+         "claim": "Written by co-founder Jeff Raider; the page's writer is not named; 5/10/25/50 referral ladder",
+         "status": "confirmed",
+         "source_url": "https://tim.blog/2014/07/21/harrys-prelaunch/",
+         "correction": "The ladder is confirmed (shave cream, razor, Winston set, a year free). A 1,000-referral tier was dropped."
+        }
+       ],
+       "reason": "The facts hold, but this is a company page with no named writer, so it cannot serve as a 'written like' persona. Keep it as evidence for the spec's referral-bridge rules."
+      },
+      {
+       "name": "NextAfter (testing lab)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "Dropping the confirmation header and 'Thank You!' for the ask: +106.7% at 98.6%",
+         "status": "confirmed",
+         "source_url": "https://www.nextafter.com/experiments/how-removing-a-confirmation-headline-and-thank-you-language-affects-donor-conversion-rate/",
+         "correction": "6.4% to 13.2%, n=446. The page also gives 98.5% in Key Learnings. No writer is credited."
+        },
+        {
+         "claim": "Form on the confirmation page instead of a button: +349.4% at 96.5%",
+         "status": "confirmed",
+         "source_url": "https://www.nextafter.com/experiments/how-presenting-a-donation-page-instantly-after-an-acquisition-offer-impacts-donor-conversion/",
+         "correction": "The treatment also added a value proposition, so the change is not the form alone. Absolute rates were 0.03% vs 0.13%, n=14,013."
+        },
+        {
+         "claim": "The remove-the-thank-you move failed to replicate in later tests (one trended -12.4%)",
+         "status": "confirmed",
+         "source_url": "https://www.nextafter.com/experiments/how-removing-the-initial-thank-you-language-affects-donation-conversion-rate/",
+         "correction": "-12.4% at 83.6%, marked not valid. The post-survey test (https://www.nextafter.com/experiments/how-eliminating-a-confirmation-message-post-survey-impacted-giving/) trended +10.7% at 40.2%, also not valid. I did not check the third."
+        }
+       ],
+       "reason": "The numbers are accurate, but it is a lab with uncredited writers, copy mostly in images and only nonprofit pages. It is evidence for the spec, not a persona."
+      }
+     ],
+     "final_order": [],
+     "missing_stronger_candidate": {}
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "email_single",
+     "picks": [
+      {
+       "name": "Laura Belgray",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Kevin Rogers (Copy Chief) says her small list out-converts affiliates with up to 50x the list size",
+         "status": "confirmed",
+         "source_url": "https://copychief.com/ep-162-laura-belgray-2/"
+        },
+        {
+         "claim": "Chris Orzechowski calls her 'an email copywriter with legendary skills'",
+         "status": "confirmed",
+         "source_url": "https://www.theemailcopywriter.com/articles/email-of-the-week-24-laura-belgray-talking-shrimp"
+        },
+        {
+         "claim": "Over $11k from one email for a $49 product (self-reported)",
+         "status": "confirmed",
+         "source_url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell"
+        },
+        {
+         "claim": "21 handpicked emails are public",
+         "status": "confirmed",
+         "source_url": "https://www.talkingshrimp.com/handpicked-emails"
+        },
+        {
+         "claim": "She split-tests subject lines",
+         "status": "unverifiable",
+         "correction": "The cited page mentions no split test of her own. What she publishes is a '33 most-opened emails, plus 4 that tanked' subject-line guide. Describe it that way instead of as split testing.",
+         "source_url": "https://www.talkingshrimp.com/email-marketing-tips-for-emails-that-sell"
+        }
+       ],
+       "reason": "Two independent peers recognize her specifically for email, and the quotes are accurate. Her one-email result is self-reported but specific, and her corpus is public in her own first-person voice. Only the split-test detail is unsupported, and nothing in the ranking depends on it."
+      },
+      {
+       "name": "Ben Settle",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Endorsed by Dan Kennedy, Matt Furey and Perry Marshall (on his own site)",
+         "status": "confirmed",
+         "correction": "His about page also carries Gary Bencivenga, Bob Bly, Brian Kurtz, Mark Ford and Russell Brunson. Brunson also cites Settle's daily emails independently in DotCom Secrets, so his recognition is not limited to his own site.",
+         "source_url": "https://bensettle.com/blog/about/"
+        },
+        {
+         "claim": "3000+ pages of his material is readable",
+         "status": "confirmed",
+         "correction": "The homepage counts '3000+ pages of advanced email, copywriting, & web marketing tips'. It is a tips archive, not a count of republished single promotional emails.",
+         "source_url": "https://bensettle.com/"
+        },
+        {
+         "claim": "No documented sales results",
+         "status": "confirmed",
+         "source_url": "https://bensettle.com/blog/about/"
+        }
+       ],
+       "reason": "The recognition claims hold up and are a little broader than the research says. He has no figures, but his daily one-link sales email is the template for the format, and he writes it in a manner that can be imitated."
+      },
+      {
+       "name": "Daniel Throssell",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Kevin Rogers: 'there is no better, or more entertaining, email copywriter in the game right now'",
+         "status": "confirmed",
+         "source_url": "https://copychief.com/ep-295-daniel-throssell/"
+        },
+        {
+         "claim": "Settle, Fladlien, Carlton and Belgray praise him on his page",
+         "status": "confirmed",
+         "source_url": "https://persuasivepage.com/"
+        },
+        {
+         "claim": "First place in affiliate contests; nearly every email is a sales email",
+         "status": "confirmed",
+         "correction": "These are self-reported. He says he has placed first in every affiliate contest since 2021, and that his first contest in 2020 was a second place. His own words are 'almost every single email I send is a sales email'.",
+         "source_url": "https://persuasivepage.com/"
+        }
+       ],
+       "reason": "Every load-bearing claim checks out, and his peer recognition for email is the strongest of the three. Third place is fair because his results have no figures and his corpus sits behind a subscription."
+      }
+     ],
+     "final_order": [
+      "Laura Belgray",
+      "Ben Settle",
+      "Daniel Throssell"
+     ]
+    },
+    {
+     "format_id": "email_sequence",
+     "picks": [
+      {
+       "name": "Ramit Sethi",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "Per-email revenue: Big Reveal $82,358, Free Taste $28,721, Last Chance $165,803; the 'Power Trio' made over 60% of a $617,944 launch",
+         "status": "confirmed",
+         "source_url": "https://www.iwillteachyoutoberich.com/behind-the-sales-email/"
+        },
+        {
+         "claim": "A 5-day sequence generated $400k in one launch",
+         "status": "confirmed",
+         "correction": "The page reports the total only, not per-email figures, and it does not name who wrote the emails.",
+         "source_url": "https://growthlab.com/400k/"
+        },
+        {
+         "claim": "He presents the emails as his own writing (authorship)",
+         "status": "wrong",
+         "correction": "The post is written in his first person, but IWT emails and launch funnels come from an in-house copy team. Head copywriter Ryan Johnson says he oversees 'all of the in-house copywriters' and 'all the material that we produce'. Treat these as IWT house emails under Sethi's byline, not as emails he wrote himself.",
+         "source_url": "https://thecopywriterclub.com/?p=943"
+        }
+       ],
+       "reason": "The figures are real but company-reported. The authorship claim behind a 'written like Ramit' persona fails: the sequences are team-written in his house voice. He stays on the list for the results but drops below Chaperon."
+      },
+      {
+       "name": "Andre Chaperon",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Brunson's company credits him as the source of the Soap Opera Sequence",
+         "status": "confirmed",
+         "correction": "ClickFunnels says Brunson 'first heard of the Soap Opera Sequence from a friend of his, Andre Chaperon' and credits Brunson with popularizing it. It does not call Chaperon the inventor in so many words.",
+         "source_url": "https://www.clickfunnels.com/blog/soap-opera-sequence/"
+        },
+        {
+         "claim": "AutoResponder Madness (2009) covered open loops, nested sequences, bridge emails and segmentation",
+         "status": "confirmed",
+         "source_url": "https://andrechaperon.com/boring-email"
+        },
+        {
+         "claim": "Open rates only, self-reported; no revenue figures",
+         "status": "confirmed",
+         "source_url": "https://andrechaperon.com/email-engine"
+        }
+       ],
+       "reason": "Every claim checks out. He set out the mechanics of the sequence format himself in 2009, and the most widely copied sequence is traced to him. With Sethi demoted for authorship, he moves to first."
+      },
+      {
+       "name": "Ben Settle",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Kennedy, Bencivenga and Furey endorse him by name on his own site",
+         "status": "confirmed",
+         "source_url": "https://bensettle.com/blog/about/"
+        },
+        {
+         "claim": "Largest readable corpus (3000+ pages)",
+         "status": "confirmed",
+         "correction": "The homepage counts '3000+ pages' of email and marketing tips, not 3000+ pages of sequence emails.",
+         "source_url": "https://bensettle.com/"
+        },
+        {
+         "claim": "His format is the daily broadcast, not a planned arc",
+         "status": "confirmed",
+         "correction": "Brunson's own framework puts Chaperon's sequence first and Settle's daily emails after it as the follow-on. That places Settle after the sequence, not inside it.",
+         "source_url": "https://www.clickfunnels.com/blog/soap-opera-sequence/"
+        }
+       ],
+       "reason": "The claims are accurate and the research already states his weakness for this format. He fits as third, the broadcast that follows the sequence. Throssell (Parallel Welcome Sequence) is the closer alternate if a sequence inventor is wanted. I could not check the research's reason for excluding him, that his openers are fiction."
+      }
+     ],
+     "final_order": [
+      "Andre Chaperon",
+      "Ramit Sethi",
+      "Ben Settle"
+     ]
+    },
+    {
+     "format_id": "cold_email",
+     "picks": [
+      {
+       "name": "Aaron Ross",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Built Salesforce's outbound 'Cold Calling 2.0' process, credited with about $100M in recurring revenue",
+         "status": "confirmed",
+         "correction": "The figure comes from the book's own subtitle ('the $100 Million Best Practices of Salesforce.com') and is repeated by secondary sources. Nobody has audited it independently, so cite it as the author's claim. The Rework source is a vendor page with no primary sourcing.",
+         "source_url": "https://resources.rework.com/libraries/leadership-legends/aaron-ross-leadership"
+        },
+        {
+         "claim": "His move is a short email to a senior person asking for a referral to whoever handles the area",
+         "status": "confirmed",
+         "source_url": "https://resources.rework.com/libraries/leadership-legends/aaron-ross-leadership"
+        },
+        {
+         "claim": "Readable in Predictable Revenue (2011)",
+         "status": "confirmed",
+         "correction": "Predictable Revenue (July 2011) is co-authored with Marylou Tyler.",
+         "source_url": "https://pastforward.org/products/predictable-revenue-turn-your-business-into-a-sales-machine-with-the-100-million-best-practices-of-salesforcecom-9780984380244"
+        }
+       ],
+       "reason": "The result is the largest in the field, even though the author reports it himself. The referral email is short and can be imitated. His manner is a template more than a voice, so add the co-author and the sourcing caveat."
+      },
+      {
+       "name": "Jon Buchan",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Meetings with Red Bull and Pepsi (anecdotal)",
+         "status": "confirmed",
+         "correction": "These come from his own account, which also names Symantec, Hewlett-Packard, HSBC and Barclays. He reports no reply rates.",
+         "source_url": "https://selzy.com/en/blog/jon-buchan-interview"
+        },
+        {
+         "claim": "Opener: 'You've never heard of me. (Hi, I'm Jon). I got your details from a list.'",
+         "status": "unverifiable",
+         "correction": "Neither cited URL contains the email text: the Selzy interview calls it 'completely absurd', and the beehiiv post only teases a template. docs/03 records the quote as verified. Re-confirm it against Buchan's own material (Charm Offensive) before using it as an exemplar.",
+         "source_url": "https://getshitdone.beehiiv.com/p/how-a-drunk-cold-email-changed-my-life"
+        }
+       ],
+       "reason": "His manner is the most distinct in the field and his brand list checks out as his own account. The exact quote needs a primary source, but nothing in the ranking depends on it."
+      },
+      {
+       "name": "Alex Berman",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Source: Mixergy cold email course cheat sheet",
+         "status": "wrong",
+         "correction": "That cheat sheet is Bryan Kreuzberger's Breakthrough Email course. It does not mention Berman. Replace it with a Berman source.",
+         "source_url": "https://mixergy.com/course-cheat-sheet-cold-email/"
+        },
+        {
+         "claim": "No published figures",
+         "status": "wrong",
+         "correction": "Berman reports over $400k in new agency business in under 30 days from cold outbound, and over $2.5M in sales for X27 overall. Both are self-reported, via Scott D. Clary.",
+         "source_url": "https://www.hackernoon.com/cold-email-is-not-dead-mb4v35g4"
+        },
+        {
+         "claim": "His structure is observation, outcome-without-pain, one-word-answer question",
+         "status": "wrong",
+         "correction": "In the sources I read, his structure is a specific compliment or observation, then a case study or niche recommendation, then an easy-yes question ('Does that sound like something you'd be interested in?'). Neither source has the 'We help X get Y without Z' line, and one source says to name the pain point, not avoid it.",
+         "source_url": "https://newsletter.levelingup.com/p/write-cold-emails-always-get-read"
+        }
+       ],
+       "reason": "He did the work and does have results, so he stays. The source citation, the 'no figures' claim and the 'without pain' framing need fixing, and docs/03 \u00a75.21 should be re-checked against what he actually teaches."
+      }
+     ],
+     "final_order": [
+      "Aaron Ross",
+      "Jon Buchan",
+      "Alex Berman"
+     ]
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "webinar_package",
+     "picks": [
+      {
+       "name": "Jason Fladlien",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "$3.29M from one 90-minute webinar with no replay",
+         "status": "confirmed",
+         "source_url": "https://www.inspiredinsider.com/jason-fladlien-interview/2",
+         "correction": "Confirmed only as his own statement in an interview: 'we did that webinar one-time to $3.29 million in 90 minutes', with no follow-up or replay."
+        },
+        {
+         "claim": "$9.8M eight-day affiliate record and $57.8M/$57.9M launch from email traffic sent to a webinar",
+         "status": "confirmed",
+         "source_url": "https://rapidcrush.com",
+         "correction": "These are his company's own figures. Rapid Crush gives $57.8M in 226 days and $9.8M in 8 days, both from email traffic sent to a webinar; the Headsmack podcast gives $57.9M. Neither source is independent."
+        },
+        {
+         "claim": "'Upwards of $100 million' sold through webinars (Entrepreneur, 2017)",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/12-steps-for-creating-the-perfect-webinar/295977",
+         "correction": "The wording is in an Entrepreneur contributor article by R.L. Adams, which also says he did 50+ unique pitches and 300+ live webinars. It is a contributor piece, not reporting by Entrepreneur's staff."
+        },
+        {
+         "claim": "Brunson credits him and calls him 'one of the smartest people I've ever met online'",
+         "status": "unverifiable",
+         "source_url": "https://podcasts.happyscribe.com/happy-scribe-s-favorites/how-to-create-the-perfect-webinar-step-by-step-russel-brunson-ceo-of-clicksfunnels-1673cf18-0bb1-494c-b5fc-380819f24324",
+         "correction": "The credit is confirmed: in the transcript Brunson says the biggest thing he took from Jason's webinar product was 'how to structure the content'. The transcript spells the name 'Flatlanders'. I could not find the 'smartest people' quote in this transcript or in a search, so drop it unless someone finds the source."
+        },
+        {
+         "claim": "Client conversion figures (Benson 21% warm, 12-14% cold on $997; Cohen 17%)",
+         "status": "confirmed",
+         "source_url": "https://rapidcrush.com",
+         "correction": "These are client testimonials on Rapid Crush's own site, so they are self-reported."
+        }
+       ],
+       "reason": "He has the most format-specific results, he presents his own webinars, and Brunson credits him for content structure. Every figure comes from him or his company. Remove or source the 'smartest people' quote, and label the Entrepreneur line as a contributor article."
+      },
+      {
+       "name": "Russell Brunson",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Perfect Webinar results: 15% live close, over $10M from the template in about ten months, $9 to over $16 per registrant after adding trial closes",
+         "status": "confirmed",
+         "source_url": "https://podcasts.happyscribe.com/happy-scribe-s-favorites/how-to-create-the-perfect-webinar-step-by-step-russel-brunson-ceo-of-clicksfunnels-1673cf18-0bb1-494c-b5fc-380819f24324",
+         "correction": "Self-reported. He says it 'closed consistently at fifteen percent' and made him 'over ten million dollars' in about ten months, and that per-registrant revenue went from $9 to over $16. He says he learned trial closes from Ted Thomas and content structure from Fladlien, so the structure is partly a synthesis of others' work."
+        },
+        {
+         "claim": "The same script from stage did $3.2M in 90 minutes (company figure)",
+         "status": "confirmed",
+         "source_url": "https://support.myclickfunnels.com/docs/10x-secrets-masterclass-faqs/",
+         "correction": "ClickFunnels gives $3.2M in 90 minutes at the 10X Growth Conference. In his podcast he says 'over $3 million' in cash collected, and says the framework was his Funnel Hacks presentation built on the Expert Secrets script (https://podscripts.co/podcasts/the-russell-brunson-show/how-i-made-3-million-dollars-in-90-minutes). It was a stage pitch, a neighbouring format."
+        }
+       ],
+       "reason": "His Perfect Webinar is the format's standard structure, and his script is publicly readable in Expert Secrets. The claims hold up as self-reports. He ranks below Fladlien because his format-specific numbers are fewer and partly come from the stage."
+      }
+     ],
+     "final_order": [
+      "Jason Fladlien",
+      "Russell Brunson"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "vsl_long",
+     "picks": [
+      {
+       "name": "Mike Palmer",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "He wrote The End of America; it started Nov 2010, brought in around 500,000 new paid subscribers, helped double Stansberry in under a year, and was called the most-imitated promotion of its decade",
+         "status": "confirmed",
+         "source_url": "https://www.awai.com/2013/08/mike-palmer-to-speak-at-awais-2013-bootcamp/",
+         "correction": "AWAI's wording is hedged: it 'might also be the most-imitated promotion of the past decade', and it calls it 'the most successful promotion in the financial industry in more than a decade'. AWAI is a trade body that promotes Palmer. Another AWAI article (https://awai.com/2017/05/why-do-some-writers-get-rich-while-others-dont) confirms he wrote it."
+        },
+        {
+         "claim": "The 500,000 subscribers and record are results of the 77-minute video specifically",
+         "status": "wrong",
+         "source_url": "https://www.awai.com/2018/12/5-steps-to-generating-big-ideas/",
+         "correction": "AWAI credits the record (most paid subscribers from any single package) to the End of America promotion as a whole. It describes that promotion as a 'sales letter'/'package' that pushed Stansberry beyond direct mail and email into radio, television and podcasts. The figure is not credited to the video alone. Present it as the campaign's result, with the long video as its centrepiece."
+        },
+        {
+         "claim": "The video ran 77 minutes per Wikipedia",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Porter_Stansberry",
+         "correction": "Wikipedia confirms 77 minutes, but it dates the video to 2011 and credits only Porter Stansberry as producer, without naming Palmer. Brian Deer's page (https://briandeer.com/stansberry/postmodern-porter-stansberry-1.htm) says fall 2010. For authorship, cite AWAI, not Wikipedia."
+        },
+        {
+         "claim": "AWAI 2009 Copywriter of the Year",
+         "status": "confirmed",
+         "source_url": "https://www.awai.com/bio/mike-palmer/"
+        }
+       ],
+       "reason": "He has the strongest documented result tied to a long video promotion, and the attribution is confirmed by AWAI. The 500K and record figures belong to the whole multi-channel campaign, not the video alone, and the 'most-imitated' line is hedged in the source."
+      },
+      {
+       "name": "Jon Benson",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "He originated the words-on-screen VSL",
+         "status": "unverifiable",
+         "source_url": "https://ilovemarketing.com/episode-44the-one-with-jon-benson-video-sales-letters",
+         "correction": "This is his own claim ('I am the inventor of that'). In the same episode he acknowledges that 'a lot of people think Ryan created it' (Ryan Deiss). The EasyWebinar piece repeats it in promotional copy. Write 'widely credited with, and claims' rather than stating it as fact."
+        },
+        {
+         "claim": "Self-reported results: 1% to 6.5%; Geary's Truth About Abs control unbeaten for almost two years",
+         "status": "confirmed",
+         "source_url": "https://ilovemarketing.com/episode-44the-one-with-jon-benson-video-sales-letters",
+         "correction": "Self-reported. He says his VSL for Geary doubled Geary's conversions. The version Geary 'tried to beat for almost 2 years' was a later animated remake using Jon's copy and voice. The transcript is unclear in that passage."
+        },
+        {
+         "claim": "His published rules: snap suggestion, one USP plus an enabler in 20 words or less, one sentence per slide ending open, cadence over voice, button held to the end; he wrote his own VSLs",
+         "status": "confirmed",
+         "source_url": "https://ilovemarketing.com/episode-44the-one-with-jon-benson-video-sales-letters",
+         "correction": "Confirmed in his own words. He also says his best VSLs ran 30 to 40 minutes and that none should be under 15."
+        }
+       ],
+       "reason": "His rules are documented in his own words and he wrote his own scripts, which fits a persona well. The invention claim and all his results are self-reported and should be worded that way."
+      },
+      {
+       "name": "Stefan Georgi",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Rewriting only the first minute of VShred's VSL raised conversions 72% and took it from about 30 to over 1,500 buyers a day on cold traffic",
+         "status": "confirmed",
+         "source_url": "https://www.justingoff.com/stefan-georgis-copy-was-a-failure-then-this-happened/",
+         "correction": "Confirmed as reported by Justin Goff, who calls Georgi 'my biz partner'. The page sells Goff's course, no data is shown, and the starting figure is 'like 30'."
+        },
+        {
+         "claim": "Large self-reported totals and VShred scaling",
+         "status": "confirmed",
+         "source_url": "https://www.stefanpaulgeorgi.com/about/",
+         "correction": "Self-reported on his own site: 70+ pieces grossing over $1B, and helping scale VShred from $50MM to over $300MM. No named VSL count and no awards."
+        }
+       ],
+       "reason": "He has a credible modern cold-traffic VSL lift, but all of it comes from himself or his business partner, and no VSL of his is publicly readable. Third place, as listed, is right."
+      }
+     ],
+     "final_order": [
+      "Mike Palmer",
+      "Jon Benson",
+      "Stefan Georgi"
+     ],
+     "missing_stronger_candidate": {}
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "vsl_short",
+     "picks": [
+      {
+       "name": "Harmon Brothers (agency team)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Squatty Potty online sales +600% and retail +200% in about four months after the video, figures from the client in a third-party publication",
+         "status": "confirmed",
+         "source_url": "https://www.utahbusiness.com/potty-talk-marketing-unconventional-product/"
+        },
+        {
+         "claim": "Keto Chow +121% in three months",
+         "status": "confirmed",
+         "source_url": "https://harmonbrothers.com/keto-chow-advertising",
+         "correction": "The quote is from Keto Chow co-founder Chris Bair, but it is published on the agency's own case page with no baseline, so it is a client-on-agency-site figure, not a third-party one."
+        },
+        {
+         "claim": "GoTREADS +4,300%",
+         "status": "confirmed",
+         "source_url": "https://harmonbrothers.com/gotreads-growth",
+         "correction": "Agency-reported only. The client quote on the page gives no numbers."
+        },
+        {
+         "claim": "Agency claims $450M+ (2020) and over $1B in sales",
+         "status": "confirmed",
+         "source_url": "https://harmonbrothers.com/",
+         "correction": "Both are the agency's own claims. $1B is on the current homepage. $450M is from a May 4, 2020 release (https://martechseries.com/sales-marketing/programmatic-buying/agency-behind-internets-greatest-viral-video-ads-boost-hard-hit-covid-19-business-free-ad-campaign/)."
+        }
+       ],
+       "reason": "The load-bearing Squatty Potty result holds. Utah Business (Heather Beers, May 20, 2016) quotes CEO Bobby Edwards: the video debuted in October 2015, and by the end of January 2016 online sales were up 600% and retail 200%, with $18M against a $12M estimate. Edwards says he 'approached the Harmon Brothers' and their pitch was the unicorn video. The other figures are agency or client claims on the agency's site and should be labeled that way. The house-persona framing is right: I found no fetchable source that settles an individual writing credit."
+      },
+      {
+       "name": "Michael Dubin",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "12,000 orders in two days",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club",
+         "correction": "Wikipedia cites the LA Times (Aug 16, 2013) and the NYT (Apr 11, 2013). Entrepreneur (Oct 13, 2012) separately reports about 12,000 sign-ups in the first 48 hours."
+        },
+        {
+         "claim": "2012 Ad Age Viral Video Award",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club",
+         "correction": "The category was 'Best Out-of-Nowhere Video Campaign' at the 2012 Ad Age Viral Video Awards, per Wikipedia citing Ad Age."
+        },
+        {
+         "claim": "Dubin wrote the script (unverified in the first pass)",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/how-a-dollar-shave-clubs-ad-went-viral/224282",
+         "correction": "Co-written in practice. Entrepreneur says director Lucia Aniello cut 'Dubin's four-page script', the two wrote jokes on top of the brand messaging, and Aniello supplied the opening line 'Our blades are f**king great' when Dubin was stuck. Credit Dubin as writer with Aniello as co-shaper. The famous opener is hers."
+        }
+       ],
+       "reason": "The result and the award hold, and the authorship question is now mostly settled: the draft was Dubin's and was trimmed with Aniello. Two caveats for this format: Entrepreneur and LA Magazine describe the piece as about a minute and a half, which is below the 2-7 minute window, and it is still one piece."
+      },
+      {
+       "name": "Arthur Schiff",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Wrote 1,800+ direct response TV spots",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Arthur_Schiff",
+         "correction": "Wikipedia says he 'produced over 1800 direct response TV infomercials'. Trade obituaries (MediaPost, 2006) say he 'wrote' 1,800 short-form DRTV spots. The count is widely repeated but I found it only in secondary sources."
+        },
+        {
+         "claim": "Ginsu sold 2-3 million sets, 1978-84",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Ginsu",
+         "correction": "The figure is a company figure: a Douglas Quikut president quoted in a 2016 Baxter Bulletin article. Ginsu itself is credited to a team (Ed Valenti, Barry Becher and copywriter Schiff) rather than to Schiff alone. Schiff was Creative Director at Dial Media."
+        },
+        {
+         "claim": "His opening shows the usual way failing before the product works",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Arthur_Schiff",
+         "correction": "The documented Ginsu opener is a karate chop through a board, then 'In Japan, the hand can be used like a knife. But this method doesn't work with a tomato.' He is also credited with 'But wait, there's more!', which is the stack close this format bans."
+        }
+       ],
+       "reason": "The core claims hold with nuance. Schiff is the documented copywriter of short DRTV spots, and his demonstration opening survives in text. The Ginsu result is company-reported and team-credited. The 'opening and demonstration only' qualification is correct and should stay."
+      }
+     ],
+     "final_order": [
+      "Harmon Brothers (agency team)",
+      "Michael Dubin",
+      "Arthur Schiff"
+     ]
+    },
+    {
+     "format_id": "youtube_ad",
+     "picks": [
+      {
+       "name": "Harmon Brothers (house manner; Daniel Harmon, Chief Creative Officer)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Squatty Potty online +600%, retail +200% within four months, $18M against a $12M estimate, from the client's CEO in a third-party publication",
+         "status": "confirmed",
+         "source_url": "https://www.utahbusiness.com/potty-talk-marketing-unconventional-product/"
+        },
+        {
+         "claim": "Keto Chow, GoTREADS and Skull Shaver results are reported by the agency or its clients",
+         "status": "confirmed",
+         "source_url": "https://harmonbrothers.com/gotreads-growth",
+         "correction": "Correct as stated. GoTREADS +4,300% is agency-reported. Keto Chow +121% is a co-founder quote on the agency page. Skull Shaver (40% lower social cost, 100M views in 3 months) appears only on the agency homepage."
+        },
+        {
+         "claim": "Daniel Harmon is Chief Creative Officer, and no individual writer is credited",
+         "status": "unverifiable",
+         "source_url": "https://derraleves.com/extended-behind-the-scenes-squatty-pottys-unicorn-ad/",
+         "correction": "A 2021 podcast listing calls Daniel Harmon CCO, but the 2015 credits call him Creative Director and director. A producer's credits post reportedly lists Daniel Harmon, Dave Vance and Jeffrey Harmon as writers, but it returned 403 and could not be read. Do not claim 'no individual writer is credited'. Say the credit is unsettled."
+        }
+       ],
+       "reason": "The results claim holds. The only correction is the authorship line: individual writers may be credited in production credits I could not read. Keeping the persona at the house level is still the safe choice. The framing that 'there is no award' is slightly off, because Google ran YouTube Works Awards (with Kantar) until 2024 and replaced them with the Google Ads Impact Awards in 2025. These are effectiveness awards for agencies, not DR writer awards, so the ranking does not change."
+      },
+      {
+       "name": "Michael Dubin (Dollar Shave Club)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "12,000 orders in two days, via LA Times and NYT on Wikipedia",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club"
+        },
+        {
+         "claim": "2012 Ad Age Viral Video Award",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club",
+         "correction": "Category: Best Out-of-Nowhere Video Campaign."
+        },
+        {
+         "claim": "His authorship is widely reported but unverified",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/how-a-dollar-shave-clubs-ad-went-viral/224282",
+         "correction": "Dubin wrote a four-page script, and director Lucia Aniello cut it down and co-wrote the jokes. The opening line that serves as 'the offer as line one' was Aniello's. The piece is an organic YouTube launch video (4.75M views in three months, per Entrepreneur). Nothing shows it ran as skippable pre-roll."
+        }
+       ],
+       "reason": "The results and the award are confirmed, and authorship is now sourced, with the correction that the signature opener came from the director. Its stated limits (one piece, not shown as paid pre-roll) remain correct."
+      },
+      {
+       "name": "Tai Lopez",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "The ad ran from February 2015 through the first half of the year",
+         "status": "confirmed",
+         "source_url": "https://knowyourmeme.com/memes/here-in-my-garage"
+        },
+        {
+         "claim": "The Hustle reports 66 million viewers",
+         "status": "confirmed",
+         "source_url": "https://thehustle.co/tai-lopez-is-the-internets-most-hated-entrepreneur-and-thats-why-he-is-so-successful",
+         "correction": "The Hustle says '66 million people watched this video advertisement' without naming the ad. The description (Lamborghini, bookshelves) matches. It is an unsourced figure in a blog post."
+        },
+        {
+         "claim": "He wrote and performed the most-run, most-parodied DR pre-roll on record",
+         "status": "unverifiable",
+         "source_url": "https://en.wikipedia.org/wiki/Tai_Lopez",
+         "correction": "Performing is confirmed. No source I read says who wrote the script, and 'most-run on record' has no source. Write 'performed (and presumably wrote) a widely run, widely parodied 2015 pre-roll'."
+        }
+       ],
+       "reason": "The run dates and reach hold as reported. The writing credit and the superlative do not. The pick already says he is ranked on manner and availability, not proven sales, which is the honest basis. He stays at #3 with the wording corrected."
+      }
+     ],
+     "final_order": [
+      "Harmon Brothers (house manner)",
+      "Michael Dubin",
+      "Tai Lopez"
+     ]
+    },
+    {
+     "format_id": "tiktok_reels",
+     "picks": [
+      {
+       "name": "Savannah Sanchez",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "TikTok's BYLT case credits her shop with scripting, with 60% lower CPA and 52% higher CVR",
+         "status": "confirmed",
+         "source_url": "https://ads.tiktok.com/business/en-US/inspiration/bylt-basics-ttcx",
+         "correction": "Confirmed. The page credits The Social Savannah with 'scripting, actor selection, video shooting, and editing'. The headline figures have no stated baseline; the body compares results to past campaigns and the brand's non-TTCX creative, as the pick says."
+        },
+        {
+         "claim": "Widely interviewed as the TikTok-ads expert, with a describable manner",
+         "status": "confirmed",
+         "source_url": "https://www.triplewhale.com/blog/social-savannah-tiktok-marketing",
+         "correction": "She appears in Triple Whale, Motion, Supermetrics, Smart Marketer and other podcasts. Her stated method is a script given to creators that leaves room for their own experience. The scripts are written by her agency's strategists, so the persona is a house manner led by her."
+        }
+       ],
+       "reason": "Both load-bearing claims hold at the platform's own case page. The caveats in the pick (agency output, little readable text, restrict to real-person first-use formats) are accurate."
+      },
+      {
+       "name": "Michael Dubin (Dollar Shave Club launch video)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "12,000 orders in 48 hours per NYT and LA Times via Wikipedia",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club"
+        },
+        {
+         "claim": "Ad Age Viral Video Award",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Dollar_Shave_Club",
+         "correction": "2012, Best Out-of-Nowhere Video Campaign."
+        },
+        {
+         "claim": "Script authorship is unverified",
+         "status": "confirmed",
+         "source_url": "https://www.entrepreneur.com/growing-a-business/how-a-dollar-shave-clubs-ad-went-viral/224282",
+         "correction": "Dubin wrote the four-page draft, and director Lucia Aniello cut it and supplied the opening line. Credit Dubin with Aniello."
+        }
+       ],
+       "reason": "The results and the award hold, and authorship is now mostly sourced. It is still a roughly 90-second horizontal YouTube video from 2012, not a vertical short. It is ranked on transferable manner, which the pick already admits."
+      },
+      {
+       "name": "Hyram Yarbro",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "CeraVe global sales reportedly up 89% in 2020, via a 2022 book chapter cited on Wikipedia",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/CeraVe",
+         "correction": "Wikipedia says 'reportedly' and cites Ozuem and Willis (2022) and i-D (2020). This is a secondary attribution of a brand-wide sales change to one influencer, not a measured result, and it covers his reviews from March to October 2020."
+        },
+        {
+         "claim": "He wrote his own short talking-to-camera product videos",
+         "status": "unverifiable",
+         "source_url": "https://en.wikipedia.org/wiki/Hyram_Yarbro",
+         "correction": "Wikipedia describes the content (reviews, tutorials, reactions) and says he joined TikTok in 2020, but does not say who wrote or produced the videos."
+        }
+       ],
+       "reason": "The sales attribution is secondhand ('reportedly'), and authorship is unsourced. More basically, the work is organic reviewing with no offer or CTA, so he did not write direct response ads in this format. He is better as an alternate for a line-one and verdict device than as a listed 'written like' persona."
+      }
+     ],
+     "final_order": [
+      "Savannah Sanchez",
+      "Michael Dubin"
+     ]
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "meta_ad",
+     "picks": [
+      {
+       "name": "Frank Kern",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "His own Facebook ads are swiped and annotated by a third party (swiped.co): a Private Event ad set and a Retargeting ad set",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/person/frank-kern"
+        },
+        {
+         "claim": "Event ads: body copy deliberately runs past the allotted length as a cliffhanger to force the click, 'Click Here' used twice; swiped June 2015, copy shown only as an image, no performance figures",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/frankkern-event-facebook/"
+        },
+        {
+         "claim": "Retargeting ads: a count (three reasons) opened before the fold with only the first paid before the click, plus one exact dollar figure and a repeated literal CTA",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/frankkern-facebook-retargeting/",
+         "correction": "The exact figure ($6,000,000.00) is an earnings claim padded with '.00' so it looks bigger, as the annotator notes. It is not proof of an ad result, and the app's precision rule would reject it as written."
+        },
+        {
+         "claim": "Kern wrote the ad text himself (authorship)",
+         "status": "unverifiable",
+         "source_url": "https://perpetualtraffic.com/podcast/frank-kern-paid-traffic-campaigns/"
+        }
+       ],
+       "reason": "The claims the pick rests on (third-party annotated ads with distinct, copyable moves; no in-format results; 2015 images only) check out as stated. Authorship of the text is not documented anywhere I read, but the ads ran under his name in a first-person voice. He is still provisional: no documented Meta result and no peer recognition for this format specifically."
+      },
+      {
+       "name": "Ryan Deiss / DigitalMarketer (house style)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "DigitalMarketer is the most represented advertiser in swiped.co's Facebook Ad type (5 of 38)",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/types/facebook-ad",
+         "correction": "Strictly, 4 of 38 files are DigitalMarketer/Deiss, and one of those is shared with Perry Marshall. It reaches 5 only if the Absolute Rights file (a Deiss property) is counted. It is still the most represented advertiser."
+        },
+        {
+         "claim": "An outside annotator saw its long-running ads run for about a year (2014-2015), with no writer named and no results figures",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/digitalmarketer-facebook-ads/"
+        },
+        {
+         "claim": "The $1 entry offer is used as the argument (trial price compared to a cup of coffee); January 2016, images only, ad text not reproduced",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/dollar-trial-ads-digital-marketer/"
+        },
+        {
+         "claim": "Signature retargeting hook is a question telling readers their own past behaviour ('Did life get in the way?' / 'You forgot to take advantage of this deal'), tagged Control, no writer named",
+         "status": "confirmed",
+         "source_url": "https://swiped.co/file/retargeted-facebook-ads-from-ryan-deiss-perry-marshall/"
+        }
+       ],
+       "reason": "The facts are right, but the pick fails the authorship test for a 'written like' persona. No writer is named on any file, there are no figures, the copy survives only as images, and the signature hook is a must_not in the app's spec. Keep it as a note on structure (make the offer the argument), not as a persona."
+      }
+     ],
+     "final_order": [
+      "Frank Kern"
+     ]
+    },
+    {
+     "format_id": "google_rsa",
+     "picks": [
+      {
+       "name": "Perry Marshall",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Wikipedia confirms the canonical AdWords book (2006/2007) co-written with Bryan Todd",
+         "status": "confirmed",
+         "source_url": "https://en.wikipedia.org/wiki/Perry_Marshall",
+         "correction": "Wikipedia lists The Definitive Guide to Google AdWords (2006) and Ultimate Guide to Google AdWords (2007), both with Bryan Todd, but gives no peer praise or 'canonical' status. That framing is the researcher's own."
+        },
+        {
+         "claim": "He wrote the 'My name is Janet / 37, Married, Overweight, Exhausted' ad against the conventional 'Learn About Condition X Symptoms' ad, built from the prospect's 'diary', with an extra phrase in the URL path ('tired_all_the_time')",
+         "status": "confirmed",
+         "source_url": "https://www.perrymarshall.com/google"
+        },
+        {
+         "claim": "His ads open on the searcher's own query",
+         "status": "unverifiable",
+         "source_url": "https://www.perrymarshall.com/google/day3",
+         "correction": "Neither page I read describes this move. The Janet ad itself opens on a narrator line, not the query, and Day 3 only says to match ads to the searcher's stage in the search cycle."
+        },
+        {
+         "claim": "His method is one-variable CTR split testing, with self-reported figures online",
+         "status": "confirmed",
+         "source_url": "https://www.perrymarshall.com/google/day3"
+        }
+       ],
+       "reason": "He wrote and published search ads himself, and the Janet move is real and imitable. Correct the description: the move is the prospect's diary words plus a phrase in the URL path, not 'opens on the query'. As the research notes, the Janet narrator is invented, so the app must rebuild it from research verbatims. His work is pre-RSA fixed-order text ads."
+      },
+      {
+       "name": "Brad Geddes",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Google selected him as its Advanced AdWords Seminar leader",
+         "status": "confirmed",
+         "source_url": "https://www.wiley.com/en-us/Advanced+Google+AdWords%2C+3rd+Edition-p-9781118819562",
+         "correction": "Only the publisher's author bio says this ('the first and only Advanced AdWords Seminar leader that Google selected'). The cited Adalysis about page does not mention it; that page confirms only his co-founder role and the book."
+        },
+        {
+         "claim": "Large-sample RSA studies (5,900+ accounts) from his company",
+         "status": "confirmed",
+         "source_url": "https://adalysis.com/blog/data-study-5900-accounts-rsa-pinning/"
+        },
+        {
+         "claim": "His structure: H1 the pinned keyword, H2 the one tested theme, H3 about the business, one theme per RSA, conversions per impression decides",
+         "status": "wrong",
+         "source_url": "https://adalysis.com/blog/how-to-test-responsive-search-ads-rsa-in-google-ads-and-microsoft-ads/",
+         "correction": "Adalysis's testing guide (bylined 'Brad') puts location tests in H1 and price-vs-discount or CTA-vs-benefit in H2, and makes H3 a 'supporting headline 2', not a line about the business. It does confirm one theme per RSA (up to three RSAs per ad group). Keyword lines go to H1 per the pinning study. The pinning study calls conversions per 1,000 impressions (CPI) the most important metric, while the testing guide says to pick the metric that matches your goal."
+        },
+        {
+         "claim": "His ads can be read only as screenshots",
+         "status": "unverifiable",
+         "source_url": "https://adalysis.com/blog/google-ads-data-study-does-a-higher-ad-strength-improve-your-performance/"
+        }
+       ],
+       "reason": "His credentials and data hold up. The persona's structure needs fixing to match what Adalysis actually publishes: H1 is keyword or location, H2 is the tested theme, H3 supports H2, one theme per RSA, and CPI or the goal metric decides. He is a tester and strategist rather than a voice, which fits a format that Google assembles slot by slot."
+      }
+     ],
+     "final_order": [
+      "Perry Marshall",
+      "Brad Geddes"
+     ]
+    },
+    {
+     "format_id": "organic_social",
+     "picks": [
+      {
+       "name": "Justin Welsh",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Ship 30 for 30 (Bush and Cole) call him 'a master at getting readers to click'",
+         "status": "confirmed",
+         "source_url": "https://www.ship30for30.com/post/how-to-write-a-great-linkedin-post"
+        },
+        {
+         "claim": "A third-party hook tracker credits him with 13 of the top 50 LinkedIn hooks in one two-week window, including #1 at about three times the runner-up's score",
+         "status": "confirmed",
+         "source_url": "https://mycircles.beehiiv.com/p/top-50-hooks-from-the-last-2-weeks",
+         "correction": "Exact figures: 2604.19 against 867.73 (Daniel Korenblum). The tracker is Artem Chetverykov's newsletter, the post is dated May 17, 2025, and the scoring method is not disclosed."
+        },
+        {
+         "claim": "$15M one-person business (self-reported)",
+         "status": "confirmed",
+         "source_url": "https://www.justinwelsh.me/about",
+         "correction": "The figure is self-reported only. Third-party write-ups give other numbers (for example about $10M cumulative), so cite it as his own claim."
+        },
+        {
+         "claim": "The business is sold through posts he writes himself",
+         "status": "unverifiable",
+         "source_url": "https://www.justinwelsh.me/about"
+        }
+       ],
+       "reason": "His peer recognition in this exact format comes from the people who wrote down its structure, and an independent hook ranking backs it up. His revenue is self-reported but tied to real commerce, his public archive is large, and his manner is distinct. No source I read states outright that he writes every post, and no source says otherwise."
+      },
+      {
+       "name": "Dickie Bush (with Nicolas Cole), Ship 30 for 30",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "The MrBeast thread brought in 1,000+ email subscribers from 2.4M impressions (Bush's own figures)",
+         "status": "confirmed",
+         "source_url": "https://www.ship30for30.com/post/6-tips-to-write-viral-twitter-threads-with-ease",
+         "correction": "Bush alone wrote this thread and article (2,400,502 impressions, 1,000+ subscribers). Cole is not credited on it."
+        },
+        {
+         "claim": "Bush's first LinkedIn post reached 500k views",
+         "status": "confirmed",
+         "source_url": "https://www.ship30for30.com/post/how-to-write-a-great-linkedin-post"
+        },
+        {
+         "claim": "They wrote the lead-in, main points and CTA structure, with the link in a comment",
+         "status": "confirmed",
+         "source_url": "https://www.ship30for30.com/post/how-to-write-a-great-linkedin-post"
+        }
+       ],
+       "reason": "All load-bearing claims check out as self-reported figures. The documented downstream record belongs to Bush personally, so the persona should be Bush, with Cole credited as co-author of the structure. He ranks below Welsh because his results are reach and subscribers rather than sales, and his structure already lives in the spec."
+      }
+     ],
+     "final_order": [
+      "Justin Welsh",
+      "Dickie Bush"
+     ]
+    }
+   ]
+  },
+  {
+   "formats": [
+    {
+     "format_id": "sms",
+     "picks": [
+      {
+       "name": "Katherine L. Milkman (Behavior Change for Good flu-shot text megastudies)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Two peer-reviewed randomized field experiments in PNAS (689,693 and 47,306 patients), with Milkman as lead author",
+         "status": "confirmed",
+         "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8833156/"
+        },
+        {
+         "claim": "The winning texts are published word for word: the brand, then the thing already held for the reader and where it is, plus a second send, measured against a no-text control",
+         "status": "confirmed",
+         "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8157982/",
+         "correction": "The two winners use different wording. In the pharmacy study (689,693), the winner was two texts sent 72 hours apart, the second reading 'A flu shot is waiting for you at Walmart'; the control got no texts (29.4% baseline, +2.9 points). In the doctor-visit study (47,306), the second text said 'a flu vaccine has been reserved for your appointment'; that control got only standard appointment reminders."
+        },
+        {
+         "claim": "Milkman wrote the texts",
+         "status": "wrong",
+         "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8157982/",
+         "correction": "Small teams drawn from 26 behavioral scientists (and separate teams in the pharmacy study) wrote the protocols. Neither paper names who wrote the winning message. The research file already says this; the persona has to be labeled as the megastudy move, not 'written like Milkman'."
+        }
+       ],
+       "reason": "The evidence is the strongest of any text message on record, and every number checks out. But it is a research program's move, not an individual's manner. Keep it as a named move source ('reserved/waiting for you' plus a second send), not as a person persona."
+      },
+      {
+       "name": "M+R Strategic Services for Planned Parenthood (test reported by Johanna Levy)",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "The two texts differ by one stakes sentence, the longer one raised revenue per recipient 50%, and they tied on the final deadline day",
+         "status": "confirmed",
+         "source_url": "https://www.mrss.com/?p=13841",
+         "correction": "The +50% and the 12/31 tie are in the article text. The 'one stakes sentence' difference shows only in the article's test graphics (ppfa-multipart-control.png and ppfa-multipart-v2.png). The variant adds 'Abortion access is under threat nationwide, and patients are counting on Planned Parenthood health centers for the kind of care they can't get anywhere else.' and changes 'year-end gift' to 'gift'. M+R itself framed this as a length and format test (standard SMS vs MMS vs multipart SMS, which included a third MMS arm), not a copy test. The +50% is revenue across all channels."
+        },
+        {
+         "claim": "The winner is 280 characters and the copy is team-written and agency-reported",
+         "status": "confirmed",
+         "source_url": "https://www.mrss.com/wp-content/uploads/2025/05/ppfa-multipart-v2.png",
+         "correction": "The winner counts exactly 280 characters; the control is 133. The test ran at year-end 2021 (the graphic says 'remainder of 2021'). The article, by Johanna Levy, is dated Oct 10, 2023."
+        }
+       ],
+       "reason": "The result is real and the copy difference is visible, but the agency describes it as a format or length test. The persona needs that caveat, and it is a team source, not an individual writer."
+      },
+      {
+       "name": "Obama for America 2008 new media team (VP announcement text)",
+       "verdict": "demote",
+       "claims_checked": [
+        {
+         "claim": "The text opens with the news as a past-tense fact from 'Barack', then gives the time, the place and one action",
+         "status": "confirmed",
+         "source_url": "https://www.presidency.ucsb.edu/documents/text-message-announcing-selection-senator-joseph-biden-the-2008-democratic-vice",
+         "correction": "It has two actions, not one. 'Watch the first Obama-Biden rally live at 3pm ET on BarackObama.com' is followed by a closing ask to spread the word."
+        },
+        {
+         "claim": "Nielsen: 2.9 million recipients",
+         "status": "confirmed",
+         "source_url": "https://www.nielsen.com/insights/2008/obamas-text-message-reaches-29-million-and-makes-history/",
+         "correction": "This is Nielsen's estimate of US mobile subscribers who received it that weekend. It measures reach only; there is no response figure."
+        }
+       ],
+       "reason": "The writer is unnamed and there is no response data. Keep it as an alternate 'news first' way in, not as a master, as the file itself suggests."
+      }
+     ],
+     "final_order": [
+      "Behavior Change for Good flu-shot megastudy texts (Milkman et al., team-written)",
+      "M+R for Planned Parenthood stakes-sentence test (team-written)"
+     ],
+     "missing_stronger_candidate": {}
+    },
+    {
+     "format_id": "podcast_read",
+     "picks": [
+      {
+       "name": "Paul Harvey",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Sponsors paid about $1M a year for his reads",
+         "status": "confirmed",
+         "source_url": "https://www.wfae.org/united-states-world/2009-03-01/radio-fans-mourn-paul-harvey",
+         "correction": "This is Bruce Dumont of the Museum of Broadcast Communications quoted by NPR/WFAE ('about a million dollars a year'). It is his account, not sponsor records."
+        },
+        {
+         "claim": "He refused products he had not tried, and his pitch slid out of the story",
+         "status": "confirmed",
+         "source_url": "https://www.wfae.org/united-states-world/2009-03-01/radio-fans-mourn-paul-harvey",
+         "correction": "The article says he 'never took a spot for a product that he didn't try out for himself' and would 'seamlessly move into his pitch, making it into a story'."
+        }
+       ],
+       "reason": "He is the benchmark live read, with a distinct manner a writer can imitate and reputable testimony on his price and his rules. No read-level sales figures exist, as the file says."
+      },
+      {
+       "name": "Arthur Godfrey",
+       "verdict": "keep_with_correction",
+       "claims_checked": [
+        {
+         "claim": "Invented the ad-libbed, kidding-the-sponsor host read",
+         "status": "unverifiable",
+         "source_url": "https://en.wikipedia.org/wiki/Arthur_Godfrey",
+         "correction": "The sources say he ad-libbed commercials, kidded sponsors, crumpled scripts, and that the flippancy 'frequently enhanced the sales'. They call him a foremost pitchman, but none says he invented the style. Say 'defined' or 'best-known early practitioner' instead. The talkers.com source URL now returns 404."
+        },
+        {
+         "claim": "An advertiser reported +30% New York sales against +12% nationally (Variety, 1946)",
+         "status": "confirmed",
+         "source_url": "https://lantern.mediahist.org/catalog/variety162-1946-05_0312",
+         "correction": "The advertiser was Smith Brothers cough drops. The figure is a testimonial quoted inside a promotional ad for Godfrey's CBS program, so it is self-reported and promotional."
+        },
+        {
+         "claim": "Sponsors kept him despite the kidding because sales rose",
+         "status": "confirmed",
+         "source_url": "https://www.worldradiohistory.com/GOLDTIME-RADIO/arthur-godfrey-audio.html",
+         "correction": "A 1939 WJSV trade ad reports more than 5,600 announcements in 1938 and over 75% renewals."
+        }
+       ],
+       "reason": "The kidding-the-sponsor manner is real and imitable, and it carries a documented (if promotional) sales claim. Only 'invented' needs softening."
+      },
+      {
+       "name": "Bill Burr (Monday Morning Podcast)",
+       "verdict": "keep",
+       "claims_checked": [
+        {
+         "claim": "Ranked first among comedy podcasts on Oxford Road's ORBIT index, built from $1.6B+ of campaign data on acquisition cost and ROAS (Nov 19, 2025)",
+         "status": "confirmed",
+         "source_url": "https://soundsprofitable.com/?p=10926",
+         "correction": "Confirmed. It ranks shows, not reads, and Oxford Road is the agency that sells these ads."
+        },
+        {
+         "claim": "His reads have a distinctive, imitable manner (mocking the read and the sponsor) that has not hurt results",
+         "status": "confirmed",
+         "source_url": "https://soundsprofitable.com/press-release/bill-burr-tops-oxford-roads-comedy-podcast-sales-effectiveness-ranking/",
+         "correction": "Oxford Road CEO Dan Granger: Burr has been 'saying wildly offensive things in and around his podcast ad reads with no apologies... But that hasn't turned off buyers.'"
+        }
+       ],
+       "reason": "He is the podcast-native heir to the Godfrey style, with agency performance data behind the show. The show-not-read caveat already in the file is accurate and sufficient."
+      }
+     ],
+     "final_order": [
+      "Paul Harvey",
+      "Arthur Godfrey",
+      "Bill Burr"
+     ],
+     "missing_stronger_candidate": {}
+    }
+   ]
+  }
+ ]
+}

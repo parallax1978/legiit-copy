@@ -224,7 +224,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               <Select value={manner} onValueChange={setManner}>
                 <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="engine">Engine picks for this format ({defaultMannerName(card.family)})</SelectItem>
+                  <SelectItem value="engine">Engine picks for this format ({defaultMannerName(card.id)})</SelectItem>
                   {MANNER_OPTIONS.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.label}</SelectItem>
                   ))}
@@ -232,7 +232,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               </Select>
               <p className="text-xs text-ink-muted">
                 {manner === "engine"
-                  ? `One master's way in, shape of proof and voice for the whole piece. ${defaultMannerName(card.family)} is the usual choice for this kind of piece; the three openings are written as three masters' ways in and the cold read picks.`
+                  ? `One master's way in, shape of proof and voice for the whole piece. ${defaultMannerName(card.id)} is the usual choice for this kind of piece; the three openings are written as three masters' ways in and the cold read picks.`
                   : MANNER_OPTIONS.find((m) => m.id === manner)?.description ?? ""}
               </p>
             </div>
@@ -286,7 +286,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               <Row label="Deadline" value={deadline || "None"} />
               <Row label="Length" value={LENGTH_OPTIONS.find((l) => l.id === length)?.label ?? length} />
               <Row label="Voice" value={voiceProfileId === "none" ? "Default" : voices.find((v) => v.id === voiceProfileId)?.name ?? "Selected profile"} />
-              <Row label="Written like" value={manner === "engine" ? `${defaultMannerName(card.family)} (engine's pick)` : MANNER_OPTIONS.find((m) => m.id === manner)?.label ?? manner} />
+              <Row label="Written like" value={manner === "engine" ? `${defaultMannerName(card.id)} (engine's pick)` : MANNER_OPTIONS.find((m) => m.id === manner)?.label ?? manner} />
               <Row label="Your current copy" value={controlText ? `${controlText.trim().split(/\s+/).length} words pasted` : "None"} />
               <Row label="Offer construction" value={offer.hasApprovedOffer ? "Approved construction reused" : skipOffer ? "Skipped, offer used as written" : "Proposed, then paused for approval"} />
             </dl>

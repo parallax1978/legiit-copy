@@ -4,6 +4,7 @@
  */
 import { z } from "zod";
 import { Awareness, Traffic } from "../schemas/common.ts";
+import { MANNER_IDS } from "../prompts/manners.ts";
 
 export const GenerationOptions = z.looseObject({
   /** Which traffic segment of the dossier this piece is written for. */
@@ -15,7 +16,7 @@ export const GenerationOptions = z.looseObject({
   /** Skeptical readers get an indirect lead even when aware (standard §3). */
   skeptical: z.boolean().optional(),
   /** The master's manner the piece is written in (prompts/manners.ts); blank lets the engine pick the family's default. */
-  manner: z.enum(["halbert", "carlton", "hopkins", "schwartz", "bencivenga", "sugarman", "ogilvy", "caples", "collier"]).optional(),
+  manner: z.enum(MANNER_IDS).optional(),
   /** The control the editorial reviewer predicts against; absent → the strongest competitor promotion in the dossier. */
   control_text: z.string().optional(),
   /** Item count for multi-item formats (sequences, ad sets); clamped to the spec's min/max. */

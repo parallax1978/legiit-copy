@@ -49,15 +49,18 @@ export function exemplarInManner(family: FormatSpec["family"], master: string): 
   return null;
 }
 
+/** How many whole pieces the writer reads per call: the piece's manner first, then the family's in file order. Keeps the prompt the same size as the library grows. */
+export const EXEMPLARS_SHOWN = 5;
+
 /** The exemplars as the writer reads them; the piece's manner leads when one is given, with its exemplar from another family when the family has none in it. */
 export function exemplarsText(family: FormatSpec["family"], pieceName: string, manner: string | null = null): string {
   const xs = [...exemplarsFor(family)];
   const lead = manner ? exemplarInManner(family, manner) : null;
   const ordered: { exemplar: Exemplar; note: string }[] = [];
   if (lead) {
-    ordered.push({ exemplar: lead.exemplar, note: lead.family === family ? " (the manner this piece is written in)" : ` (the manner this piece is written in, shown on a ${lead.family} piece: the move carries over, the shape of this piece does not)` });
+    ordered.push({ exemplar: lead.exemplar, note: lead.family === family ? " (the manner this piece is written in)" : ` (the manner this piece is written in, shown on a piece from the ${lead.family} family: the move carries over, the shape of this piece does not)` });
   }
-  for (const x of xs) if (!lead || x !== lead.exemplar) ordered.push({ exemplar: x, note: "" });
+  for (const x of xs) if ((!lead || x !== lead.exemplar) && ordered.length < EXEMPLARS_SHOWN) ordered.push({ exemplar: x, note: "" });
   if (!ordered.length) return "";
   const body = ordered.map(({ exemplar: x, note }, i) => `--- ${i + 1}. In ${x.master}'s manner${note}. The move: ${x.move}\n\n${x.text}${x.first_comment ? `\n\nFirst comment: ${x.first_comment}` : ""}`).join("\n\n");
   return `HOW THIS KIND OF PIECE READS WHEN IT IS RIGHT (${pieceName.toLowerCase()}s from other trades, other products, every fact theirs; study the moves, never reuse a sentence or a fact):\n\n${body}`;

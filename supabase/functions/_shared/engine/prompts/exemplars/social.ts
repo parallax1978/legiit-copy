@@ -85,4 +85,52 @@ Since June we have had 27 dropped shifts, and someone took 25 of them inside an 
 The price is $19 a month for the whole crew. Try a month for $1. Link in the first comment.`,
     first_comment: `$1 for the first month, then $19 a month. shiftboard.cafe`,
   },
+  {
+    master: "Fladlien",
+    move: "The promise with its time and even if in line one; one piece of the method taught so he can use it tonight; the product as what does it from then on; the offer as a stack where each part answers one objection; a guarantee he earns by doing the work and a deadline kept.",
+    text: `By the time you finish this post you will know how I cut my Monday bucket of dead flowers from 140 stems to 61.
+
+That bucket cost me about $2,300 a month at my wholesaler's prices.
+
+The count that fixed it takes two minutes a night, even if you have never written down one number in your shop.
+
+I ordered by feel. Big weekend coming, so I ordered big. Then the weekend went quiet and the roses drooped in the cooler until Monday.
+
+Tonight, before you lock up, count the stems in the throw-out bucket and write the number on the cooler door. Next Monday, order by last week's sales, not by what you hope to sell. I did that with a pen for five weeks before I paid for anything, and the bucket went from 140 to 61.
+
+Stem Count is an ordering app for flower shops that writes your Monday order from what you sold last week. You tap the bucket number each night; the app keeps the count so the cooler door stays bare, builds the order so you stop guessing, and prices the tossed stems off your invoices so you see the bucket in dollars. The Monday order is the part that pays; the rest is there so you keep using it.
+
+Since March the app has done the counting. The bucket has not topped 70 stems in a week, and my wholesaler bill is $1,900 a month lower than last spring.
+
+Count every night for four weeks. If the fifth bucket is not smaller than the first, Stem Count pays your month back twice.
+
+The first month is $1 until Sunday night. It does not come back after, because the people who paid on Sunday were told it would not.
+
+Count the bucket tonight, then put the app on your phone before Sunday. Link in the first comment.`,
+    first_comment: `$1 for the first month until Sunday night, then $24 a month. stemcount.app`,
+  },
+  {
+    master: "Brunson",
+    move: "The epiphany bridge: where he was, the wall, the moment he saw it differently, the new way as a different thing to sell; the product in one plain sentence, the kit read out piece by piece, the count from his own mailing, and the ask as a yes and a no in the buyer's words.",
+    text: `In June of 2019 I mowed 61 yards a week and took home about $900 after gas.
+
+Every yard was quoted by the cut. When it did not rain, a third of them called to skip, and the truck sat in the driveway with the payment still due.
+
+All I wanted was to know on Friday what the month would pay.
+
+In August I raised my price by $5 a cut and lost nine yards in two weeks. I dropped it back and none of the nine came back.
+
+Then a customer on Birch Street asked me to take care of her yard all year and send one bill. I made up a number on her porch. She paid on the first, rain or none, and never called to skip.
+
+That was when I saw it. I had been selling cuts, and she was buying a yard that stays done, which does not skip a dry week.
+
+So that fall I stopped selling cuts. The whole route went on one yearly plan, billed monthly, and I have not quoted a cut since.
+
+Yard Year is a kit for lawn guys that moves a by-the-cut route onto monthly plans. You get the letter I mail every February that offers the plan. The price sheet that turns a season of cuts into one monthly number. The two texts I send in March to anyone who has not answered. And the card form, so nobody mails a check.
+
+I mailed that letter to 112 customers in February 2020. 67 signed. This March, 59 of the 67 were still on it, and the route pays $9,400 on the first of every month before I start the truck.
+
+If that is a yes, it is $47, once, and the link is in the first comment. If it is a no, keep quoting by the cut, and I hope it rains.`,
+    first_comment: `$47, one payment. yardyearkit.com`,
+  },
 ];
