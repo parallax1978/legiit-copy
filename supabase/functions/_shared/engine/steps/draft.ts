@@ -15,7 +15,7 @@ import { DraftOutput, LeadVariant, Section, SectionDraft } from "../schemas/draf
 import type { LeadType } from "../schemas/common.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
-import { draftPrompt, type DraftArgs } from "../prompts/draft.v22.ts";
+import { draftPrompt, type DraftArgs } from "../prompts/draft.v23.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
 import { SEQUENCE_ROLES, sectionBaseId } from "../formats/index.ts";
 import { evaluateGates } from "../tells.ts";
@@ -32,6 +32,12 @@ export const SectionGroupDraft = z.object({ sections: z.array(Section), ledger_r
 export const LeadsDraft = z.object({ leads: z.array(LeadVariant), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
 /** A whole short piece in one call: every part but the opening, and the three openings. */
 export const WholeDraft = z.object({ sections: z.array(Section), leads: z.array(LeadVariant), ledger_refs_used: z.array(z.string()), needs_source: z.array(z.string()) });
+
+/** A gate's failure in the writer's words, where the gate's name alone would not say what to do. */
+export function explainGate(failure: string): string {
+  if (failure.includes("product_first_share")) return `${failure}: the product is named too early. The discovery comes first (why the usual way keeps failing him, as what you found, two to four sentences, a scene when there is one), so the product arrives as the answer to the question he is now asking; in a piece this long its name waits for the middle.`;
+  return failure;
+}
 
 /** Wall-clock estimate for one model call; the budget check uses it for the next group. */
 export const DRAFT_CALL_ESTIMATE_MS = 75_000;
@@ -278,13 +284,13 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     const withOpening = (sections: Section[], ls: LeadVariantT[] | null) => orderSections(spec, only.kind === "whole" && ls ? [...sections, provisionalLeadSection(only.lead!.id, leadSpec?.name ?? null, ls)] : sections);
     let failures: string[] = [];
     try {
-      failures = evaluateGates(withOpening(drafted, leads), spec).failures;
+      failures = evaluateGates(withOpening(drafted, leads), spec, { productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null }).failures;
     } catch (e) {
       console.warn("hard gates skipped:", e instanceof Error ? e.message : e);
     }
     if (failures.length) {
       await ctx.progress(`Hard gates failed (${failures.join("; ")}); redrafting once`);
-      const note = `The format's machine-checked hard gates failed on your draft: ${failures.join("; ")}. Fix exactly these and return the whole draft again.`;
+      const note = `The format's machine-checked hard gates failed on your draft: ${failures.map(explainGate).join("; ")}. Fix exactly these and return the whole draft again.`;
       if (only.kind === "whole") {
         const r = await runWhole(only, 0, note);
         drafted.splice(0, drafted.length, ...r.sections);

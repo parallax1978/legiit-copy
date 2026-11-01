@@ -241,3 +241,33 @@ Deno.test("one fact never argues both ways: the writer (draft v22), the reviser 
   assert(ONE_FACT_ONE_WAY.includes("A Wikipedia page on page one cannot be the reason one page can win and, two lines later, the reason another cannot"));
   assert(e21.system.includes("if two proofs in one piece turn on the same fact pointing opposite ways"), "the copy chief reads the gate");
 });
+
+Deno.test("the discovery before the product: the shape in the writer's words (draft v23), Gate B (editorial v22), the social spec, and a gate on where the product is first named", async () => {
+  const { COPY_CHIEF_RUBRIC, FORMAT_SPECS } = await import("../prompts/standard.ts");
+  assert(COPY_CHIEF_RUBRIC.includes("a pitch before the discovery is a pitch, the discovery before the pitch is persuasion"));
+  assert(FORMAT_SPECS.includes("Main points, in the order the masters built a case: the discovery before the product"));
+  const { draftPrompt: d23, SHAPE, WRITER: W23 } = await import("../prompts/draft.v23.ts");
+  const { revisePrompt: r23 } = await import("../prompts/revise.v23.ts");
+  const { editorialPrompt: e22 } = await import("../prompts/editorial.v22.ts");
+  assertEquals([d23.version, r23.version, e22.version], [23, 23, 22]);
+  assert(d23.system.includes(SHAPE) && d23.system.startsWith(W23) && r23.system.startsWith(W23));
+  assert(SHAPE.startsWith("The shape of the case, in the order the masters built one (Collier's start, Halbert's story, Schwartz's mechanism, Hopkins's reason-why, Sugarman's slide)"));
+  assert(e22.system.includes("a pitch before the discovery is a pitch"));
+  const { organic_social } = await import("../formats/specs/organic_social.ts");
+  assert(organic_social.hard_gates.includes("organic_social.product_first_share>=0.3"));
+  assert(organic_social.sections.find((x) => x.id === "main")!.must[0].startsWith("the discovery before the product"));
+  // the gate: the product named in the first lines of a long post fails; after the middle passes; a short post is not read
+  const { evaluateGates } = await import("../tells.ts");
+  const { explainGate } = await import("../steps/draft.ts");
+  const para = (id: string, text: string) => ({ id, type: "paragraph" as const, text, items: null, meta: null });
+  const filler = Array.from({ length: 30 }, (_, i) => `Sentence ${i + 1} about the pages he builds and what they cost him.`).join(" "); // 330 words
+  const early = [{ section_id: "lead_in", title: null, blocks: [para("l1", "So I built Legiit Keywords, an app that finds the pages you can win.")] }, { section_id: "main", title: null, blocks: [para("m1", filler)] }, { section_id: "cta", title: null, blocks: [{ id: "c1", type: "cta" as const, text: "Link in the first comment.", items: null, meta: null }] }];
+  const r1 = evaluateGates(early, organic_social, { productName: "Legiit Keywords" });
+  assert(r1.failures.some((f) => f.startsWith("organic_social.product_first_share>=0.3")), r1.failures.join("; "));
+  assert(explainGate(r1.failures[0]).includes("the product is named too early"));
+  const late = [{ section_id: "lead_in", title: null, blocks: [para("l1", "Half the pages I ever paid writers for never earned a dime.")] }, { section_id: "main", title: null, blocks: [para("m1", filler), para("m2", "So I built Legiit Keywords, an app that finds the pages you can win.")] }, { section_id: "cta", title: null, blocks: [{ id: "c1", type: "cta" as const, text: "Link in the first comment.", items: null, meta: null }] }];
+  assert(!evaluateGates(late, organic_social, { productName: "Legiit Keywords" }).failures.some((f) => f.includes("product_first_share")));
+  const short = [{ section_id: "lead_in", title: null, blocks: [para("l1", "So I built Legiit Keywords, an app that finds the pages you can win.")] }, { section_id: "main", title: null, blocks: [para("m1", "Short post.")] }, { section_id: "cta", title: null, blocks: [{ id: "c1", type: "cta" as const, text: "Link in the first comment.", items: null, meta: null }] }];
+  assert(!evaluateGates(short, organic_social, { productName: "Legiit Keywords" }).failures.some((f) => f.includes("product_first_share")), "under 200 words the gate does not read");
+  assert(!evaluateGates(early, organic_social).failures.some((f) => f.includes("product_first_share")), "without the product's name the gate does not read");
+});

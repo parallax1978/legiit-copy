@@ -90,7 +90,7 @@ Deno.test("the social post: the lead-in never carries the product, the main poin
   assert(main.must.some((m) => m.startsWith("how it works in at most two short sentences")));
   assert(main.must.some((m) => m.includes("every paragraph stands on its own")));
   for (const t of ["a lesson in how his trade works", "two sentences built on one frame", "a pair of short sentences that land a moral"]) assert(main.must_not.some((m) => m.includes(t)), t);
-  assertStringIncludes(FORMAT_SPECS, "with its name before anything else about it, and that sentence survives every edit; how it works in two short sentences at most");
+  assertStringIncludes(FORMAT_SPECS, "then the product in one plain sentence with its name, which in a post over 200 words appears no earlier than the middle, and that sentence survives every edit; how it works in two short sentences at most");
   assertStringIncludes(FORMAT_SPECS, "a lesson in how his trade works; the product named or pointed at in the lead-in;");
   assertStringIncludes(FORMAT_SPECS, "two sentences built on one frame; a pair of short sentences that land a moral;");
 });

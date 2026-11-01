@@ -2186,6 +2186,8 @@ interface MetricCtx {
   sections: Section[];      // the item's sections (or all sections for aggregate metrics)
   all: Section[];           // every section of the draft
   spec: FormatSpec;
+  /** the product's name, for the metrics that read where it first appears; null when the caller has none */
+  productName: string | null;
 }
 type MetricValue = number | boolean | null;
 interface MetricDef {
@@ -2307,6 +2309,21 @@ export const GATE_METRICS: Record<string, MetricDef> = {
   plans: { kind: "aggregate", note: "price blocks in `plans`/`plan` sections", compute: (c) => blocks(c.all.filter((s) => inBase(s, "plans", "plan"))).filter(({ block }) => block.type === "price").length },
   // shares
   close_share: { kind: "item", note: "words in `close` sections over all words", compute: (c) => { const total = wordsIn(blocks(c.sections)); return total ? wordsIn(blocks(c.sections.filter((s) => inBase(s, "close")))) / total : null; } },
+  product_first_share: { kind: "item", text: true, note: "words before the product's first mention over all words (the discovery before the pitch, Section 9); 1 when the piece is under 200 words or never names the product; needs the product's name", compute: (c) => {
+    if (!c.productName) return null;
+    const bs = blocks(c.sections).filter(({ block }) => block.type !== "subject" && block.type !== "preview");
+    const total = wordsIn(bs);
+    if (total < 200) return 1;
+    const name = c.productName.toLowerCase();
+    let before = 0;
+    for (const { block } of bs) {
+      const t = textOf(block);
+      const i = t.toLowerCase().indexOf(name);
+      if (i >= 0) return (before + countWords(clean(t.slice(0, i)))) / total;
+      before += countWords(clean(t));
+    }
+    return 1;
+  } },
   price_position_share: { kind: "item", note: "words before the first price block over all words", compute: (c) => {
     const bs = blocks(c.sections);
     const i = bs.findIndex(({ block }) => block.type === "price");
@@ -2363,7 +2380,7 @@ function fmt(v: MetricValue): string {
  * Evaluate the spec's hard gates. Unknown or advisory gates are reported with ok=null and never fail the draft.
  * With `textOnly`, metrics that need block types (cta, field, price, headline...) are skipped as well.
  */
-export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean } = {}): { failures: string[]; outcomes: GateOutcome[] } {
+export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { textOnly?: boolean; productName?: string | null } = {}): { failures: string[]; outcomes: GateOutcome[] } {
   const outcomes: GateOutcome[] = [];
   const failures: string[] = [];
   const byItem = new Map<number, Section[]>();
@@ -2392,7 +2409,7 @@ export function evaluateGates(sections: Section[], spec: FormatSpec, opts: { tex
     const actual: MetricValue[] = [];
     let ok: boolean | null = null;
     for (const target of targets) {
-      const v = def.compute({ sections: target, all: sections, spec });
+      const v = def.compute({ sections: target, all: sections, spec, productName: opts.productName ?? null });
       actual.push(v);
       const r = compare(v, g.op, g.value);
       if (r === false) ok = false;
@@ -2428,7 +2445,7 @@ export function analyzeDraft(sections: Section[], spec: FormatSpec, opts: { text
   const proseText = units.filter((u) => u.kind !== "display").map((u) => u.text).join("\n\n");
 
   const { flags, score, tier0, owner, ownerStack } = detectTells(units, spec, words, opts.exemptTerms ?? [], { toolNames: opts.toolNames, openings: opts.openings, productName: opts.productName });
-  const gates = evaluateGates(sections, spec, opts);
+  const gates = evaluateGates(sections, spec, { textOnly: opts.textOnly, productName: opts.productName ?? null });
 
   const cadence_cv = sentenceLengthCV(proseText);
   const cadence_flag = words >= 300 && cadence_cv !== null && cadence_cv < spec.cadence_floor_cv;

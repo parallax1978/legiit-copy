@@ -110,7 +110,7 @@ Deno.test("the social spec is short and plain: the lead-in feels and never names
   assert(lead.must.some((m) => m.startsWith("a feeling the research holds")));
   assert(lead.must_not.some((m) => m.startsWith("the product named, used or pointed at")));
   assert(lead.must_not.some((m) => m.startsWith("a metric's name, a term from his tool")));
-  assert(main.must.some((m) => m.startsWith("the turn: what the speaker saw, found or built")));
+  assert(main.must.some((m) => m.startsWith("the discovery before the product: the turn, what the speaker saw, found or built")));
   assert(main.must.some((m) => m.includes("that sentence is the first sentence about the product in the post and survives every later edit")));
   assert(main.must.some((m) => m.startsWith("words a ten-year-old knows")));
   assert(main.must_not.some((m) => m.startsWith("a paragraph that informs and makes him feel nothing")));
