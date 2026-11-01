@@ -12,7 +12,7 @@ import { buildContext } from "../../supabase/functions/_shared/engine/context.ts
 import { ArgumentOutput } from "../../supabase/functions/_shared/engine/schemas/argument.ts";
 import { parseOptions } from "../../supabase/functions/_shared/engine/draft/options.ts";
 import { interrogate, knownClaimIds, targetAwareness, usableClaims } from "../../supabase/functions/_shared/engine/draft/ledger.ts";
-import { leadTypesForAwareness } from "../../supabase/functions/_shared/engine/draft/leads.ts";
+import { openingLeadTypes } from "../../supabase/functions/_shared/engine/draft/leads.ts";
 import { describePlan, planDraft } from "../../supabase/functions/_shared/engine/draft/plan.ts";
 import { describeArgument, stepOutput } from "../../supabase/functions/_shared/engine/draft/step_util.ts";
 import { SEQUENCE_ROLES } from "../../supabase/functions/_shared/engine/formats/index.ts";
@@ -40,7 +40,7 @@ if (!q.ok) throw new Error(`drafting would be blocked: ${q.reason}`);
 const seqType = options.sequence_type && options.sequence_type in SEQUENCE_ROLES ? (options.sequence_type as keyof typeof SEQUENCE_ROLES) : null;
 const roles = spec.id === "email_sequence" ? SEQUENCE_ROLES[seqType ?? "welcome"] : undefined;
 const plan = planDraft(spec, { itemCount: options.item_count, roles });
-const leadTypes = plan.leadSectionId ? leadTypesForAwareness(target.awareness, options.skeptical) : null;
+const leadTypes = plan.leadSectionId ? openingLeadTypes(spec, options, target.awareness) : null;
 const argumentText = describeArgument(ctx.winningAngle, ctx.angles);
 const sophistication = ctx.dossier?.sophistication.stage ?? "unknown";
 

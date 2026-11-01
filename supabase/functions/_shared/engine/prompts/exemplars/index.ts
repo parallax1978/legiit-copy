@@ -38,10 +38,27 @@ export function allExemplarTexts(): string[] {
   return Object.values(EXEMPLARS_BY_FAMILY).flatMap((xs) => (xs ?? []).flatMap((x) => [x.text, ...(x.first_comment ? [x.first_comment] : [])]));
 }
 
-/** The exemplars as the writer reads them. */
-export function exemplarsText(family: FormatSpec["family"], pieceName: string): string {
-  const xs = exemplarsFor(family);
-  if (!xs.length) return "";
-  const body = xs.map((x, i) => `--- ${i + 1}. In ${x.master}'s manner. The move: ${x.move}\n\n${x.text}${x.first_comment ? `\n\nFirst comment: ${x.first_comment}` : ""}`).join("\n\n");
+/** The exemplar in a master's manner for a family, else the nearest: the same master in another family. */
+export function exemplarInManner(family: FormatSpec["family"], master: string): { exemplar: Exemplar; family: FormatSpec["family"] } | null {
+  const own = exemplarsFor(family).find((x) => x.master === master);
+  if (own) return { exemplar: own, family };
+  for (const [fam, xs] of Object.entries(EXEMPLARS_BY_FAMILY) as [FormatSpec["family"], readonly Exemplar[] | undefined][]) {
+    const x = (xs ?? []).find((e) => e.master === master);
+    if (x) return { exemplar: x, family: fam };
+  }
+  return null;
+}
+
+/** The exemplars as the writer reads them; the piece's manner leads when one is given, with its exemplar from another family when the family has none in it. */
+export function exemplarsText(family: FormatSpec["family"], pieceName: string, manner: string | null = null): string {
+  const xs = [...exemplarsFor(family)];
+  const lead = manner ? exemplarInManner(family, manner) : null;
+  const ordered: { exemplar: Exemplar; note: string }[] = [];
+  if (lead) {
+    ordered.push({ exemplar: lead.exemplar, note: lead.family === family ? " (the manner this piece is written in)" : ` (the manner this piece is written in, shown on a ${lead.family} piece: the move carries over, the shape of this piece does not)` });
+  }
+  for (const x of xs) if (!lead || x !== lead.exemplar) ordered.push({ exemplar: x, note: "" });
+  if (!ordered.length) return "";
+  const body = ordered.map(({ exemplar: x, note }, i) => `--- ${i + 1}. In ${x.master}'s manner${note}. The move: ${x.move}\n\n${x.text}${x.first_comment ? `\n\nFirst comment: ${x.first_comment}` : ""}`).join("\n\n");
   return `HOW THIS KIND OF PIECE READS WHEN IT IS RIGHT (${pieceName.toLowerCase()}s from other trades, other products, every fact theirs; study the moves, never reuse a sentence or a fact):\n\n${body}`;
 }

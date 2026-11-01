@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
-import { FORMAT_IDS } from "@/lib/formats";
+import { FORMAT_IDS, MANNER_IDS } from "@/lib/formats";
 import { settingsToInput, type GenerationOptions, type DraftRow } from "@/lib/data/generations";
 import type { Json } from "@/lib/supabase/database.types";
 import { initialSteps } from "@engine/pipeline.ts";
@@ -31,6 +31,7 @@ const CreateInput = z.object({
   instructions: z.string().trim().max(4000).optional().default(""),
   sequence_type: z.string().trim().max(60).optional().default(""),
   control_text: z.string().trim().max(60000).optional().default(""),
+  manner: z.enum(["", ...MANNER_IDS]).optional().default(""),
   skip_offer: z.boolean().optional().default(false),
   voice_profile_id: z.string().uuid().nullable().optional().default(null),
 });
@@ -71,6 +72,7 @@ export async function createGeneration(raw: CreateGenerationInput): Promise<Acti
     instructions: input.instructions || undefined,
     sequence_type: input.format === "email_sequence" ? input.sequence_type || undefined : undefined,
     control_text: input.control_text || undefined,
+    manner: input.manner || undefined,
     skip_offer: input.skip_offer || undefined,
   };
   const step_order = initialSteps({ hasActiveResearch: !!research, hasApprovedOffer: !!variant, skipOffer: input.skip_offer });

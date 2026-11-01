@@ -1,7 +1,8 @@
 import { FORMAT_IDS, type FormatId } from "@engine/schemas/common.ts";
 import { FORMATS, listFormats, type FormatSpec } from "@engine/formats/index.ts";
-export { FORMAT_IDS };
-export type { FormatId, FormatSpec };
+import { DEFAULT_MANNER_BY_FAMILY, MANNER_IDS, MANNERS, type MannerId } from "@engine/prompts/manners.ts";
+export { FORMAT_IDS, MANNER_IDS, DEFAULT_MANNER_BY_FAMILY };
+export type { FormatId, FormatSpec, MannerId };
 
 export type FormatFamily = FormatSpec["family"];
 
@@ -113,5 +114,30 @@ export const LENGTH_OPTIONS: { id: "shorter" | "standard" | "longer"; label: str
   { id: "standard", label: "Standard for the format" },
   { id: "longer", label: "Longer than usual" },
 ];
+
+/** What each manner reads like, for a user who does not know the names (the writer gets the full move from the engine). */
+const MANNER_BLURBS: Record<MannerId, string> = {
+  halbert: "A story told like a letter: a day, a place, a dollar figure, what it cost.",
+  carlton: "The event with the clock on it, a flat claim he would argue with, then the proof.",
+  hopkins: "A test the reader runs on his own screen, then the reason why it keeps happening.",
+  schwartz: "The want he already has, aimed at the mechanism he does not know about.",
+  bencivenga: "Proof first: the speaker's own count, and a promise no bigger than it.",
+  sugarman: "The slide: each short line pulls the next, nothing held back for a reveal.",
+  ogilvy: "The one specific that says it all, facts as facts, no adjectives.",
+  caples: "A specific result with its time; the body pays off the first line exactly.",
+  collier: "Start where his mind already is, in the words he would use.",
+};
+
+/** The masters a piece can be written like ("Written like" in the wizard); blank lets the engine pick the format's default. */
+export const MANNER_OPTIONS: { id: MannerId; label: string; description: string }[] = MANNER_IDS.map((id) => ({ id, label: MANNERS[id].master, description: MANNER_BLURBS[id] }));
+
+export function isMannerId(value: string): value is MannerId {
+  return (MANNER_IDS as readonly string[]).includes(value);
+}
+
+/** The master the engine writes like when the user leaves the manner blank. */
+export function defaultMannerName(family: FormatFamily): string {
+  return MANNERS[DEFAULT_MANNER_BY_FAMILY[family]].master;
+}
 
 export { listFormats };

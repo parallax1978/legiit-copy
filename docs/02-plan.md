@@ -118,6 +118,8 @@ Gate: beta users reuse output with limited rewriting (self-reported and measured
 
 - [x] The engine writes the product sentence itself (argument v21 returns it once per run; the setup's sentence overrides it) and the intake (v17) writes the one line as a friend would say it and one row per decision an example report shows, so a user who fills nothing in still gets the product said plainly and a proof told as one decision.
 
+- [x] Manner: a piece is written in one master's manner (docs/04 Section 12, `prompts/manners.ts`), chosen on the piece ("Written like" in the wizard) or picked by the engine per format family; the writer (draft v24, revise v24) reads it as a WRITTEN LIKE line with that master's exemplar first, and the three openings are three masters' ways in for the cold read to pick.
+
 ## Open decisions (user)
 
 | Decision | Default if not decided |

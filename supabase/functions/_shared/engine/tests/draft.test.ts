@@ -456,6 +456,25 @@ Deno.test("draft step: a social post is written whole in one call, with three op
   assert(text.indexOf("HOW THIS KIND OF PIECE READS WHEN IT IS RIGHT") < text.indexOf("<<<cache-break>>>") && text.indexOf("<<<cache-break>>>") < text.indexOf("YOUR JOB NOW"), "material, exemplars, break, job");
 });
 
+Deno.test("draft step: the three openings of a short piece are the manner's way in and two companions' (the engine's pick or the user's), and the awareness table's when the reader is most aware", async () => {
+  const { MANNERS, openingManners } = await import("../prompts/manners.ts");
+  const typesOf = async (options: Record<string, unknown>) => {
+    let seen: DraftArgs | null = null;
+    const base = fakeCaller([]);
+    const capture = ((c, step, mod, args, schema, purpose, over) => {
+      const a = args as unknown as DraftArgs;
+      if (a.call.kind === "whole") seen = a;
+      return base(c, step, mod, args, schema, purpose, over);
+    }) as typeof callStep;
+    await runDraft(fakeCtx({ format: organic_social, generation: { id: "gen-1", workspace_id: "ws-1", options } as unknown as StepContext["generation"] }), { call: capture });
+    return seen!.leadTypes;
+  };
+  assertEquals(await typesOf({ awareness: "problem_aware" }), openingManners(MANNERS.halbert).map((m) => m.lead_type), "the engine's pick for a social post is Halbert");
+  assertEquals(await typesOf({ awareness: "problem_aware", manner: "carlton" }), ["proclamation", "problem_solution", "promise"], "the user's choice");
+  assertEquals(await typesOf({ awareness: "most_aware", manner: "carlton" }), leadTypesForAwareness("most_aware"), "a most-aware reader gets the table's openings");
+  assertEquals(await typesOf({ awareness: "problem_aware", skeptical: true }), leadTypesForAwareness("problem_aware", true), "a skeptic gets the table's indirect leads first");
+});
+
 Deno.test("draft step: a full run makes one call per group, saves a partial after every group, assembles the draft", async () => {
   const made: string[] = [];
   const ctx = fakeCtx();

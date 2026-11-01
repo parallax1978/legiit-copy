@@ -15,13 +15,13 @@ import { DraftOutput, LeadVariant, Section, SectionDraft } from "../schemas/draf
 import type { LeadType } from "../schemas/common.ts";
 import { ArgumentOutput } from "../schemas/argument.ts";
 import { retrieve, formatExamplesForPrompt } from "../retrieval.ts";
-import { draftPrompt, type DraftArgs } from "../prompts/draft.v23.ts";
+import { draftPrompt, type DraftArgs } from "../prompts/draft.v24.ts";
 import { describePlan, planDraft, type DraftCall } from "../draft/plan.ts";
 import { SEQUENCE_ROLES, sectionBaseId } from "../formats/index.ts";
 import { evaluateGates } from "../tells.ts";
 import { parseOptions } from "../draft/options.ts";
 import { interrogate, knownClaimIds, targetAwareness, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
-import { LEAD_IDS, leadTypesForAwareness } from "../draft/leads.ts";
+import { LEAD_IDS, openingLeadTypes } from "../draft/leads.ts";
 import { assembleDraft, orderSections, provisionalLeadSection, toDraftEffect, type LeadVariantT } from "../draft/assemble.ts";
 import { callStep, describeArgument, stepOutput } from "../draft/step_util.ts";
 import { type DraftPartial, emptyPartial, restoreState, resumePartial, withGroup } from "../draft/partial.ts";
@@ -165,7 +165,8 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     console.warn("retrieval skipped:", e instanceof Error ? e.message : e);
   }
 
-  const leadTypes = plan.leadSectionId ? leadTypesForAwareness(target.awareness, options.skeptical) : null;
+  // three ways in: the manner's and two companions' (Section 12), or the awareness table's when the reader's state decides
+  const leadTypes = plan.leadSectionId ? openingLeadTypes(spec, options, target.awareness) : null;
   const argumentText = describeArgument(ctx.winningAngle, ctx.angles);
   const sophistication = ctx.dossier?.sophistication.stage ?? "unknown";
 

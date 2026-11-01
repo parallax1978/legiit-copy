@@ -443,3 +443,23 @@ The writer also reads whole pieces before it writes one: original posts, emails 
 - The close: the step, and the risk carried by the seller (John Carlton, the Cage Fighter ad): "Call. You risk nothing... because if you're not completely convinced, I will pay for your lesson."
 - What arrives and when (Gary Bencivenga, the Kurobuta ham letter): "Your Kurobuta ham will be shipped for guaranteed delivery during the week of Monday, March 21st. This means that if you're planning to serve your ham on Easter Sunday, which falls on March 27th this year, your ham is guaranteed to arrive in plenty of time."
 - A P.S. that adds a fact (Gary Halbert, the coat-of-arms letter): "P.S. If you are ordering only one report, send two dollars ($2.00). Additional reports ordered at the same time and sent to the same address are one dollar each."
+
+## 12. Manner
+
+A piece is written in one master's manner: his way in, his shape of proof and his voice, with his exemplar first among the pieces the writer studies (Section 11). The case keeps its order under every manner (Gate B: the moment, the cost, the discovery, the product as the answer, the proof, the ask); the manner decides how the piece gets in, what the proof looks like and how it sounds. Mixing the masters inside one piece produced copy that belonged to no one; one manner per piece is the rule.
+
+The user chooses the manner on the piece ("Written like" in the wizard, `options.manner`) or leaves it blank and the engine picks the family's default. The three openings are three ways in: the piece's manner and two companions, each a different lead type (Section 3), each written in the manner it is given, with the body in the piece's manner under every one; the cold read picks and the runner-up is the challenger. When the reader is most aware or product aware, or skeptical, the openings follow the awareness table of Section 3 instead, because those states decide the opening themselves (the deal, the promise, an indirect lead).
+
+| Manner | The way in | Lead type | Companions | Engine's default for |
+|---|---|---|---|---|
+| Halbert | A letter from one person: a day, a place, a dollar figure, what happened and what it cost, and why he is writing | story | Hopkins, Schwartz | Social, email, audio |
+| Carlton | The event: a thing that happened at a named time, with the clock on it and the number off the speaker's own records, then a flat claim he would argue with | proclamation | Hopkins, Bencivenga | Video and webinar |
+| Hopkins | A test he runs on himself in the first lines, on what he has open right now, and what he will find | problem_solution | Halbert, Carlton | |
+| Schwartz | The want he already has, in his words, aimed at the thing he does not know that explains why the usual way fails him | secret | Bencivenga, Halbert | Pages |
+| Bencivenga | The speaker's own count first, with the number and the average, and the promise made only as large as it | promise | Carlton, Schwartz | |
+| Sugarman | A short first sentence that makes him read the second, the day it went wrong told in small pieces | secret | Halbert, Bencivenga | Messaging |
+| Ogilvy | The one specific that says it all, in the first line, as a fact with no adjective | promise | Hopkins, Carlton | Commerce |
+| Caples | A specific result with its time, told as what changed and what did not, with his self-interest and the news in the first line | promise | Halbert, Schwartz | Paid ads |
+| Collier | Where his mind already is: the night he dreads, the call he cannot answer, in the words he would use | problem_solution | Halbert, Ogilvy | |
+
+The full move of each manner (the way in, the proof and the voice, in the writer's words) is in `supabase/functions/_shared/engine/prompts/manners.ts`; the writer reads the piece's as a WRITTEN LIKE line in the material and the companions' as the ways in of the other two openings. A manner with no exemplar in the piece's family borrows the master's exemplar from another family, marked as such: the move carries over, the shape of the piece does not.

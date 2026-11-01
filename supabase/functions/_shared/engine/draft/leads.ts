@@ -7,6 +7,8 @@ import type { Awareness, LeadType } from "../schemas/common.ts";
 import type { DraftOutput } from "../schemas/draft.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { automatedReadabilityIndex, GRADE_CEILING, GRADE_CEILING_BY_FORMAT, hemingwayGrade } from "../tells.ts";
+import { openingManners, pickManner } from "../prompts/manners.ts";
+import type { GenerationOptions } from "./options.ts";
 
 export const DIRECT_LEADS: LeadType[] = ["offer", "promise", "problem_solution"];
 export const INDIRECT_LEADS: LeadType[] = ["story", "proclamation", "secret"];
@@ -40,6 +42,15 @@ export function leadTypesForAwareness(awareness: Awareness, skeptical = false): 
   const out: LeadType[] = [];
   for (const t of order) if (!out.includes(t)) out.push(t);
   return out.slice(0, 3);
+}
+
+/**
+ * The three openings' lead types for a piece: the manner's way in and its two companions' (docs/04 Section 12),
+ * unless the reader's state decides the opening itself (most aware, product aware, or skeptical: the Section 3 table).
+ */
+export function openingLeadTypes(spec: FormatSpec, options: GenerationOptions, awareness: Awareness): LeadType[] {
+  if (awareness === "most_aware" || awareness === "product_aware" || options.skeptical) return leadTypesForAwareness(awareness, options.skeptical);
+  return openingManners(pickManner(spec, options.manner).manner).map((m) => m.lead_type);
 }
 
 /** The first lead that was not chosen, in preference order (leads are stored in preference order). */

@@ -15,6 +15,7 @@ import { ONE_LINE_OFFER_FAMILIES, offerBlockText, rowFacts, verbatimLedgerTags, 
 import { verbatimKey } from "../research/answers.ts";
 import { GRADE_CEILING, GRADE_CEILING_BY_FORMAT } from "../tells.ts";
 import { ADMISSION_TELL_RE } from "./admissions.ts";
+import { pickManner } from "../prompts/manners.ts";
 import type { GenerationOptions } from "./options.ts";
 
 /** A ledger reference as the dossier may hold it ("L:<id>", "[[L:<id>]]" or the bare id) reduced to the id. */
@@ -226,6 +227,7 @@ function partText(s: SectionSpec, id = s.id): string {
 
 /** The piece: what it is, its parts in reading order, its length, its limits. */
 export function pieceText(spec: FormatSpec, options: GenerationOptions): string {
+  const picked = pickManner(spec, options.manner);
   const length = options.length === "longer"
     ? `Length: the user asked for a longer piece. Each part runs toward the top of its band with new material (more of his world, the case told as he will see it, the exact thing he gets); a point said twice is padding, and when the new material runs out the part ends.`
     : options.length === "shorter"
@@ -234,6 +236,7 @@ export function pieceText(spec: FormatSpec, options: GenerationOptions): string 
   const grade = GRADE_CEILING_BY_FORMAT[spec.id] ?? GRADE_CEILING[spec.family];
   return [
     `THE PIECE: ${spec.name}, ${spec.length_band_words[0]} to ${spec.length_band_words[1]} words in all. ${spec.description}`,
+    `WRITTEN LIKE ${picked.manner.master} (${picked.chosenBy === "user" ? "the user's choice" : "the engine's pick for this kind of piece"}): ${picked.manner.move}`,
     `Its parts, in reading order:`,
     ...spec.sections.map((s) => partText(s)),
     length,

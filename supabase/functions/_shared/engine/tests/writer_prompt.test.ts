@@ -271,3 +271,67 @@ Deno.test("the discovery before the product: the shape in the writer's words (dr
   assert(!evaluateGates(short, organic_social, { productName: "Legiit Keywords" }).failures.some((f) => f.includes("product_first_share")), "under 200 words the gate does not read");
   assert(!evaluateGates(early, organic_social).failures.some((f) => f.includes("product_first_share")), "without the product's name the gate does not read");
 });
+
+Deno.test("a piece is written in one master's manner: the user's choice or the family's default, his exemplar first, three openings as three ways in (draft v24, revise v24, Section 12)", async () => {
+  const { DEFAULT_MANNER_BY_FAMILY, isMannerId, MANNER_IDS, MANNERS, openingManners, pickManner } = await import("../prompts/manners.ts");
+  for (const id of MANNER_IDS) {
+    const m = MANNERS[id];
+    const three = openingManners(m);
+    assertEquals(three[0], m);
+    assertEquals(new Set(three.map((x) => x.lead_type)).size, 3, `${id}: three ways in take three lead types`);
+    assert(m.way_in.length > 40 && m.move.length > 120 && !m.move.includes("—"), `${id}: the way in and the move are said`);
+  }
+  for (const [family, id] of Object.entries(DEFAULT_MANNER_BY_FAMILY)) assert(isMannerId(id), `${family}: a default manner`);
+  assertEquals(pickManner(FORMATS.organic_social, undefined), { manner: MANNERS.halbert, chosenBy: "engine" });
+  assertEquals(pickManner(FORMATS.organic_social, "schwartz"), { manner: MANNERS.schwartz, chosenBy: "user" });
+  assertEquals(pickManner(FORMATS.organic_social, "nobody").chosenBy, "engine");
+  const { parseOptions } = await import("../draft/options.ts");
+  assertEquals(parseOptions({ manner: "carlton" }).manner, "carlton");
+  assertEquals(parseOptions({ manner: "nobody" }).manner, undefined, "an unknown manner is no manner");
+  const { exemplarInManner } = await import("../prompts/exemplars/index.ts");
+  for (const master of ["Halbert", "Carlton", "Hopkins", "Schwartz", "Bencivenga", "Sugarman", "Caples", "Collier"]) assert(exemplarInManner("social", master), `${master}: a piece to study`);
+  const { STANDARD_TITLES } = await import("../prompts/standard.ts");
+  assertEquals(STANDARD_TITLES.MANNER, "Manner");
+
+  const { draftPrompt: d24, MANNER_RULE, WRITER: W24 } = await import("../prompts/draft.v24.ts");
+  const { revisePrompt: r24 } = await import("../prompts/revise.v24.ts");
+  assertEquals([d24.version, r24.version], [24, 24]);
+  assert(d24.system.includes(MANNER_RULE) && d24.system.startsWith(W24) && r24.system.startsWith(W24));
+
+  // the engine's pick on a social post: Halbert, his way in first, the body in his manner under every opening
+  const plan = planDraft(FORMATS.organic_social);
+  const base: DraftArgs = { call: plan.calls[0], callIndex: 1, callTotal: 1, awareness: "problem_aware", segment: null, sophistication: "4", thesis: "the thesis", argumentText: "", drafted: [], leads: null, leadTypes: openingManners(MANNERS.halbert).map((m) => m.lead_type), examplesText: "", retryNote: null };
+  const u = d24.user(ctx(), base);
+  assert(u.includes("WRITTEN LIKE Halbert (the engine's pick for this kind of piece): A story, told like a letter from one person"), "the manner in the material");
+  assert(u.includes("to this reader, in Halbert's manner: lead_in (20 to 70 words)"), "the job names the manner");
+  assert(u.includes("lead-a: story, Halbert's way in (a letter from one person") && u.includes("lead-b: problem_solution, Hopkins's way in (a test he runs on himself") && u.includes("lead-c: secret, Schwartz's way in (the want he already has"), "three ways in");
+  assert(u.includes("The body stays in Halbert's manner under every one of them."));
+  assert(u.includes("--- 1. In Halbert's manner (the manner this piece is written in). The move:"), "his exemplar first");
+  assert(u.indexOf("WRITTEN LIKE Halbert") < u.indexOf("Its parts, in reading order:"), "the manner before the parts");
+
+  // the user's choice: Schwartz on a social post, whose exemplar is borrowed from another family when social has none
+  const c2 = ctx();
+  (c2.generation as unknown as { options: Record<string, unknown> }).options.manner = "schwartz";
+  const u2 = d24.user(c2, { ...base, leadTypes: openingManners(MANNERS.schwartz).map((m) => m.lead_type) });
+  assert(u2.includes("WRITTEN LIKE Schwartz (the user's choice): The want he already has"));
+  assert(u2.includes("lead-a: secret, Schwartz's way in") && u2.includes("lead-b: promise, Bencivenga's way in") && u2.includes("lead-c: story, Halbert's way in"));
+  const borrowed = exemplarInManner("social", "Schwartz")!;
+  assert(u2.includes(borrowed.family === "social" ? "--- 1. In Schwartz's manner (the manner this piece is written in). The move:" : `--- 1. In Schwartz's manner (the manner this piece is written in, shown on a ${borrowed.family} piece: the move carries over, the shape of this piece does not). The move:`), "the chosen master's exemplar first, marked when borrowed");
+  assert(!u2.includes("--- 2. In Schwartz's manner"), "his exemplar once");
+
+  // the openings follow the awareness table when the reader is most aware: lead types without a manner, the body still in the piece's manner
+  const u3 = d24.user(ctx(), { ...base, awareness: "most_aware", leadTypes: ["offer", "promise", "problem_solution"] });
+  assert(u3.includes("lead-a: offer (the deal in line one)") && !u3.includes("'s way in"), "the table's openings");
+  assert(u3.includes("Any of the three may open on the test he runs") && u3.includes("in Halbert's manner: lead_in"));
+
+  // a long format: the leads call names the ways in and the sections call names the manner
+  const long = planDraft(FORMATS.sales_letter);
+  const leadsCall = long.calls.find((c) => c.kind === "leads")!;
+  const sectionsCall = long.calls.find((c) => c.kind === "sections")!;
+  const c4 = ctx();
+  c4.format = FORMATS.sales_letter;
+  const u4 = d24.user(c4, { ...base, call: leadsCall, leadTypes: openingManners(MANNERS.schwartz).map((m) => m.lead_type) });
+  assert(u4.includes("WRITTEN LIKE Schwartz (the engine's pick for this kind of piece)") && u4.includes("lead-a: secret, Schwartz's way in") && u4.includes("The body that follows is in Schwartz's manner, and every one of the three leads into it."));
+  const u5 = d24.user(c4, { ...base, call: sectionsCall, leadTypes: null });
+  assert(u5.includes("in Schwartz's manner: "), "the sections job names the manner");
+});

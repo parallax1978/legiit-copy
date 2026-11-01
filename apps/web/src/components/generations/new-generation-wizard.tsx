@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { formatCardsByFamily, SEQUENCE_TYPES, LENGTH_OPTIONS, isFormatId, type FormatCard, type FormatId } from "@/lib/formats";
+import { formatCardsByFamily, SEQUENCE_TYPES, LENGTH_OPTIONS, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatCard, type FormatId } from "@/lib/formats";
 import { type OfferOption, type GenerationInputValues } from "@/lib/data/generations";
 import type { CreateGenerationInput } from "@/lib/actions/generations";
 import { createGeneration } from "@/lib/actions/generations";
@@ -38,6 +38,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
   const [sequenceType, setSequenceType] = useState(initial?.sequence_type || "launch");
   const [voiceProfileId, setVoiceProfileId] = useState<string>(initial?.voice_profile_id ?? "none");
   const [controlText, setControlText] = useState(initial?.control_text ?? "");
+  const [manner, setManner] = useState<string>(initial?.manner && isMannerId(initial.manner) ? initial.manner : "engine");
   const [skipOffer, setSkipOffer] = useState(!!initial?.skip_offer);
   const [pending, start] = useTransition();
 
@@ -62,6 +63,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
       instructions,
       sequence_type: format === "email_sequence" ? sequenceType : "",
       control_text: controlText,
+      manner: manner === "engine" ? "" : isMannerId(manner) ? manner : "",
       skip_offer: skipOffer,
       voice_profile_id: voiceProfileId === "none" ? null : voiceProfileId,
     };
@@ -218,6 +220,23 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               </div>
             </div>
             <div className="space-y-2">
+              <Label>Written like</Label>
+              <Select value={manner} onValueChange={setManner}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engine">Engine picks for this format ({defaultMannerName(card.family)})</SelectItem>
+                  {MANNER_OPTIONS.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-ink-muted">
+                {manner === "engine"
+                  ? `One master's way in, shape of proof and voice for the whole piece. ${defaultMannerName(card.family)} is the usual choice for this kind of piece; the three openings are written as three masters' ways in and the cold read picks.`
+                  : MANNER_OPTIONS.find((m) => m.id === manner)?.description ?? ""}
+              </p>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="instructions">One-off instructions</Label>
               <Textarea id="instructions" value={instructions} onChange={(e) => setInstructions(e.target.value)} rows={3} placeholder="Anything specific to this piece: mention the webinar replay closes Sunday; do not reference the old price." />
             </div>
@@ -267,6 +286,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
               <Row label="Deadline" value={deadline || "None"} />
               <Row label="Length" value={LENGTH_OPTIONS.find((l) => l.id === length)?.label ?? length} />
               <Row label="Voice" value={voiceProfileId === "none" ? "Default" : voices.find((v) => v.id === voiceProfileId)?.name ?? "Selected profile"} />
+              <Row label="Written like" value={manner === "engine" ? `${defaultMannerName(card.family)} (engine's pick)` : MANNER_OPTIONS.find((m) => m.id === manner)?.label ?? manner} />
               <Row label="Your current copy" value={controlText ? `${controlText.trim().split(/\s+/).length} words pasted` : "None"} />
               <Row label="Offer construction" value={offer.hasApprovedOffer ? "Approved construction reused" : skipOffer ? "Skipped, offer used as written" : "Proposed, then paused for approval"} />
             </dl>
