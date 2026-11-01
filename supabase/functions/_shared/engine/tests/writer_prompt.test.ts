@@ -229,3 +229,15 @@ Deno.test("a thing is named the first time it appears: rule 40, the writer (draf
     assertEquals(p.version, version, file);
   }
 });
+
+Deno.test("one fact never argues both ways: the writer (draft v22), the reviser (v22) and Gate C (editorial v21)", async () => {
+  const { COPY_CHIEF_RUBRIC } = await import("../prompts/standard.ts");
+  assert(COPY_CHIEF_RUBRIC.includes("if two proofs in one piece turn on the same fact pointing opposite ways"));
+  const { draftPrompt: d22, ONE_FACT_ONE_WAY, WRITER: W22 } = await import("../prompts/draft.v22.ts");
+  const { revisePrompt: r22 } = await import("../prompts/revise.v22.ts");
+  const { editorialPrompt: e21 } = await import("../prompts/editorial.v21.ts");
+  assertEquals([d22.version, r22.version, e21.version], [22, 22, 21]);
+  assert(d22.system.includes(ONE_FACT_ONE_WAY) && d22.system.startsWith(W22) && r22.system.startsWith(W22));
+  assert(ONE_FACT_ONE_WAY.includes("A Wikipedia page on page one cannot be the reason one page can win and, two lines later, the reason another cannot"));
+  assert(e21.system.includes("if two proofs in one piece turn on the same fact pointing opposite ways"), "the copy chief reads the gate");
+});
