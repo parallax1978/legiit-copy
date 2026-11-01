@@ -153,28 +153,32 @@ P.S. I measure in June, before the sprinklers start. A pump lowered in June is a
   },
   {
     master: "Settle",
-    move: "A reader's question in line one, answered with the speaker's own interest said straight; his own knives as the proof, with the year and the count; one opinion stated as a rule; the shop in one plain sentence; the deal once; a bridge line and one bare link, no P.S.",
-    text: `Subject: The hardware store does it for $8
+    move: "A reader's question in line one, with the speaker's interest said straight; his own trees and his own tally as the proof, with the year and the count; one opinion stated as a rule; the reader told he can go elsewhere; the company in one plain sentence; the price once; a bridge line and one bare link, no P.S.",
+    text: `Subject: The $350 tree job I will not take
 
-A man who gets these emails wrote me last night. He asked why he should pay me five times what the hardware store on Fifth charges to sharpen a knife.
+A woman who reads these emails wrote in on Sunday. Two outfits had quoted her $350 to top the red maple over her garage, I had turned the job down, and she wanted to know why.
 
-I told him I want his money. I said that first so he would believe the rest.
+I want the work. I would rather have her money for a pruning than see somebody else take her $350, and I say so up front so none of this reads as a sermon.
 
-The rest is the wheel. The cheap job is a grinding wheel. It takes steel off fast and it gets the edge hot. A hot edge goes soft, and a soft edge folds the first week you use it. So the knife goes back to the wheel, and back again, and in two years there is no knife left. Then you buy a new one for $90 and start over.
+Topping is cutting the trunk and the big limbs off flat wherever the saw reaches, so the tree is shorter by the weekend. A maple cannot close a cut that wide. It pushes out a ring of thin shoots around every stub to get its leaves back, the shoots hold on with bark instead of wood, and rot works down into the flat cuts under them. Ten years on she has a taller tree than before, made of limbs that let go in a wind.
 
-I cook on the same three knives I bought in 2014. I sharpen them once a year, on the stones in my shop, by hand, at the angle the maker put on them. Twelve years on, I have not replaced one. The big one still goes through a tomato skin without me pushing.
+Cut the top off a maple and you have killed it. It takes ten years, so nobody blames the saw.
 
-A knife that needs the wheel every month was not used hard. It was ground wrong. I have sharpened knives for nineteen years and I have not seen that rule break.
+Two red maples stand in front of my own house. I pruned them in 2014 and again in 2021, a morning each, dead wood out and the limbs over the porch cut back to a side branch. The tops are on. Nothing has landed on the roof in twelve years.
 
-If you are happy with the wheel, keep going to it. No hard feelings, and you can stop reading here.
+On my shop wall there is a tally of every tree I have taken down since 2015. 212 marks. 94 of those trees had been topped by somebody years before I got the call, and a takedown on a maple that size runs $2,400 at my prices.
 
-Marsh Edge Works is my shop, and the sharpening is me at the bench with the stones, one knife at a time, set back to the edge it came with. You bring a knife in once a year and you stop buying knives. $40 a knife, three for $100, and it comes back wrapped, with the date on the paper so you know when it is due.
+Twenty years in trees and I have not watched one go the other way.
 
-Book a slot below and drop the knives at the shop any morning before noon. They are ready the next day.
+If what you want is a shorter tree by Friday, I am the wrong call. Two outfits in town will do it, and I will not argue.
 
-marshedgeworks.com/bench
+Haskell Tree Care is my company, and a pruning is me in the tree with a handsaw, taking out the dead wood and cutting the limbs over your roof back to a branch that can carry them, with the top left on. $600 for a maple like hers, and I am not back for seven years.
 
-Pete
-Marsh Edge Works`,
+Pick a morning below. I look at the tree before I bring the saw.
+
+haskelltreecare.com/prune
+
+Dean
+Haskell Tree Care`,
   },
 ];

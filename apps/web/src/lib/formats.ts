@@ -133,7 +133,7 @@ const MANNER_BLURBS: Record<MannerId, string> = {
   aagaard: "What the click gets, in his words, then who it is for, what arrives, when and the cost.",
   harmon: "The blunt line said flat over one absurd picture; a stand-in shows why it works.",
   dubin: "The deal and the price first, from the man who makes it; each objection put down dry.",
-  settle: "A reader's question answered from his own practice; one opinion as a rule, one link.",
+  settle: "A reader's question answered from what he does himself; one opinion as a rule, one link.",
 };
 
 /** The masters a piece can be written like ("Written like" in the wizard); blank lets the engine pick the format's default. */

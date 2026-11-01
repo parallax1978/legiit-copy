@@ -108,8 +108,8 @@ export const MANNERS: Record<MannerId, Manner> = {
   },
   settle: {
     id: "settle", master: "Settle", lead_type: "story", companions: ["ogilvy", "hopkins"],
-    way_in: "a reader's question, or the speaker's own interest said straight, answered from what he does himself",
-    move: "A daily note: line one is a reader's question, or the speaker's own interest said straight; the proof is his own practice, what he does and what it got him, with the year and the count, never what others say; one opinion stated as a rule; a one-line bridge to the product, named plainly, then one bare link; a P.S. only when it sells nothing. The voice is blunt and unhurried and does not mind who leaves.",
+    way_in: "a reader's question, or the speaker's own interest said straight, answered with what he does himself and what it got him",
+    move: "A daily email: line one is a reader's question or the speaker's own interest said straight; the proof is what he does himself and what it got him, with the year and the count, never what others say; one opinion stated as a rule; the reader told he can go; a one-line bridge to the product, named plainly, then one bare link; no P.S. that sells. The voice is blunt and unhurried and does not mind who leaves.",
   },
 };
 

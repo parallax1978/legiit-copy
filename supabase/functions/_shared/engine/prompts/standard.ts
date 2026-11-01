@@ -464,7 +464,7 @@ The user chooses the manner on the piece ("Written like" in the wizard, \`option
 | Aagaard | What the click gets, in the words of the thing he clicked, with the button in his own first person finishing the headline | offer | Hopkins, Caples | Opt-in page |
 | Harmon Brothers | The blunt line nobody says out loud about the problem, said flat over one picture that is absurd and on message, then the stand-in that shows why it works | proclamation | Hopkins, Halbert | Short video sales letter, YouTube ad script |
 | Dubin | The offer and the price in the first breath, from the man who makes it, with his shop behind him | offer | Carlton, Hopkins |  |
-| Settle | A reader's question, or the speaker's own interest said straight, answered from what he does himself | story | Ogilvy, Hopkins |  |
+| Settle | A reader's question, or the speaker's own interest said straight, answered with what he does himself and what it got him | story | Ogilvy, Hopkins |  |
 
 The full move of each manner (the way in, the proof and the voice, in the writer's words) is in \`supabase/functions/_shared/engine/prompts/manners.ts\`; the writer reads the piece's as a WRITTEN LIKE line in the material and the companions' as the ways in of the other two openings. A manner with no exemplar in the piece's family borrows the master's exemplar from another family, marked as such: the move carries over, the shape of the piece does not.`;
 
