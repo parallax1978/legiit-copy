@@ -425,10 +425,10 @@ Deno.test("one way only (rule 40): the writer says a sentence one way with its d
   const { coldReadPrompt: c6 } = await import("../prompts/cold_read.v6.ts");
   const { coldReadPrompt: c5 } = await import("../prompts/cold_read.v5.ts");
   assertEquals([d28.version, r28.version, c6.version], [28, 28, 6]);
-  assert(ONE_WAY.includes("each sentence follows from the one before it") && ONE_WAY.includes("what happens first and then why") && ONE_WAY.includes("either nobody reads it because it never ranks, or plenty read it and nobody buys"));
+  assert(ONE_WAY.includes("each sentence follows from the one before it") && ONE_WAY.includes("what happens first and then why") && ONE_WAY.includes("either nobody reads it because it never ranks, or plenty of people read it and nobody buys") && ONE_WAY.includes("told in absolutes (nobody reads it, no one buys") && !ONE_WAY.includes("with its doer"));
   assert(W28.includes(ONE_WAY) && d28.system.includes(ONE_WAY) && r28.system.startsWith(W28));
-  assert(c6.system !== c5.system && c6.system.includes("a sentence that does not follow from the one before it") && c6.system.includes(`a sentence you could take two ways ("The page goes up": put online, or up the rankings?`) && c6.system.includes("whose doer is missing or hidden behind \"nobody\"") && c6.system.includes("when you had to pick a meaning or supply a missing step, you read it twice"), "the cold read's reread rule");
+  assert(c6.system !== c5.system && c6.system.includes("a sentence that does not follow from the one before it") && c6.system.includes(`a sentence you could take two ways ("The page goes up": put online, or up the rankings?`) && !c6.system.includes("hidden behind \"nobody\"") && c6.system.includes("when you had to pick a meaning or supply a missing step, you read it twice"), "the cold read's reread rule");
   assert(c6.system.includes("in one plain sentence that can be taken one way only and says what happened before why"), "say_it is one way, what happened before why");
   const { RULES } = await import("../prompts/standard.ts");
-  assert(RULES.includes("Each sentence follows from the one before it") && RULES.includes("A sentence can be taken one way only, with its doer in it"), "rule 40 carries it");
+  assert(RULES.includes("Each sentence follows from the one before it") && RULES.includes("The trouble is told in absolutes (nobody reads it, no one buys, every page)") && RULES.includes("A sentence can be taken one way only"), "rule 40 carries it");
 });

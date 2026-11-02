@@ -3,8 +3,8 @@
  * (docs/04 rule 40). "The page goes up. Nobody read the ten pages it had to beat." made no sense: after the action the
  * reader waits for what happened and gets a cause instead, with the outcome (it never ranks, nobody sees it) left
  * out, so "Or worse, the page ranks" compared against nothing. On top of that "goes up" could mean put online or up
- * the rankings, and "nobody" hid that the one who never read them is the reader. Each sentence follows from the one
- * before; a two-way failure is told whole, what happens and then why; a sentence is said one way, with its doer.
+ * the rankings. Each sentence follows from the one before; a two-way failure is told whole, what happens and then
+ * why, in absolutes (nobody reads it, no one buys); a sentence is said one way.
  */
 import { amend, type PromptModule } from "./types.ts";
 import { draftPrompt as draftPrev, MANNER_RULE, NEVER, OUTPUT, PROMISE_PLACE, WRITER as WRITER_V27, withShape, callItems, writerTells, type DraftArgs } from "./draft.v27.ts";
@@ -12,7 +12,7 @@ import { draftPrompt as draftPrev, MANNER_RULE, NEVER, OUTPUT, PROMISE_PLACE, WR
 export type { DraftArgs };
 export { MANNER_RULE, NEVER, OUTPUT, PROMISE_PLACE, callItems, withShape, writerTells };
 
-export const ONE_WAY = `each sentence follows from the one before it: after an action ("the page goes up") the reader waits for what happened, and gets it, never a cause in its place ("Nobody read the ten pages it had to beat" says why and skips what happened: the page never ranks, nobody sees it); where the old way fails two ways, both are said whole, what happens first and then why, and each can be taken one way only with its doer in it ("You make the page, and either nobody reads it because it never ranks, or plenty read it and nobody buys, because the people typing that search were never shopping"); never "the page goes up" when it could mean put online or up the rankings, never "nobody" for the reader himself (he is the one who never opened the ten pages already on page one);`
+export const ONE_WAY = `each sentence follows from the one before it: after an action ("the page goes up") the reader waits for what happened, and gets it, never a cause in its place ("Nobody read the ten pages it had to beat" says why and skips what happened: the page never ranks, nobody sees it); where the old way fails two ways, both are said whole, what happens first and then why ("You make the page, and either nobody reads it because it never ranks, or plenty of people read it and nobody buys, because the people typing that search were never shopping"); the trouble is told in absolutes (nobody reads it, no one buys, every page), never softened to "few", "hardly anyone" or "most", because the reader does not want nuance there; a sentence can be taken one way only ("the page goes up" could mean put online or up the rankings: say which);`;
 
 export const WRITER = amend(WRITER_V27, [
   [
