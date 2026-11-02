@@ -432,3 +432,16 @@ Deno.test("one way only (rule 40): the writer says a sentence one way with its d
   const { RULES } = await import("../prompts/standard.ts");
   assert(RULES.includes("Each sentence follows from the one before it") && RULES.includes("The trouble is told in absolutes (nobody reads it, no one buys, every page)") && RULES.includes("A sentence can be taken one way only"), "rule 40 carries it");
 });
+
+Deno.test("every sentence earns its place (rule 40): no truism, no setup sentence; the thing is named inside the sentence that does work (draft v29, revise v29, cold read v7)", async () => {
+  const { draftPrompt: d29, EARNS_ITS_PLACE, WRITER: W29 } = await import("../prompts/draft.v29.ts");
+  const { revisePrompt: r29 } = await import("../prompts/revise.v29.ts");
+  const { coldReadPrompt: c7 } = await import("../prompts/cold_read.v7.ts");
+  const { coldReadPrompt: c6 } = await import("../prompts/cold_read.v6.ts");
+  assertEquals([d29.version, r29.version, c7.version], [29, 29, 7]);
+  assert(EARNS_ITS_PLACE.includes("tells him something he did not know a second ago") && EARNS_ITS_PLACE.includes("already has ten pages on page one") && EARNS_ITS_PLACE.includes("named inside the sentence that does work with it"));
+  assert(W29.includes(EARNS_ITS_PLACE) && d29.system.includes(EARNS_ITS_PLACE) && r29.system.startsWith(W29));
+  assert(c7.system !== c6.system && c7.system.includes("told you nothing you did not already know and stood there only to set up the next one") && c7.system.includes("hunt for the point") && c7.system.includes("for a sentence that told you nothing, the point it was reaching for with the thing named in it"), "the cold read's reread rule");
+  const { RULES } = await import("../prompts/standard.ts");
+  assert(RULES.includes("Every sentence tells him something he did not know a second ago") && RULES.includes("hunt for the point of"), "rule 40 carries it");
+});
