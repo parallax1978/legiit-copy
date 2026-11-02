@@ -162,6 +162,8 @@ const FILLER = [
   "Nobody at the warehouse expected the second order to arrive before noon.",
   "A customer in Ohio wrote to say the box had been opened by her dog.",
   "We refunded her on the spot.",
+  // one fragment in the cycle: human copy has one in 29% of its sentences, and a text with none is the even rhythm (even_rhythm)
+  "Nobody complained.",
   "The next print run doubled the page count without raising the price.",
   "Our bookkeeper keeps a ledger in pencil because she trusts it more than the screen.",
   "Two of the drivers have worked the same route since 2011.",
@@ -1095,4 +1097,135 @@ Deno.test("round 4 review: the new checks pass plain comparisons, stories and pr
   assertEquals(tells(r, "bare_credential"), undefined);
   // a word inside the aphorism's tail still counts on its own
   assertEquals(analyzeText("Every brief is a tailored plan you don't have to write yourself.", { format: FORMATS.organic_social }).owner_tells, 2);
+});
+
+// ---------------------------------------------------------------------------------------------------------------
+// The sanitized post: the even rhythm, the repeated paragraph opener, the reader's imagined day, the assurance word
+// before the proof and the list that ends on a bare why
+// ---------------------------------------------------------------------------------------------------------------
+
+const EVEN_TWELVE = [
+  "Last spring I wrote forty pages for a roofing client in Tulsa. Each one went after a search his tool had marked easy. Eleven months later three of them had reached page one. The other thirty-seven sat behind pages I had never opened.",
+  "I opened them in June and read every one. Most were store pages with a cart and a phone number. The rest were guides from two national brands with a thousand links each. His site had ninety links and a page about shingles.",
+  "Now I read page one before I write a word. I count the links on each page and compare them with his. I pick only the searches where his links beat the pages there. He pays for twelve pages this year instead of forty.",
+];
+const EVEN_EIGHT_MORE = [
+  "The first of the twelve went up in March and ranks fourth today. It brings him two calls a week from people with a leak. The second one covers hail damage and sits at number six. I check both every Monday and note the position in a sheet.",
+  "The sheet goes to him on the first of the month. He reads it in two minutes and asks about the next page. We pick it together from the list of searches his links can win. That is the whole method and it took one bad year to learn.",
+];
+
+Deno.test("even_rhythm: every sentence 5 to 25 words across ten or more is the sanitized rhythm; one fragment or one long sentence breaks it; an email needs twenty", () => {
+  const social = (paras: string[]) => analyzeText(paras.join("\n\n"), { format: FORMATS.organic_social });
+  const r = social(EVEN_TWELVE);
+  assertEquals(tells(r, "even_rhythm")?.count, 1, r.flags.map((f) => f.tell).join(","));
+  assertEquals(tells(r, "even_rhythm")?.tier, 2);
+  assertEquals(tells(r, "even_rhythm")!.examples, ["12 sentences, all 9 to 13 words; none under five, none past twenty-five"]);
+  // one three-word fragment is the human rate (29% of human sentences are four words or fewer)
+  assertEquals(tells(social([...EVEN_TWELVE, "Not one sale."]), "even_rhythm"), undefined);
+  // one sentence that runs past twenty-five words where the thought does
+  const long = [...EVEN_TWELVE, "The page that beat him for hail damage was a town paper's story about the storm of 2019, with photos of forty roofs and the names of the crews that fixed them."];
+  assertEquals(tells(social(long), "even_rhythm"), undefined);
+  // words are counted between spaces: "72,300" and "don't" are one each, so this 25-word sentence is not a long one
+  const twentyFive = [...EVEN_TWELVE, "The same plan left out espresso vs coffee, even at 72,300 searches a month, because the people typing that don't own an espresso machine yet."];
+  assertEquals(tells(social(twentyFive), "even_rhythm")?.count, 1);
+  // under ten sentences there is too little text to judge
+  assertEquals(tells(social(EVEN_TWELVE.slice(0, 2)), "even_rhythm"), undefined);
+  // human email has fewer fragments (18% of sentences against 32% in social), so an email needs twenty even sentences
+  assertEquals(tells(analyzeText(EVEN_TWELVE.join("\n\n"), { format: FORMATS.email_single }), "even_rhythm"), undefined);
+  assertEquals(tells(analyzeText([...EVEN_TWELVE, ...EVEN_EIGHT_MORE].join("\n\n"), { format: FORMATS.email_single }), "even_rhythm")?.count, 1);
+});
+
+Deno.test("repeated_paragraph_opener: two paragraphs in a row on the same word count, in social too; articles, the first person, If/If, a pasted subject and a block between them do not", () => {
+  const post = (paras: string[], f: FormatSpec = FORMATS.organic_social) => analyzeText(paras.join("\n\n"), { format: f });
+  const so = ["So you pick one marked easy, write it, and watch it sit on page three.", "So I built an app that reads page one first."];
+  const r = post(so);
+  assertEquals(tells(r, "repeated_paragraph_opener")?.count, 1, r.flags.map((f) => f.tell).join(","));
+  assertEquals(tells(r, "repeated_paragraph_opener")?.tier, 2);
+  assertEquals(tells(r, "repeated_paragraph_opener")!.examples, ['So: "So you pick one marked easy, write..." then "So I built an app that reads..."']);
+  // each further repeat counts once; case and a leading quote mark do not hide it
+  assertEquals(tells(post([...so, "so the next page he paid for ranked.", "\"So what,\" he said."]), "repeated_paragraph_opener")?.count, 3);
+  // the words that open paragraphs for a reason
+  assertEquals(tells(post(["The first page took a week.", "The second took a day."]), "repeated_paragraph_opener"), undefined);
+  assertEquals(tells(post(["I wrote the first page in a week.", "I wrote the second in a day.", "I'm on the third now."]), "repeated_paragraph_opener"), undefined);
+  assertEquals(tells(post(["If the water spreads out flat, the paint has nothing on it.", "If it balls up and runs off, somebody put a coating on it."], FORMATS.email_single), "repeated_paragraph_opener"), undefined);
+  // a subject line pasted above the first paragraph is no paragraph
+  assertEquals(tells(post(["Pour a cup of water on your hood", "Pour a cup of water on your hood and watch what it does."], FORMATS.email_single), "repeated_paragraph_opener"), undefined);
+  // a block of another type between two paragraphs breaks the run, and the first comment is its own text
+  const apart = analyzeDraft([
+    section("main", [block("paragraph", "So you pick one marked easy and write it."), block("bullets", "", ["Page one read first.", "Links counted."]), block("paragraph", "So the next one ranks.")]),
+    section("first_comment", [block("paragraph", "So here is the link: legiit.com/keywords")]),
+    section("cta", [block("cta", "Comment PLAN and I'll send the link.")]),
+  ], FORMATS.organic_social);
+  assertEquals(tells(apart, "repeated_paragraph_opener"), undefined);
+  const together = analyzeDraft([section("main", [block("paragraph", "So you pick one marked easy and write it."), block("paragraph", "So the next one ranks.")])], FORMATS.organic_social);
+  assertEquals(tells(together, "repeated_paragraph_opener")?.count, 1);
+});
+
+Deno.test("reader_scene: three You sentences in a row with nothing to check is the imagined day; a number, a name, a quote, the opening block, two sentences or a testimonial pass", () => {
+  const open = "Think of the last page you wrote for a client, and the ten pages that already rank for the search it went after.";
+  const scene = "You pull two thousand keywords out of your keyword tool, each one marked easy or hard. You still don't know what the pages at the top say. You sit at your desk and choose one blind.";
+  const post = (paras: string[]) => analyzeText(paras.join("\n\n"), { format: FORMATS.organic_social });
+  const r = post([open, scene]);
+  assertEquals(tells(r, "reader_scene")?.count, 1, r.flags.map((f) => f.tell).join(","));
+  assertEquals(tells(r, "reader_scene")?.tier, 2);
+  assertEquals(tells(r, "reader_scene")!.examples, ["You pull two thousand keywords out of your keyword tool, each one marked easy or hard."]);
+  // "You're" and "You've" open the scene too
+  assertEquals(tells(post([open, "You're staring at the list again. You've marked half of it easy. You pick one and hope."]), "reader_scene")?.count, 1);
+  // a digit, a name mid-sentence or a quotation is a specific
+  for (const p of [
+    "You pull 2,000 keywords out of your keyword tool, each one marked easy or hard. You still don't know what the pages at the top say. You sit at your desk and choose one blind.",
+    "You pull two thousand keywords out of Ahrefs, each one marked easy or hard. You still don't know what the pages at the top say. You sit at your desk and choose one blind.",
+    "You pull two thousand keywords out of your keyword tool. You still don't know what the pages at the top say. You pick the one your client called \"the obvious one\" and hope.",
+  ]) assertEquals(tells(post([open, p]), "reader_scene"), undefined, p);
+  // line one is reader_scene_opener's; two You sentences are a run, not a day
+  assertEquals(tells(post([scene, open]), "reader_scene"), undefined);
+  assertEquals(tells(post([open, "You pull two thousand keywords out of your keyword tool. You still don't know what the pages at the top say. Then you pick one blind."]), "reader_scene"), undefined);
+  // a testimonial in the second person keeps its words
+  const draft = analyzeDraft([section("lead", [block("paragraph", open)]), section("proof", [block("testimonial", scene)])], FORMATS.sales_letter);
+  assertEquals(tells(draft, "reader_scene"), undefined);
+});
+
+Deno.test("reassurance_adjective and and_why_tail: the assurance word before the proof noun and the list that ends on a bare why are Tier 3; real estate, true north, real time and a why that goes on are not", () => {
+  const body = (t: string) => analyzeText(t, { format: FORMATS.organic_social });
+  for (const t of ["One real run was for Pull Shot Coffee, an espresso bean subscription.", "Here is a real result from last month.", "These are actual results, not projections.", "A genuine case from a client in Tulsa.", "A real-world example from a roofing client.", "This is a true story."]) {
+    assertEquals(tells(body(t), "reassurance_adjective")?.count, 1, t);
+    assertEquals(tells(body(t), "reassurance_adjective")?.tier, 3, t);
+  }
+  for (const t of ["She sells real estate in Tulsa.", "Find your true north.", "The sheet updates in real time.", "Print it at actual size.", "The run was for Pull Shot Coffee, an espresso bean subscription."]) assertEquals(tells(body(t), "reassurance_adjective"), undefined, t);
+  for (const t of ["You see which pages your links can beat, which to leave alone, and why.", "It shows what to build, and how.", "He tells you which pages to skip, or which!"]) {
+    assertEquals(tells(body(t), "and_why_tail")?.count, 1, t);
+    assertEquals(tells(body(t), "and_why_tail")?.tier, 3, t);
+  }
+  for (const t of ["You see which pages to skip, and why each one loses to the pages there.", "He asked where, and when the truck would come.", "That is how, and why, the plan skips it."]) assertEquals(tells(body(t), "and_why_tail"), undefined, t);
+  // a headline is not body
+  const draft = analyzeDraft([section("lead", [block("headline", "Which pages to build, and why."), block("paragraph", "The plan lists the pages your links can beat and the reason for each.")])], FORMATS.sales_letter);
+  assertEquals(tells(draft, "and_why_tail"), undefined);
+});
+
+const OWNER_POST = `Think of the last page you wrote for a client, and the ten pages that already rank for the search it went after.
+
+Your client pays for that page whether it beats them or not.
+
+The next page you build for a client climbs past those ten and brings him buyers. Before you build it, you know his site can beat those pages and that the people searching want to buy.
+
+You pull two thousand keywords out of your keyword tool, each one marked easy or hard. You still don't know what the pages at the top say. You sit at your desk and choose one blind.
+
+So you pick one marked easy, write it, and watch it sit on page three of Google behind pages you never read. Or it ranks, and nobody who lands on it wants to buy anything.
+
+So I built Legiit Keywords, an app that finds the pages your site can win and sell from, and writes them.
+
+It reads your site and the pages already ranking for each search. You see which pages your links can beat on searches from people ready to buy, which to leave alone, and why.
+
+One real run was for Pull Shot Coffee, an espresso bean subscription. The plan Legiit Keywords made had a buyer's guide for arabica beans. People type that search 222,000 times a month. Page one was Wikipedia and three shop pages with a cart. None of them helped a buyer choose. So a guide that helps a coffee buyer pick his beans had a clear opening to rank and sell the bags.
+
+The same plan left out espresso vs coffee, even at 72,300 searches a month, because the people typing that don't own an espresso machine yet. They aren't buying beans, whoever ranks.
+
+You open the plan and see those pages in the order to build them. Then you click once and it writes the page. When a client asks what you're building next month, you show him the pages his site wins.`;
+
+Deno.test("the owner's sanitized post: the detector names the even rhythm, the two So paragraphs, the reader's imagined day, the real run and the bare why, and flags the piece", () => {
+  const r = analyzeText(OWNER_POST, { format: FORMATS.organic_social });
+  const names = r.flags.map((f) => f.tell);
+  for (const t of ["even_rhythm", "repeated_paragraph_opener", "reader_scene", "reassurance_adjective", "and_why_tail"]) assert(names.includes(t), `${t}: ${names.join(",")}`);
+  assertEquals(tells(r, "even_rhythm")!.examples, ["23 sentences, all 6 to 25 words; none under five, none past twenty-five"]);
+  assert(r.tell_score_per_300 >= TELL_THRESHOLDS.flag, `score ${r.tell_score_per_300}: ${names.join(",")}`);
 });

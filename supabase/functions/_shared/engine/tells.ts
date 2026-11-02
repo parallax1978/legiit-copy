@@ -659,6 +659,27 @@ export const TELLS: TellRule[] = [
     example: "Most sellers don't fail because of effort. They fail because nobody checks their numbers.",
     fix: "A claim with a carrier.",
   },
+  {
+    tier: 2, name: "even_rhythm", weight: 2, scope: "structural", density_per_1000: 0,
+    regex: null,
+    example: "23 sentences, all 6 to 25 words; none under five, none past twenty-five",
+    fix: "Let the lengths spread: a sentence of two or three words where he would say one, one that runs past twenty-five where the thought does.",
+    note: "Every sentence of the piece between 5 and 25 words, in at least 120 words and ten sentences (twenty in an email, where human copy has fewer fragments). Fragments of four words or fewer are 29% of human sentences (social 32%, email 18%); human social copy's sentence-length CV is 0.70 (range 0.50 to 0.92), email 0.65. The owner's rejected post had 23 sentences, all 6 to 25 words, CV 0.37, and read sanitized. Words are counted between spaces, so \"72,300\" and \"don't\" are one each.",
+  },
+  {
+    tier: 2, name: "repeated_paragraph_opener", weight: 2, scope: "structural", density_per_1000: 0,
+    regex: null,
+    example: "So: \"So you pick one marked easy, write...\" then \"So I built Legiit Keywords, an app...\"",
+    fix: "Open the second paragraph on its own subject: cut the connective, or make the two paragraphs one.",
+    note: "Two body paragraphs in a row opening on the same word (\"So... So...\", \"And... And...\"), each further repeat counted once. Articles, the first person (I, I'm, I've, I'd, I'll, we, my) and \"if\" are not counted: two \"If\" paragraphs are the two outcomes of a test the reader runs (Hopkins's water test). A subject or headline pasted as a line is no paragraph. Counted in social formats too, unlike anaphora_triad: the owner's post opened two paragraphs in a row on \"So\".",
+  },
+  {
+    tier: 2, name: "reader_scene", weight: 2, scope: "structural", density_per_1000: 0,
+    regex: null,
+    example: "You pull two thousand keywords out of your keyword tool. You still don't know what the pages at the top say. You sit at your desk and choose one blind.",
+    fix: "A specific inside the scene: the tool's name, the number it showed him, the page that outranked him; or a documented case with its name and number in place of the imagined day.",
+    note: "A body paragraph after the opening with three or more sentences in a row opening on \"You\", \"You're\" or \"You've\" and no specific anywhere in it (no digit, currency sign, percent, quotation or capitalised word mid-sentence): the reader's imagined day told back to him. reader_scene_opener (§7.1 tell 14) reads line one; this reads the body. A paragraph that names a thing or a number passes.",
+  },
 
   // ---- Tier 3: weight 1, never alone ----
   {
@@ -725,6 +746,20 @@ export const TELLS: TellRule[] = [
     regex: new RegExp(`(?:^|[.!?]["”’)]?\\s+)Most (?:people|[a-z]+s) (?:don${A}t|never|struggle|think|assume|spend|waste|fail|try|believe)\\b`, "gm"),
     example: "Most people never launch because...",
     fix: "A number from the research, or the reader's own verbatim.",
+  },
+  {
+    tier: 3, name: "reassurance_adjective", weight: 1, scope: "body", density_per_1000: 0,
+    regex: /\b(?:(?:one|a|an|the|this|that|these|those|our|my|some|several)\s+)?(?:real|actual|genuine|true|legit|legitimate|real[- ]world|real[- ]life)\s+(?:run|runs|result|results|example|examples|case|cases|client|clients|customer|customers|user|users|number|numbers|story|stories|data|test|tests|win|wins|proof|outcome|outcomes|people|business|businesses)\b/gi,
+    example: "One real run was for Pull Shot Coffee.",
+    fix: "Cut the adjective; the name, the date and the number say it was real.",
+    note: "An assurance word in front of a proof noun (\"a real result\", \"actual results\", \"a genuine case\", \"a true story\"), with or without an article, vouches for proof that should stand on its own; a run with the client's name and a number needs no \"real\". The nouns are a closed list, so \"real estate\", \"real time\", \"true north\" and \"actual size\" are not matched.",
+  },
+  {
+    tier: 3, name: "and_why_tail", weight: 1, scope: "body", density_per_1000: 0,
+    regex: /,\s+(?:and|or)\s+(?:why|how|when|where|which)[.!?]/gi,
+    example: "which pages to leave alone, and why.",
+    fix: "Say the why (\"because page one is three shop pages with a cart\"), or end the list on its last item.",
+    note: "A list that ends on a bare question word (\", and why.\", \", and how.\", \", or which.\") promises the reason and withholds it: the shape of the empty teaser (§7.1 structure), one clause long.",
   },
 ];
 
@@ -932,6 +967,89 @@ function unansweredOpeners(bodyUnits: Unit[]): string[] {
     if (!/^(?:imagine|picture this|what if|wouldn['’]?t it be)\b/i.test(s0)) continue;
     const answer = sents.length > 1 ? sents.slice(1).join(" ") : (bodyUnits[i + 1]?.text ?? "");
     if (!answer || !hasSpecific(answer)) out.push(s0);
+  }
+  return out;
+}
+
+/** What a reader counts as a word in a sentence: a run between spaces holding a letter or a digit ("72,300", "don't" and "touch-up" are one each). */
+function spokenWords(sentence: string): number {
+  return sentence.split(/\s+/).filter((t) => /[A-Za-z0-9]/.test(t)).length;
+}
+
+/**
+ * The even rhythm: no sentence of `short` words or fewer and none past `long`, in a piece of at least `min_words` and
+ * the profile's sentence floor. Fragments of four words or fewer are 29% of human sentences (social 32%, email 18%),
+ * so the floor is ten sentences for social and the rest and twenty for email: about the same odds (one in fifty) of a
+ * human piece with no fragment at each format's share.
+ */
+export const EVEN_RHYTHM = {
+  min_words: 120,
+  short: 4,
+  long: 25,
+  min_sentences: { email: 20, social: 10, optin: 10, page: 10, ad: 10 } as Record<DensityProfile, number>,
+} as const;
+
+/** The one-line statement of the lengths when every sentence sits between 5 and 25 words in a piece long enough for that to be unusual, else null. */
+function evenRhythm(sents: string[], words: number, profile: DensityProfile): string | null {
+  if (sents.length < EVEN_RHYTHM.min_sentences[profile] || words < EVEN_RHYTHM.min_words) return null;
+  const lens = sents.map(spokenWords).filter((n) => n > 0);
+  if (lens.length < EVEN_RHYTHM.min_sentences[profile]) return null;
+  const min = Math.min(...lens), max = Math.max(...lens);
+  if (min <= EVEN_RHYTHM.short || max > EVEN_RHYTHM.long) return null;
+  return `${lens.length} sentences, all ${min} to ${max} words; none under five, none past twenty-five`;
+}
+
+/** Paragraph openers that repeat for a reason: articles, the first person, and "if" (two "If" paragraphs are the two outcomes of a test the reader runs). */
+const FREE_OPENERS = new Set(["the", "a", "an", "i", "i'm", "i've", "i'd", "i'll", "we", "my", "if"]);
+
+function openerOf(text: string): string {
+  return (text.split(/\s+/)[0] ?? "").toLowerCase().replace(/’/g, "'").replace(/^["“*'(]+|["”*',.:;!?)]+$/g, "");
+}
+
+function headOf(text: string, n = 7): string {
+  const w = text.trim().split(/\s+/);
+  return w.length > n ? w.slice(0, n).join(" ").replace(/[,.;:]$/, "") + "..." : w.join(" ");
+}
+
+/**
+ * Two body paragraphs in a row opening on the same word ("So... So..."); each further repeat counts once. A block of
+ * another type between them breaks the run; a subject or headline pasted as a line is no paragraph; the first comment
+ * of a social post is its own text.
+ */
+function repeatedParagraphOpeners(units: Unit[]): string[] {
+  const out: string[] = [];
+  let prev: { word: string; text: string } | null = null;
+  for (const u of units) {
+    const paragraph = u.kind === "body" && u.type === "paragraph" && sectionBaseId(u.sectionId) !== "first_comment" && !headlineLike(u.text, false);
+    if (!paragraph) {
+      prev = null;
+      continue;
+    }
+    const word = openerOf(u.text);
+    if (prev && word && word === prev.word && !FREE_OPENERS.has(word)) out.push(`${u.text.trim().split(/\s+/)[0]}: "${headOf(prev.text)}" then "${headOf(u.text)}"`);
+    prev = { word, text: u.text };
+  }
+  return out;
+}
+
+const YOU_SENTENCE_RE = /^You(?:['’](?:re|ve))?\s+\S/;
+
+/** A body paragraph after the piece's opening with three or more "You ..." sentences in a row and no specific in it: the reader's imagined day. One hit per paragraph, its first sentence as the example. */
+function readerScenes(bodyUnits: Unit[], spec: FormatSpec): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const u of bodyUnits) {
+    const piece = pieceOf(u, spec);
+    const first = !seen.has(piece);
+    seen.add(piece);
+    if (first || u.kind !== "body" || u.type !== "paragraph") continue;
+    const sents = sentences(u.text);
+    let run = 0, longest = 0;
+    for (const s of sents) {
+      run = YOU_SENTENCE_RE.test(s) ? run + 1 : 0;
+      if (run > longest) longest = run;
+    }
+    if (longest >= 3 && !hasSpecific(u.text)) out.push(sents[0]);
   }
   return out;
 }
@@ -2083,6 +2201,21 @@ function detectTells(units: Unit[], spec: FormatSpec, words: number, exemptTerms
       }
       case "unanswered_opener": {
         const found = unansweredOpeners(bodyUnits);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
+        break;
+      }
+      case "even_rhythm": {
+        const found = evenRhythm(proseSentences, countWords(proseText), DENSITY_PROFILES[spec.id]);
+        hit = { rule, count: found ? 1 : 0, examples: found ? [found] : [] };
+        break;
+      }
+      case "repeated_paragraph_opener": {
+        const found = repeatedParagraphOpeners(units);
+        hit = { rule, count: found.length, examples: trimExamples(found) };
+        break;
+      }
+      case "reader_scene": {
+        const found = readerScenes(bodyUnits, spec);
         hit = { rule, count: found.length, examples: trimExamples(found) };
         break;
       }
