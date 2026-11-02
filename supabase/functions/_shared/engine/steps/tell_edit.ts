@@ -11,8 +11,9 @@
 import type { StepContext, StepResult } from "./types.ts";
 import type { FormatSpec } from "../formats/spec.ts";
 import { TellEditCall, TellEditOutput, TellEditPartial, type TellEditAuditItem, type TellEditPoint } from "../schemas/tell_edit.ts";
-import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v17.ts";
+import { tellEditPrompt, type TellEditArgs } from "../prompts/tell_edit.v18.ts";
 import { exemptTermsFrom, toolNamesFrom } from "../tells.ts";
+import { shapeTextForDraft } from "../draft/shape.ts";
 import { applyEdits, backstopUnits, coupletFindings, editableUnits, flatCadence, groupUnits, ledgerWordingFindings, openingFindings, openPoints, ownerTellCount, promiseStems, rebuildDraft, repeatFindings, sentenceTagged, statesPromise, stillStands, stripNeverTells, syncChosenLead, unitFindings, type EditUnit, type TellEdit } from "../draft/tell_edit.ts";
 import { Candidate } from "../schemas/argument.ts";
 import { REPEAT_FAMILIES } from "../tells.ts";
@@ -166,6 +167,7 @@ export async function runTellEdit(ctx: StepContext, deps: { call: typeof callSte
       groupTotal: groups.length,
       retryNote: null,
       cadence,
+      shape: cadence ? shapeTextForDraft(ctx.generation.id, spec, source.sections) : null,
       acceptedWording,
     };
     const res = await deps.call(ctx, "tell_edit", tellEditPrompt, args, TellEditCall, `tell edit${groups.length > 1 ? ` ${gi + 1}/${groups.length}` : ""}`);

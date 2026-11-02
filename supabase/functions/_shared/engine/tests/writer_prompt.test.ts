@@ -355,3 +355,66 @@ Deno.test("a piece is written in one master's manner: the user's choice or the f
   assert(!exemplarsText("social", "Organic social post", "Halbert").includes("In Brunson's manner"), "and sits out when it is not");
   assertEquals(shown(exemplarsText("ad", "Meta ad")), exemplarsFor("ad").length, "a small family shows all of its pieces");
 });
+
+Deno.test("the shape of this one: drawn from the human ranges, fixed by the generation id, read as counts by the drafter, the reviser and the tell edit (Section 13)", async () => {
+  const { SHAPE_RANGES, itemIndexes, seededRandom, shapeFor, shapeLine, shapeText, shapeTextForDraft } = await import("../draft/shape.ts");
+  // the same id draws the same shape; other ids draw other shapes
+  const a = shapeFor("gen-1", FORMATS.organic_social);
+  assertEquals(a, shapeFor("gen-1", FORMATS.organic_social), "a retry draws the same shape");
+  const others = Array.from({ length: 30 }, (_, i) => shapeFor(`gen-${i + 2}`, FORMATS.organic_social));
+  assert(others.some((s) => s.spread !== a.spread) && others.some((s) => s.short_share !== a.short_share) && others.some((s) => s.close !== a.close) && others.some((s) => s.questions !== a.questions), "pieces differ");
+  assert(new Set(others.map((s) => s.contractions)).size === 3 && new Set(others.map((s) => s.close)).size === 3, "every option is drawn over thirty pieces");
+  // every draw sits inside its family's range
+  for (const spec of Object.values(FORMATS)) {
+    const range = SHAPE_RANGES[spec.family];
+    for (let i = 0; i < 20; i++) {
+      const s = shapeFor(`id-${i}`, spec);
+      assert(s.mean >= range.mean[0] && s.mean <= range.mean[1] && s.spread >= range.spread[0] && s.spread <= range.spread[1], `${spec.id}: mean and spread in range`);
+      assert(s.short_share >= range.short_share[0] && s.short_share <= range.short_share[1] && s.long >= range.long[0] && s.long <= range.long[1], `${spec.id}: shares in range`);
+      assert(s.questions >= range.questions[0] && s.questions <= range.questions[1] && s.longest_paragraph >= range.longest_paragraph[0] && s.longest_paragraph <= range.longest_paragraph[1], `${spec.id}: counts in range`);
+      if (spec.id === "organic_social") assert(s.product_at !== null && s.product_at >= 0.3 && s.product_at <= 0.6, "the product's position respects the format's gate");
+      else assert(s.product_at === null, `${spec.id}: no product position without the gate`);
+    }
+  }
+  const r1 = seededRandom("x"), r2 = seededRandom("x");
+  assertEquals([r1(), r1(), r1()], [r2(), r2(), r2()]);
+  // the line is counts, not adjectives
+  const line = shapeLine(a, FORMATS.organic_social);
+  assert(/sentences average about \d+ words, with a spread of 0\.\d+/.test(line) && /about \d+ sentences? of four words or fewer/.test(line) && /the close: the step/.test(line), line);
+  assert(!/\b(punchy|conversational|natural|engaging|authentic)\b/i.test(line), "no tone adjectives");
+  // pages count per 300 words; multi-item pieces draw one shape per item
+  assert(shapeLine(shapeFor("g", FORMATS.sales_letter), FORMATS.sales_letter).includes("in every 300 words"));
+  assertEquals(itemIndexes([{ section_id: "subject#1" }, { section_id: "body#1" }, { section_id: "subject#3" }, { section_id: "lead_in" }]), [0, 1, 3]);
+  const seq = shapeText("g", FORMATS.email_sequence, [1, 2, 3]);
+  assert(seq.startsWith("THE SHAPE OF THIS ONE (drawn for this piece") && seq.includes("- email 1: ") && seq.includes("- email 3: "), seq.slice(0, 200));
+  assert(shapeFor("g", FORMATS.email_sequence, 1).spread !== shapeFor("g", FORMATS.email_sequence, 2).spread || shapeFor("g", FORMATS.email_sequence, 1).close !== shapeFor("g", FORMATS.email_sequence, 2).close, "the emails of one sequence differ");
+
+  // the drafter (v25): the shape sits last in the stable material, before the cache break; the grade line no longer fixes the rhythm
+  const { draftPrompt: d25, WRITER: W25 } = await import("../prompts/draft.v25.ts");
+  assertEquals(d25.version, 25);
+  assert(W25.includes("sentence lengths as THE SHAPE OF THIS ONE in the material gives them") && !W25.includes("short sentences, with one long one where the feeling needs it"), "the writer's words");
+  assert(d25.system.includes("sentence lengths as THE SHAPE OF THIS ONE") && !d25.system.includes("with one long one where the feeling needs it"));
+  const plan = planDraft(FORMATS.organic_social);
+  const base: DraftArgs = { call: plan.calls[0], callIndex: 1, callTotal: 1, awareness: "problem_aware", segment: null, sophistication: "4", thesis: "the thesis", argumentText: "", drafted: [], leads: null, leadTypes: null, examplesText: "", retryNote: null };
+  const u = d25.user(ctx(), base);
+  const expected = shapeText("g", FORMATS.organic_social, [0]);
+  assert(u.includes(expected), "the piece's own shape in the material");
+  assert(u.indexOf("HOW THIS KIND OF PIECE READS") < u.indexOf("THE SHAPE OF THIS ONE (drawn") && u.indexOf("THE SHAPE OF THIS ONE (drawn") < u.indexOf("<<<cache-break>>>"), "after the exemplars, before the break");
+  assert(u.includes("the sentence lengths follow THE SHAPE OF THIS ONE") && !u.includes("A sentence over thirty words is two sentences") && !u.includes("most sentences under fifteen words"), "the grade line defers to the shape");
+
+  // the reviser (v25) reads the draft's items' shapes; the tell edit (v18) points its cadence note at the shape
+  const { revisePrompt: r25 } = await import("../prompts/revise.v25.ts");
+  assertEquals(r25.version, 25);
+  assert(r25.system.startsWith(W25));
+  const draft = { sections: [{ section_id: "lead_in", title: null, blocks: [{ id: "lead_in-1", type: "paragraph", text: "A line.", items: null, meta: null }] }] };
+  const ru = r25.user(ctx(), { cycle: 1, editorial: null, factual: [], mechanical: null, coldRead: null, draft, retryNote: null } as unknown as Parameters<typeof r25.user>[1]);
+  assert(ru.includes(shapeTextForDraft("g", FORMATS.organic_social, draft.sections as never)) && ru.indexOf("THE SHAPE OF THIS ONE (drawn") < ru.indexOf("<<<cache-break>>>"), "the revision keeps the drawn rhythm");
+  const { tellEditPrompt: t18, shapeNote } = await import("../prompts/tell_edit.v18.ts");
+  assertEquals(t18.version, 18);
+  const tctx = { format: FORMATS.organic_social, voice: null, config: null } as unknown as Parameters<typeof t18.user>[0];
+  const tbase = { draft: { sections: [] }, units: [], findings: [], exemptTerms: [], groupIndex: 0, groupTotal: 1, retryNote: null } as unknown as Parameters<typeof t18.user>[1];
+  const flat = t18.user(tctx, { ...tbase, cadence: { cv: 0.37, floor: 0.5 }, shape: expected });
+  assert(flat.includes("toward the counts in THE SHAPE OF THIS ONE below") && flat.includes(expected) && !flat.includes("Break one or two long sentences"), "the cadence note points at the shape");
+  assert(!t18.user(tctx, { ...tbase, cadence: null, shape: expected }).includes("THE SHAPE OF THIS ONE (drawn"), "no shape block when the piece is not flat");
+  assertEquals(shapeNote("plain", null), "plain");
+});

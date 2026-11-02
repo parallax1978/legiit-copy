@@ -468,6 +468,24 @@ The user chooses the manner on the piece ("Written like" in the wizard, \`option
 
 The full move of each manner (the way in, the proof and the voice, in the writer's words) is in \`supabase/functions/_shared/engine/prompts/manners.ts\`; the writer reads the piece's as a WRITTEN LIKE line in the material and the companions' as the ways in of the other two openings. A manner with no exemplar in the piece's family borrows the master's exemplar from another family, marked as such: the move carries over, the shape of the piece does not.`;
 
+export const SHAPE = `## 13. Shape
+
+Every piece is written to a shape of its own: how its sentence lengths spread, how many run short or long, how many questions it leaves open, how many paragraphs are one sentence, how long the longest runs, how often it contracts, where the product's name arrives and how it ends. The shape is drawn at random for the piece from the ranges human direct response copy lives in (\`research/tells/human_calibration_report.md\`: a sentence-length spread of 0.50 to 0.92 for social, 0.50 to 0.84 for email, 0.71 to 1.10 for pages; sentences of four words or fewer are 29% of human sentences) and fixed by the generation's id, so a retry draws the same shape and no two pieces share one. A fixed rhythm rule ("short sentences, one long one") made every piece the same piece: the first pieces measured a spread of 0.37 with no sentence under five words, evener than human copy and evener than plain AI drafts (0.83). A rule that says "one fragment, one question, one long sentence" would be a new pattern; a draw is not.
+
+The writer reads the shape as counts in the material (THE SHAPE OF THIS ONE, \`draft/shape.ts\`): the mean sentence length and the spread, the number of sentences of four words or fewer, the number past twenty-five words, the questions, the one-line paragraphs, the longest paragraph, the contraction rate, the product's position and the close, per piece for short formats and per 300 words for pages. The counts are targets to hit within one or two, never by padding or clipping a sentence. The revision reads the same shape so it does not even the piece out; the tell edit, when the piece runs flat against the format's floor (Section 7), is pointed at the shape's counts instead of being told to break long sentences in two. The mechanical pass measures the spread (\`cadence_floor_cv\`) and flags a piece whose sentences all fall between five and twenty-four words (\`even_rhythm\`).
+
+| Drawn for each piece | Social and email | Pages and commerce | Spoken and ads |
+|---|---|---|---|
+| Mean sentence length (words) | 10 to 15 | 11 to 16 | 8 to 13 |
+| Spread (coefficient of variation) | 0.50 to 0.90 | 0.70 to 1.05 | 0.50 to 0.90 |
+| Sentences of four words or fewer | 15% to 40% | 15% to 35% | 20% to 50% |
+| Sentences past twenty-five words | 0 to 2 a piece | 1 to 3 per 300 words | 0 or 1 |
+| Questions left open | 0 to 2 | 0 to 2 per 300 words | 0 or 1 |
+| Paragraphs of one sentence | 1 to 6 (social), 0 to 4 (email) | 1 to 3 per 300 words | 0 to 2 |
+| Longest paragraph (sentences) | 3 to 6 | 3 to 7 | 2 to 5 |
+| Contractions where they fit | few, about half, or most | same | same |
+| The close | the step alone; the step, then one fact; the step, then one short flat line | same | same |`;
+
 export const OWNER_TELLS = `### 7.1 The owner's tells and words
 
 These are the owner's rules. They apply to every piece in every format: the writer follows them, the tell edit removes what slips through, the detector counts them, and the copy chief fails a stack at Gate D. Each is a pattern, not a word list: rewording a banned pattern with a synonym or near-variant is the same tell.
@@ -519,7 +537,7 @@ The tell edit. Every draft and every revision passes this edit before the cold r
 
 Scoring: tells 11-13 are Tier 0; every other 7.1 tell, word or windup is Tier 1 (weight 4) per hit (a repeated run of words counts from the second repeat in a piece, since one is common in human posts), and two or more in a piece are the stack the copy chief fails at Gate D and the mechanical pass sends back to revision.`;
 
-export const STANDARD = { RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, OFFER_PRESENTATION, COPY_CHIEF_RUBRIC, AI_TELL_CHECKLIST, CLAIMS_AND_FACTUAL_REVIEW, FORMAT_SPECS, VOICE_CAPTURE, EXEMPLARS, MANNER } as const;
+export const STANDARD = { RULES, ARGUMENT_SELECTION, LEAD_SELECTION, PROOF_PLACEMENT, OFFER_PRESENTATION, COPY_CHIEF_RUBRIC, AI_TELL_CHECKLIST, CLAIMS_AND_FACTUAL_REVIEW, FORMAT_SPECS, VOICE_CAPTURE, EXEMPLARS, MANNER, SHAPE } as const;
 export const STANDARD_TITLES: Record<string, string> = {
   "RULES": "The standard",
   "ARGUMENT_SELECTION": "Argument selection",
@@ -532,5 +550,6 @@ export const STANDARD_TITLES: Record<string, string> = {
   "FORMAT_SPECS": "Per-format specs",
   "VOICE_CAPTURE": "Voice capture",
   "EXEMPLARS": "Exemplars from the masters",
-  "MANNER": "Manner"
+  "MANNER": "Manner",
+  "SHAPE": "Shape"
 };

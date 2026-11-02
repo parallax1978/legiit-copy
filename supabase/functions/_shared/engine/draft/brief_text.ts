@@ -240,7 +240,7 @@ export function pieceText(spec: FormatSpec, options: GenerationOptions): string 
     `Its parts, in reading order:`,
     ...spec.sections.map((s) => partText(s)),
     length,
-    `Reading grade: ${grade} or below, as the Hemingway app grades it (a machine checks it): short words, most sentences under fifteen words, one long one where the feeling needs it. A sentence over thirty words is two sentences.`,
+    `Reading grade: ${grade} or below, as the Hemingway app grades it (a machine checks it): short words; the sentence lengths follow THE SHAPE OF THIS ONE.`,
     spec.hard_gates.length ? `Checked by machine: ${spec.hard_gates.join("; ")}` : "",
     spec.platform_limits ? `Platform limits: ${Object.entries(spec.platform_limits).map(([k, v]) => `${k}=${v}`).join(", ")}` : "",
     `${spec.allow_markdown_headings ? "Markdown headings allowed" : "No markdown headings"}; ${spec.allow_caps ? "caps at human rates" : "no caps"}; no em dashes, emojis or hashtags.`,
