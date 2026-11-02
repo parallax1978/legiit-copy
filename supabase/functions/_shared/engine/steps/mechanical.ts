@@ -69,7 +69,40 @@ export function promiseGap(sections: Section[], spec: FormatSpec, promise: strin
     const hasHead = promiseOverlap(x, new Set([head])) > 0;
     if (n > best || (n === best && closest !== null && hasHead && !bestHead)) [closest, best, bestHead] = [x, n, hasHead];
   }
-  return `No sentence says the argument's promise ("${promise.trim()}") to the reader: say it as a sentence of its own, early (in a short piece by the rehook), with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}.`;
+  return `No sentence says the argument's promise ("${promise.trim()}") to the reader: say it as a sentence of its own at the turn, with the product's first mention or the sentence beside it, after the trouble is told whole, with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}.`;
+}
+
+export const PROMISE_EARLY = "promise_early";
+
+/**
+ * The promise's place (docs/04 rule 8): at the turn, in the block that first names the product or the one beside it,
+ * after the trouble is told whole. A promise dropped early, with the piece going back to the trouble for a paragraph
+ * or more before the product is named, reads as a contradiction (the trouble is solved, then it is not). The opening
+ * block is exempt: a piece that opens on the promise says it there. Returns the note and the sentence, or null.
+ */
+export function promiseEarly(sections: Section[], spec: FormatSpec, promise: string | null | undefined, names: string[] = []): { note: string; quote: string } | null {
+  if (!promise?.trim() || spec.multi_item || spec.family === "message" || NO_PROMISE_FORMATS.has(spec.id)) return null;
+  const stems = promiseStems(promise);
+  if (!stems.size || !names.length) return null;
+  const blocks = sections
+    .filter((s) => s.section_id !== "first_comment")
+    .flatMap((s) => s.blocks.filter((b) => !OFFER_BLOCK_TYPES.has(b.type) && (b.text?.trim() || b.items?.length)).map((b) => [b.text, ...(b.items ?? [])].join("\n")));
+  const lower = names.map((n) => n.toLowerCase());
+  let promiseAt = -1, productAt = -1, quote = "";
+  for (let i = 0; i < blocks.length; i++) {
+    const t = blocks[i];
+    if (productAt < 0 && lower.some((n) => t.toLowerCase().includes(n))) productAt = i;
+    if (promiseAt < 0) {
+      const hit = readerText(t).split(SENTENCE_SPLIT).map((x) => x.trim()).find((x) => x && readerSentence(x, names) && statesPromise(x, stems));
+      if (hit) [promiseAt, quote] = [i, hit];
+    }
+  }
+  if (promiseAt <= 0 || productAt < 0 || promiseAt >= productAt - 1) return null;
+  const between = productAt - promiseAt - 1;
+  return {
+    quote,
+    note: `The promise ("${quote}") is said in paragraph ${promiseAt + 1}, and the piece goes back to the trouble for ${between} paragraph${between === 1 ? "" : "s"} before the product is named in paragraph ${productAt + 1}; read in order, the trouble is solved and then it is not. The promise belongs at the turn (rule 8): in the sentence that first names the product or the one beside it, after the trouble is told whole. Move it there, and let the paragraphs before it tell the trouble without it.`,
+  };
 }
 
 export function flagsFromReport(report: MechanicalReport): Flag[] {
@@ -77,8 +110,8 @@ export function flagsFromReport(report: MechanicalReport): Flag[] {
   const hasHigher = report.flags.some((f) => f.tier === 1 || f.tier === 2);
   for (const f of report.flags) {
     if (f.tier === 3 && !hasHigher) continue; // Tier 3 never counts alone
-    if (f.tell === PROMISE_UNSTATED) {
-      flags.push({ source: "mechanical", kind: PROMISE_UNSTATED, severity: "medium", quote: f.examples[0] ?? null, rule: "04-copy-standard §1 rule 8", issue: f.fix, suggestedRewrite: null });
+    if (f.tell === PROMISE_UNSTATED || f.tell === PROMISE_EARLY) {
+      flags.push({ source: "mechanical", kind: f.tell, severity: "medium", quote: f.examples[0] ?? null, rule: "04-copy-standard §1 rule 8", issue: f.fix, suggestedRewrite: null });
       continue;
     }
     flags.push({
@@ -123,6 +156,10 @@ export const mechanicalStep: StepFn = async (ctx): Promise<StepResult<Mechanical
   if (gap) {
     const quoted = /the closest line is "(.*)"\.$/.exec(gap)?.[1];
     report.flags.push({ tier: 1, tell: PROMISE_UNSTATED, weight: 0, count: 1, examples: quoted ? [quoted] : [], fix: gap });
+  } else {
+    // the promise is said: it belongs at the turn, not dropped early between two paragraphs of trouble
+    const early = promiseEarly(sections, ctx.format, angle.success ? angle.data.promise : null, names);
+    if (early) report.flags.push({ tier: 1, tell: PROMISE_EARLY, weight: 0, count: 1, examples: [early.quote], fix: early.note });
   }
   const flags = flagsFromReport(report);
 

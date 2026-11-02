@@ -407,3 +407,43 @@ Deno.test("ship: an unsaid promise is a note the user sees, never a blocker", ()
   const att = userAttention({ editorial: null, factual: null, mechanical, pendingFlags: [], needsSource: [], openQuestions: [], finalPass: true });
   assertEquals(att, ["Worth fixing (promise check): No sentence says the argument's promise."]);
 });
+
+Deno.test("mechanical: a promise dropped early, with the trouble told on after it before the product is named, is sent back to the turn; the opening and the turn itself are not (rule 8)", async () => {
+  const { promiseEarly, PROMISE_EARLY, flagsFromReport } = await import("../steps/mechanical.ts");
+  const promise = "rankings on keywords that bring paying customers";
+  const social = FORMATS.organic_social;
+  const names = ["Legiit Keywords"];
+  // the owner's post: hook, trouble, promise, trouble, trouble, product
+  const hook = b("lead_in-1", "How do you pick the next page for your best client's site?");
+  const trouble1 = b("lead_in-2", "You've got a list of two thousand keywords from Ahrefs, each with a number for how hard it is to rank.");
+  const early = b("lead_in-3", "Once you can see who's typing the search, you rank on keywords that bring paying customers before anyone writes a word.");
+  const trouble2 = b("main-1", "When the page you picked sits there and no orders come in, it's you the client calls.");
+  const trouble3 = b("main-2", "You go by the low number, publish the page, and it sits on page three.");
+  const product = b("main-3", "I built Legiit Keywords, an app that finds the buyer pages your site can win and writes them.");
+  const r = promiseEarly([s("lead_in", [hook, trouble1, early]), s("main", [trouble2, trouble3, product])], social, promise, names);
+  assert(r && r.quote === early.text && r.note.includes("paragraph 3") && r.note.includes("2 paragraphs before the product is named in paragraph 6") && r.note.includes("at the turn"), r?.note ?? "no note");
+  // the promise at the turn: the paragraph before the product, or the product's own paragraph, or after it
+  assertEquals(promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, early, product])], social, promise, names), null, "the paragraph before the product is the turn");
+  assertEquals(promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, product, early])], social, promise, names), null, "after the product");
+  // a piece that opens on the promise says it there
+  assertEquals(promiseEarly([s("lead_in", [early, trouble1]), s("main", [trouble2, trouble3, product])], social, promise, names), null, "the opening");
+  // nothing to place: no promise, no product name, an ad set, an SMS
+  assertEquals(promiseEarly([s("lead_in", [hook, early]), s("main", [trouble2, trouble3, product])], social, null, names), null);
+  assertEquals(promiseEarly([s("lead_in", [hook, early]), s("main", [trouble2, trouble3, product])], social, promise, []), null);
+  assertEquals(promiseEarly([s("lead_in", [hook, early]), s("main", [trouble2, trouble3, product])], FORMATS.google_rsa, promise, names), null);
+  assertEquals(promiseEarly([s("lead_in", [hook, early]), s("main", [trouble2, trouble3, product])], FORMATS.sms, promise, names), null);
+  // the flag reaches the revision as a rule 8 note with the sentence quoted
+  const flags = flagsFromReport({ tell_score_per_300: 0, flags: [{ tier: 1, tell: PROMISE_EARLY, weight: 0, count: 1, examples: [early.text], fix: r!.note }], hard_fail: false, hard_fail_reasons: [], fk_grade: 6, ari_grade: 6, cadence_cv: 0.7, cadence_flag: false, and_then_count: 0, word_count: 300, format_gate_failures: [] } as never);
+  assertEquals(flags.map((f) => [f.kind, f.severity, f.rule, f.quote]), [[PROMISE_EARLY, "medium", "04-copy-standard §1 rule 8", early.text]]);
+  assertEquals(flags[0].issue, r!.note);
+
+  // the writer's words carry the promise's place (draft v26, revise v26); the gap note points at the turn too
+  const { draftPrompt: d26, PROMISE_PLACE, WRITER: W26 } = await import("../prompts/draft.v26.ts");
+  const { revisePrompt: r26 } = await import("../prompts/revise.v26.ts");
+  assertEquals([d26.version, r26.version], [26, 26]);
+  assert(W26.includes(PROMISE_PLACE) && d26.system.includes(PROMISE_PLACE) && r26.system.startsWith(W26));
+  assert(PROMISE_PLACE.includes("after the trouble is told whole") && PROMISE_PLACE.includes("does not say it again"));
+  const { promiseGap } = await import("../steps/mechanical.ts");
+  const gap = promiseGap([s("main", [b("main-1", "You get a list.")])], social, promise);
+  assert(gap?.includes("at the turn, with the product's first mention") && !gap.includes("by the rehook"), gap ?? "");
+});
