@@ -421,10 +421,18 @@ Deno.test("mechanical: a promise dropped early, with the trouble told on after i
   const trouble3 = b("main-2", "You go by the low number, publish the page, and it sits on page three.");
   const product = b("main-3", "I built Legiit Keywords, an app that finds the buyer pages your site can win and writes them.");
   const r = promiseEarly([s("lead_in", [hook, trouble1, early]), s("main", [trouble2, trouble3, product])], social, promise, names);
-  assert(r && r.quote === early.text && r.note.includes("paragraph 3") && r.note.includes("2 paragraphs before the product is named in paragraph 6") && r.note.includes("at the turn"), r?.note ?? "no note");
-  // the promise at the turn: the paragraph before the product, or the product's own paragraph, or after it
-  assertEquals(promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, early, product])], social, promise, names), null, "the paragraph before the product is the turn");
+  assert(r && r.quote === early.text && r.note.includes("paragraph 3") && r.note.includes("2 paragraphs before the product is named in paragraph 6") && r.note.includes("with the product"), r?.note ?? "no note");
+  // the paragraph right before the product is still before it: the promise has to speak of a time that has not come ("this time")
+  const before = promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, early, product])], social, promise, names);
+  assert(before?.note.includes("the product is not named until paragraph 5, so the promise has to speak of a time that has not come"), before?.note ?? "no note");
+  // with the product, or after it: its place
+  assertEquals(promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, { ...product, text: `${product.text} You rank on keywords that bring paying customers.` }])], social, promise, names), null, "the product's own paragraph");
   assertEquals(promiseEarly([s("lead_in", [hook, trouble1]), s("main", [trouble2, product, early])], social, promise, names), null, "after the product");
+  // the announced turn is a tell of its own
+  const { analyzeText } = await import("../tells.ts");
+  const turn = analyzeText("He paid for every one of those pages, and all his chart shows is visits.\n\nThis time you show him pages that rank and the customers they bring.\n\nI built Legiit Keywords, an app that finds the pages a site can win.", { format: social });
+  assertEquals(turn.flags.filter((f) => f.tell === "announced_turn").map((f) => f.examples[0]?.startsWith("This time you show him pages that rank")), [true]);
+  assertEquals(analyzeText("Last March I lost a $140 customer.\n\nNow the happy ones get asked. This time it was a Tuesday.", { format: social }).flags.filter((f) => f.tell === "announced_turn").length, 0, "a bare Now, and This time inside a paragraph, are not the announced turn");
   // a piece that opens on the promise says it there
   assertEquals(promiseEarly([s("lead_in", [early, trouble1]), s("main", [trouble2, trouble3, product])], social, promise, names), null, "the opening");
   // nothing to place: no promise, no product name, an ad set, an SMS
@@ -445,5 +453,14 @@ Deno.test("mechanical: a promise dropped early, with the trouble told on after i
   assert(PROMISE_PLACE.includes("after the trouble is told whole") && PROMISE_PLACE.includes("does not say it again"));
   const { promiseGap } = await import("../steps/mechanical.ts");
   const gap = promiseGap([s("main", [b("main-1", "You get a list.")])], social, promise);
-  assert(gap?.includes("at the turn, with the product's first mention") && !gap.includes("by the rehook"), gap ?? "");
+  assert(gap?.includes("with the product's first mention or right after it") && !gap.includes("by the rehook"), gap ?? "");
+});
+
+Deno.test("the promise's place, tightened: with the product's name or right after it (draft v27, revise v27), never the sentence before it", async () => {
+  const { draftPrompt: d27, PROMISE_PLACE, WRITER: W27 } = await import("../prompts/draft.v27.ts");
+  const { PROMISE_PLACE: P26 } = await import("../prompts/draft.v26.ts");
+  const { revisePrompt: r27 } = await import("../prompts/revise.v27.ts");
+  assertEquals([d27.version, r27.version], [27, 27]);
+  assert(PROMISE_PLACE.includes("never before the product is named") && PROMISE_PLACE.includes("\"This time\"") && !PROMISE_PLACE.includes("the sentence beside it"));
+  assert(W27.includes(PROMISE_PLACE) && !W27.includes(P26) && d27.system.includes(PROMISE_PLACE) && r27.system.startsWith(W27));
 });

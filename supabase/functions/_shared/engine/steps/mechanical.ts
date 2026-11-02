@@ -69,16 +69,17 @@ export function promiseGap(sections: Section[], spec: FormatSpec, promise: strin
     const hasHead = promiseOverlap(x, new Set([head])) > 0;
     if (n > best || (n === best && closest !== null && hasHead && !bestHead)) [closest, best, bestHead] = [x, n, hasHead];
   }
-  return `No sentence says the argument's promise ("${promise.trim()}") to the reader: say it as a sentence of its own at the turn, with the product's first mention or the sentence beside it, after the trouble is told whole, with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}.`;
+  return `No sentence says the argument's promise ("${promise.trim()}") to the reader: say it as a sentence of its own with the product's first mention or right after it, after the trouble is told whole, with every result it names (rule 8)${closest ? `; the closest line is "${closest}"` : ""}.`;
 }
 
 export const PROMISE_EARLY = "promise_early";
 
 /**
- * The promise's place (docs/04 rule 8): at the turn, in the block that first names the product or the one beside it,
- * after the trouble is told whole. A promise dropped early, with the piece going back to the trouble for a paragraph
- * or more before the product is named, reads as a contradiction (the trouble is solved, then it is not). The opening
- * block is exempt: a piece that opens on the promise says it there. Returns the note and the sentence, or null.
+ * The promise's place (docs/04 rule 8): with the product, in the block that first names it or the one right after,
+ * after the trouble is told whole. A promise before the product's name either sends the piece back to the trouble
+ * (the trouble is solved, then it is not) or has to speak of a time that has not come ("this time", "once you can
+ * see"). The opening block is exempt: a piece that opens on the promise says it there. Returns the note and the
+ * sentence, or null.
  */
 export function promiseEarly(sections: Section[], spec: FormatSpec, promise: string | null | undefined, names: string[] = []): { note: string; quote: string } | null {
   if (!promise?.trim() || spec.multi_item || spec.family === "message" || NO_PROMISE_FORMATS.has(spec.id)) return null;
@@ -97,11 +98,14 @@ export function promiseEarly(sections: Section[], spec: FormatSpec, promise: str
       if (hit) [promiseAt, quote] = [i, hit];
     }
   }
-  if (promiseAt <= 0 || productAt < 0 || promiseAt >= productAt - 1) return null;
+  if (promiseAt <= 0 || productAt < 0 || promiseAt >= productAt) return null;
   const between = productAt - promiseAt - 1;
+  const why = between > 0
+    ? `the piece goes back to the trouble for ${between} paragraph${between === 1 ? "" : "s"} before the product is named in paragraph ${productAt + 1}; read in order, the trouble is solved and then it is not`
+    : `the product is not named until paragraph ${productAt + 1}, so the promise has to speak of a time that has not come ("this time", "once you can see"), with nothing yet that makes it so`;
   return {
     quote,
-    note: `The promise ("${quote}") is said in paragraph ${promiseAt + 1}, and the piece goes back to the trouble for ${between} paragraph${between === 1 ? "" : "s"} before the product is named in paragraph ${productAt + 1}; read in order, the trouble is solved and then it is not. The promise belongs at the turn (rule 8): in the sentence that first names the product or the one beside it, after the trouble is told whole. Move it there, and let the paragraphs before it tell the trouble without it.`,
+    note: `The promise ("${quote}") is said in paragraph ${promiseAt + 1}, and ${why}. The promise belongs with the product (rule 8): in the sentence that names it, or the one right after, after the trouble is told whole. Move it there, and let the paragraphs before it tell the trouble without it.`,
   };
 }
 

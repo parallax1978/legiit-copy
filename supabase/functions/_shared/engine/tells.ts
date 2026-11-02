@@ -660,6 +660,13 @@ export const TELLS: TellRule[] = [
     fix: "A claim with a carrier.",
   },
   {
+    tier: 2, name: "announced_turn", weight: 2, scope: "paragraph", density_per_1000: 0,
+    regex: /(?:^|\n)\s*(?:This time|From now on|Now imagine|Imagine instead|But now|Instead,|Not anymore|Not this time|Never again)\b/g,
+    example: "This time you show him pages that rank and the customers they bring.",
+    fix: "The turn is the product's name, not a word that says things are about to change: name it, and say the result in the same breath.",
+    note: "A paragraph that opens by announcing the change (\"This time\", \"From now on\", \"But now\", \"Instead,\") before anything has been named that makes the change. The owner read one as a transition that did not feel right; the promise it carries belongs with the product (rule 8).",
+  },
+  {
     tier: 2, name: "even_rhythm", weight: 2, scope: "structural", density_per_1000: 0,
     regex: null,
     example: "23 sentences, all 6 to 25 words; none under five, none past twenty-five",
