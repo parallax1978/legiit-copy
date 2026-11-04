@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCard, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatId } from "@/lib/formats";
 import { REWRITE_FORMATS } from "@/lib/page-format";
-import { finishRewrite, getRewriteStatus, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
+import { finishRewrite, getRewriteStatus, MIN_PAGE_WORDS, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
 
 const POLL_MS = 3000;
 
@@ -20,6 +20,7 @@ const POLL_MS = 3000;
  */
 export function RewriteForm() {
   const [url, setUrl] = useState("");
+  const [text, setText] = useState("");
   const [offerId, setOfferId] = useState<string | null>(null);
   const [status, setStatus] = useState<RewriteStatus | null>(null);
   const [format, setFormat] = useState<FormatId | null>(null);
@@ -29,8 +30,10 @@ export function RewriteForm() {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reading = !!offerId && (!status || status.status === "extracting" || status.sourceStatus === "pending" || status.sourceStatus === "processing");
-  const failed = !!status && (status.sourceStatus === "failed" || (status.status !== "extracting" && status.words === 0));
+  const failed = !!status && !reading && (status.sourceStatus === "failed" || status.tooShort || !status.briefReady);
   const ready = !!status && !reading && !failed;
+  const pastedWords = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const canRead = pastedWords >= MIN_PAGE_WORDS || (!!url.trim() && pastedWords === 0);
 
   useEffect(() => {
     if (!offerId || !reading) return;
@@ -55,7 +58,7 @@ export function RewriteForm() {
   function read(e: React.FormEvent) {
     e.preventDefault();
     startTransition(async () => {
-      const r = await startRewrite({ url });
+      const r = await startRewrite({ url, text });
       if (!r.ok) {
         toast.error(r.error);
         return;
@@ -81,12 +84,18 @@ export function RewriteForm() {
       <form onSubmit={read} className="rounded-xl border border-line bg-surface p-5">
         <Label htmlFor="url">The page</Label>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-          <Input id="url" type="url" inputMode="url" placeholder="https://example.com/the-page" value={url} onChange={(e) => setUrl(e.target.value)} disabled={pending || reading} required />
-          <Button type="submit" disabled={pending || reading || !url.trim()} className="rounded-full">
+          <Input id="url" type="url" inputMode="url" placeholder="https://example.com/the-page" value={url} onChange={(e) => setUrl(e.target.value)} disabled={pending || reading} />
+          <Button type="submit" disabled={pending || reading || !canRead} className="rounded-full">
             {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />} {offerId ? "Read another" : "Read it"}
           </Button>
         </div>
-        <p className="mt-2 text-xs text-ink-muted">The page becomes an offer of its own: its facts go into a claims ledger with evidence grades, and its copy becomes the control the new piece has to beat.</p>
+        <div className="mt-3 space-y-1">
+          <Label htmlFor="pasted" className="text-ink-muted">Or paste the page&apos;s copy</Label>
+          <Textarea id="pasted" rows={4} value={text} onChange={(e) => setText(e.target.value)} disabled={pending || reading} placeholder="For a page the app cannot fetch (an app that draws itself in the browser, a page behind a login): select everything on the page, copy, paste here." className="font-mono text-xs" />
+          {pastedWords > 0 && pastedWords < MIN_PAGE_WORDS && <p className="text-xs text-ink-muted">{pastedWords} words so far; a page is at least {MIN_PAGE_WORDS}.</p>}
+          {pastedWords >= MIN_PAGE_WORDS && <p className="text-xs text-ink-muted">{pastedWords.toLocaleString()} words pasted. The paste is read instead of the address.</p>}
+        </div>
+        <p className="mt-3 text-xs text-ink-muted">The page becomes an offer of its own: its facts go into a claims ledger with evidence grades, and its copy becomes the control the new piece has to beat.</p>
       </form>
 
       {offerId && reading && (
@@ -98,8 +107,11 @@ export function RewriteForm() {
 
       {offerId && failed && status && (
         <div className="rounded-xl border border-line bg-surface p-4 text-sm">
-          <div className="font-medium text-ink">The page could not be read.</div>
-          <p className="mt-1 text-ink-muted">{status.error ?? "Nothing came back from that address."} You can paste the page&apos;s copy as a text source on <Link href={`/app/offers/${offerId}`} className="underline">its offer</Link> and write from there.</p>
+          <div className="font-medium text-ink">{status.tooShort ? `The page gave back only ${status.words} word${status.words === 1 ? "" : "s"}.` : "The page could not be read."}</div>
+          <p className="mt-1 text-ink-muted">
+            {status.error ?? (status.tooShort ? "It is probably an app that draws itself in the browser, or a page behind a login, so the fetch saw none of its copy." : "The reader could not build a brief from what came back.")} Open the page, select everything, copy it, paste it in the box above and read it again.
+            {" "}The empty offer it made is <Link href={`/app/offers/${offerId}`} className="underline">here</Link> if you want to delete it.
+          </p>
         </div>
       )}
 
