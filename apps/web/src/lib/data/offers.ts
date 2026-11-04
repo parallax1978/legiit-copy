@@ -149,7 +149,7 @@ export async function listRewrites(workspaceId: string, limit = 12): Promise<Rew
   const supabase = await createClient();
   const base = () => supabase.from("offers").select("id, name, status, setup, created_at").eq("workspace_id", workspaceId).neq("status", "archived").order("created_at", { ascending: false }).limit(limit);
   // the marker names a page started since it existed; a page started before it is known by the name the flow gave the offer
-  const [marked, named] = await Promise.all([base().not("setup->rewrite", "is", null), base().or("name.ilike.* page,name.eq.Pasted page")]);
+  const [marked, named] = await Promise.all([base().not("setup->rewrite", "is", null), base().or("name.ilike.*page,name.eq.Pasted page")]);
   if (marked.error) throw new Error(marked.error.message);
   if (named.error) throw new Error(named.error.message);
   const seen = new Set<string>();
