@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { pageWords } from "@/lib/page-format";
-import { rewriteOf } from "@/lib/rewrite-marker";
+import { legacyRewrite, rewriteOf, type RewriteMarker } from "@/lib/rewrite-marker";
 import type {
   OfferRow,
   OfferSourceRow,
@@ -147,23 +147,26 @@ export interface RewriteListItem {
 /** The pages a workspace started rewriting, newest first: read, being read, or written already (with the piece). */
 export async function listRewrites(workspaceId: string, limit = 12): Promise<RewriteListItem[]> {
   const supabase = await createClient();
-  const { data: offers, error } = await supabase
-    .from("offers")
-    .select("id, name, status, setup, created_at")
-    .eq("workspace_id", workspaceId)
-    .neq("status", "archived")
-    .not("setup->rewrite", "is", null)
-    .order("created_at", { ascending: false })
-    .limit(limit);
-  if (error) throw new Error(error.message);
-  const rows = (offers ?? []).map((o) => ({ o, marker: rewriteOf(o.setup) })).filter((x) => x.marker);
-  if (!rows.length) return [];
-  const ids = rows.map((x) => x.o.id);
+  const base = () => supabase.from("offers").select("id, name, status, setup, created_at").eq("workspace_id", workspaceId).neq("status", "archived").order("created_at", { ascending: false }).limit(limit);
+  // the marker names a page started since it existed; a page started before it is known by the name the flow gave the offer
+  const [marked, named] = await Promise.all([base().not("setup->rewrite", "is", null), base().or("name.ilike.* page,name.eq.Pasted page")]);
+  if (marked.error) throw new Error(marked.error.message);
+  if (named.error) throw new Error(named.error.message);
+  const seen = new Set<string>();
+  const candidates = [...(marked.data ?? []), ...(named.data ?? [])].filter((o) => (seen.has(o.id) ? false : (seen.add(o.id), true)));
+  if (!candidates.length) return [];
+  const ids = candidates.map((o) => o.id);
   const [{ data: sources }, { data: gens }] = await Promise.all([
-    supabase.from("offer_sources").select("offer_id, extraction_status, extracted_text").in("offer_id", ids),
+    supabase.from("offer_sources").select("offer_id, kind, url, extraction_status, extracted_text, created_at").in("offer_id", ids).order("created_at"),
     supabase.from("generations").select("id, offer_id, status, created_at").in("offer_id", ids).not("options->>control_text", "is", null).order("created_at", { ascending: false }),
   ]);
-  return rows.map(({ o, marker }) => {
+  const rows = candidates.flatMap((o) => {
+    const firstUrl = (sources ?? []).find((s) => s.offer_id === o.id && s.kind === "url" && s.url)?.url ?? null;
+    const marker: RewriteMarker | null = rewriteOf(o.setup) ?? (legacyRewrite(o.name, firstUrl) ? { url: firstUrl, pasted: !firstUrl, started_at: o.created_at } : null);
+    return marker ? [{ o, marker }] : [];
+  });
+  rows.sort((a, b) => Date.parse(b.marker.started_at || b.o.created_at) - Date.parse(a.marker.started_at || a.o.created_at));
+  return rows.slice(0, limit).map(({ o, marker }) => {
     const mine = (sources ?? []).filter((s) => s.offer_id === o.id);
     const best = mine.reduce<{ extraction_status: string; extracted_text: string | null } | null>((b, s) => (!b || (s.extracted_text?.length ?? 0) > (b.extracted_text?.length ?? 0) ? s : b), null);
     const busy = mine.find((s) => s.extraction_status === "pending" || s.extraction_status === "processing");
@@ -171,9 +174,9 @@ export async function listRewrites(workspaceId: string, limit = 12): Promise<Rew
     return {
       offerId: o.id,
       name: o.name,
-      url: marker!.url,
-      pasted: marker!.pasted,
-      startedAt: marker!.started_at || o.created_at,
+      url: marker.url,
+      pasted: marker.pasted,
+      startedAt: marker.started_at || o.created_at,
       offerStatus: o.status,
       sourceStatus: busy ? busy.extraction_status : best?.extraction_status ?? "pending",
       words: pageWords(best?.extracted_text ?? ""),
