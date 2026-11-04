@@ -32,7 +32,15 @@ function hostOf(url: string): string {
 
 const StartInput = z.object({ url: z.string().trim().default(""), text: z.string().trim().max(400_000).default("") });
 
-/** Step 1: create the offer for this page and start reading it, from its address or from its copy pasted. Returns the offer id to poll. */
+/** The browser read's share of the action's minute: the launch, the load and the read, leaving room for the brief to start. */
+const RENDER_BUDGET_MS = 38_000;
+
+/**
+ * Step 1: create the offer for this page and read it, from its address or from its copy pasted. A page from its address
+ * is opened in a headless browser here, in this call, and read as a reader sees it (an app that draws itself, a page
+ * that fades its sections in, a plain page: one path for all of them); the plain fetch is the fallback when the
+ * browser could not open it. Returns the offer id to poll.
+ */
 export async function startRewrite(raw: { url?: string; text?: string }): Promise<ActionResult<{ offerId: string }>> {
   const parsed = StartInput.safeParse(raw);
   if (!parsed.success) return fail("Paste the page's address, or its copy.");
@@ -45,12 +53,42 @@ export async function startRewrite(raw: { url?: string; text?: string }): Promis
   const name = url ? `${hostOf(url)} page` : "Pasted page";
   const created = await createOffer({ firstUrl: url || undefined, name });
   if (!created.ok) return created;
-  const marked = await markRewrite(created.data.offerId, { url: url || null, pasted });
+  const offerId = created.data.offerId;
+  const marked = await markRewrite(offerId, { url: url || null, pasted });
   if (!marked.ok) return marked;
-  // the pasted copy is the source when it is given: a page the fetch cannot read is read from the paste
-  const added = await addOfferSources({ offerId: created.data.offerId, urls: pasted ? [] : [url], files: [], text: pasted ? text : "" });
+  if (!pasted) {
+    const read = await readPageIntoOffer(offerId, url);
+    if (read.ok) return { ok: true, data: { offerId } };
+    console.warn(`browser read of ${url} fell back to the fetch: ${read.error}`);
+  }
+  // the pasted copy is the source when it is given; a page the browser could not open goes to the plain fetch
+  const added = await addOfferSources({ offerId, urls: pasted ? [] : [url], files: [], text: pasted ? text : "" });
   if (!added.ok) return added;
-  return { ok: true, data: { offerId: created.data.offerId } };
+  return { ok: true, data: { offerId } };
+}
+
+/** Opens the page in the headless browser and stores what it read as the offer's source, then starts the brief. */
+async function readPageIntoOffer(offerId: string, url: string): Promise<Done> {
+  const { workspace } = await requireWorkspace();
+  const supabase = await createClient();
+  let page;
+  try {
+    page = await renderPage(url, RENDER_BUDGET_MS);
+  } catch (e) {
+    return fail(e instanceof Error ? e.message : String(e));
+  }
+  const words = pageWords(page.text);
+  if (words < MIN_PAGE_WORDS) return fail(`the browser read only ${words} word${words === 1 ? "" : "s"}`);
+  const { data: inserted, error } = await supabase
+    .from("offer_sources")
+    .insert({ offer_id: offerId, workspace_id: workspace.id, kind: "text", url, title: page.title || hostOf(url), extracted_text: page.text })
+    .select("id")
+    .single();
+  if (error) return fail(error.message);
+  await supabase.from("offers").update({ status: "extracting" }).eq("id", offerId);
+  const { error: fnError } = await supabase.functions.invoke("ingest-source", { body: { source_id: inserted.id, run_extraction: true } });
+  if (fnError) return fail(`the page was read but the brief could not be started: ${fnError.message}`);
+  return { ok: true };
 }
 
 export interface RewriteStatus {

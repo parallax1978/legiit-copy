@@ -120,7 +120,7 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <Input id="url" type="url" inputMode="url" placeholder="https://example.com/the-page" value={url} onChange={(e) => setUrl(e.target.value)} disabled={pending || reading} />
           <Button type="submit" disabled={pending || reading || !canRead} className="rounded-full">
-            {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />} {offerId ? "Read another" : "Read it"}
+            {pending || reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />} {pending ? "Opening the page" : offerId ? "Read another" : "Read it"}
           </Button>
         </div>
         <div className="mt-3 space-y-1">
@@ -129,7 +129,7 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
           {pastedWords > 0 && pastedWords < MIN_PAGE_WORDS && <p className="text-xs text-ink-muted">{pastedWords} words so far; a page is at least {MIN_PAGE_WORDS}.</p>}
           {pastedWords >= MIN_PAGE_WORDS && <p className="text-xs text-ink-muted">{pastedWords.toLocaleString()} words pasted. The paste is read instead of the address.</p>}
         </div>
-        <p className="mt-3 text-xs text-ink-muted">The page becomes an offer of its own: its facts go into a claims ledger with evidence grades, and its copy becomes the control the new piece has to beat.</p>
+        <p className="mt-3 text-xs text-ink-muted">The page is opened in a browser and read as a reader sees it, which takes up to a minute. It becomes an offer of its own: its facts go into a claims ledger with evidence grades, and its copy becomes the control the new piece has to beat.</p>
       </form>
 
       {offerId && reading && (
