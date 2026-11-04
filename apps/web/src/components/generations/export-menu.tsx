@@ -60,7 +60,9 @@ export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props)
       const r = await handoffForClaude(draftId);
       toast.dismiss(waiting);
       if (!r.ok) {
-        toast.error(r.error);
+        // the placement could not run (the engine not yet updated, a model error): the message still goes out, matched by role
+        await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), controlText));
+        toast.message("Copied, matched by role and order rather than exact placement.", { description: r.error });
         return;
       }
       await navigator.clipboard.writeText(r.text);
