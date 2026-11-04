@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
-import { Package, FileText, Activity, Receipt, Plus, PenLine, CheckCircle2 } from "lucide-react";
+import { Package, FileText, Activity, Receipt, Plus, PenLine, CheckCircle2, Globe } from "lucide-react";
 import { requireWorkspace, getUser, canEdit } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getDashboardData, formatInt } from "@/lib/data/dashboard";
@@ -43,6 +43,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           editor ? (
             <>
               <Button asChild variant="outline" className="rounded-full"><Link href="/app/offers/new"><Plus className="h-4 w-4" /> New offer</Link></Button>
+              <Button asChild variant="outline" className="rounded-full"><Link href="/app/rewrite"><Globe className="h-4 w-4" /> Rewrite a page</Link></Button>
               <Button asChild className="rounded-full shadow-glow"><Link href="/app/generations/new"><PenLine className="h-4 w-4" /> Write copy</Link></Button>
             </>
           ) : undefined

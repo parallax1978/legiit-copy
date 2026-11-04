@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Globe } from "lucide-react";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { listGenerations, listOfferOptions } from "@/lib/data/generations";
 import { allFormatCards } from "@/lib/formats";
@@ -32,9 +32,14 @@ export default async function GenerationsPage({ searchParams }: { searchParams: 
         description="Every piece of copy written from your offers, with its argument, reviews and versions."
         actions={
           editor ? (
-            <Button asChild className="rounded-full shadow-glow">
-              <Link href="/app/generations/new"><Plus className="h-4 w-4" /> New copy</Link>
-            </Button>
+            <>
+              <Button asChild variant="outline" className="rounded-full">
+                <Link href="/app/rewrite"><Globe className="h-4 w-4" /> Rewrite a page</Link>
+              </Button>
+              <Button asChild className="rounded-full shadow-glow">
+                <Link href="/app/generations/new"><Plus className="h-4 w-4" /> New copy</Link>
+              </Button>
+            </>
           ) : null
         }
       />

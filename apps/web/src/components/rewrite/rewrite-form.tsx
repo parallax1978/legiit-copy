@@ -1,0 +1,161 @@
+"use client";
+import { useEffect, useRef, useState, useTransition } from "react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { ArrowRight, Check, Globe, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { formatCard, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatId } from "@/lib/formats";
+import { REWRITE_FORMATS } from "@/lib/page-format";
+import { finishRewrite, getRewriteStatus, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
+
+const POLL_MS = 3000;
+
+/**
+ * Paste a URL, the app reads the page into an offer of its own and builds the brief from it, you confirm what kind
+ * of page it is, and the piece is written with the original as the control the copy chief predicts against.
+ */
+export function RewriteForm() {
+  const [url, setUrl] = useState("");
+  const [offerId, setOfferId] = useState<string | null>(null);
+  const [status, setStatus] = useState<RewriteStatus | null>(null);
+  const [format, setFormat] = useState<FormatId | null>(null);
+  const [manner, setManner] = useState("engine");
+  const [purpose, setPurpose] = useState("");
+  const [pending, startTransition] = useTransition();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const reading = !!offerId && (!status || status.status === "extracting" || status.sourceStatus === "pending" || status.sourceStatus === "processing");
+  const failed = !!status && (status.sourceStatus === "failed" || (status.status !== "extracting" && status.words === 0));
+  const ready = !!status && !reading && !failed;
+
+  useEffect(() => {
+    if (!offerId || !reading) return;
+    let stopped = false;
+    const tick = async () => {
+      const r = await getRewriteStatus(offerId);
+      if (stopped) return;
+      if (r.ok) {
+        setStatus(r.data);
+        if (r.data.guess && !format) setFormat(r.data.guess);
+      } else toast.error(r.error);
+      timer.current = setTimeout(tick, POLL_MS);
+    };
+    timer.current = setTimeout(tick, 1200);
+    return () => {
+      stopped = true;
+      if (timer.current) clearTimeout(timer.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offerId, reading]);
+
+  function read(e: React.FormEvent) {
+    e.preventDefault();
+    startTransition(async () => {
+      const r = await startRewrite({ url });
+      if (!r.ok) {
+        toast.error(r.error);
+        return;
+      }
+      setStatus(null);
+      setFormat(null);
+      setOfferId(r.data.offerId);
+    });
+  }
+
+  function write() {
+    if (!offerId || !format) return;
+    startTransition(async () => {
+      const r = await finishRewrite({ offerId, format, manner: isMannerId(manner) ? manner : "", purpose });
+      if (r && !r.ok) toast.error(r.error);
+    });
+  }
+
+  const card = format ? formatCard(format) : null;
+
+  return (
+    <div className="space-y-6">
+      <form onSubmit={read} className="rounded-xl border border-line bg-surface p-5">
+        <Label htmlFor="url">The page</Label>
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+          <Input id="url" type="url" inputMode="url" placeholder="https://example.com/the-page" value={url} onChange={(e) => setUrl(e.target.value)} disabled={pending || reading} required />
+          <Button type="submit" disabled={pending || reading || !url.trim()} className="rounded-full">
+            {reading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Globe className="h-4 w-4" />} {offerId ? "Read another" : "Read it"}
+          </Button>
+        </div>
+        <p className="mt-2 text-xs text-ink-muted">The page becomes an offer of its own: its facts go into a claims ledger with evidence grades, and its copy becomes the control the new piece has to beat.</p>
+      </form>
+
+      {offerId && reading && (
+        <div className="flex items-center gap-3 rounded-xl border border-line bg-surface-alt p-4 text-sm text-ink-muted">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span>{status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
+        </div>
+      )}
+
+      {offerId && failed && status && (
+        <div className="rounded-xl border border-line bg-surface p-4 text-sm">
+          <div className="font-medium text-ink">The page could not be read.</div>
+          <p className="mt-1 text-ink-muted">{status.error ?? "Nothing came back from that address."} You can paste the page&apos;s copy as a text source on <Link href={`/app/offers/${offerId}`} className="underline">its offer</Link> and write from there.</p>
+        </div>
+      )}
+
+      {offerId && ready && status && (
+        <div className="space-y-5 rounded-xl border border-line bg-surface p-5">
+          <div>
+            <div className="flex items-center gap-2 text-sm font-medium text-ink"><Check className="h-4 w-4 text-brand" /> Read: {status.title ?? status.url}</div>
+            <p className="mt-1 text-xs text-ink-muted">{status.words.toLocaleString()} words. {status.excerpt && <span className="italic">&ldquo;{status.excerpt}&hellip;&rdquo;</span>}</p>
+            {status.openQuestions > 0 && (
+              <p className="mt-2 text-xs text-ink-muted">
+                The reader found {status.openQuestions} question{status.openQuestions === 1 ? "" : "s"} it could not answer from the page. The piece pauses at those until you answer them on <Link href={`/app/offers/${offerId}`} className="underline">the offer page</Link>, now or when it asks.
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>What kind of page it is</Label>
+              <Select value={format ?? ""} onValueChange={(v) => isFormatId(v) && setFormat(v)}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Pick the page type" /></SelectTrigger>
+                <SelectContent>
+                  {REWRITE_FORMATS.map((id) => (
+                    <SelectItem key={id} value={id}>{formatCard(id).name}{status.guess === id ? " (the app's guess)" : ""}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {card && <p className="text-xs text-ink-muted">{card.description}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label>Written like</Label>
+              <Select value={manner} onValueChange={(v) => (v === "engine" || isMannerId(v)) && setManner(v)}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engine">Engine picks{format ? ` (${defaultMannerName(format)})` : ""}</SelectItem>
+                  {MANNER_OPTIONS.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-ink-muted">{manner === "engine" ? "One master's way in, shape of proof and voice for the whole piece." : MANNER_OPTIONS.find((m) => m.id === manner)?.description ?? ""}</p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="purpose">Anything the new page must do differently (optional)</Label>
+            <Textarea id="purpose" rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Sell the annual plan, not the monthly. Keep the guarantee wording." />
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs text-ink-muted">The copy chief judges the new piece against the page as it is now and says whether it beats it.</p>
+            <Button onClick={write} disabled={pending || !format} className="rounded-full shadow-glow">
+              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />} Rewrite it
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
