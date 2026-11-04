@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   experimental: { externalDir: true },
   // Deno-only modules must never reach the browser bundle. The alias points at plain files only.
   serverExternalPackages: ["@anthropic-ai/sdk", "@sparticuz/chromium", "puppeteer-core"],
+  // the serverless Chromium build ships its binary as files the tracer cannot see: include them where the browser runs
+  outputFileTracingIncludes: {
+    "/app/rewrite": ["./node_modules/@sparticuz/chromium/bin/**"],
+    "/api/render-check": ["./node_modules/@sparticuz/chromium/bin/**"],
+  },
   typescript: { ignoreBuildErrors: false },
   images: { remotePatterns: [] },
   async headers() {
