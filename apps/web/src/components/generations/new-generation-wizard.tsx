@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { formatCardsByFamily, SEQUENCE_TYPES, LENGTH_OPTIONS, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatCard, type FormatId } from "@/lib/formats";
+import { AWARENESS_OPTIONS, awarenessFromPurpose, isAwareness } from "@/lib/awareness";
 import { type OfferOption, type GenerationInputValues } from "@/lib/data/generations";
 import type { CreateGenerationInput } from "@/lib/actions/generations";
 import { createGeneration } from "@/lib/actions/generations";
@@ -31,6 +32,9 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
   const [offerId, setOfferId] = useState<string | null>(initialOfferId && offers.some((o) => o.id === initialOfferId) ? initialOfferId : offers.length === 1 ? offers[0].id : null);
   const [format, setFormat] = useState<FormatId | null>(initialFormat && isFormatId(initialFormat) ? initialFormat : null);
   const [purpose, setPurpose] = useState(initial?.purpose ?? "");
+  const [awareness, setAwareness] = useState<string>(initial?.awareness && isAwareness(initial.awareness) ? initial.awareness : "engine");
+  const [awarenessTouched, setAwarenessTouched] = useState(!!initial?.awareness);
+  const awarenessShown = awarenessTouched ? awareness : awarenessFromPurpose(purpose) ?? "engine";
   const [length, setLength] = useState<"shorter" | "standard" | "longer">(initial?.length ?? "standard");
   const [cta, setCta] = useState(initial?.cta ?? "");
   const [deadline, setDeadline] = useState(initial?.deadline ?? "");
@@ -64,6 +68,7 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
       sequence_type: format === "email_sequence" ? sequenceType : "",
       control_text: controlText,
       manner: manner === "engine" ? "" : isMannerId(manner) ? manner : "",
+      awareness: isAwareness(awarenessShown) ? awarenessShown : "",
       skip_offer: skipOffer,
       voice_profile_id: voiceProfileId === "none" ? null : voiceProfileId,
     };
@@ -164,7 +169,19 @@ export function NewGenerationWizard({ offers, voiceProfiles, initialOfferId, ini
             <div className="space-y-2">
               <Label htmlFor="purpose">Purpose</Label>
               <Textarea id="purpose" value={purpose} onChange={(e) => setPurpose(e.target.value)} rows={3} placeholder="What this piece has to do, for whom, where it runs. Example: launch email to the warm list, three days before cart close." />
-              <p className="text-xs text-ink-muted">Plain words. The engine turns this into a job for each section.</p>
+              <p className="text-xs text-ink-muted">Plain words. The engine turns this into a job for each section, and the copy chief keeps what you ask it to stress.</p>
+            </div>
+            <div className="space-y-2">
+              <Label>Who lands on it</Label>
+              <Select value={awarenessShown} onValueChange={(v) => { setAwareness(v); setAwarenessTouched(true); }}>
+                <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {AWARENESS_OPTIONS.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-ink-muted">{AWARENESS_OPTIONS.find((a) => a.id === awarenessShown)?.hint}{!awarenessTouched && awarenessFromPurpose(purpose) ? " Set from the purpose; change it if that is wrong." : ""}</p>
             </div>
             {format === "email_sequence" && (
               <div className="space-y-2">

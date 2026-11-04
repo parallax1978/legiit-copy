@@ -131,8 +131,16 @@ export function verifyDoNotTouch(doNotTouch: string[], before: Section[], after:
 }
 
 /** Which segment this piece is for, and its diagnosed awareness. */
-export function targetAwareness(dossier: Dossier | null, options: GenerationOptions): { awareness: Awareness; segment: string | null; source: "option" | "dossier" | "none" } {
+/** The user said the piece is a sale, a deal or a launch price: its reader came for the deal and is most aware (docs/04 Section 3). */
+export const SALE_WORDS = /\b(black friday|cyber monday|flash sale|sale|discount(?:ed|s)?|promo(?:tion)?|coupon|deal|launch (?:price|offer)|price drop|limited.time offer|special offer)\b/i;
+export function awarenessFromPurpose(purpose: string | null | undefined): Awareness | null {
+  return purpose && SALE_WORDS.test(purpose) ? "most_aware" : null;
+}
+
+export function targetAwareness(dossier: Dossier | null, options: GenerationOptions): { awareness: Awareness; segment: string | null; source: "option" | "purpose" | "dossier" | "none" } {
   if (options.awareness) return { awareness: options.awareness, segment: options.segment ?? options.traffic ?? null, source: "option" };
+  const fromPurpose = awarenessFromPurpose(options.purpose);
+  if (fromPurpose) return { awareness: fromPurpose, segment: options.segment ?? options.traffic ?? null, source: "purpose" };
   const segs = dossier?.awareness_by_segment ?? [];
   if (segs.length === 0) return { awareness: "unknown", segment: null, source: "none" };
   const byLabel = options.segment ? segs.find((s) => s.label.toLowerCase() === options.segment!.toLowerCase()) : undefined;

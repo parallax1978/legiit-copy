@@ -9,6 +9,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { FORMAT_IDS, MANNER_IDS } from "@/lib/formats";
+import { AWARENESS_IDS } from "@/lib/awareness";
 import { guessPageFormat, MIN_PAGE_WORDS, pageExcerpt, pageWords } from "@/lib/page-format";
 import { createOffer, addOfferSources, markRewrite } from "./offers";
 import { renderPage } from "@/lib/render-page";
@@ -178,6 +179,7 @@ const FinishInput = z.object({
   offerId: z.string().uuid(),
   format: z.enum(FORMAT_IDS),
   manner: z.enum(["", ...MANNER_IDS]).optional().default(""),
+  awareness: z.enum(["", ...AWARENESS_IDS]).optional().default(""),
   purpose: z.string().trim().max(2000).optional().default(""),
 });
 
@@ -207,6 +209,7 @@ export async function finishRewrite(raw: z.input<typeof FinishInput>): Promise<D
     purpose: input.purpose || `Rewrite the page at ${url} so it beats the page that is there now: the same offer, to the same reader, doing the same job. The original is the control.`,
     control_text: source.extracted_text.trim().slice(0, CONTROL_MAX),
     manner: input.manner,
+    awareness: input.awareness,
     skip_offer: true,
   });
 }

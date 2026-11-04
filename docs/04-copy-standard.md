@@ -159,6 +159,8 @@ Must not: feature list as offer; fabricated stack values; apology at the price; 
 
 Posture: predict whether a skeptical stranger sends money and keeps it. Review against a control or the strongest competitor promotion. Stop at the first fatal defect. Never average.
 
+The piece's job, in the user's words, binds the review. When the user asked the piece to stress a thing (a sale, a deadline, a price, a name, a bonus), a note may sharpen how and where it is said, never cut it, soften it or move it under the fold. The awareness the user set decides the lead, and the reader of a sale page is most aware: the deal, with its price, its former price and its deadline, is the headline (Section 3). The gates still hold: a claim the ledger does not support is flagged for the user's decision, never removed.
+
 Before step 1, the draft has passed the tell edit (Section 7.1); the reviewers read the edited copy.
 
 Step 1, cold read, on a different model with no brief, memo or ledger. Read the skim path alone (headline, deck, crossheads, bold, captions, P.S., order form) and report what is sold, to whom, for how much, and why believe it. Then read the full draft once, fast; report where attention dropped, the one claim you disbelieve, and the promise in one sentence.

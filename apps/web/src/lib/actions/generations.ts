@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { FORMAT_IDS, MANNER_IDS } from "@/lib/formats";
 import { settingsToInput, type GenerationOptions, type DraftRow } from "@/lib/data/generations";
+import { AWARENESS_IDS } from "@/lib/awareness";
 import type { Json } from "@/lib/supabase/database.types";
 import { initialSteps } from "@engine/pipeline.ts";
 import { stripNeverTells } from "@engine/draft/never_tells.ts";
@@ -32,6 +33,8 @@ const CreateInput = z.object({
   sequence_type: z.string().trim().max(60).optional().default(""),
   control_text: z.string().trim().max(60000).optional().default(""),
   manner: z.enum(["", ...MANNER_IDS]).optional().default(""),
+  /** who lands on the piece; blank lets the research decide (a sale in the purpose counts as most aware either way) */
+  awareness: z.enum(["", ...AWARENESS_IDS]).optional().default(""),
   skip_offer: z.boolean().optional().default(false),
   voice_profile_id: z.string().uuid().nullable().optional().default(null),
 });
@@ -73,6 +76,7 @@ export async function createGeneration(raw: CreateGenerationInput): Promise<Acti
     sequence_type: input.format === "email_sequence" ? input.sequence_type || undefined : undefined,
     control_text: input.control_text || undefined,
     manner: input.manner || undefined,
+    awareness: input.awareness || undefined,
     skip_offer: input.skip_offer || undefined,
   };
   const step_order = initialSteps({ hasActiveResearch: !!research, hasApprovedOffer: !!variant, skipOffer: input.skip_offer });

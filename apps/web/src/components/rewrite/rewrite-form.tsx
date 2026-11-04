@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCard, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatId } from "@/lib/formats";
 import { MIN_PAGE_WORDS, REWRITE_FORMATS } from "@/lib/page-format";
+import { AWARENESS_OPTIONS, awarenessFromPurpose, isAwareness } from "@/lib/awareness";
 import { finishRewrite, getRewriteStatus, readRenderedPage, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
 
 const POLL_MS = 3000;
@@ -29,6 +30,10 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
   const [format, setFormat] = useState<FormatId | null>(null);
   const [manner, setManner] = useState("engine");
   const [purpose, setPurpose] = useState("");
+  const [awareness, setAwareness] = useState("engine");
+  const [awarenessTouched, setAwarenessTouched] = useState(false);
+  // a purpose that says sale, deal or Black Friday puts the reader at the deal: the choice follows it until the user sets one
+  const awarenessShown = awarenessTouched ? awareness : awarenessFromPurpose(purpose) ?? "engine";
   const [pending, startTransition] = useTransition();
   const [browser, setBrowser] = useState<"idle" | "opening" | "done" | "failed">("idle");
   const [browserError, setBrowserError] = useState<string | null>(null);
@@ -106,7 +111,7 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
   function write() {
     if (!offerId || !format) return;
     startTransition(async () => {
-      const r = await finishRewrite({ offerId, format, manner: isMannerId(manner) ? manner : "", purpose });
+      const r = await finishRewrite({ offerId, format, manner: isMannerId(manner) ? manner : "", awareness: isAwareness(awarenessShown) ? awarenessShown : "", purpose });
       if (r && !r.ok) toast.error(r.error);
     });
   }
@@ -191,7 +196,20 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
 
           <div className="space-y-2">
             <Label htmlFor="purpose">Anything the new page must do differently (optional)</Label>
-            <Textarea id="purpose" rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Sell the annual plan, not the monthly. Keep the guarantee wording." />
+            <Textarea id="purpose" rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Sell the annual plan, not the monthly. Keep the guarantee wording. Say it is a Black Friday price, not the normal one." />
+            <p className="text-xs text-ink-muted">What you write here binds the writer and the copy chief: a thing you ask the page to stress stays in, at full strength.</p>
+          </div>
+          <div className="space-y-2">
+            <Label>Who lands on this page</Label>
+            <Select value={awarenessShown} onValueChange={(v) => { setAwareness(v); setAwarenessTouched(true); }}>
+              <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {AWARENESS_OPTIONS.map((a) => (
+                  <SelectItem key={a.id} value={a.id}>{a.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-ink-muted">{AWARENESS_OPTIONS.find((a) => a.id === awarenessShown)?.hint}{!awarenessTouched && awarenessFromPurpose(purpose) ? " Set from what you wrote above; change it if that is wrong." : ""}</p>
           </div>
 
           <div className="flex items-center justify-between gap-3">

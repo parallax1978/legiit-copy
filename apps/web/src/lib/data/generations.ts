@@ -26,6 +26,8 @@ export interface GenerationOptions {
   control_text?: string;
   /** The master the piece is written like (engine prompts/manners.ts); absent lets the engine pick the format's default. */
   manner?: string;
+  /** the reader's awareness the user set; absent lets the research decide */
+  awareness?: string;
   skip_offer?: boolean;
   exclude_angle_ids?: string[];
 }
@@ -197,6 +199,7 @@ export interface GenerationInputValues {
   sequence_type: string;
   control_text: string;
   manner: string;
+  awareness: string;
   skip_offer: boolean;
   voice_profile_id: string | null;
 }
@@ -215,6 +218,7 @@ export function settingsToInput(s: { offer_id: string; format: string; purpose: 
     sequence_type: o.sequence_type ?? "",
     control_text: o.control_text ?? "",
     manner: o.manner ?? "",
+    awareness: o.awareness ?? "",
     skip_offer: !!o.skip_offer,
     voice_profile_id: s.voice_profile_id ?? null,
   };

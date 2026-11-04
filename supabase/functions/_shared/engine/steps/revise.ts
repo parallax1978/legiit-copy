@@ -5,12 +5,13 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
-import { revisePrompt, type ReviseArgs } from "../prompts/revise.v29.ts";
+import { revisePrompt, type ReviseArgs } from "../prompts/revise.v30.ts";
 import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
 import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
 import { leadSectionId } from "../draft/plan.ts";
 import { callStep, latestDraftOutput, stepOutput } from "../draft/step_util.ts";
+import { parseOptions } from "../draft/options.ts";
 import { promiseStems } from "../draft/tell_edit.ts";
 import { Candidate } from "../schemas/argument.ts";
 
@@ -42,7 +43,8 @@ export const reviseStep: StepFn = async (ctx) => {
   const known = knownClaimIds(usableClaims(ctx.claims)); // a dropped row may not be cited by the revision either
   await ctx.progress(`Revision ${cycle}: ${editorial?.one_thing ? "the one thing, " : ""}${factualPending.length} factual rewrite(s), ${tier01.length} Tier 0/1 tell(s), ${reread.length} sentence(s) read twice, ${doNotTouch.length} DO NOT TOUCH line(s)`);
 
-  const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, retryNote: null };
+  const options = parseOptions(ctx.generation.options);
+  const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, purpose: options.purpose ?? null, instructions: options.instructions ?? null, retryNote: null };
   const run = async (retryNote: string | null) => {
     const res = await callStep(ctx, "revise", revisePrompt, { ...args, retryNote }, RevisionOutput, `revise ${cycle}${retryNote ? " (retry)" : ""}`);
     const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise, { productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null });

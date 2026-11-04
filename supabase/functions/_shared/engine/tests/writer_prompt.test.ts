@@ -2,7 +2,7 @@
  * The writer's prompt (draft v19, revise v19): short, in the register of the copy it asks for, with whole exemplars
  * the detector passes, the material said plainly once, the facts deduped, short pieces written whole.
  */
-import { assert, assertEquals } from "@std/assert";
+import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import { draftPrompt, NEVER, WRITER, writerTells, type DraftArgs } from "../prompts/draft.v19.ts";
 import { revisePrompt } from "../prompts/revise.v19.ts";
 import { OWNER_TELLS } from "../prompts/standard.ts";
@@ -444,4 +444,24 @@ Deno.test("every sentence earns its place (rule 40): no truism, no setup sentenc
   assert(c7.system !== c6.system && c7.system.includes("told you nothing you did not already know and stood there only to set up the next one") && c7.system.includes("hunt for the point") && c7.system.includes("for a sentence that told you nothing, the point it was reaching for with the thing named in it"), "the cold read's reread rule");
   const { RULES } = await import("../prompts/standard.ts");
   assert(RULES.includes("Every sentence tells him something he did not know a second ago") && RULES.includes("hunt for the point of"), "rule 40 carries it");
+});
+
+Deno.test("the piece's job binds the review: editorial v28 and revise v30 carry the user's words; a sale page's reader is most aware", async () => {
+  const { editorialPrompt: e28, pieceJob } = await import("../prompts/editorial.v28.ts");
+  const { revisePrompt: r30, PIECE_JOB_RULE } = await import("../prompts/revise.v30.ts");
+  const { COPY_CHIEF_RUBRIC } = await import("../prompts/standard.ts");
+  const { awarenessFromPurpose, targetAwareness } = await import("../draft/ledger.ts");
+  assertEquals([e28.version, r30.version], [28, 30]);
+  assert(COPY_CHIEF_RUBRIC.includes("The piece's job, in the user's words, binds the review."));
+  assert(e28.system.includes("binds the review"));
+  assert(r30.system.includes(PIECE_JOB_RULE));
+  const withJob = pieceJob({ purpose: "Emphasize that this is a Black Friday sale and not the normal price.", instructions: "Keep the guarantee wording." });
+  assertStringIncludes(withJob, "THE PIECE'S JOB, IN THE USER'S WORDS");
+  assertStringIncludes(withJob, "Purpose: Emphasize that this is a Black Friday sale");
+  assertStringIncludes(withJob, "Instructions: Keep the guarantee wording.");
+  assertEquals(pieceJob({ purpose: null, instructions: "  " }), "");
+  assertEquals(awarenessFromPurpose("Emphasize that this is a Black Friday sale and discount"), "most_aware");
+  assertEquals(awarenessFromPurpose("Keep the same plan and promise, better copy"), null);
+  assertEquals(targetAwareness(null, { purpose: "A Black Friday deal for business owners" } as never).awareness, "most_aware");
+  assertEquals(targetAwareness(null, { purpose: "A Black Friday deal", awareness: "problem_aware" } as never).awareness, "problem_aware", "the user's own setting wins");
 });
