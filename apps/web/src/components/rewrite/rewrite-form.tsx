@@ -35,7 +35,7 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const opening = browser === "opening";
-  const reading = !!offerId && (opening || !status || status.status === "extracting" || status.sourceStatus === "pending" || status.sourceStatus === "processing");
+  const reading = !!offerId && (opening || !status || status.busy);
   // a page the fetch saw only the shell of is opened in a browser before it counts as unread
   const needsBrowser = !!status && !reading && status.tooShort && !status.readInBrowser && browser === "idle";
   const failed = !!status && !reading && !needsBrowser && (status.sourceStatus === "failed" || status.tooShort || !status.briefReady || browser === "failed");
@@ -135,7 +135,7 @@ export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string
       {offerId && reading && (
         <div className="flex items-center gap-3 rounded-xl border border-line bg-surface-alt p-4 text-sm text-ink-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <span>{opening ? "The page draws itself in the browser, so it is being opened in one and read, frame by frame. The first read on a server takes up to a minute." : status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
+          <span>{opening ? "The page draws itself in the browser, so it is being opened in one and read, frame by frame. The first read on a server takes up to a minute." : status && status.sourceStatus === "done" && status.words >= MIN_PAGE_WORDS ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
         </div>
       )}
 

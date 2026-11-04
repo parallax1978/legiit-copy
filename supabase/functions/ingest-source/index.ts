@@ -77,6 +77,9 @@ serve(async (req) => {
   } catch (e) {
     const msg = errorMessage(e).slice(0, 1000);
     await db.from("offer_sources").update({ extraction_status: "failed", error: msg }).eq("id", src.id);
+    // nothing else is being read: the offer is not extracting, whatever set it so (a read that fails left it there for good)
+    const { data: others } = await db.from("offer_sources").select("id").eq("offer_id", src.offer_id).in("extraction_status", ["pending", "processing"]).limit(1);
+    if (!others?.length) await db.from("offers").update({ status: "draft" }).eq("id", src.offer_id).eq("status", "extracting");
     return json({ source_id: src.id, offer_id: src.offer_id, extraction_status: "failed", chars: 0, title, error: msg });
   }
 

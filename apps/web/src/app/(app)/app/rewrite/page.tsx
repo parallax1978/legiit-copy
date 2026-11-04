@@ -46,8 +46,8 @@ export default async function RewritePage({ searchParams }: { searchParams: Prom
           <p className="mt-0.5 text-xs text-ink-muted">A page stays here once it is read. Leaving this page does not lose it: pick it up to write from it.</p>
           <ul className="mt-3 divide-y divide-line rounded-xl border border-line bg-surface">
             {started.map((s) => {
-              const reading = s.sourceStatus === "pending" || s.sourceStatus === "processing" || s.offerStatus === "extracting";
-              const unread = !reading && (s.sourceStatus === "failed" || s.words < MIN_PAGE_WORDS);
+              const unread = s.sourceStatus === "failed" || (s.sourceStatus === "done" && s.words < MIN_PAGE_WORDS);
+              const reading = !unread && (s.sourceStatus === "pending" || s.sourceStatus === "processing" || s.offerStatus === "extracting");
               const state = s.generation ? `written (${s.generation.status.replace("_", " ")})` : reading ? "being read" : unread ? "could not be read" : `read, ${s.words.toLocaleString()} words`;
               return (
                 <li key={s.offerId} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">

@@ -68,8 +68,10 @@ export interface RewriteStatus {
   openQuestions: number;
   /** the brief built from the page holds something to write from (an empty page builds an empty brief) */
   briefReady: boolean;
-  /** the page gave back fewer words than a page has: it is opened in a browser next, and failing that its copy is pasted */
+  /** the page gave back fewer words than a page has, or no text at all (an app that draws itself in the browser): it is opened in a browser next, and failing that its copy is pasted */
   tooShort: boolean;
+  /** something is still running: a source being read, or the brief being built from a page that was read */
+  busy: boolean;
   /** the page was read in a headless browser (an app that draws itself) */
   readInBrowser: boolean;
 }
@@ -108,11 +110,18 @@ export async function getRewriteStatus(offerId: string): Promise<ActionResult<Re
   const busy = all.find((x) => x.extraction_status === "pending" || x.extraction_status === "processing");
   const text = source?.extracted_text ?? "";
   const words = pageWords(text);
+  const settled = !busy && !!source && (source.extraction_status === "done" || source.extraction_status === "failed");
+  // a page the fetch could not read at all (an app shell: a title and nothing else) is the same case as one read short
+  const unread = settled && words < MIN_PAGE_WORDS;
+  // the offer stays "extracting" while the brief is built from a page that was read; a failed read leaves it there too,
+  // and that is not work in progress
+  const building = offer.status === "extracting" && settled && !unread;
   return {
     ok: true,
     data: {
       briefReady: offer.status !== "extracting" && briefHolds(offer.brief),
-      tooShort: !busy && !!source && source.extraction_status === "done" && words < MIN_PAGE_WORDS,
+      tooShort: unread,
+      busy: !!busy || building,
       readInBrowser: !!source && source.kind === "text" && !!source.url,
       status: offer.status,
       sourceStatus: busy ? busy.extraction_status : source?.extraction_status ?? "pending",
@@ -180,6 +189,7 @@ export async function readRenderedPage(offerId: string): Promise<ActionResult<{ 
   if (!offer) return fail("That page is not in this workspace.");
   const first = (sources ?? []).find((x) => x.kind === "url" && x.url);
   if (!first?.url) return fail("This offer has no page address to open.");
+  if ((sources ?? []).some((x) => x.extraction_status === "pending" || x.extraction_status === "processing")) return fail("The page is still being read. Give it a moment.");
   if ((sources ?? []).some((x) => x.kind === "text" && x.url === first.url)) return fail("The page was already opened in a browser.");
   let page;
   try {
