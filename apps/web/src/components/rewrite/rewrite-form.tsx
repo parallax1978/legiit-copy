@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatCard, MANNER_OPTIONS, defaultMannerName, isFormatId, isMannerId, type FormatId } from "@/lib/formats";
-import { REWRITE_FORMATS } from "@/lib/page-format";
-import { finishRewrite, getRewriteStatus, MIN_PAGE_WORDS, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
+import { MIN_PAGE_WORDS, REWRITE_FORMATS } from "@/lib/page-format";
+import { finishRewrite, getRewriteStatus, readRenderedPage, startRewrite, type RewriteStatus } from "@/lib/actions/rewrite";
 
 const POLL_MS = 3000;
 
@@ -27,11 +27,16 @@ export function RewriteForm() {
   const [manner, setManner] = useState("engine");
   const [purpose, setPurpose] = useState("");
   const [pending, startTransition] = useTransition();
+  const [browser, setBrowser] = useState<"idle" | "opening" | "done" | "failed">("idle");
+  const [browserError, setBrowserError] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const reading = !!offerId && (!status || status.status === "extracting" || status.sourceStatus === "pending" || status.sourceStatus === "processing");
-  const failed = !!status && !reading && (status.sourceStatus === "failed" || status.tooShort || !status.briefReady);
-  const ready = !!status && !reading && !failed;
+  const opening = browser === "opening";
+  const reading = !!offerId && (opening || !status || status.status === "extracting" || status.sourceStatus === "pending" || status.sourceStatus === "processing");
+  // a page the fetch saw only the shell of is opened in a browser before it counts as unread
+  const needsBrowser = !!status && !reading && status.tooShort && !status.readInBrowser && browser === "idle";
+  const failed = !!status && !reading && !needsBrowser && (status.sourceStatus === "failed" || status.tooShort || !status.briefReady || browser === "failed");
+  const ready = !!status && !reading && !failed && !needsBrowser;
   const pastedWords = text.trim() ? text.trim().split(/\s+/).length : 0;
   const canRead = pastedWords >= MIN_PAGE_WORDS || (!!url.trim() && pastedWords === 0);
 
@@ -55,6 +60,22 @@ export function RewriteForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offerId, reading]);
 
+  // the fetch got the shell: open the page in a browser and read every frame, then the brief is rebuilt from it
+  useEffect(() => {
+    if (!offerId || !needsBrowser) return;
+    setBrowser("opening");
+    setBrowserError(null);
+    readRenderedPage(offerId).then((r) => {
+      if (r.ok) {
+        setBrowser("done");
+        setStatus(null);
+      } else {
+        setBrowser("failed");
+        setBrowserError(r.error);
+      }
+    });
+  }, [offerId, needsBrowser]);
+
   function read(e: React.FormEvent) {
     e.preventDefault();
     startTransition(async () => {
@@ -65,6 +86,8 @@ export function RewriteForm() {
       }
       setStatus(null);
       setFormat(null);
+      setBrowser("idle");
+      setBrowserError(null);
       setOfferId(r.data.offerId);
     });
   }
@@ -101,15 +124,15 @@ export function RewriteForm() {
       {offerId && reading && (
         <div className="flex items-center gap-3 rounded-xl border border-line bg-surface-alt p-4 text-sm text-ink-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <span>{status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
+          <span>{opening ? "The page draws itself in the browser, so it is being opened in one and read, frame by frame." : status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
         </div>
       )}
 
       {offerId && failed && status && (
         <div className="rounded-xl border border-line bg-surface p-4 text-sm">
-          <div className="font-medium text-ink">{status.tooShort ? `The page gave back only ${status.words} word${status.words === 1 ? "" : "s"}.` : "The page could not be read."}</div>
+          <div className="font-medium text-ink">{browser === "failed" ? "The page could not be read, even in a browser." : status.tooShort ? `The page gave back only ${status.words} word${status.words === 1 ? "" : "s"}.` : "The page could not be read."}</div>
           <p className="mt-1 text-ink-muted">
-            {status.error ?? (status.tooShort ? "It is probably an app that draws itself in the browser, or a page behind a login, so the fetch saw none of its copy." : "The reader could not build a brief from what came back.")} Open the page, select everything, copy it, paste it in the box above and read it again.
+            {browserError ?? status.error ?? (status.tooShort ? "The fetch saw none of its copy, and the browser read found no more." : "The reader could not build a brief from what came back.")} Open the page yourself, select everything, copy it, paste it in the box above and read it again.
             {" "}The empty offer it made is <Link href={`/app/offers/${offerId}`} className="underline">here</Link> if you want to delete it.
           </p>
         </div>
@@ -119,7 +142,7 @@ export function RewriteForm() {
         <div className="space-y-5 rounded-xl border border-line bg-surface p-5">
           <div>
             <div className="flex items-center gap-2 text-sm font-medium text-ink"><Check className="h-4 w-4 text-brand" /> Read: {status.title ?? status.url}</div>
-            <p className="mt-1 text-xs text-ink-muted">{status.words.toLocaleString()} words. {status.excerpt && <span className="italic">&ldquo;{status.excerpt}&hellip;&rdquo;</span>}</p>
+            <p className="mt-1 text-xs text-ink-muted">{status.words.toLocaleString()} words{status.readInBrowser ? ", read in a browser" : ""}. {status.excerpt && <span className="italic">&ldquo;{status.excerpt}&hellip;&rdquo;</span>}</p>
             {status.openQuestions > 0 && (
               <p className="mt-2 text-xs text-ink-muted">
                 The reader found {status.openQuestions} question{status.openQuestions === 1 ? "" : "s"} it could not answer from the page. The piece pauses at those until you answer them on <Link href={`/app/offers/${offerId}`} className="underline">the offer page</Link>, now or when it asks.

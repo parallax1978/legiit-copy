@@ -7,6 +7,8 @@ import { RewriteForm } from "@/components/rewrite/rewrite-form";
 
 export const metadata = { title: "Rewrite a page" };
 export const dynamic = "force-dynamic";
+/** The page is read in a headless browser from the server action: a cold start plus a full page load fit in a minute. */
+export const maxDuration = 60;
 
 export default async function RewritePage() {
   const { role } = await requireWorkspace();

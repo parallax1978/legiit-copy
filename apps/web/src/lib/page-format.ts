@@ -7,6 +7,9 @@ import type { FormatId } from "@engine/schemas/common.ts";
 /** The formats a page on a site can be rewritten as, in the order the picker shows them. */
 export const REWRITE_FORMATS: FormatId[] = ["landing_page_short", "sales_letter", "optin", "product_description", "pricing_page", "advertorial", "upsell", "thank_you", "order_form"];
 
+/** A page that gave back fewer words than this was not read (an app that draws itself in the browser, a login wall, a blocked fetch). */
+export const MIN_PAGE_WORDS = 80;
+
 export function pageWords(text: string): number {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 }

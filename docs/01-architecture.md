@@ -21,7 +21,7 @@ Supabase is the backend of record: Postgres, Auth, Storage, Edge Functions, Queu
 ## 2. Repository layout
 
 ```
-apps/web/                      Next.js app (offers, the copy wizard, /app/rewrite: a page read from its URL and written again with the original as the control)
+apps/web/                      Next.js app (offers, the copy wizard, /app/rewrite: a page read from its URL, in headless Chromium when it draws itself in the browser, and written again with the original as the control)
 supabase/
   config.toml
   migrations/                  SQL migrations (schema, RLS, triggers, cron)

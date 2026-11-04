@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   // from supabase/functions/_shared/engine via the @engine/* alias; these files live outside apps/web.
   experimental: { externalDir: true },
   // Deno-only modules must never reach the browser bundle. The alias points at plain files only.
-  serverExternalPackages: ["@anthropic-ai/sdk"],
+  serverExternalPackages: ["@anthropic-ai/sdk", "@sparticuz/chromium", "puppeteer-core"],
   typescript: { ignoreBuildErrors: false },
   images: { remotePatterns: [] },
   async headers() {
