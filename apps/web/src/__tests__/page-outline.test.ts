@@ -58,3 +58,33 @@ describe("page outline", () => {
     expect(outlineOf(doc(``))).toBe("");
   });
 });
+
+describe("page outline: real-page cases", () => {
+  it("reads headings, buttons, folds and cells through its own rules: no glue across breaks, no hidden or script text", () => {
+    const out = outlineOf(doc(`
+      <nav><style>.m{}</style><ul><li><a>Home</a><ul style="display:none"><li><a>Sub</a></li></ul></li><li><a>Pricing</a></li></ul></nav>
+      <h1>Finally...<br>A Way To Win</h1>
+      <h2><span style="display:block">Build faster</span><span style="display:block">with us</span></h2>
+      <button>Add to cart<span style="display:none">Adding...</span></button>
+      <button><svg><title>Arrow</title></svg>Buy</button>
+      <table><tr><td>Plan<br>Pro</td><td><span style="display:none">was $99</span>$49</td></tr></table>
+      <footer><p>Terms</p><style>.a{color:red}</style><script>window.x=1</script><ul style="display:none"><li>Hidden submenu</li></ul></footer>`));
+    expect(out).toBe(["[Nav] Home Pricing", "# Finally... A Way To Win", "## Build faster with us", "[Button] Add to cart", "[Button] Buy", "Plan Pro | $49", "[Footer] Terms"].join("\n\n"));
+  });
+
+  it("keeps copy that only starts transparent, a form with a control named hidden, and a card row walked as blocks", () => {
+    const out = outlineOf(doc(`
+      <section style="opacity:0"><p>Fades in on scroll.</p></section>
+      <form><input name="hidden" value="1" type="text" aria-label="Promo code"><input type="submit"></form>
+      <table><tr><td><h3>Pro</h3><p>$49/mo</p></td><td><h3>Team</h3><p>$99/mo</p></td></tr></table>
+      <div class="cookie-banner"><p>We use cookies.</p><button>Accept</button></div>
+      <div role="button"><h3>Starter</h3><p>$9/mo</p></div>`));
+    expect(out).toBe(["Fades in on scroll.", "[Field] Promo code", "[Button] Submit", "### Pro", "$49/mo", "### Team", "$99/mo", "[Button] Starter $9/mo"].join("\n\n"));
+  });
+
+  it("does not hide the page when its root carries aria-hidden for an open popup", () => {
+    const out = outlineOf(doc(`<div id="app" aria-hidden="true"><h1>The page</h1><p>Still the page, with its copy and everything on it.</p></div><div role="dialog"><span aria-hidden="true">x</span>Sign in</div>`));
+    expect(out).toContain("# The page");
+    expect(out).not.toContain("x\n");
+  });
+});

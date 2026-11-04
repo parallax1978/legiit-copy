@@ -9,7 +9,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { FORMAT_IDS, MANNER_IDS } from "@/lib/formats";
-import { guessPageFormat, MIN_PAGE_WORDS, pageWords } from "@/lib/page-format";
+import { guessPageFormat, MIN_PAGE_WORDS, pageExcerpt, pageWords } from "@/lib/page-format";
 import { createOffer, addOfferSources } from "./offers";
 import { renderPage } from "@/lib/render-page";
 import { createGeneration } from "./generations";
@@ -118,7 +118,7 @@ export async function getRewriteStatus(offerId: string): Promise<ActionResult<Re
       title: source?.title ?? null,
       words,
       guess: words >= MIN_PAGE_WORDS ? guessPageFormat(text, source?.url ?? "") : null,
-      excerpt: text ? text.trim().slice(0, 280) : null,
+      excerpt: pageExcerpt(text),
       error: source?.error ?? null,
       openQuestions: count ?? 0,
     },

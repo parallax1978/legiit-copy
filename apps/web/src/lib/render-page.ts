@@ -8,7 +8,8 @@ import "server-only";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import puppeteer, { type Browser } from "puppeteer-core";
-import { OUTLINE_SRC } from "./page-outline";
+import { FLAT_SRC, OUTLINE_SRC } from "./page-outline";
+import { pageWords } from "./page-format";
 
 export interface RenderedPage {
   title: string;
@@ -27,6 +28,16 @@ const CHROMIUM_PACK = "https://github.com/Sparticuz/chromium/releases/download/v
 /** A frame with fewer words than this is the app's chrome (a share bar, a sign-in link), not the page. */
 const FRAME_MIN_WORDS = 30;
 const MAX_CHARS = 400_000;
+/** Scrolls the frame to its end in viewport steps and back, inside a few seconds, so observers fire and lazy sections mount. */
+const SCROLL_SRC = String.raw`(async () => {
+  const height = () => (document.scrollingElement || document.body || { scrollHeight: 0 }).scrollHeight;
+  for (let y = 0, i = 0; y < height() && i < 40; y += 700, i++) {
+    window.scrollTo(0, y);
+    await new Promise((r) => setTimeout(r, 90));
+  }
+  window.scrollTo(0, 0);
+  await new Promise((r) => setTimeout(r, 300));
+})()`;
 
 function privateAddress(ip: string): boolean {
   if (isIP(ip) === 6) return /^(::1$|::$|fc|fd|fe80:|::ffff:(10\.|127\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.))/i.test(ip);
@@ -72,7 +83,8 @@ async function launch(): Promise<Browser> {
   return puppeteer.launch({ executablePath, headless: true, args: chromium.args });
 }
 
-const words = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);
+/** words of the page's own copy: the marks and the nav and footer folds do not count */
+const words = (t: string) => pageWords(t);
 
 /** The page's copy with its layout kept (see page-outline.ts), every frame read; empty text when the page carried none. */
 export async function renderPage(raw: string, budgetMs = 40_000): Promise<RenderedPage> {
@@ -83,6 +95,8 @@ export async function renderPage(raw: string, budgetMs = 40_000): Promise<Render
     const page = await browser.newPage();
     await page.setUserAgent(UA);
     await page.setViewport({ width: 1280, height: 900 });
+    // a page that fades its sections in as the reader scrolls starts them hidden; under reduced motion most skip that
+    await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]).catch(() => undefined);
     await page.setRequestInterception(true);
     page.on("request", (r) => {
       try {
@@ -96,13 +110,17 @@ export async function renderPage(raw: string, budgetMs = 40_000): Promise<Render
     await page.goto(url.href, { waitUntil: "networkidle2", timeout: Math.max(5_000, budgetMs - 12_000) }).catch(() => undefined);
     // the frame's app boots after the shell: give it a moment, inside the budget
     await new Promise((r) => setTimeout(r, Math.min(4_000, Math.max(0, budgetMs - (Date.now() - started) - 3_000))));
+    // scroll through every frame so sections that mount or reveal on scroll are on the page before it is read
+    if (budgetMs - (Date.now() - started) > 8_000) {
+      await Promise.all(page.frames().map((f) => f.evaluate(SCROLL_SRC).catch(() => undefined)));
+    }
     const title = await page.title().catch(() => "");
     const read = await Promise.all(page.frames().map(async (f) => {
       // the outline keeps where each line sits (headings, buttons, fields, lists); the flat text is the fallback
       // for a page whose styling hides the outline most of it (then the flat read is what a reader sees)
       const outline = await f.evaluate(OUTLINE_SRC).then((v) => (typeof v === "string" ? v : "")).catch(() => "");
-      const flat = await f.evaluate(() => (document.body ? document.body.innerText : "")).catch(() => "");
-      const text = words(outline) >= words(flat) * 0.6 ? outline : flat;
+      const flat = await f.evaluate(FLAT_SRC).then((v) => (v && typeof v === "object" && typeof (v as { text?: unknown }).text === "string" ? (v as { text: string; words: number }) : { text: "", words: 0 })).catch(() => ({ text: "", words: 0 }));
+      const text = words(outline) >= flat.words * 0.6 ? outline : flat.text;
       return { url: f.url(), text: text.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim() };
     }));
     const carrying = read.map((r) => ({ ...r, words: words(r.text) })).filter((r) => r.words > 0).sort((a, b) => b.words - a.words);

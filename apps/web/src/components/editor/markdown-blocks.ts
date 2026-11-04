@@ -117,6 +117,26 @@ export function markdownToText(md: string): string {
     .trim() + "\n";
 }
 
+/**
+ * One message to paste into the Claude conversation that holds the page: what to do, the new copy with its marks
+ * explained, and the page's current copy for matching. Claude updates the page's words and leaves its design alone.
+ */
+export function claudeHandoff(markdown: string, controlText?: string | null): string {
+  const control = (controlText ?? "").trim();
+  return [
+    "Update the copy on this page. Keep the design, the layout, the images, every link and every button's destination exactly as they are; change only the words.",
+    "",
+    "Replace the page's copy with NEW COPY below, top to bottom, part for part. A line starting with # is the headline (## a deck or subhead, ### a crosshead); a line in *asterisks* is the preheadline, the small line above the headline; [ text ] is a button label; lines starting with - are bullets; lines starting with > are quotes. Where NEW COPY has a part the page lacks, add it in that position in the page's own style. Where the page has an element NEW COPY does not cover, leave its words as they are. Do not add anything of your own, do not rewrite or shorten any line of NEW COPY, and keep its paragraph breaks.",
+    control ? "\nTHE PAGE'S COPY NOW is included only so you can match each part of NEW COPY to the element that holds it today; it is the old copy, not copy to keep." : "",
+    "",
+    "NEW COPY",
+    "",
+    markdownToText(markdown).trim(),
+    "",
+    control ? `THE PAGE'S COPY NOW\n\n${control}` : "",
+  ].join("\n").trim() + "\n";
+}
+
 /* ---------------- markdown → blocks ---------------- */
 
 let counter = 0;

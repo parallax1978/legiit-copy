@@ -130,6 +130,7 @@ export function EditorPage({ detail, canEdit, notice }: { detail: GenerationDeta
                     fileBase={fileBase}
                     all={{ label: "all", markdown: fullMarkdown }}
                     item={activeItem ? { label: activeItem.label, markdown: sectionsToMarkdown(activeItem.sections), sectionIds: activeItem.sections.map((s) => s.section_id) } : null}
+                    controlText={detail.options.control_text || null}
                   />
                 )}
                 {!editing && <FeedbackButtons draftId={current.id} existing={detail.feedback} canEdit={canEdit} />}

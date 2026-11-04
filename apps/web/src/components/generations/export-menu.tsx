@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Download, Copy, FileText, FileCode, FileType, Loader2, File } from "lucide-react";
+import { Download, Copy, FileText, FileCode, FileType, Loader2, File, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { exportDraft } from "@/lib/actions/generations";
-import { cleanMarkdown, markdownToText } from "@/components/editor/markdown-blocks";
+import { claudeHandoff, cleanMarkdown, markdownToText } from "@/components/editor/markdown-blocks";
 import { markdownToHtml } from "@/components/editor/copy-editor";
 
 export interface ExportScope {
@@ -20,7 +20,10 @@ interface Props {
   all: ExportScope;
   /** The item currently shown, for multi-item formats. */
   item?: ExportScope | null;
+  /** The page's copy as it is now (a rewrite's control): packed with the new copy so Claude can match part to part. */
+  controlText?: string | null;
 }
+
 
 function download(name: string, content: string, type: string) {
   const blob = new Blob([content], { type });
@@ -38,8 +41,16 @@ function slug(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 60) || "copy";
 }
 
-export function ExportMenu({ draftId, fileBase, all, item }: Props) {
+export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props) {
   const [busy, setBusy] = useState(false);
+  const forClaude = async () => {
+    try {
+      await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), controlText));
+      toast.success("Copied. Paste it into the Claude conversation that holds your page.");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Copy failed");
+    }
+  };
   const scopes: { key: string; scope: ExportScope }[] = item ? [{ key: "item", scope: item }, { key: "all", scope: all }] : [{ key: "all", scope: all }];
 
   const run = async (scope: ExportScope, kind: "copy" | "md" | "html" | "txt" | "docx") => {
@@ -91,6 +102,9 @@ export function ExportMenu({ draftId, fileBase, all, item }: Props) {
             <DropdownMenuItem onClick={() => run(scope, "docx")}><File className="h-4 w-4" /> Word (.docx)</DropdownMenuItem>
           </div>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="text-[11px] uppercase tracking-wide text-ink-muted">Update the page</DropdownMenuLabel>
+        <DropdownMenuItem onClick={forClaude}><Sparkles className="h-4 w-4" /> For Claude: paste one message, it updates the page</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

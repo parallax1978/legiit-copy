@@ -26,7 +26,7 @@ Deno.test("htmlToText keeps the page's layout as marks", () => {
       "- Business plan\n- Specialist on call",
       "Your email\n[Field] you@example.com",
       "[Button] Send me the plan",
-      "Plan $399",
+      "Plan | $399",
       "[Footer] Terms · Privacy",
     ].join("\n\n"),
   );
@@ -39,4 +39,13 @@ Deno.test("htmlToText marks submit inputs and role buttons, drops asides and hid
   assertStringIncludes(text, "[Button] Join");
   assertEquals(text.includes("Related posts"), false);
   assertEquals(text.includes("Monthly"), false);
+});
+
+Deno.test("htmlToText folds a heading whole, keeps a list item's dash, an image's alt, a bare < in copy, and stops at an unclosed anchor", () => {
+  assertEquals(htmlToText(`<h3><button class="accordion">Is there a refund?</button></h3><p>Yes.</p>`), "### Is there a refund?\n\nYes.");
+  assertEquals(htmlToText(`<ul><li><p>First</p></li><li><h3>Second</h3><p>More</p></li></ul>`), "- First\n- ### Second\n\nMore");
+  assertEquals(htmlToText(`<img src="a.png" alt="The dashboard"><img src="b.png" alt="b.png"><p>5 < 6 and 7 > 2</p>`), "[Image] The dashboard\n\n5 < 6 and 7 > 2");
+  // an unclosed anchor keeps its words and loses only its mark; a card of nested divs with role=button is read as its blocks
+  assertEquals(htmlToText(`<a class="btn" href="/a">Buy now<a class="btn" href="/b">Second CTA</a></a><div role="button"><div>Inner</div>Outer</div>`), "Buy now\n[Button] Second CTA\n\nInner\n\nOuter");
+  assertEquals(htmlToText(`<svg/><p>Copy after a self-closed svg</p><dialog><p>A modal</p></dialog>`), "Copy after a self-closed svg");
 });

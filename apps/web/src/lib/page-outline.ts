@@ -5,37 +5,69 @@
  *
  * The walker runs inside the page (puppeteer evaluates it in every frame), so it is kept as plain JavaScript source
  * rather than a function the server bundle could rewrite: nothing outside the string is referenced, and `outlineOf`
- * evaluates the same source for tests.
+ * evaluates the same source for tests. The fetch-side read (_shared/html_text.ts) writes the same marks from markup.
  */
 export const OUTLINE_SRC = String.raw`(() => {
-  const BLOCK = new Set(["address","article","aside","blockquote","body","dd","details","dialog","div","dl","dt","fieldset","figcaption","figure","form","header","hr","li","main","ol","p","pre","section","summary","table","tbody","tfoot","thead","tr","ul"]);
-  const SKIP = new Set(["audio","canvas","embed","head","iframe","link","map","meta","noscript","object","option","picture","script","source","style","svg","template","title","track","video"]);
+  const BLOCK = new Set(["address","article","blockquote","body","dd","details","dialog","div","dl","dt","fieldset","figcaption","figure","form","header","hr","li","main","ol","p","pre","section","summary","table","tbody","td","tfoot","th","thead","tr","ul"]);
+  const SKIP = new Set(["aside","audio","canvas","embed","head","iframe","link","map","meta","noscript","object","option","script","source","style","svg","template","title","track","video"]);
+  const FIELD_INPUT = /^(hidden|checkbox|radio|submit|button|reset|image)$/i;
+  const CHROME = /(^|[\s_-])(cookie|consent|gdpr)([\s_-]|$)/i;
   const lines = [];
   let buf = "";
+  const win = document.defaultView || window;
+  const bodyLength = document.body ? (document.body.textContent || "").length : 0;
   const flush = () => {
     const t = buf.replace(/[ \t \r\f\v]+/g, " ").replace(/ ?\n ?/g, "\n").replace(/\n{2,}/g, "\n").trim();
     if (t) lines.push(t);
     buf = "";
   };
-  const text = (el) => (el.textContent || "").replace(/\s+/g, " ").trim();
+  const cls = (el) => (typeof el.className === "string" ? el.className : "");
+  const styleOf = (el) => {
+    try { return win.getComputedStyle(el); } catch { return null; }
+  };
+  const blockDisplay = (d) => d === "block" || d === "flex" || d === "grid" || d === "list-item" || d === "flow-root" || d.startsWith("table");
+  // hidden the way a reader finds it: display none or visibility hidden (opacity is an animation's starting state,
+  // not a hiding); aria-hidden hides a part of the page, never the page itself (an open popup marks the rest)
+  const hidden = (el, cs) => {
+    if (el.hasAttribute("hidden")) return true;
+    if (el.getAttribute("aria-hidden") === "true" && (el.textContent || "").length * 2 < bodyLength) return true;
+    return !!cs && (cs.display === "none" || cs.visibility === "hidden");
+  };
+  const chrome = (el) => CHROME.test(el.id || "") || CHROME.test(cls(el));
+  /** the words of one element as a reader sees them: the walker's own skips and hides, a space at a break or a block edge */
+  const inline = (root) => {
+    let s = "";
+    const rec = (node) => {
+      if (node.nodeType === 3) { s += node.nodeValue; return; }
+      if (node.nodeType !== 1) return;
+      const el = node;
+      const tag = el.tagName.toLowerCase();
+      if (SKIP.has(tag) || tag === "select" || tag === "textarea") return;
+      const cs = styleOf(el);
+      if (hidden(el, cs)) return;
+      if (tag === "br") { s += " "; return; }
+      const block = BLOCK.has(tag) || (cs ? blockDisplay(cs.display || "") : false);
+      if (block) s += " ";
+      for (const c of el.childNodes) rec(c);
+      if (block) s += " ";
+    };
+    rec(root);
+    return s.replace(/\s+/g, " ").trim();
+  };
   const isButton = (el, tag) => {
     if (tag === "button") return true;
     if (tag === "input") return /^(submit|button|reset|image)$/i.test(el.type || "");
     if (el.getAttribute("role") === "button") return true;
-    if (tag === "a") return /(^|[\s_-])(btn|button|cta)([\s_-]|$)/i.test(typeof el.className === "string" ? el.className : "");
+    if (tag === "a") return /(^|[\s_-])(btn|button|cta)([\s_-]|$)/i.test(cls(el));
     return false;
   };
   const fieldLabel = (el) => {
-    let label = "";
-    if (el.id) {
-      const l = el.ownerDocument.querySelector('label[for="' + el.id.replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"]');
-      if (l) label = text(l);
+    const labels = el.labels ? Array.from(el.labels) : [];
+    for (const l of labels) {
+      const t = inline(l);
+      if (t) return t;
     }
-    if (!label) {
-      const l = el.closest("label");
-      if (l) label = text(l);
-    }
-    return label || el.getAttribute("aria-label") || el.getAttribute("placeholder") || el.getAttribute("name") || "";
+    return el.getAttribute("aria-label") || el.getAttribute("placeholder") || el.getAttribute("name") || "";
   };
   const prefixed = (start, first, rest) => {
     for (let i = start; i < lines.length; i++) lines[i] = (i === start ? first : rest) + lines[i];
@@ -43,7 +75,15 @@ export const OUTLINE_SRC = String.raw`(() => {
   const walkChildren = (el) => {
     for (const child of el.childNodes) walk(child);
   };
+  const simpleCell = (c) => !c.querySelector("h1,h2,h3,h4,h5,h6,p,div,ul,ol,table,button,input,select,textarea");
   const walk = (node) => {
+    try {
+      walkNode(node);
+    } catch {
+      // one bad node (a selector it cannot answer, a detached element) skips itself, not the frame
+    }
+  };
+  const walkNode = (node) => {
     if (node.nodeType === 3) {
       buf += node.nodeValue;
       return;
@@ -52,9 +92,9 @@ export const OUTLINE_SRC = String.raw`(() => {
     const el = node;
     const tag = el.tagName.toLowerCase();
     if (SKIP.has(tag)) return;
-    if (el.hidden || el.getAttribute("aria-hidden") === "true") return;
-    const cs = el.ownerDocument.defaultView.getComputedStyle(el);
-    if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0") return;
+    const cs = styleOf(el);
+    if (hidden(el, cs)) return;
+    if (chrome(el)) return; // a cookie or consent banner is the site's, not the page's
     if (tag === "br") {
       buf += "\n";
       return;
@@ -66,25 +106,27 @@ export const OUTLINE_SRC = String.raw`(() => {
     }
     if (/^h[1-6]$/.test(tag)) {
       flush();
-      const t = text(el);
+      const t = inline(el);
       if (t) lines.push("#".repeat(Number(tag[1])) + " " + t);
       return;
     }
     if (isButton(el, tag)) {
       flush();
-      const t = tag === "input" ? (el.value || el.getAttribute("aria-label") || "").trim() : text(el);
+      const t = tag === "input"
+        ? (el.getAttribute("alt") || el.value || el.getAttribute("aria-label") || (/^submit$/i.test(el.type || "") ? "Submit" : "")).trim()
+        : inline(el);
       if (t) lines.push("[Button] " + t);
       return;
     }
     if (tag === "input" || tag === "select" || tag === "textarea") {
-      if (tag === "input" && /^(hidden|checkbox|radio)$/i.test(el.type || "")) return;
+      if (tag === "input" && FIELD_INPUT.test(el.type || "")) return;
       flush();
       lines.push("[Field] " + (fieldLabel(el) || tag));
       return;
     }
     if (tag === "img") {
       const alt = (el.getAttribute("alt") || "").trim();
-      if (alt.length >= 3) {
+      if (alt.length >= 3 && !/\.(png|jpe?g|gif|webp|svg)$/i.test(alt)) {
         flush();
         lines.push("[Image] " + alt);
       }
@@ -92,7 +134,7 @@ export const OUTLINE_SRC = String.raw`(() => {
     }
     if (tag === "nav" || tag === "footer") {
       flush();
-      const t = text(el);
+      const t = inline(el);
       if (t) lines.push("[" + (tag === "nav" ? "Nav" : "Footer") + "] " + t.slice(0, 400));
       return;
     }
@@ -102,11 +144,11 @@ export const OUTLINE_SRC = String.raw`(() => {
       const forId = el.getAttribute("for");
       const target = forId ? el.ownerDocument.getElementById(forId) : el.querySelector("input, select, textarea");
       const tt = target ? target.tagName.toLowerCase() : "";
-      const carried = tt === "select" || tt === "textarea" || (tt === "input" && !/^(hidden|checkbox|radio|submit|button|reset|image)$/i.test(target.type || ""));
+      const carried = tt === "select" || tt === "textarea" || (tt === "input" && !FIELD_INPUT.test(target.type || ""));
       if (carried) {
         if (forId) return;
         flush();
-        for (const child of el.childNodes) if (child.nodeType === 1) walk(child);
+        for (const c of el.querySelectorAll("input, select, textarea, button")) walk(c);
         flush();
         return;
       }
@@ -129,12 +171,18 @@ export const OUTLINE_SRC = String.raw`(() => {
     }
     if (tag === "tr") {
       flush();
-      const cells = Array.from(el.children).map((c) => text(c)).filter(Boolean);
-      if (cells.length) lines.push(cells.join(" | "));
+      const cells = Array.from(el.children);
+      if (cells.every(simpleCell)) {
+        const texts = cells.map((c) => (hidden(c, styleOf(c)) ? "" : inline(c))).filter(Boolean);
+        if (texts.length) lines.push(texts.join(" | "));
+        return;
+      }
+      walkChildren(el); // a row of cards: every cell walked as the blocks it holds
+      flush();
       return;
     }
-    const d = cs.display || "";
-    const block = BLOCK.has(tag) || d === "block" || d === "flex" || d === "grid" || d === "list-item" || d === "flow-root" || d.startsWith("table") || d.startsWith("inline-block") === false && d.startsWith("inline") === false && d !== "" && d !== "contents";
+    const d = cs ? cs.display || "" : "";
+    const block = BLOCK.has(tag) || blockDisplay(d);
     if (block) flush();
     walkChildren(el);
     if (block) flush();
@@ -147,6 +195,15 @@ export const OUTLINE_SRC = String.raw`(() => {
     out += (i === 0 ? "" : item ? "\n" : "\n\n") + lines[i];
   }
   return out;
+})()`;
+
+/** The reader's flat text of the page, for the fallback: body.innerText without the options of its selects. */
+export const FLAT_SRC = String.raw`(() => {
+  if (!document.body) return "";
+  const all = document.body.innerText || "";
+  const selects = Array.from(document.querySelectorAll("select")).map((s) => s.innerText || "").join(" ");
+  const words = (t) => (t.trim() ? t.trim().split(/\s+/).length : 0);
+  return { text: all, words: Math.max(0, words(all) - words(selects)) };
 })()`;
 
 /** The outline of a document, for tests: the same source the browser runs, evaluated against this window. */
