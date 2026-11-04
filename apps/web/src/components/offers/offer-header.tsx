@@ -9,7 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { refreshResearch, reextractOffer, setOfferStatus } from "@/lib/actions/offers";
 import { OfferStatusBadge } from "./badges";
 
-export function OfferHeader({ offer, editable, sourceCount }: { offer: { id: string; name: string; status: string; updated_at: string }; editable: boolean; sourceCount: number }) {
+export function OfferHeader({ offer, editable, sourceCount, rewrite = false }: { offer: { id: string; name: string; status: string; updated_at: string }; editable: boolean; sourceCount: number; /** the offer is a page being rewritten: the Rewrite page picks it up */ rewrite?: boolean }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [running, setRunning] = useState<string | null>(null);
@@ -48,8 +48,15 @@ export function OfferHeader({ offer, editable, sourceCount }: { offer: { id: str
         </p>
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-2">
-        {!archived && (
+        {!archived && rewrite && (
           <Button asChild className="rounded-full shadow-glow">
+            <Link href={`/app/rewrite?offer=${offer.id}`}>
+              <PenSquare className="size-4" /> Rewrite the page
+            </Link>
+          </Button>
+        )}
+        {!archived && (
+          <Button asChild className="rounded-full" variant={rewrite ? "outline" : "default"}>
             <Link href={`/app/generations/new?offer=${offer.id}`}>
               <PenSquare className="size-4" /> Write copy
             </Link>

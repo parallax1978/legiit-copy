@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ArrowRight, Check, Globe, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,12 @@ const POLL_MS = 3000;
  * Paste a URL, the app reads the page into an offer of its own and builds the brief from it, you confirm what kind
  * of page it is, and the piece is written with the original as the control the copy chief predicts against.
  */
-export function RewriteForm() {
+export function RewriteForm({ initialOfferId = null }: { initialOfferId?: string | null }) {
+  const router = useRouter();
   const [url, setUrl] = useState("");
   const [text, setText] = useState("");
-  const [offerId, setOfferId] = useState<string | null>(null);
+  // the offer in the address: a page read earlier is picked up where it was left, polling and the browser read included
+  const [offerId, setOfferId] = useState<string | null>(initialOfferId);
   const [status, setStatus] = useState<RewriteStatus | null>(null);
   const [format, setFormat] = useState<FormatId | null>(null);
   const [manner, setManner] = useState("engine");
@@ -95,6 +98,8 @@ export function RewriteForm() {
       setBrowser("idle");
       setBrowserError(null);
       setOfferId(r.data.offerId);
+      // the address carries the page from here, so leaving and coming back finds it
+      router.replace(`/app/rewrite?offer=${r.data.offerId}`, { scroll: false });
     });
   }
 

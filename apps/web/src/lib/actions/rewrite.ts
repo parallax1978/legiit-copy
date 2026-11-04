@@ -10,7 +10,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { FORMAT_IDS, MANNER_IDS } from "@/lib/formats";
 import { guessPageFormat, MIN_PAGE_WORDS, pageExcerpt, pageWords } from "@/lib/page-format";
-import { createOffer, addOfferSources } from "./offers";
+import { createOffer, addOfferSources, markRewrite } from "./offers";
 import { renderPage } from "@/lib/render-page";
 import { createGeneration } from "./generations";
 import type { FormatId } from "@engine/schemas/common.ts";
@@ -45,6 +45,8 @@ export async function startRewrite(raw: { url?: string; text?: string }): Promis
   const name = url ? `${hostOf(url)} page` : "Pasted page";
   const created = await createOffer({ firstUrl: url || undefined, name });
   if (!created.ok) return created;
+  const marked = await markRewrite(created.data.offerId, { url: url || null, pasted });
+  if (!marked.ok) return marked;
   // the pasted copy is the source when it is given: a page the fetch cannot read is read from the paste
   const added = await addOfferSources({ offerId: created.data.offerId, urls: pasted ? [] : [url], files: [], text: pasted ? text : "" });
   if (!added.ok) return added;

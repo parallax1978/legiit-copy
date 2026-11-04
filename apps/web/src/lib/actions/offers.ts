@@ -88,13 +88,32 @@ function setupJson(raw: unknown): J {
   })) as J;
 }
 
+/** The page a rewrite started from is kept in the offer's setup (see lib/rewrite-marker.ts); a setup save keeps it. */
+function rewriteMarker(setup: unknown): { rewrite?: J } {
+  const r = setup && typeof setup === "object" ? (setup as Record<string, unknown>).rewrite : null;
+  return r && typeof r === "object" ? { rewrite: r as J } : {};
+}
+
+/** Marks an offer as a page being rewritten (the Rewrite page lists these until a piece is written from them). */
+export async function markRewrite(offerId: string, rewrite: { url: string | null; pasted: boolean }): Promise<ActionResult> {
+  const g = await editor();
+  if (!g.ok) return fail(g.error);
+  const offer = await loadOffer(g.ctx, offerId);
+  if (!offer) return fail("Offer not found.");
+  const marker: J = { url: rewrite.url, pasted: rewrite.pasted, started_at: new Date().toISOString() };
+  const current = offer.setup && typeof offer.setup === "object" && !Array.isArray(offer.setup) ? (offer.setup as Record<string, J>) : {};
+  const { error } = await g.ctx.supabase.from("offers").update({ setup: { ...current, rewrite: marker } }).eq("id", offer.id);
+  if (error) return fail(error.message);
+  return done(undefined);
+}
+
 /** The setup answers (who signs, the reader, the lead offer, refunds, proof). Optionally reads the sources again so the brief and ledger use them. */
 export async function saveSetup(offerId: string, raw: SetupInput, reextract = false): Promise<ActionResult> {
   const g = await editor();
   if (!g.ok) return fail(g.error);
   const offer = await loadOffer(g.ctx, offerId);
   if (!offer) return fail("Offer not found.");
-  const { error } = await g.ctx.supabase.from("offers").update({ setup: setupJson(raw) }).eq("id", offer.id);
+  const { error } = await g.ctx.supabase.from("offers").update({ setup: { ...(setupJson(raw) as Record<string, J>), ...rewriteMarker(offer.setup) } }).eq("id", offer.id);
   if (error) return fail(error.message);
   revalidateOffer(offer.id);
   if (reextract) return reextractOffer(offer.id);

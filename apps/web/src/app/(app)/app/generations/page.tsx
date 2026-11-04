@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Plus, Globe } from "lucide-react";
 import { requireWorkspace, canEdit } from "@/lib/auth";
 import { listGenerations, listOfferOptions } from "@/lib/data/generations";
+import { listRewrites } from "@/lib/data/offers";
 import { allFormatCards } from "@/lib/formats";
 import { PageHeader, EmptyState } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,8 @@ export default async function GenerationsPage({ searchParams }: { searchParams: 
   const params = await searchParams;
   const current = await requireWorkspace();
   const editor = canEdit(current.role);
-  const [items, offers] = await Promise.all([listGenerations(current.workspace.id, params), listOfferOptions(current.workspace.id)]);
+  const [items, offers, rewrites] = await Promise.all([listGenerations(current.workspace.id, params), listOfferOptions(current.workspace.id), listRewrites(current.workspace.id)]);
+  const waiting = rewrites.filter((r) => !r.generation).length;
   const filtered = !!(params.offer || params.status || params.format);
   const anyLive = items.some((g) => g.status === "running" || g.status === "queued");
   const formats = allFormatCards().map((f) => ({ id: f.id, name: f.name }));
@@ -34,7 +36,7 @@ export default async function GenerationsPage({ searchParams }: { searchParams: 
           editor ? (
             <>
               <Button asChild variant="outline" className="rounded-full">
-                <Link href="/app/rewrite"><Globe className="h-4 w-4" /> Rewrite a page</Link>
+                <Link href="/app/rewrite"><Globe className="h-4 w-4" /> Rewrite a page{waiting ? ` (${waiting} read, not written)` : ""}</Link>
               </Button>
               <Button asChild className="rounded-full shadow-glow">
                 <Link href="/app/generations/new"><Plus className="h-4 w-4" /> New copy</Link>
