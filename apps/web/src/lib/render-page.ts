@@ -8,6 +8,7 @@ import "server-only";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import puppeteer, { type Browser } from "puppeteer-core";
+import { OUTLINE_SRC } from "./page-outline";
 
 export interface RenderedPage {
   title: string;
@@ -73,7 +74,7 @@ async function launch(): Promise<Browser> {
 
 const words = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);
 
-/** The page's text as a reader sees it, every frame read; empty text when the page carried none. */
+/** The page's copy with its layout kept (see page-outline.ts), every frame read; empty text when the page carried none. */
 export async function renderPage(raw: string, budgetMs = 40_000): Promise<RenderedPage> {
   const url = await guardUrl(raw);
   const started = Date.now();
@@ -97,7 +98,11 @@ export async function renderPage(raw: string, budgetMs = 40_000): Promise<Render
     await new Promise((r) => setTimeout(r, Math.min(4_000, Math.max(0, budgetMs - (Date.now() - started) - 3_000))));
     const title = await page.title().catch(() => "");
     const read = await Promise.all(page.frames().map(async (f) => {
-      const text = await f.evaluate(() => (document.body ? document.body.innerText : "")).catch(() => "");
+      // the outline keeps where each line sits (headings, buttons, fields, lists); the flat text is the fallback
+      // for a page whose styling hides the outline most of it (then the flat read is what a reader sees)
+      const outline = await f.evaluate(OUTLINE_SRC).then((v) => (typeof v === "string" ? v : "")).catch(() => "");
+      const flat = await f.evaluate(() => (document.body ? document.body.innerText : "")).catch(() => "");
+      const text = words(outline) >= words(flat) * 0.6 ? outline : flat;
       return { url: f.url(), text: text.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim() };
     }));
     const carrying = read.map((r) => ({ ...r, words: words(r.text) })).filter((r) => r.words > 0).sort((a, b) => b.words - a.words);

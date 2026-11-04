@@ -14,6 +14,7 @@ import mammoth from "mammoth";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
 import { assertEditor, background, errorMessage, normalizeWhitespace, parseBody, runIntake, serve } from "shared/http.ts";
 import { discoverKeyPages } from "shared/discover.ts";
+import { htmlToText, looksLikeHtml, titleOf } from "shared/html_text.ts";
 
 const Body = z.object({ source_id: z.uuid(), run_extraction: z.boolean().optional().default(false) });
 
@@ -176,80 +177,6 @@ function decode(bytes: Uint8Array, charset: string | null): string {
 function charsetOf(contentType: string | null): string | null {
   const m = /charset=([^;\s]+)/i.exec(contentType ?? "");
   return m ? m[1].replace(/^["']|["']$/g, "").toLowerCase() : null;
-}
-
-function looksLikeHtml(s: string): boolean {
-  return /<(?:!doctype\s+html|html|body|head|div|p|article|section)[\s>]/i.test(s.slice(0, 5000));
-}
-
-// ---------- HTML → text ----------
-
-export function htmlToText(html: string): string {
-  let h = html;
-  h = h.replace(/<!--[\s\S]*?-->/g, " ");
-  h = h.replace(/<(script|style|noscript|template|svg|canvas|iframe|object|head)\b[\s\S]*?<\/\1\s*>/gi, " ");
-  h = h.replace(/<(nav|footer|aside|form)\b[\s\S]*?<\/\1\s*>/gi, " ");
-  h = h.replace(/<br\s*\/?>/gi, "\n");
-  h = h.replace(/<\/?(li)\b[^>]*>/gi, (t) => (t.startsWith("</") ? "\n" : "\n- "));
-  h = h.replace(/<\/(p|div|h[1-6]|tr|blockquote|section|article|header|ul|ol|table|pre|figure|figcaption|dd|dt)\s*>/gi, "\n\n");
-  h = h.replace(/<(h[1-6]|p|div|tr|blockquote|section|article|pre)\b[^>]*>/gi, "\n");
-  h = h.replace(/<\/(td|th)\s*>/gi, "\t");
-  h = h.replace(/<\/?(?:a|abbr|b|bdi|bdo|cite|code|data|del|dfn|em|font|i|ins|kbd|label|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)\b[^>]*>/gi, ""); // inline: no space
-  h = h.replace(/<[^>]+>/g, " ");
-  h = decodeEntities(h);
-  return normalizeWhitespace(h);
-}
-
-export function titleOf(html: string): string | null {
-  const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(html);
-  if (!m) return null;
-  const t = normalizeWhitespace(decodeEntities(m[1]));
-  return t ? t.slice(0, 200) : null;
-}
-
-const NAMED_ENTITIES: Record<string, string> = {
-  amp: "&",
-  lt: "<",
-  gt: ">",
-  quot: '"',
-  apos: "'",
-  nbsp: " ",
-  mdash: "—",
-  ndash: "–",
-  hellip: "…",
-  rsquo: "’",
-  lsquo: "‘",
-  rdquo: "”",
-  ldquo: "“",
-  copy: "©",
-  reg: "®",
-  trade: "™",
-  bull: "•",
-  middot: "·",
-  laquo: "«",
-  raquo: "»",
-  deg: "°",
-  times: "×",
-  euro: "€",
-  pound: "£",
-  cent: "¢",
-  shy: "",
-};
-
-function decodeEntities(s: string): string {
-  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, body: string) => {
-    if (body[0] === "#") {
-      const code = body[1].toLowerCase() === "x" ? parseInt(body.slice(2), 16) : parseInt(body.slice(1), 10);
-      if (!Number.isFinite(code) || code <= 0 || code > 0x10ffff) return whole;
-      try {
-        return String.fromCodePoint(code);
-      } catch {
-        return whole;
-      }
-    }
-    const v = NAMED_ENTITIES[body.toLowerCase()];
-    return v === undefined ? whole : v;
-  });
 }
 
 // ---------- guarded URL fetch ----------

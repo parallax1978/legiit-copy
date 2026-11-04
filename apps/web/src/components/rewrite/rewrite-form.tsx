@@ -151,7 +151,7 @@ export function RewriteForm() {
             <p className="mt-1 text-xs text-ink-muted">{status.words.toLocaleString()} words{status.readInBrowser ? ", read in a browser" : ""}. {status.excerpt && <span className="italic">&ldquo;{status.excerpt}&hellip;&rdquo;</span>}</p>
             {status.openQuestions > 0 && (
               <p className="mt-2 text-xs text-ink-muted">
-                The reader found {status.openQuestions} question{status.openQuestions === 1 ? "" : "s"} it could not answer from the page. The piece pauses at those until you answer them on <Link href={`/app/offers/${offerId}`} className="underline">the offer page</Link>, now or when it asks.
+                The page leaves {status.openQuestions} thing{status.openQuestions === 1 ? "" : "s"} unsaid (a guarantee, who signs, a deadline). The copy writes from what the page says and never invents those; nothing waits on them. Answer any you want used on <Link href={`/app/offers/${offerId}`} className="underline">the offer page</Link>.
               </p>
             )}
           </div>
