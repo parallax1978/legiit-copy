@@ -6,15 +6,26 @@
  * With section_ids only those sections are rendered (one email of a sequence, one ad of a set) and the file is
  * stored under its own name so it never overwrites the full export.
  * Ledger tags are stripped; any workspace member may export.
+ *   POST { draft_id, kind: "claude" } → { text, steps, unplaced, unmatched }: for a rewrite (a generation with a control),
+ *   the handoff message to paste to whoever updates the page: the engine places every block of the draft onto the page's
+ *   current copy (one model call, prompts/placement) and writes exact REPLACE / ADD / REMOVE instructions; without a
+ *   control, the new copy with its marks explained.
  */
 import { z } from "zod";
 import { AlignmentType, Document, HeadingLevel, type IRunOptions, LevelFormat, Packer, Paragraph, TextRun } from "docx";
 import { HttpError, json, requireUser, serviceClient } from "shared/supabase.ts";
-import { parseBody, recordUsageSafe, serve } from "shared/http.ts";
+import { loadPromptVersions, parseBody, recordUsageSafe, serve } from "shared/http.ts";
 import { Block, Section } from "engine/schemas/draft.ts";
 import { renderMarkdown, stripLedger } from "engine/render.ts";
+import { callModel } from "engine/llm.ts";
+import { PLACEMENT_MODEL } from "engine/config.ts";
+import { Placement } from "engine/schemas/placement.ts";
+import placementPrompt, { placementUser } from "engine/prompts/placement.v1.ts";
+import { newBlocks, pageLines, reconcilePlacement, renderHandoff } from "engine/handoff.ts";
 
-const Body = z.object({ draft_id: z.uuid(), kind: z.enum(["docx", "html", "md", "txt"]), section_ids: z.array(z.string().min(1)).min(1).max(50).optional() });
+const Body = z.object({ draft_id: z.uuid(), kind: z.enum(["docx", "html", "md", "txt", "claude"]), section_ids: z.array(z.string().min(1)).min(1).max(50).optional() });
+/** The page's copy the placement reads: a control longer than this is cut (the draft itself is short). */
+const CONTROL_MAX = 60_000;
 
 const LooseBlock = Block.extend({ items: Block.shape.items.optional(), meta: Block.shape.meta.optional() });
 const LooseSection = Section.extend({ blocks: z.array(LooseBlock) });
@@ -40,7 +51,7 @@ serve(async (req) => {
   const db = serviceClient();
   const [{ data: draft }, { data: gen }] = await Promise.all([
     db.from("drafts").select("*").eq("id", draft_id).single(),
-    db.from("generations").select("id, workspace_id, format, offer_id").eq("id", visible.generation_id).single(),
+    db.from("generations").select("id, workspace_id, format, offer_id, options").eq("id", visible.generation_id).single(),
   ]);
   if (!draft || !gen) throw new HttpError(404, "draft or generation missing");
   // the same-workspace triggers make this unreachable; it stays as the last check before a service-role write to storage
@@ -49,6 +60,7 @@ serve(async (req) => {
 
   const parsed = parseSections(draft.blocks);
   let sections = parsed ?? [{ section_id: "all", title: null, blocks: [{ id: "md", type: "paragraph" as const, text: draft.markdown, items: null, meta: null }] }];
+  if (kind === "claude") return json(await handoffForClaude(db, { sections, gen, draftId: draft_id }));
   let suffix = "";
   if (section_ids) {
     if (!parsed) throw new HttpError(422, "this draft has no sections to select from");
@@ -86,6 +98,42 @@ serve(async (req) => {
 
   return json({ url: signed.signedUrl, path, filename, kind, content_type: CONTENT_TYPES[kind], expires_in: EXPIRES_IN, draft_id, generation_id: gen.id, version: draft.version, section_ids: sections.map((s) => s.section_id) });
 });
+
+// ---------- the handoff to the page ----------
+/** The message for whoever updates the page: exact placements when the draft rewrote a page, the marked copy otherwise. */
+async function handoffForClaude(db: ReturnType<typeof serviceClient>, args: { sections: SectionT[]; gen: { id: string; workspace_id: string; format: string; options: unknown }; draftId: string }) {
+  const options = args.gen.options && typeof args.gen.options === "object" ? (args.gen.options as Record<string, unknown>) : {};
+  const control = typeof options.control_text === "string" ? options.control_text.trim().slice(0, CONTROL_MAX) : "";
+  const blocks = newBlocks(args.sections);
+  if (!control || !blocks.length) {
+    const md = renderMarkdown({ sections: args.sections }, { stripLedger: true });
+    const text = [
+      "Update the copy on this page. Keep the design, the layout, the images, every link and every button's destination exactly as they are; change only the words.",
+      "",
+      "Replace the page's copy with NEW COPY below, top to bottom, part for part. A line starting with # is the headline (## a deck or subhead, ### a crosshead); a line in *asterisks* is the preheadline; [ text ] is a button label; lines starting with - are bullets; lines starting with > are quotes. Where NEW COPY has a part the page lacks, add it in that position in the page's own style. Where the page has an element NEW COPY does not cover, leave its words as they are. Do not add anything of your own and do not rewrite or shorten any line.",
+      "",
+      "NEW COPY",
+      "",
+      md.trim(),
+    ].join("\n") + "\n";
+    return { text, steps: 0, unplaced: 0, unmatched: 0, placed: false, draft_id: args.draftId };
+  }
+  const lines = pageLines(control);
+  const pageUrl = /^Rewrite the page at (\S+) /.exec(typeof options.purpose === "string" ? options.purpose : "")?.[1] ?? null;
+  const pv = (await loadPromptVersions(db))["placement"]; // an active prompt_versions row replaces the inline prompt
+  const call = await callModel({
+    model: pv?.model ?? PLACEMENT_MODEL,
+    effort: (pv?.effort as "low" | "medium" | "high" | "xhigh" | "max" | undefined) ?? placementPrompt.effort,
+    maxTokens: pv?.max_tokens ?? placementPrompt.maxTokens,
+    system: pv?.template ?? placementPrompt.system,
+    user: placementUser({ pageLines: lines.map((l) => l.raw), blocks, format: args.gen.format }),
+    schema: Placement,
+    log: { db, workspaceId: args.gen.workspace_id, generationId: args.gen.id, purpose: "placement", promptVersionId: pv?.id ?? null },
+  });
+  const handoff = reconcilePlacement(call.output, lines, blocks);
+  await recordUsageSafe(db, { workspaceId: args.gen.workspace_id, generationId: args.gen.id, kind: "handoff", tokens: call.usage.input_tokens + call.usage.output_tokens, cost: call.costUsd });
+  return { text: renderHandoff(handoff, { pageUrl }), steps: handoff.steps.length, unplaced: handoff.unplaced.length, unmatched: handoff.unmatched.length, placed: true, draft_id: args.draftId };
+}
 
 // ---------- blocks ----------
 

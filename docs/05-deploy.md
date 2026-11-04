@@ -15,7 +15,7 @@ Project `vcxldzuowhktamltlnla` ("Legiit Copy", us-east-1) has all 17 migrations 
    ```
    supabase secrets set ANTHROPIC_API_KEY=sk-ant-... PIPELINE_SHARED_SECRET=<at least 16 random chars; run-step refuses every request otherwise> RESEND_API_KEY=re_... SITE_URL=https://<your-domain> INVITE_FROM_EMAIL="Legiit Copy <no-reply@your-domain>"
    ```
-   Optional: `ENGINE_DEFAULT_MODEL`, `ENGINE_COLD_READ_MODEL`.
+   Optional: `ENGINE_DEFAULT_MODEL`, `ENGINE_COLD_READ_MODEL`, `ENGINE_PLACEMENT_MODEL` (the handoff's placement of a rewrite onto its page; the cold read's model by default).
 5. **Deploy functions**: `supabase functions deploy --no-verify-jwt --import-map supabase/functions/deno.json run-step` then `supabase functions deploy --import-map supabase/functions/deno.json <name>` for every other folder in `supabase/functions/`. The import map flag is required: the remote bundler does not read `supabase/functions/deno.json` on its own. CI does this on `main`.
 6. **Dispatcher settings** (SQL editor, once):
    ```sql

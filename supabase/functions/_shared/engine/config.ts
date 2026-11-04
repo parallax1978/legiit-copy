@@ -12,6 +12,8 @@ export function env(key: string): string | undefined {
 export const DEFAULT_MODEL = env("ENGINE_DEFAULT_MODEL") ?? "claude-opus-5-5";
 export const COLD_READ_MODEL = env("ENGINE_COLD_READ_MODEL") ?? "claude-sonnet-5-5";
 export const CHEAP_MODEL = env("ENGINE_CHEAP_MODEL") ?? "claude-haiku-5-5";
+/** The handoff's placement of a rewrite onto its page: matching, not writing, so the cold read's model unless set. */
+export const PLACEMENT_MODEL = env("ENGINE_PLACEMENT_MODEL") ?? COLD_READ_MODEL;
 
 export type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 export const EFFORT_ORDER: readonly Effort[] = ["low", "medium", "high", "xhigh", "max"];

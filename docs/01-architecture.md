@@ -41,7 +41,7 @@ supabase/
     rewrite-passage/           targeted rewrite
     embed/                     embeddings for examples and research chunks
     judge/                     LLM-as-judge for eval runs
-    export/                    DOCX/HTML rendering
+    export/                    DOCX/HTML/MD/TXT rendering, and the handoff to the page (kind "claude": the rewrite's blocks placed onto the page's current copy by one model call, prompts/placement, engine/handoff.ts; exact REPLACE / ADD / REMOVE instructions to paste to Claude)
   tests/                       Deno tests for engine
 tools/
   engine-cli/                  `deno run` harness: run a brief through the pipeline locally

@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Download, Copy, FileText, FileCode, FileType, Loader2, File, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { exportDraft } from "@/lib/actions/generations";
+import { exportDraft, handoffForClaude } from "@/lib/actions/generations";
 import { claudeHandoff, cleanMarkdown, markdownToText } from "@/components/editor/markdown-blocks";
 import { markdownToHtml } from "@/components/editor/copy-editor";
 
@@ -44,11 +44,32 @@ function slug(s: string) {
 export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props) {
   const [busy, setBusy] = useState(false);
   const forClaude = async () => {
+    // a rewrite: the engine places every block onto the page first (a model call of a few seconds); otherwise the marked copy, built here
+    if (!controlText) {
+      try {
+        await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), null));
+        toast.success("Copied. Paste it into the Claude conversation that holds your page.");
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Copy failed");
+      }
+      return;
+    }
+    setBusy(true);
+    const waiting = toast.loading("Placing each line of the new copy on the page.");
     try {
-      await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), controlText));
-      toast.success("Copied. Paste it into the Claude conversation that holds your page.");
+      const r = await handoffForClaude(draftId);
+      toast.dismiss(waiting);
+      if (!r.ok) {
+        toast.error(r.error);
+        return;
+      }
+      await navigator.clipboard.writeText(r.text);
+      toast.success(r.unplaced ? `Copied. ${r.unplaced} block${r.unplaced === 1 ? "" : "s"} had no line on the page and are listed at the end to place.` : "Copied. Paste it into the Claude conversation that holds your page.");
     } catch (e) {
+      toast.dismiss(waiting);
       toast.error(e instanceof Error ? e.message : "Copy failed");
+    } finally {
+      setBusy(false);
     }
   };
   const scopes: { key: string; scope: ExportScope }[] = item ? [{ key: "item", scope: item }, { key: "all", scope: all }] : [{ key: "all", scope: all }];
