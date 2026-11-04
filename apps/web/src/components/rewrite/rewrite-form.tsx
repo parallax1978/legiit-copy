@@ -65,15 +65,21 @@ export function RewriteForm() {
     if (!offerId || !needsBrowser) return;
     setBrowser("opening");
     setBrowserError(null);
-    readRenderedPage(offerId).then((r) => {
-      if (r.ok) {
-        setBrowser("done");
-        setStatus(null);
-      } else {
+    readRenderedPage(offerId)
+      .then((r) => {
+        if (r.ok) {
+          setBrowser("done");
+          setStatus(null);
+        } else {
+          setBrowser("failed");
+          setBrowserError(r.error);
+        }
+      })
+      .catch((e: unknown) => {
+        // the server action itself failed (the function timed out or died): say so instead of spinning
         setBrowser("failed");
-        setBrowserError(r.error);
-      }
-    });
+        setBrowserError(`The browser read did not finish on the server (${e instanceof Error ? e.message : String(e)}).`);
+      });
   }, [offerId, needsBrowser]);
 
   function read(e: React.FormEvent) {
@@ -124,7 +130,7 @@ export function RewriteForm() {
       {offerId && reading && (
         <div className="flex items-center gap-3 rounded-xl border border-line bg-surface-alt p-4 text-sm text-ink-muted">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <span>{opening ? "The page draws itself in the browser, so it is being opened in one and read, frame by frame." : status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
+          <span>{opening ? "The page draws itself in the browser, so it is being opened in one and read, frame by frame. The first read on a server takes up to a minute." : status?.sourceStatus === "done" ? "Page read. Building the brief and the claims ledger from it." : "Reading the page and the pages it links to (pricing, terms, about)."}</span>
         </div>
       )}
 

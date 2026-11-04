@@ -17,7 +17,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@sparticuz/chromium':
+      '@sparticuz/chromium-min':
         specifier: ^141.0.0
         version: 141.0.0
       '@supabase/ssr':
@@ -1608,8 +1608,8 @@ packages:
   '@rushstack/eslint-patch@1.16.1':
     resolution: {integrity: sha512-TvZbIpeKqGQQ7X0zSCvPH9riMSFQFSggnfBjFZ1mEoILW+UuXCKwOoPcgjMwiUtRqFZ8jWhPJc4um14vC6I4ag==}
 
-  '@sparticuz/chromium@141.0.0':
-    resolution: {integrity: sha512-JsTp4AqgStkqKki4dUpEM0GoisAjQhsqZ1lQTNMSKK5A9pw6BbIuIvv2HVYMYzSZGyDdQNJYBPPDg2eggCkezA==}
+  '@sparticuz/chromium-min@141.0.0':
+    resolution: {integrity: sha512-1EAR1NBrY4sa0hysDUCxCSI+9xc88/LYB3YjWFqMMu3CF82ATp8FzOeu7icwGxI02NAPcwzb0Uf1kIzsfH7Eiw==}
     engines: {node: '>=20.11.0'}
 
   '@supabase/auth-js@2.118.0':
@@ -5513,7 +5513,7 @@ snapshots:
 
   '@rushstack/eslint-patch@1.16.1': {}
 
-  '@sparticuz/chromium@141.0.0':
+  '@sparticuz/chromium-min@141.0.0':
     dependencies:
       follow-redirects: 1.16.2
       tar-fs: 3.1.3

@@ -17,6 +17,12 @@ export interface RenderedPage {
 }
 
 const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36";
+/**
+ * The Chromium build the minimal package drives, fetched once per function instance into /tmp (Vercel's documented
+ * setup: the binary inside the function would pass its size limit). Its version matches @sparticuz/chromium-min in
+ * package.json; bump both together. CHROMIUM_PACK_URL overrides it (a mirror, a newer pack).
+ */
+const CHROMIUM_PACK = "https://github.com/Sparticuz/chromium/releases/download/v141.0.0/chromium-v141.0.0-pack.x64.tar";
 /** A frame with fewer words than this is the app's chrome (a share bar, a sign-in link), not the page. */
 const FRAME_MIN_WORDS = 30;
 const MAX_CHARS = 400_000;
@@ -51,11 +57,18 @@ export async function guardUrl(raw: string): Promise<URL> {
 }
 
 async function launch(): Promise<Browser> {
-  // outside Vercel (local dev, tests) the Chromium on the machine; on Vercel the serverless build
+  // outside Vercel (local dev, tests) the Chromium on the machine; on Vercel the serverless build, downloaded and
+  // unpacked into /tmp on the instance's first read and reused after
   const local = process.env.CHROMIUM_PATH;
   if (local) return puppeteer.launch({ executablePath: local, headless: true, args: ["--no-sandbox", "--disable-dev-shm-usage"] });
-  const chromium = (await import("@sparticuz/chromium")).default;
-  return puppeteer.launch({ executablePath: await chromium.executablePath(), headless: true, args: chromium.args });
+  const chromium = (await import("@sparticuz/chromium-min")).default;
+  let executablePath: string;
+  try {
+    executablePath = await chromium.executablePath(process.env.CHROMIUM_PACK_URL || CHROMIUM_PACK);
+  } catch (e) {
+    throw new Error(`the browser could not be set up on the server (${e instanceof Error ? e.message : String(e)})`);
+  }
+  return puppeteer.launch({ executablePath, headless: true, args: chromium.args });
 }
 
 const words = (t: string) => (t.trim() ? t.trim().split(/\s+/).length : 0);

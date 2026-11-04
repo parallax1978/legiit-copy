@@ -42,7 +42,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
 NEXT_PUBLIC_SITE_URL=https://<your-domain>
 ```
-No service-role key is ever set on Vercel.
+No service-role key is ever set on Vercel. Optional: `CHROMIUM_PACK_URL`, a mirror of the Chromium pack the Rewrite page's browser read fetches into `/tmp` on first use (the default is the GitHub release pinned in `lib/render-page.ts`, matching `@sparticuz/chromium-min`).
 
 ## 4. GitHub Actions
 
