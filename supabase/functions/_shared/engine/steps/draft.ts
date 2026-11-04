@@ -212,7 +212,7 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     let attempt = 0;
     let note: string | null = null;
     for (;;) {
-      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, LeadsDraft, `draft leads${attempt ? " (retry)" : ""}`);
+      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, LeadsDraft, `draft leads${attempt ? " (retry)" : ""}`, { effortRungsDown: 1 });
       callsThisInvocation++;
       model = res.model;
       const normalized = normalizeLeads(res.output.leads, leadTypes!);
@@ -229,7 +229,7 @@ export async function runDraft(ctx: StepContext, deps: DraftDeps): Promise<StepR
     let attempt = 0;
     let note: string | null = extraNote;
     for (;;) {
-      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, WholeDraft, `draft whole piece${attempt ? " (retry)" : ""}`);
+      const res = await deps.call(ctx, "draft", draftPrompt, { ...args, retryNote: note }, WholeDraft, `draft whole piece${attempt ? " (retry)" : ""}`, { effortRungsDown: 1 });
       callsThisInvocation++;
       model = res.model;
       const matched = matchSections(res.output.sections, call);

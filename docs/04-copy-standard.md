@@ -68,7 +68,7 @@ Body
 
 ## 2. Argument selection
 
-1. Generate twenty candidates per offer by search (the unused fact, the opposite of the category idea, the mechanism in the process), one line each: core desire [cluster, k] | promise | mechanism.
+1. Generate twelve candidates per offer by search (the unused fact, the opposite of the category idea, the mechanism in the process), one line each: core desire [cluster, k] | promise | mechanism.
 2. Compute C1-C3 per cluster (`research/rubric/magnitude.py`): urgency = share of verbatims with intensity or time-pressure markers, banded 0-3 at 10/25/50 percent; staying power = the higher of the duration-marker share banded at 10/30/50 and distinct years banded at 2/3/4; scope = prevalence banded at 5/15/30 percent. A share band needs the count behind it: band 1 needs two marked verbatims, band 2 three, band 3 five; a small cluster stays at the band its count supports, so three intense quotes in a cluster of six do not outrank seventeen quieter ones. Years and prevalence are counts already.
 3. Gates, before any sum. Desire: C1+C2+C3 ≥ 4 of 9 with k ≥ 5 verbatims (fewer passes only as provisional). Proof: C9 ≥ 2, meaning a carrier in rule 8 backs the promise: a fact on file (the product's own features, process and terms count), the mechanism that produces the result, or a demonstration the reader runs. A promise of the result never fails this gate for want of a result row; a number, a rate or a time in it does without its data.
 4. Score survivors on C4-C14. Weighted total = Σ weight × score, maximum 57.

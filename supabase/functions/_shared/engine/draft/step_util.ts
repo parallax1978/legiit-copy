@@ -27,12 +27,14 @@ export async function callStep<A, S extends z.ZodTypeAny>(
   args: A,
   schema: S,
   purpose: string,
-  overrides: { model?: string; maxTokens?: number; effort?: Effort } = {},
+  overrides: { model?: string; maxTokens?: number; effort?: Effort; effortRungsDown?: number } = {},
 ): Promise<CallResult<z.infer<S>>> {
   const r = resolvePrompt(ctx, mod);
   const d = STEP_DEFAULTS[step];
   const model = overrides.model ?? r.model ?? d.model;
-  const effort = overrides.effort ?? (r.effort as Effort | undefined) ?? d.effort;
+  let effort = overrides.effort ?? (r.effort as Effort | undefined) ?? d.effort;
+  // a call whose answer is long (a whole piece, three openings) starts below the step's effort: thinking shares its budget
+  for (let i = 0; i < (overrides.effortRungsDown ?? 0); i++) effort = lowerEffort(effort);
   const maxTokens = Math.min(overrides.maxTokens ?? r.maxTokens ?? d.maxTokens, MAX_TOKENS_PER_CALL);
   const user = mod.user(ctx, args);
   const run = (eff: Effort, tag: string) =>

@@ -16,7 +16,7 @@ import { type Db, serviceClient } from "shared/supabase.ts";
 import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls, secretMatches } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
-import { inFinalPass, nextSteps, passBoundary, STEP_PREDECESSORS, type PipelineState } from "engine/pipeline.ts";
+import { inFinalPass, nextSteps, passBoundary, reviewsStalled, STEP_PREDECESSORS, type PipelineState } from "engine/pipeline.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
 import { RefusalError, TruncatedError } from "engine/llm.ts";
@@ -502,6 +502,7 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
 
   const latest = (s: StepName) => thisCycle.filter((r) => r.step === s).at(-1)?.output ?? null;
   const editorialOut = asRecord(latest("editorial"));
+  const editorialStalled = reviewsStalled(completedRows.filter((r) => r.step === "editorial" && isAfter(r.finished_at ?? r.created_at, loopStart)).map((r) => r.output));
   const mechanicalOut = asRecord(latest("mechanical"));
   const factualOut = asRecord(latest("factual"));
 
@@ -528,8 +529,10 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
     revisionCycles,
     skipOffer: options.skip_offer === true,
     finalPass: inFinalPass(completedRows),
+    editorialStalled,
   };
 }
+
 
 // ---------- helpers ----------
 /** The variant the offer step just proposed: from applyEffects, else the newest proposed row for the offer. */

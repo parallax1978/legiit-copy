@@ -18,7 +18,7 @@ import { CandidatesOutput, isExcluded, normalizeCandidates, readExclusions } fro
 import { computeClusterTable, renderClusterTable } from "../argument/magnitude.ts";
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
 import { callModel, TruncatedError } from "../llm.ts";
-import argumentPrompt from "../prompts/argument.v26.ts";
+import argumentPrompt from "../prompts/argument.v27.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { formatExamplesForPrompt, retrieve } from "../retrieval.ts";
 import { ArgumentOutput, Candidate } from "../schemas/argument.ts";
@@ -30,8 +30,9 @@ import { remainingBudgetMs } from "./budget.ts";
 import { requireBrief } from "./research.ts";
 import type { StepContext, StepFn, StepResult } from "./types.ts";
 
-export const CANDIDATE_COUNT = 20;
-export const CANDIDATE_RETRY_COUNT = 12;
+/** Twelve candidates at two rungs less thinking: twenty at one rung ran past the output budget on seven runs in ten and were redone at twelve. */
+export const CANDIDATE_COUNT = 12;
+export const CANDIDATE_RETRY_COUNT = 8;
 /** Scoring needs about this long; with less left in the invocation the step checkpoints and continues later. */
 export const SCORING_ESTIMATE_MS = 150_000;
 export const CANDIDATES_RETRY_REASON = "Candidate generation ran past the output budget; retrying with fewer candidates";
@@ -121,7 +122,7 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
       try {
         gen = await call({
           ...base,
-          effort: retry ? lowerEffort(lowerEffort(base.effort)) : lowerEffort(base.effort),
+          effort: retry ? lowerEffort(lowerEffort(lowerEffort(base.effort))) : lowerEffort(lowerEffort(base.effort)),
           timeoutMs: remainingBudgetMs(ctx),
           user: argumentPrompt.user(ctx, { phase: "candidates", ...common, count, examples, exclusions }),
           schema: CandidatesOutput,
@@ -153,20 +154,22 @@ export function makeArgumentStep(deps: Partial<ArgumentDeps> = {}): StepFn {
     const survivors = gated.filter(isSurvivor);
     let judged: Record<string, JudgedEntry> = {};
     if (survivors.length) {
-      const compact = !!partial.candidates && !!partial.retry;
-      await ctx.progress(`Scoring ${survivors.length} gate survivor${survivors.length === 1 ? "" : "s"} on C4-C14${compact ? " (retry, one-sentence rationales)" : ""}`);
+      // one-sentence rationales at one rung less thinking, always: the full rationales ran past the budget on nine runs in ten and were redone this way
+      const retryScoring = !!partial.candidates && !!partial.retry;
+      const compact = true;
+      await ctx.progress(`Scoring ${survivors.length} gate survivor${survivors.length === 1 ? "" : "s"} on C4-C14${retryScoring ? " (retry, less thinking)" : ""}`);
       let sc;
       try {
         sc = await call({
           ...base,
-          effort: compact ? lowerEffort(base.effort) : base.effort,
+          effort: retryScoring ? lowerEffort(lowerEffort(base.effort)) : lowerEffort(base.effort),
           timeoutMs: remainingBudgetMs(ctx),
           user: argumentPrompt.user(ctx, { phase: "scoring", ...common, survivors, compact }),
           schema: ScoringOutput,
-          log: log(compact ? "argument.scoring.retry_compact" : "argument.scoring"),
+          log: log(retryScoring ? "argument.scoring.retry_compact" : "argument.scoring"),
         });
       } catch (e) {
-        if (!(e instanceof TruncatedError) || compact) throw e;
+        if (!(e instanceof TruncatedError) || retryScoring) throw e;
         const next: ArgumentPartial = { candidates, dropped: droppedReasons, retry: true, product_sentence: productSentence };
         await ctx.savePartial(next);
         return { output: next, model, summary: "scoring ran past the output budget; retrying with one-sentence rationales", continueLater: { reason: SCORING_RETRY_REASON } };

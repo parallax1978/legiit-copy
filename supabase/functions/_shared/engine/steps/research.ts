@@ -215,7 +215,7 @@ export function makeResearchStep(deps: Partial<ResearchDeps> = {}): StepFn {
     try {
       res = await call({
         model: p.model ?? d.model,
-        effort: retry ? lowerEffort(effort) : effort,
+        effort: retry ? lowerEffort(lowerEffort(effort)) : lowerEffort(effort), // organizing what was collected: one rung below the step, two on the retry
         maxTokens,
         timeoutMs: remainingBudgetMs(ctx),
         system: p.system,

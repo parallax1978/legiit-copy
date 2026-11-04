@@ -542,7 +542,7 @@ Deno.test("research step, synthesize: builds the dossier from the checkpoint wit
   const res = await makeResearchStep({ call })(ctx);
 
   assertEquals(calls.length, 1);
-  assertEquals([calls[0].webTools, calls[0].effort, calls[0].purpose], [undefined, "high", "research.synthesize"]);
+  assertEquals([calls[0].webTools, calls[0].effort, calls[0].purpose], [undefined, "medium", "research.synthesize"]);
   assertStringIncludes(calls[0].user, '<collected verbatims="12" findings="1" sources="1">');
   assertStringIncludes(calls[0].user, "<cluster_vocabulary>\nroutine, energy, taste\n</cluster_vocabulary>");
   assertStringIncludes(calls[0].user, "V1 | desire");
@@ -598,7 +598,7 @@ Deno.test("research step: a truncated synthesis is retried once with tighter cap
   const second = fakeCall(() => SYNTHESIS);
   const ctx2 = fakeCtx({ brief: BRIEF, partial: { phase: "synthesize", collect: COLLECT, retry: true } });
   const res2 = await makeResearchStep({ call: second.call })(ctx2);
-  assertEquals([second.calls[0].effort, second.calls[0].purpose], ["medium", "research.synthesize.retry_tighter_caps"]);
+  assertEquals([second.calls[0].effort, second.calls[0].purpose], ["low", "research.synthesize.retry_tighter_caps"]);
   assertStringIncludes(second.calls[0].user, "Cap themes at 6");
   assertEquals(res2.effects?.research?.dossier.verbatims.length, 12);
 
@@ -738,7 +738,7 @@ Deno.test("argument step: two calls, code gates between them, exclusions honored
 
   assertEquals(calls.map((c) => c.purpose), ["argument.candidates", "argument.scoring"]);
   assertEquals(calls.every((c) => c.system === argumentPrompt.system && c.maxTokens === 12000), true);
-  assertEquals(calls.map((c) => c.effort), ["high", "xhigh"]); // candidates one rung below the step; scoring at the step's effort
+  assertEquals(calls.map((c) => c.effort), ["medium", "high"]); // candidates two rungs below the step, scoring one: the rungs the overrun retries had settled on
   assertStringIncludes(calls[0].system, "| C9 | Claim ≤ proof | 2 |");
   const u1 = calls[0].user;
   assertStringIncludes(u1, "<phase>\ncandidates\n</phase>");
@@ -849,7 +849,7 @@ Deno.test("argument step: candidates are checkpointed; a short budget defers sco
   const resume = fakeCall(() => SCORED_A1);
   const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: saved });
   const res2 = await makeArgumentStep({ call: resume.call, retrieve: noRetrieve })(ctx2);
-  assertEquals(resume.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring", "xhigh"]]);
+  assertEquals(resume.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring", "high"]]);
   assertEquals(res2.continueLater, undefined);
   assertEquals(ArgumentOutput.parse(res2.output).winner_id, "A01");
   assertEquals((res2.effects?.angles ?? []).filter((a) => a.isWinner).length, 1);
@@ -867,7 +867,7 @@ Deno.test("argument step: a truncated candidates call is retried next invocation
   const second = fakeCall((rec) => (rec.purpose.startsWith("argument.candidates") ? { cluster_vocabulary_used: ["routine"], candidates: [cand("A1", "routine", ["c-guar"])] } : SCORED_A1));
   const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: { retry: true } });
   const res2 = await makeArgumentStep({ call: second.call, retrieve: noRetrieve })(ctx2);
-  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.candidates.retry_fewer", "medium"], ["argument.scoring", "xhigh"]]);
+  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.candidates.retry_fewer", "low"], ["argument.scoring", "high"]]);
   assertStringIncludes(second.calls[0].user, `${CANDIDATE_RETRY_COUNT} candidates`);
   assertEquals(res2.continueLater, undefined);
 
@@ -893,7 +893,7 @@ Deno.test("argument step: a truncated scoring call keeps the candidates and retr
   const second = fakeCall(() => SCORED_A1);
   const ctx2 = fakeCtx({ brief: BRIEF, claims: CLAIMS, dossier: DOSSIER, partial: saved });
   const res2 = await makeArgumentStep({ call: second.call, retrieve: noRetrieve })(ctx2);
-  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring.retry_compact", "high"]]);
+  assertEquals(second.calls.map((c) => [c.purpose, c.effort]), [["argument.scoring.retry_compact", "medium"]]);
   assertStringIncludes(second.calls[0].user, "one sentence of rationale per survivor");
   assertEquals(ArgumentOutput.parse(res2.output).winner_id, "A01");
 });

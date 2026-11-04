@@ -8,7 +8,7 @@
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import type { Block, Section } from "../schemas/draft.ts";
 import type { RevisionOutput } from "../schemas/review.ts";
-import { reconcileRevision, unquotedSentencesLost } from "../draft/review.ts";
+import { productNameForms, reconcileRevision, unquotedSentencesLost } from "../draft/review.ts";
 import { analyzeDraft, openingMatches, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
@@ -103,4 +103,20 @@ Deno.test("prompts: the tell edit reads for the lecture and the frame pair and k
   for (const t of ["1. Change only the sentence a note quotes. Inside a quoted block, every sentence no note quotes is returned byte for byte as it was", "The sentence that introduces the product by name (rule 38) is never cut, merged away or rewritten unless a note quotes it", "(f) A rebuilt line stands on its own", "An example line in a note shows the move; the rebuilt line is written from a fact the piece holds"]) assertStringIncludes(revisePrompt.system, t);
   assert(!revisePrompt.system.includes("1. Change only blocks a note quotes."));
   for (const t of ["goes in DO NOT TOUCH unless THE ONE THING is about that sentence", "never to rebuild the block that holds the introduction and never to move the introduction into the lead-in", "Gate D also fails a lesson in how the reader's trade works, a mechanism told in more than two short sentences, two sentences built on one frame"]) assertStringIncludes(editorialPrompt.system, t);
+});
+
+Deno.test("the product's short name counts as naming it: cutting the one line with the full name is not cutting the introduction", () => {
+  assertEquals(productNameForms("Command Center by Legiit"), ["command center by legiit", "command center"]);
+  assertEquals(productNameForms("Legiit Keywords"), ["legiit keywords"]);
+  assertEquals(productNameForms("Clipboard (Mac app)"), ["clipboard (mac app)", "clipboard"]);
+  const pre = blk("headline-1", "Command Center by Legiit", "preheadline");
+  const deck = blk("headline-2", "For owners running one business.");
+  const body = blk("main-1", "Command Center is an app that reads your website and your numbers and shows you the one thing to do next [[L:aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa]].");
+  const was = [sec("headline", [pre, deck]), sec("main", [body])];
+  const cut = reconcileRevision(was, revision([sec("headline", [deck]), sec("main", [body])], []), ["Command Center by Legiit / For owners running one business."], [], undefined, { productName: "Command Center by Legiit" });
+  assertEquals([cut.removed, cut.productKept, cut.reverted], [["headline-1"], [], []]);
+  // with no other line naming the product, the introduction still stays
+  const alone = [sec("headline", [pre, deck]), sec("main", [blk("main-1", "An app that reads your website and shows you the one thing to do next.")])];
+  const kept = reconcileRevision(alone, revision([sec("headline", [deck]), alone[1]], []), ["Command Center by Legiit / For owners running one business."], [], undefined, { productName: "Command Center by Legiit" });
+  assertEquals([kept.removed, kept.productKept], [[], ["headline-1"]]);
 });

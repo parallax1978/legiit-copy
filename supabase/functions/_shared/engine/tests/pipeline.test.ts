@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "@std/assert";
-import { inFinalPass, nextSteps, passBoundary, type PipelineState } from "../pipeline.ts";
+import { inFinalPass, nextSteps, passBoundary, reviewsStalled, type PipelineState } from "../pipeline.ts";
 import { MAX_REVISION_CYCLES, type StepName } from "../config.ts";
 
 interface Row {
@@ -79,4 +79,19 @@ Deno.test("final pass: a normal cycle is unchanged; the cold read still sets the
   assertEquals(nextSteps("factual", state(reviewed, { editorialVerdict: "APPROVE" })), ["ship"]);
   // a draft's first tell edit, before any cold read, is not a final pass
   assert(!inFinalPass(history(["argument", "draft", "tell_edit"])));
+});
+
+Deno.test("a stalled review loop ships: the chief failed the same gate on the same line twice, so a third revision would repeat the note", () => {
+  const review = (quote: string, gate: string | null = "B", verdict = "REJECT") => ({ verdict, reject_gate: gate, one_thing: gate ? { quote, fails: "Gate B", do: "cut it" } : null });
+  assertEquals(reviewsStalled([review("Command Center by Legiit / Stop guessing."), review("Command Center by Legiit / Stop guessing.")]), true);
+  assertEquals(reviewsStalled([review("Command Center by Legiit / Stop guessing [[L:1]]."), review("command center by legiit / stop guessing")]), true, "ledger tags, case and punctuation do not tell the lines apart");
+  assertEquals(reviewsStalled([review("one line"), review("another line")]), false);
+  assertEquals(reviewsStalled([review("one line", "A"), review("one line", "B")]), false);
+  assertEquals(reviewsStalled([review("one line")]), false);
+  assertEquals(reviewsStalled([review("one line"), review("one line", null, "APPROVE")]), false);
+  const s = { hasActiveResearch: true, hasApprovedOffer: true, completed: ["editorial", "mechanical", "factual"] as StepName[], editorialVerdict: "REJECT" as const, revisionCycles: 1, editorialStalled: true };
+  assertEquals(nextSteps("factual", s), ["ship"]);
+  assertEquals(nextSteps("factual", { ...s, editorialStalled: false }), ["revise"]);
+  assertEquals(nextSteps("factual", { ...s, factualFatal: true }), ["revise"], "a fabrication still gets its revision");
+  assertEquals(nextSteps("editorial", { ...s, completed: ["editorial"] }), [], "the checks finish first");
 });

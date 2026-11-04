@@ -14,6 +14,8 @@ export interface PipelineState {
   revisionCycles: number;
   skipOffer?: boolean;             // user chose to keep the offer as-is
   finalPass?: boolean;             // the newest tell edit came after the newest cold read: the checks of the final pass
+  /** the copy chief failed the same gate on the same quoted line two reviews running: the revision cannot apply the fix, so another round would repeat it */
+  editorialStalled?: boolean;
 }
 
 /**
@@ -100,6 +102,9 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
       if (!all) return [];
       const clean = s.editorialVerdict === "APPROVE" && !s.mechanicalHardFail && !s.factualFatal;
       if (clean) return ["ship"];
+      // the chief's objection did not move in a round: a third attempt repeats the same revision, so the piece ships
+      // with the objection listed for the user (a fabrication or a hard tell fail still gets its revision)
+      if (s.editorialStalled && !s.mechanicalHardFail && !s.factualFatal) return ["ship"];
       // up to three revisions are reviewed again; after the last review one more revision applies its notes, so the
       // copy chief's last objection is never shipped unaddressed
       return ["revise"];
@@ -112,3 +117,22 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
 }
 
 export const REVIEW_STEPS: StepName[] = ["editorial", "mechanical", "factual"];
+
+/**
+ * The copy chief's last two reviews of this loop failed the same gate on the same quoted line: the revision between
+ * them could not apply the fix (the desk reverted it, or the model would not make it), and a third round would repeat
+ * the same note. The piece ships instead, with the objection listed for the user.
+ */
+export function reviewsStalled(editorialOutputs: unknown[]): boolean {
+  const asRecord = (v: unknown): Record<string, unknown> | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null);
+  const last = editorialOutputs.slice(-2).map(asRecord);
+  if (last.length < 2 || last.some((o) => !o)) return false;
+  const key = (o: Record<string, unknown>) => {
+    if (o.verdict === "APPROVE" || !o.reject_gate) return null;
+    const one = asRecord(o.one_thing);
+    const quote = typeof one?.quote === "string" ? one.quote.toLowerCase().replace(/\[\[[^\]]*\]\]/g, "").replace(/[^a-z0-9]+/g, " ").trim().slice(0, 200) : "";
+    return quote ? `${o.reject_gate}|${quote}` : null;
+  };
+  const a = key(last[0]!);
+  return a !== null && a === key(last[1]!);
+}

@@ -423,11 +423,27 @@ export function unquotedSentencesLost(before: Section["blocks"][number], after: 
   return lost;
 }
 
+/**
+ * The names a product goes by in its copy: the brief's full name and its short form, the part before a " by <brand>"
+ * attribution or a parenthesis ("Command Center by Legiit" is "Command Center" in every line but the preheadline).
+ * Without the short form, a revision that cut the one line carrying the full name read as cutting the product's
+ * introduction, and the desk restored it on every round.
+ */
+export function productNameForms(productName: string | null | undefined): string[] {
+  const full = normalizeQuote(productName ?? "");
+  if (!full) return [];
+  const short = full.replace(/\s+by\s+.*$/, "").replace(/\s*\(.*$/, "").trim();
+  return short && short !== full ? [full, short] : [full];
+}
+
 /** The first block whose text names the product: its introduction (rule 38). */
 function productBlock(sections: Section[], productName: string | null | undefined): string | null {
-  const name = normalizeQuote(productName ?? "");
-  if (!name) return null;
-  for (const s of sections) for (const b of s.blocks) if (normalizeQuote(blockText(b)).includes(name)) return b.id;
+  const forms = productNameForms(productName);
+  if (!forms.length) return null;
+  for (const s of sections) for (const b of s.blocks) {
+    const text = normalizeQuote(blockText(b));
+    if (forms.some((f) => text.includes(f))) return b.id;
+  }
   return null;
 }
 
