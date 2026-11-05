@@ -105,7 +105,7 @@ async function handoffForClaude(db: ReturnType<typeof serviceClient>, args: { se
   const options = args.gen.options && typeof args.gen.options === "object" ? (args.gen.options as Record<string, unknown>) : {};
   const control = typeof options.control_text === "string" ? options.control_text.trim().slice(0, CONTROL_MAX) : "";
   const blocks = newBlocks(args.sections);
-  if (!control || !blocks.length) {
+  const markedCopy = (error: string | null) => {
     const md = renderMarkdown({ sections: args.sections }, { stripLedger: true });
     const text = [
       "Update the copy on this page. Keep the design, the layout, the images, every link and every button's destination exactly as they are; change only the words.",
@@ -115,24 +115,34 @@ async function handoffForClaude(db: ReturnType<typeof serviceClient>, args: { se
       "NEW COPY",
       "",
       md.trim(),
-    ].join("\n") + "\n";
-    return { text, steps: 0, unplaced: 0, unmatched: 0, placed: false, draft_id: args.draftId };
+      "",
+      control ? `THE PAGE'S COPY NOW (the old copy, for matching only)\n\n${control}` : "",
+    ].join("\n").trim() + "\n";
+    return { text, steps: 0, unplaced: 0, unmatched: 0, placed: false, error, draft_id: args.draftId };
+  };
+  if (!control || !blocks.length) return markedCopy(null);
+  // the placement is one model call and a check; when either fails the message still goes out, matched by role, with the reason
+  try {
+    const lines = pageLines(control);
+    const pageUrl = /^Rewrite the page at (\S+) /.exec(typeof options.purpose === "string" ? options.purpose : "")?.[1] ?? null;
+    const pv = (await loadPromptVersions(db))["placement"]; // an active prompt_versions row replaces the inline prompt
+    const call = await callModel({
+      model: pv?.model ?? PLACEMENT_MODEL,
+      effort: (pv?.effort as "low" | "medium" | "high" | "xhigh" | "max" | undefined) ?? placementPrompt.effort,
+      maxTokens: pv?.max_tokens ?? placementPrompt.maxTokens,
+      system: pv?.template ?? placementPrompt.system,
+      user: placementUser({ pageLines: lines.map((l) => l.raw), blocks, format: args.gen.format }),
+      schema: Placement,
+      log: { db, workspaceId: args.gen.workspace_id, generationId: args.gen.id, purpose: "placement", promptVersionId: pv?.id ?? null },
+    });
+    const handoff = reconcilePlacement(call.output, lines, blocks);
+    await recordUsageSafe(db, { workspaceId: args.gen.workspace_id, generationId: args.gen.id, kind: "handoff", tokens: call.usage.input_tokens + call.usage.output_tokens, cost: call.costUsd });
+    return { text: renderHandoff(handoff, { pageUrl }), steps: handoff.steps.length, unplaced: handoff.unplaced.length, unmatched: handoff.unmatched.length, placed: true, error: null, draft_id: args.draftId };
+  } catch (e) {
+    const reason = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+    console.error("placement failed", reason);
+    return markedCopy(reason);
   }
-  const lines = pageLines(control);
-  const pageUrl = /^Rewrite the page at (\S+) /.exec(typeof options.purpose === "string" ? options.purpose : "")?.[1] ?? null;
-  const pv = (await loadPromptVersions(db))["placement"]; // an active prompt_versions row replaces the inline prompt
-  const call = await callModel({
-    model: pv?.model ?? PLACEMENT_MODEL,
-    effort: (pv?.effort as "low" | "medium" | "high" | "xhigh" | "max" | undefined) ?? placementPrompt.effort,
-    maxTokens: pv?.max_tokens ?? placementPrompt.maxTokens,
-    system: pv?.template ?? placementPrompt.system,
-    user: placementUser({ pageLines: lines.map((l) => l.raw), blocks, format: args.gen.format }),
-    schema: Placement,
-    log: { db, workspaceId: args.gen.workspace_id, generationId: args.gen.id, purpose: "placement", promptVersionId: pv?.id ?? null },
-  });
-  const handoff = reconcilePlacement(call.output, lines, blocks);
-  await recordUsageSafe(db, { workspaceId: args.gen.workspace_id, generationId: args.gen.id, kind: "handoff", tokens: call.usage.input_tokens + call.usage.output_tokens, cost: call.costUsd });
-  return { text: renderHandoff(handoff, { pageUrl }), steps: handoff.steps.length, unplaced: handoff.unplaced.length, unmatched: handoff.unmatched.length, placed: true, draft_id: args.draftId };
 }
 
 // ---------- blocks ----------

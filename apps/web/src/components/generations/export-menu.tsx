@@ -5,6 +5,8 @@ import { Download, Copy, FileText, FileCode, FileType, Loader2, File, Sparkles }
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { exportDraft, handoffForClaude } from "@/lib/actions/generations";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { claudeHandoff, cleanMarkdown, markdownToText } from "@/components/editor/markdown-blocks";
 import { markdownToHtml } from "@/components/editor/copy-editor";
 
@@ -43,35 +45,40 @@ function slug(s: string) {
 
 export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props) {
   const [busy, setBusy] = useState(false);
+  // the message opens in a window with its own Copy button: a clipboard write after a wait of several seconds is refused
+  // by browsers that want a fresh click, and a failure then looked like the export failing
+  const [handoff, setHandoff] = useState<{ text: string; note: string | null } | null>(null);
   const forClaude = async () => {
-    // a rewrite: the engine places every block onto the page first (a model call of a few seconds); otherwise the marked copy, built here
     if (!controlText) {
-      try {
-        await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), null));
-        toast.success("Copied. Paste it into the Claude conversation that holds your page.");
-      } catch (e) {
-        toast.error(e instanceof Error ? e.message : "Copy failed");
-      }
+      setHandoff({ text: claudeHandoff(cleanMarkdown(all.markdown), null), note: null });
       return;
     }
+    // a rewrite: the engine places every block onto the page first (one model call, a few seconds)
     setBusy(true);
     const waiting = toast.loading("Placing each line of the new copy on the page.");
     try {
       const r = await handoffForClaude(draftId);
       toast.dismiss(waiting);
       if (!r.ok) {
-        // the placement could not run (the engine not yet updated, a model error): the message still goes out, matched by role
-        await navigator.clipboard.writeText(claudeHandoff(cleanMarkdown(all.markdown), controlText));
-        toast.message("Copied, matched by role and order rather than exact placement.", { description: r.error });
+        setHandoff({ text: claudeHandoff(cleanMarkdown(all.markdown), controlText), note: `Matched by role and order, not exact placement: ${r.error}` });
         return;
       }
-      await navigator.clipboard.writeText(r.text);
-      toast.success(r.unplaced ? `Copied. ${r.unplaced} block${r.unplaced === 1 ? "" : "s"} had no line on the page and are listed at the end to place.` : "Copied. Paste it into the Claude conversation that holds your page.");
+      const note = !r.placed ? `Matched by role and order, not exact placement${r.note ? `: ${r.note}` : "."}` : r.unplaced ? `${r.unplaced} block${r.unplaced === 1 ? "" : "s"} had no line on the page and are listed at the end to place.` : null;
+      setHandoff({ text: r.text, note });
     } catch (e) {
       toast.dismiss(waiting);
-      toast.error(e instanceof Error ? e.message : "Copy failed");
+      setHandoff({ text: claudeHandoff(cleanMarkdown(all.markdown), controlText), note: `Matched by role and order, not exact placement: ${e instanceof Error ? e.message : String(e)}` });
     } finally {
       setBusy(false);
+    }
+  };
+  const copyHandoff = async () => {
+    if (!handoff) return;
+    try {
+      await navigator.clipboard.writeText(handoff.text);
+      toast.success("Copied. Paste it into the Claude conversation that holds your page.");
+    } catch {
+      toast.error("The browser refused the copy. Select the text in the box and copy it.");
     }
   };
   const scopes: { key: string; scope: ExportScope }[] = item ? [{ key: "item", scope: item }, { key: "all", scope: all }] : [{ key: "all", scope: all }];
@@ -107,6 +114,7 @@ export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props)
   };
 
   return (
+    <>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" disabled={busy}>
@@ -130,6 +138,21 @@ export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props)
         <DropdownMenuItem onClick={forClaude}><Sparkles className="h-4 w-4" /> For Claude: paste one message, it updates the page</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    <Dialog open={!!handoff} onOpenChange={(open) => !open && setHandoff(null)}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>For Claude</DialogTitle>
+          <DialogDescription>Copy this and paste it into the Claude conversation that holds your page. Claude changes the words and leaves the design alone.</DialogDescription>
+        </DialogHeader>
+        {handoff?.note && <p className="rounded-md bg-surface-alt px-3 py-2 text-xs text-ink-muted">{handoff.note}</p>}
+        <Textarea readOnly value={handoff?.text ?? ""} rows={16} className="font-mono text-xs" onFocus={(e) => e.currentTarget.select()} />
+        <DialogFooter>
+          <Button variant="outline" onClick={() => handoff && download(`${slug(fileBase)}-for-claude.md`, handoff.text, "text/markdown;charset=utf-8")}><FileText className="h-4 w-4" /> Download (.md)</Button>
+          <Button onClick={copyHandoff}><Copy className="h-4 w-4" /> Copy</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
 

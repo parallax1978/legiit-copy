@@ -372,13 +372,14 @@ export async function reportResult(raw: ReportResultInput): Promise<ActionResult
 
 /** DOCX (and other server-rendered kinds) via the export Edge Function, which returns a signed URL. */
 /** The message that updates the page the draft rewrote: exact placements from the engine (one model call), or the marked copy when there is no page. */
-export async function handoffForClaude(draftId: string): Promise<ActionResult<{ text: string; placed: boolean; unplaced: number }>> {
+export async function handoffForClaude(draftId: string): Promise<ActionResult<{ text: string; placed: boolean; unplaced: number; note: string | null }>> {
   await requireWorkspace();
   const supabase = await createClient();
-  const { data, error } = await supabase.functions.invoke<{ text?: string; placed?: boolean; unplaced?: number; error?: string }>("export", { body: { draft_id: draftId, kind: "claude" } });
+  const { data, error } = await supabase.functions.invoke<{ text?: string; placed?: boolean; unplaced?: number; error?: string | null }>("export", { body: { draft_id: draftId, kind: "claude" } });
   if (error) return { ok: false, error: await describeFunctionError(error, "export") };
   if (!data?.text) return { ok: false, error: data?.error ?? "The handoff came back empty." };
-  return { ok: true, text: data.text, placed: !!data.placed, unplaced: data.unplaced ?? 0 };
+  // placed false with a reason: the engine answered with the marked copy because the placement itself failed
+  return { ok: true, text: data.text, placed: !!data.placed, unplaced: data.unplaced ?? 0, note: data.error ?? null };
 }
 
 export async function exportDraft(draftId: string, kind: "docx" | "md" | "html" | "txt", sectionIds?: string[]): Promise<ActionResult<{ url: string }>> {

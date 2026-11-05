@@ -119,8 +119,9 @@ export function reconcilePlacement(plan: PlacementT, lines: PageLine[], blocks: 
   for (const a of plan.additions) {
     const block = take(a.new_block);
     if (!block) continue;
-    const line = a.after === null ? null : findLine(lines, a.after);
-    if (a.after !== null && !line) unmatched.push(a.after);
+    const after = a.after ?? null;
+    const line = after === null ? null : findLine(lines, after);
+    if (after !== null && !line) unmatched.push(after);
     steps.push({ kind: "add", line: line ?? null, block });
   }
   for (const d of plan.drop) {
