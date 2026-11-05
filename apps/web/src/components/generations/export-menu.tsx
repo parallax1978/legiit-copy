@@ -142,10 +142,10 @@ export function ExportMenu({ draftId, fileBase, all, item, controlText }: Props)
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>For Claude</DialogTitle>
-          <DialogDescription>Copy this and paste it into the Claude conversation that holds your page. Claude changes the words and leaves the design alone.</DialogDescription>
+          <DialogDescription>Copy this and paste it into the Claude conversation that holds your page. Claude changes the words and leaves the design alone. The REMOVE lines are parts of the page the new copy does not carry: delete any you want the page to keep, here, before you copy.</DialogDescription>
         </DialogHeader>
         {handoff?.note && <p className="rounded-md bg-surface-alt px-3 py-2 text-xs text-ink-muted">{handoff.note}</p>}
-        <Textarea readOnly value={handoff?.text ?? ""} rows={16} className="font-mono text-xs" onFocus={(e) => e.currentTarget.select()} />
+        <Textarea value={handoff?.text ?? ""} onChange={(e) => handoff && setHandoff({ ...handoff, text: e.target.value })} rows={16} className="font-mono text-xs" />
         <DialogFooter>
           <Button variant="outline" onClick={() => handoff && download(`${slug(fileBase)}-for-claude.md`, handoff.text, "text/markdown;charset=utf-8")}><FileText className="h-4 w-4" /> Download (.md)</Button>
           <Button onClick={copyHandoff}><Copy className="h-4 w-4" /> Copy</Button>
