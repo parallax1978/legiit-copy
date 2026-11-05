@@ -95,3 +95,12 @@ Deno.test("a stalled review loop ships: the chief failed the same gate on the sa
   assertEquals(nextSteps("factual", { ...s, factualFatal: true }), ["revise"], "a fabrication still gets its revision");
   assertEquals(nextSteps("editorial", { ...s, completed: ["editorial"] }), [], "the checks finish first");
 });
+
+Deno.test("a short piece's loop is one round shorter: the cap in the state wins over the default", () => {
+  const base = { hasActiveResearch: true, hasApprovedOffer: true, completed: ["tell_edit"] as StepName[], revisionCycles: 3 };
+  assertEquals(nextSteps("tell_edit", base), ["cold_read"], "the default loop reviews a third revision");
+  assertEquals(nextSteps("tell_edit", { ...base, maxRevisionCycles: 2 }), ["mechanical", "factual"], "a short piece's third revision is the final pass");
+  assertEquals(nextSteps("tell_edit", { ...base, revisionCycles: 2, maxRevisionCycles: 2 }), ["cold_read"]);
+  const reviewed = { ...base, completed: ["editorial", "mechanical", "factual"] as StepName[], editorialVerdict: "REJECT" as const, revisionCycles: 3, maxRevisionCycles: 2 };
+  assertEquals(nextSteps("factual", reviewed), ["ship"], "past the cap, the checks ship");
+});

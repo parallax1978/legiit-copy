@@ -465,3 +465,17 @@ Deno.test("the piece's job binds the review: editorial v28 and revise v30 carry 
   assertEquals(targetAwareness(null, { purpose: "A Black Friday deal for business owners" } as never).awareness, "most_aware");
   assertEquals(targetAwareness(null, { purpose: "A Black Friday deal", awareness: "problem_aware" } as never).awareness, "problem_aware", "the user's own setting wins");
 });
+
+Deno.test("the page itself announces the sale: its reader came for the deal, whatever the research guessed", async () => {
+  const { awarenessFromPage, targetAwareness } = await import("../draft/ledger.ts");
+  const { shortPiece } = await import("../draft/plan.ts");
+  const { getFormat } = await import("../formats/index.ts");
+  const page = "[Nav] Home Log In Start Free Trial\n\nBlack Friday offer for business owners\n\n# Stop Guessing What To Work On. $399 For Your First Year.\n\n[Button] Start My 7-Day Free Trial";
+  assertEquals(awarenessFromPage(page), "most_aware");
+  assertEquals(awarenessFromPage("# Book a demo\n\nNo sales calls, no deal pressure. We handle the problem for you."), null, "a page that merely says sales or deal is not a sale");
+  assertEquals(awarenessFromPage("[Nav] Black Friday deals\n\n# Our story"), null, "a sale in the menu is the site's, not the page's");
+  assertEquals(targetAwareness(null, { control_text: page } as never).source, "page");
+  assertEquals(targetAwareness(null, { control_text: page, purpose: "Keep the same plan", awareness: "product_aware" } as never).awareness, "product_aware", "the user's own setting wins");
+  assertEquals(shortPiece(getFormat("landing_page_short")), true);
+  assertEquals(shortPiece(getFormat("sales_letter")), false);
+});

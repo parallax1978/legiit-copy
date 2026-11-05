@@ -137,10 +137,20 @@ export function awarenessFromPurpose(purpose: string | null | undefined): Awaren
   return purpose && SALE_WORDS.test(purpose) ? "most_aware" : null;
 }
 
-export function targetAwareness(dossier: Dossier | null, options: GenerationOptions): { awareness: Awareness; segment: string | null; source: "option" | "purpose" | "dossier" | "none" } {
+/** A sale announced at the top of the page a rewrite starts from (its preheadline, its headline, its first lines): narrower words than the purpose's, since a page can say "no sales calls". */
+export const PAGE_SALE_WORDS = /\b(black friday|cyber monday|flash sale|on sale|sale ends|\d+% off|discount(?:ed|s)?|promo code|coupon code|limited.time offer|special offer|launch price|price drop)\b/i;
+export function awarenessFromPage(controlText: string | null | undefined): Awareness | null {
+  if (!controlText) return null;
+  const head = controlText.replace(/\r\n?/g, "\n").split("\n").map((l) => l.trim()).filter((l) => l && !/^\[(?:Nav|Footer)\] /.test(l)).join("\n").slice(0, 800);
+  return PAGE_SALE_WORDS.test(head) ? "most_aware" : null;
+}
+
+export function targetAwareness(dossier: Dossier | null, options: GenerationOptions): { awareness: Awareness; segment: string | null; source: "option" | "purpose" | "page" | "dossier" | "none" } {
   if (options.awareness) return { awareness: options.awareness, segment: options.segment ?? options.traffic ?? null, source: "option" };
   const fromPurpose = awarenessFromPurpose(options.purpose);
   if (fromPurpose) return { awareness: fromPurpose, segment: options.segment ?? options.traffic ?? null, source: "purpose" };
+  const fromPage = awarenessFromPage(options.control_text);
+  if (fromPage) return { awareness: fromPage, segment: options.segment ?? options.traffic ?? null, source: "page" };
   const segs = dossier?.awareness_by_segment ?? [];
   if (segs.length === 0) return { awareness: "unknown", segment: null, source: "none" };
   const byLabel = options.segment ? segs.find((s) => s.label.toLowerCase() === options.segment!.toLowerCase()) : undefined;

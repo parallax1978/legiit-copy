@@ -16,6 +16,8 @@ export interface PipelineState {
   finalPass?: boolean;             // the newest tell edit came after the newest cold read: the checks of the final pass
   /** the copy chief failed the same gate on the same quoted line two reviews running: the revision cannot apply the fix, so another round would repeat it */
   editorialStalled?: boolean;
+  /** reviewed revisions before the final pass; MAX_REVISION_CYCLES unless the piece is short (config SHORT_PIECE_REVISION_CYCLES) */
+  maxRevisionCycles?: number;
 }
 
 /**
@@ -88,13 +90,13 @@ export function nextSteps(justCompleted: StepName, s: PipelineState): StepName[]
     case "tell_edit":
       // every draft and revision passes the owner's tell edit before the cold read (docs/04 §7.1); the final revision,
       // which applies the last review's notes, is checked for facts and tells instead of reviewed again
-      return s.revisionCycles > MAX_REVISION_CYCLES ? ["mechanical", "factual"] : ["cold_read"];
+      return s.revisionCycles > (s.maxRevisionCycles ?? MAX_REVISION_CYCLES) ? ["mechanical", "factual"] : ["cold_read"];
     case "cold_read":
       return ["editorial", "mechanical", "factual"];
     case "editorial":
     case "mechanical":
     case "factual": {
-      if (s.finalPass || s.revisionCycles > MAX_REVISION_CYCLES) {
+      if (s.finalPass || s.revisionCycles > (s.maxRevisionCycles ?? MAX_REVISION_CYCLES)) {
         // the final pass: the last review's notes are in; it ships once the facts and the mechanics are checked
         return (["mechanical", "factual"] as StepName[]).every((x) => s.completed.includes(x)) ? ["ship"] : [];
       }

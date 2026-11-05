@@ -58,6 +58,8 @@ export const STEP_DEFAULTS: Record<StepName, { model: string; effort: Effort; ma
 /** Hard caps that keep one invocation inside the Edge Function wall clock. */
 export const MAX_TOKENS_PER_CALL = 12000;
 export const MAX_REVISION_CYCLES = 3; // the copy chief's objection is fixed and reviewed again up to three times; a fourth revision applies the last review's notes and is checked, not reviewed
+/** A short piece (draft/plan.ts shortPiece) is reviewed again twice: a third round on a page of a few hundred words moved a crosshead and cost six minutes. */
+export const SHORT_PIECE_REVISION_CYCLES = 2;
 export const MAX_STEP_ATTEMPTS = 3;
 export const REQUEST_TIMEOUT_MS = 380_000;
 export const WEB_SEARCH_MAX_USES = 8;

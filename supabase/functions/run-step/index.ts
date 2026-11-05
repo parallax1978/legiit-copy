@@ -17,6 +17,9 @@ import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCall
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { inFinalPass, nextSteps, passBoundary, reviewsStalled, STEP_PREDECESSORS, type PipelineState } from "engine/pipeline.ts";
+import { getFormat } from "engine/formats/index.ts";
+import { shortPiece } from "engine/draft/plan.ts";
+import { SHORT_PIECE_REVISION_CYCLES } from "engine/config.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
 import { RefusalError, TruncatedError } from "engine/llm.ts";
@@ -530,7 +533,17 @@ async function pipelineState(db: Db, gen: GenerationRow, history: StepRowLite[],
     skipOffer: options.skip_offer === true,
     finalPass: inFinalPass(completedRows),
     editorialStalled,
+    maxRevisionCycles: shortPieceFormat(gen.format) ? SHORT_PIECE_REVISION_CYCLES : undefined,
   };
+}
+
+/** A format whose bands sum to a short piece; an unknown format id gets the default loop. */
+function shortPieceFormat(format: string): boolean {
+  try {
+    return shortPiece(getFormat(format as Parameters<typeof getFormat>[0]));
+  } catch {
+    return false;
+  }
 }
 
 

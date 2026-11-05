@@ -74,6 +74,12 @@ export function leadSectionId(spec: FormatSpec): string | null {
  * writes it in reading order and the two other openings to the same body, so the piece is one piece of talk and
  * not parts written apart. Long formats keep the section plan.
  */
+/** A piece whose bands sum to this many words or fewer gets the shorter review loop (config SHORT_PIECE_REVISION_CYCLES). */
+export const SHORT_PIECE_MAX_WORDS = 1500;
+export function shortPiece(spec: FormatSpec): boolean {
+  return spec.sections.reduce((n, s) => n + s.band_words[1], 0) <= SHORT_PIECE_MAX_WORDS;
+}
+
 export function wholePiece(spec: FormatSpec): boolean {
   if (spec.multi_item || spec.lead_variants !== 3) return false;
   const leadId = leadSectionId(spec);
