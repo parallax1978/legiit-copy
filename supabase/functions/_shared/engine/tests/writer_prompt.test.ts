@@ -479,3 +479,12 @@ Deno.test("the page itself announces the sale: its reader came for the deal, wha
   assertEquals(shortPiece(getFormat("landing_page_short")), true);
   assertEquals(shortPiece(getFormat("sales_letter")), false);
 });
+
+Deno.test("a note that moves a thing says where it goes, and an offer term is moved, never lost: editorial v29, revise v31", async () => {
+  const { editorialPrompt: e29, MOVE_NOT_CUT } = await import("../prompts/editorial.v29.ts");
+  const { revisePrompt: r31, OFFER_TERMS_RULE } = await import("../prompts/revise.v31.ts");
+  assertEquals([e29.version, r31.version], [29, 31]);
+  assert(e29.system.endsWith(MOVE_NOT_CUT));
+  assert(r31.system.endsWith(OFFER_TERMS_RULE));
+  assert(e29.system.includes("binds the review"), "version 28's rule is still there");
+});

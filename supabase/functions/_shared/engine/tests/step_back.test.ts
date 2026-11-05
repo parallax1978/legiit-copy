@@ -8,7 +8,7 @@
 import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 import type { Block, Section } from "../schemas/draft.ts";
 import type { RevisionOutput } from "../schemas/review.ts";
-import { productNameForms, reconcileRevision, unquotedSentencesLost } from "../draft/review.ts";
+import { offerTerms, productNameForms, reconcileRevision, statesTerm, unquotedSentencesLost } from "../draft/review.ts";
 import { analyzeDraft, openingMatches, TELLS } from "../tells.ts";
 import { FORMATS } from "../formats/index.ts";
 import { FORMAT_SPECS } from "../prompts/standard.ts";
@@ -119,4 +119,24 @@ Deno.test("the product's short name counts as naming it: cutting the one line wi
   const alone = [sec("headline", [pre, deck]), sec("main", [blk("main-1", "An app that reads your website and shows you the one thing to do next.")])];
   const kept = reconcileRevision(alone, revision([sec("headline", [deck]), alone[1]], []), ["Command Center by Legiit / For owners running one business."], [], undefined, { productName: "Command Center by Legiit" });
   assertEquals([kept.removed, kept.productKept], [[], ["headline-1"]]);
+});
+
+Deno.test("the lead offer's terms are moved, never lost: a revision that cuts the only line stating one keeps that block", () => {
+  const brief = { lead_offer: "Command Center Business plan, $399 for the first year instead of $470.40, with 100,000 AI credits a month for 12 months (Black Friday, ends November 30, 2026)", price: { text: "$399 for your first year, billed annually, instead of the regular $470.40" } };
+  assertEquals(offerTerms(brief), ["$399", "$470.40", "100,000", "12 months", "November 30"]);
+  assertEquals(offerTerms(brief, ["Regular annual price of the Business plan is $470.40"]), ["$399", "100,000", "12 months", "November 30"], "a figure the user dropped from the ledger is not restored");
+  assert(statesTerm("with 100000 AI credits a month", "100,000"));
+  const open = blk("cta_primary-1", "$399 for your first year, with 100,000 AI credits a month for 12 months instead of the usual 50,000, Black Friday only.");
+  const body = blk("objections-1", "This one costs $399 for your first year. The offer ends November 30, 2026.");
+  const was = [sec("cta_primary", [open]), sec("objections", [body])];
+  const terms = offerTerms(brief);
+  // the note cut the credits from the opening and nowhere else states them: the desk keeps the opening as written
+  const cut = reconcileRevision(was, revision([sec("cta_primary", [blk("cta_primary-1", "$399 for your first year at the Black Friday price, through November 30.")]), was[1]], ["cta_primary-1"]), [open.text], [], undefined, { offerTerms: terms });
+  assertEquals(cut.offerKept, [{ term: "100,000", blocks: ["cta_primary-1"] }, { term: "12 months", blocks: ["cta_primary-1"] }]);
+  assertEquals([cut.changed, cut.reverted, cut.promiseKept], [[], ["cta_primary-1"], []]);
+  assertEquals(cut.sections[0].blocks[0].text, open.text);
+  // moved below the product's introduction: the opening may lose them
+  const moved = reconcileRevision(was, revision([sec("cta_primary", [blk("cta_primary-1", "$399 for your first year at the Black Friday price, through November 30.")]), sec("objections", [blk("objections-1", "This one costs $399 for your first year, with 100,000 AI credits a month for 12 months. The offer ends November 30, 2026.")])], ["cta_primary-1", "objections-1"]), [open.text, body.text], [], undefined, { offerTerms: terms });
+  assertEquals(moved.offerKept, []);
+  assertEquals(moved.changed, ["cta_primary-1", "objections-1"]);
 });

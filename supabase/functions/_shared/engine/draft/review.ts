@@ -351,6 +351,8 @@ export interface Reconciled {
   admissions: string[];
   /** blocks that carried the promise and would have left the piece with no line that states it: kept as written, rule 8 */
   promiseKept: string[];
+  /** terms of the lead offer (a price, a bonus, the credits, a deadline) the revision would have left unstated, with the blocks that stated them, kept as written (docs/04 Section 5: every asset states the lead offer) */
+  offerKept: { term: string; blocks: string[] }[];
   added: string[];
   removed: string[];
   changed: string[];
@@ -447,7 +449,29 @@ function productBlock(sections: Section[], productName: string | null | undefine
   return null;
 }
 
-export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[], promise?: Set<string>, opts: { productName?: string | null } = {}): Reconciled {
+/** The figures a lead offer is made of: money, big numbers, percentages, dates, spans. A revision may move them, never lose them. */
+const OFFER_TERM = /\$\s?\d[\d,]*(?:\.\d+)?|\b\d{1,3}(?:,\d{3})+\b|\b\d+(?:\.\d+)?\s?%|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\.? \d{1,2}\b|\b\d+ (?:days?|weeks?|months?|years?)\b/gi;
+const normTerm = (s: string) => s.toLowerCase().replace(/,/g, "").replace(/\s+/g, " ").trim();
+
+/** The lead offer's terms from the brief, minus any figure the user dropped from the ledger (a dropped former price is not restored). */
+export function offerTerms(brief: { lead_offer?: string | null; price?: { text?: string | null } | null } | null | undefined, droppedClaimTexts: string[] = []): string[] {
+  const source = [brief?.lead_offer ?? "", brief?.price?.text ?? ""].join(" ");
+  const dropped = droppedClaimTexts.map(normTerm);
+  const out: string[] = [];
+  for (const m of source.match(OFFER_TERM) ?? []) {
+    const t = m.replace(/\s+/g, " ").trim();
+    if (out.some((x) => normTerm(x) === normTerm(t))) continue;
+    if (dropped.some((d) => d.includes(normTerm(t)))) continue;
+    out.push(t);
+  }
+  return out;
+}
+
+export function statesTerm(text: string, term: string): boolean {
+  return normTerm(text).includes(normTerm(term));
+}
+
+export function reconcileRevision(before: Section[], revision: RevisionOutput, quotes: string[], doNotTouch: string[], promise?: Set<string>, opts: { productName?: string | null; offerTerms?: string[] } = {}): Reconciled {
   const beforeIds = new Set(before.map((s) => s.section_id));
   const afterIds = new Set(revision.sections.map((s) => s.section_id));
   const missing = [...beforeIds].filter((id) => !afterIds.has(id));
@@ -461,8 +485,8 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
   // their words, whatever note asked to change or cut them
   const carried = new Set<string>();
   const promiseKept: string[] = [];
+  const blocksOf = (secs: Section[]) => secs.flatMap((x) => x.blocks);
   if (promise?.size) {
-    const blocksOf = (secs: Section[]) => secs.flatMap((x) => x.blocks);
     const held = Math.max(0, ...blocksOf(before).filter((b) => statesPromise(blockText(b), promise)).map((b) => promiseOverlap(blockText(b), promise)));
     const statesIt = (b: Section["blocks"][number]) => statesPromise(blockText(b), promise) && promiseOverlap(blockText(b), promise) >= held;
     if (held > 0 && !blocksOf(revision.sections).some(statesIt)) {
@@ -475,6 +499,20 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
   const productKept: string[] = [];
   const intro = productBlock(before, opts.productName);
   if (intro && !productBlock(revision.sections, opts.productName)) carried.add(intro);
+
+  // the lead offer's terms stay (docs/04 Section 5): when the revision would leave no block stating a term the draft
+  // stated, the blocks that stated it keep their words; a note that cuts a term from the opening moves it, never loses it
+  const offerKept: { term: string; blocks: string[] }[] = [];
+  const offerBlocks = new Set<string>();
+  for (const term of opts.offerTerms ?? []) {
+    const holders = blocksOf(before).filter((b) => statesTerm(blockText(b), term)).map((b) => b.id);
+    if (!holders.length || blocksOf(revision.sections).some((b) => statesTerm(blockText(b), term))) continue;
+    offerKept.push({ term, blocks: holders });
+    for (const id of holders) {
+      carried.add(id);
+      offerBlocks.add(id);
+    }
+  }
 
   const diff = diffBlocks(before, revision.sections);
   const reverted: string[] = [];
@@ -505,7 +543,7 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
         if (diff.changed.includes(ob.id) && carried.has(ob.id)) {
           reverted.push(ob.id);
           if (ob.id === intro) productKept.push(ob.id);
-          else promiseKept.push(ob.id);
+          else if (!offerBlocks.has(ob.id)) promiseKept.push(ob.id);
           blocks.push(ob);
         } else if (diff.changed.includes(ob.id) && !referenced.has(ob.id)) {
           reverted.push(ob.id);
@@ -523,7 +561,8 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
         } else blocks.push(rb);
       } else if (!referenced.has(ob.id) || carried.has(ob.id)) {
         reverted.push(ob.id);
-        if (carried.has(ob.id)) (ob.id === intro ? productKept : promiseKept).push(ob.id);
+        if (carried.has(ob.id) && ob.id === intro) productKept.push(ob.id);
+        else if (carried.has(ob.id) && !offerBlocks.has(ob.id)) promiseKept.push(ob.id);
         blocks.push(ob);
       }
     }
@@ -536,7 +575,7 @@ export function reconcileRevision(before: Section[], revision: RevisionOutput, q
 
   const finalDiff = diffBlocks(before, sections);
   const dnt = verifyDoNotTouch(doNotTouch, before, sections);
-  return { sections, reverted, sentencesLost, productKept, admissions, promiseKept, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
+  return { sections, reverted, sentencesLost, productKept, admissions, promiseKept, offerKept, added: finalDiff.added, removed: finalDiff.removed, changed: finalDiff.changed, doNotTouch: dnt };
 }
 
 // ---------------------------------------------------------------- ship

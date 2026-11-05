@@ -5,9 +5,9 @@
  */
 import type { StepFn } from "./types.ts";
 import { ColdRead, EditorialVerdict, FactualOutput, MechanicalReport, RevisionOutput } from "../schemas/review.ts";
-import { revisePrompt, type ReviseArgs } from "../prompts/revise.v30.ts";
+import { revisePrompt, type ReviseArgs } from "../prompts/revise.v31.ts";
 import { knownClaimIds, normalizeQuote, sectionsText, unknownLedgerRefs, usableClaims } from "../draft/ledger.ts";
-import { pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
+import { offerTerms, pendingFactualFlags, reconcileRevision, revisionQuotes } from "../draft/review.ts";
 import { assembleDraft, toDraftEffect } from "../draft/assemble.ts";
 import { leadSectionId } from "../draft/plan.ts";
 import { callStep, latestDraftOutput, stepOutput } from "../draft/step_util.ts";
@@ -44,22 +44,25 @@ export const reviseStep: StepFn = async (ctx) => {
   await ctx.progress(`Revision ${cycle}: ${editorial?.one_thing ? "the one thing, " : ""}${factualPending.length} factual rewrite(s), ${tier01.length} Tier 0/1 tell(s), ${reread.length} sentence(s) read twice, ${doNotTouch.length} DO NOT TOUCH line(s)`);
 
   const options = parseOptions(ctx.generation.options);
+  // the lead offer's figures, minus any the user dropped from the ledger: a revision moves them, never loses them
+  const terms = offerTerms(ctx.brief, (ctx.claims ?? []).filter((c) => c.user_decision === "drop").map((c) => c.claim_text));
   const args: ReviseArgs = { draft, editorial, factual: factualPending, mechanical, coldRead, cycle, purpose: options.purpose ?? null, instructions: options.instructions ?? null, retryNote: null };
   const run = async (retryNote: string | null) => {
     const res = await callStep(ctx, "revise", revisePrompt, { ...args, retryNote }, RevisionOutput, `revise ${cycle}${retryNote ? " (retry)" : ""}`);
-    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise, { productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null });
+    const rec = reconcileRevision(draft.sections, res.output, quotes, doNotTouch, promise, { productName: ctx.brief?.product_name ?? ctx.offer?.name ?? null, offerTerms: terms });
     const unknown = unknownLedgerRefs(rec.sections, known);
     return { res, rec, unknown };
   };
 
   let r = await run(null);
-  if (!r.rec.doNotTouch.ok || r.unknown.length || r.rec.sentencesLost.length || r.rec.productKept.length) {
+  if (!r.rec.doNotTouch.ok || r.unknown.length || r.rec.sentencesLost.length || r.rec.productKept.length || r.rec.offerKept.length) {
     // one retry with the desk's findings; a second miss keeps the reverted blocks (fix lost) and the pipeline goes on
     const note = [
       ...r.rec.doNotTouch.violated.map((q) => `This DO NOT TOUCH line changed or disappeared; return it exactly: "${q}"`),
       ...(r.unknown.length ? [`These ledger ids do not exist or were dropped by the user: ${r.unknown.join(", ")}. Use only ids shown in the ledger; cut the claim otherwise.`] : []),
       ...r.rec.sentencesLost.map((x) => `In block ${x.block} you changed or cut sentences no note quotes, so the desk reverted the whole block and your fix with it. Change only the quoted sentence and return these exactly as they were: ${x.lost.map((q) => `"${q}"`).join(" ")}`),
       ...r.rec.productKept.map((b) => `Block ${b} introduces the product by name (rule 38); your revision left the piece with no line that names it, so the desk kept the block as written. Keep the introduction and change only what the note quotes.`),
+      ...r.rec.offerKept.map((k) => `The lead offer's term "${k.term}" was stated only in block ${k.blocks.join(", ")} and your revision left no line stating it, so the desk kept that block as written and your fix with it. Every asset states the lead offer: a note that cuts a term from a line moves it. Say "${k.term}" in the block the note names, or in the offer block, and then change the quoted line.`),
     ].join("\n");
     r = await run(note);
   }
@@ -92,7 +95,7 @@ export const reviseStep: StepFn = async (ctx) => {
     changes: res.output.changes.filter((c) => changedSet.has(c.block_id)),
     untouched_confirmed: doNotTouch.filter((q) => !rec.doNotTouch.unverifiable.includes(q)),
   });
-  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} edit(s) reverted` : ""}${rec.admissions.length ? ` (${rec.admissions.length} for a weakening admission)` : ""}${rec.promiseKept.length ? ` (${rec.promiseKept.length} kept the promise)` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
+  const summary = `Revision ${cycle}: ${rec.changed.length} block(s) changed, ${rec.added.length} added, ${rec.removed.length} removed${rec.reverted.length ? `, ${rec.reverted.length} edit(s) reverted` : ""}${rec.admissions.length ? ` (${rec.admissions.length} for a weakening admission)` : ""}${rec.promiseKept.length ? ` (${rec.promiseKept.length} kept the promise)` : ""}${rec.offerKept.length ? ` (${rec.offerKept.length} kept an offer term: ${rec.offerKept.map((k) => k.term).join(", ")})` : ""}; ${output.untouched_confirmed.length} DO NOT TOUCH line(s) verified${rec.doNotTouch.unverifiable.length ? ` (${rec.doNotTouch.unverifiable.length} quote(s) never appeared in the draft)` : ""}`;
   await ctx.progress(summary);
   return { output, model: res.model, summary, effects: { newDraft: toDraftEffect(revised, "revise", `revise ${cycle}`) } };
 };
