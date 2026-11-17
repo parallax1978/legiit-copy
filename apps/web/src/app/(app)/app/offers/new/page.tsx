@@ -4,6 +4,9 @@ import { PageHeader, EmptyState } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
 import { NewOfferForm } from "@/components/offers/new-offer-form";
 
+/** Adding a URL opens it in a headless browser from the server action: a launch and a page load or two fit in two minutes. */
+export const maxDuration = 120;
+
 export const metadata = { title: "New offer" };
 
 export default async function NewOfferPage() {

@@ -13,7 +13,7 @@
  */
 import { z } from "zod";
 import { type Db, serviceClient } from "shared/supabase.ts";
-import { background, errorMessage, recordUsageSafe, stepTimeBudgetMs, sumLlmCalls, secretMatches } from "shared/http.ts";
+import { background, errorMessage, recordUsageSafe, runIntake, stepTimeBudgetMs, sumLlmCalls, secretMatches } from "shared/http.ts";
 import type { Database, Json } from "shared/database.types.ts";
 import { MAX_GENERATION_COST_USD, MAX_STEP_ATTEMPTS, STEP_NAMES, type StepName } from "engine/config.ts";
 import { inFinalPass, nextSteps, passBoundary, reviewsStalled, STEP_PREDECESSORS, type PipelineState } from "engine/pipeline.ts";
@@ -22,7 +22,7 @@ import { shortPiece } from "engine/draft/plan.ts";
 import { SHORT_PIECE_REVISION_CYCLES } from "engine/config.ts";
 import { STEPS } from "engine/steps/index.ts";
 import type { GenerationRow, StepContext, StepResult } from "engine/steps/types.ts";
-import { RefusalError, TruncatedError } from "engine/llm.ts";
+import { InvalidOutputError, RefusalError, TruncatedError } from "engine/llm.ts";
 import { type AppliedEffects, applyEffects, buildContext } from "engine/context.ts";
 
 /** pgmq visibility timeout used by app.dispatch_pipeline; a running row older than this is presumed dead. */
@@ -443,6 +443,15 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
       const attemptsUsed = Math.max(a.readCt, a.failedBefore + 1);
       await failGeneration(db, a, `${label(a.step)} could not finish${terminal ? "" : ` after ${attemptsUsed} attempt${attemptsUsed === 1 ? "" : "s"}`}: ${plainReason(e)}. Use "Retry" to run it again; if it keeps failing, support can read the details.`);
     } else {
+      // the offer has no brief: build it now (intake), so the retry has something to read; an offer still being
+      // read is left to finish, and a failed intake leaves the next attempt to report it
+      if (plainReason(e) === "the offer has no brief yet") {
+        const { data: offer } = await db.from("offers").select("status").eq("id", a.gen.offer_id).maybeSingle();
+        if (offer && offer.status !== "extracting") {
+          await db.from("generations").update({ progress_message: "Building the offer's brief from its sources first." }).eq("id", a.gen.id);
+          await runIntake(db, a.gen.offer_id).catch((err) => console.error(`${a.tag} intake before ${a.step} failed`, errorMessage(err).slice(0, 500)));
+        }
+      }
       // Retry now, not after the 450s visibility timeout: re-enqueue the step with a short delay and ack this
       // delivery. The attempt cap counts rows, so the cap holds across re-enqueues. If the enqueue fails the
       // message is left unacked and the visibility timeout redelivers it.
@@ -462,6 +471,7 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
 export function plainReason(e: unknown): string {
   if (e instanceof TruncatedError) return "its answer ran past the length budget";
   if (e instanceof RefusalError) return "the model declined to write this content";
+  if (e instanceof InvalidOutputError) return "its answer came back in the wrong shape";
   const msg = errorMessage(e).toLowerCase();
   if (msg.includes("timed out") || msg.includes("timeout")) return "it took too long";
   if (msg.includes("rate") && msg.includes("limit")) return "the writing service was busy";

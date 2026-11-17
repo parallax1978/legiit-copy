@@ -14,6 +14,8 @@ import { ClaimType } from "@engine/schemas/common.ts";
 import { stripNeverTells } from "@engine/draft/never_tells.ts";
 import { type ActionResult, normalizeBrief, chosenFromBrief, hostOf } from "@/components/offers/normalize";
 import { CLAIM_ROLES, EVIDENCE_GRADES, CLAIM_STATUSES, EDGE_TOLERANCES } from "@/components/offers/constants";
+import { renderPage } from "@/lib/render-page";
+import { MIN_PAGE_WORDS, pageWords } from "@/lib/page-format";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
 type Ctx = { supabase: Supabase; workspaceId: string; userId: string };
@@ -72,7 +74,43 @@ const SourcesInput = z.object({
   urls: z.array(z.string().url()).default([]),
   text: z.string().trim().default(""),
   files: z.array(SourceFile).default([]),
+  /** open each address in the headless browser first (off for a caller whose browser read already failed) */
+  browser: z.boolean().default(true),
 });
+
+/** The browser reads' share of an add-sources call: the rest of the addresses go to the plain fetch. */
+const BROWSER_BUDGET_MS = 45_000;
+const BROWSER_MIN_LEFT_MS = 15_000;
+
+/**
+ * Each address opened in the headless browser and read as a reader sees it, within the budget: a page that draws
+ * itself (a Legiit gig, an app) gives its real copy here, where the plain fetch saw only its hidden popups. An
+ * address the browser could not read, or read short, goes to the plain fetch (which also finds the pricing,
+ * terms and about pages).
+ */
+async function browserReads(urls: string[], enabled: boolean): Promise<{ read: { url: string; title: string; text: string }[]; fetch: string[] }> {
+  const read: { url: string; title: string; text: string }[] = [];
+  const fetch: string[] = [];
+  const started = Date.now();
+  for (const url of urls) {
+    const left = BROWSER_BUDGET_MS - (Date.now() - started);
+    if (!enabled || left < BROWSER_MIN_LEFT_MS) {
+      fetch.push(url);
+      continue;
+    }
+    try {
+      const page = await renderPage(url, Math.min(38_000, left));
+      if (pageWords(page.text) >= MIN_PAGE_WORDS) {
+        read.push({ url, title: page.title || hostOf(url), text: page.text });
+        continue;
+      }
+    } catch (e) {
+      console.warn(`browser read of ${url} fell back to the fetch: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    fetch.push(url);
+  }
+  return { read, fetch };
+}
 export type SourcesInput = z.input<typeof SourcesInput>;
 
 /** Step 1 of the new-offer flow: create the shell so files can be uploaded under its id. */
@@ -144,8 +182,10 @@ async function insertAndIngest(ctx: Ctx, input: z.output<typeof SourcesInput>): 
   const offer = await loadOffer(ctx, input.offerId);
   if (!offer) return fail("Offer not found.");
   if (input.files.some((f) => !storagePathBelongsTo(f.storage_path, workspaceId, offer.id))) return fail("One of the uploaded files is not in this offer's folder. Upload it again.");
+  const pages = await browserReads(input.urls, input.browser);
   const rows = [
-    ...input.urls.map((url) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "url", url, title: hostOf(url) })),
+    ...pages.read.map((p) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "text", url: p.url, title: p.title.slice(0, 200), extracted_text: p.text })),
+    ...pages.fetch.map((url) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "url", url, title: hostOf(url) })),
     ...input.files.map((f) => ({ offer_id: offer.id, workspace_id: workspaceId, kind: "file", storage_path: f.storage_path, title: f.name, mime_type: f.mime_type })),
     ...(input.text ? [{ offer_id: offer.id, workspace_id: workspaceId, kind: "text", title: "Typed description", extracted_text: input.text }] : []),
   ];

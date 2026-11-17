@@ -6,6 +6,9 @@ import { OfferTabs } from "@/components/offers/offer-tabs";
 import { ExtractionBanner } from "@/components/offers/extraction-banner";
 import { legacyRewrite, rewriteOf } from "@/lib/rewrite-marker";
 
+/** Adding a URL opens it in a headless browser from the server action: a launch and a page load or two fit in two minutes. */
+export const maxDuration = 120;
+
 export default async function OfferLayout({ params, children }: { params: Promise<{ offerId: string }>; children: React.ReactNode }) {
   const { offerId } = await params;
   const { role, workspace } = await requireWorkspace();

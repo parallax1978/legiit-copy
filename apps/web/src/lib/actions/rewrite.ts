@@ -63,7 +63,7 @@ export async function startRewrite(raw: { url?: string; text?: string }): Promis
     console.warn(`browser read of ${url} fell back to the fetch: ${read.error}`);
   }
   // the pasted copy is the source when it is given; a page the browser could not open goes to the plain fetch
-  const added = await addOfferSources({ offerId, urls: pasted ? [] : [url], files: [], text: pasted ? text : "" });
+  const added = await addOfferSources({ offerId, urls: pasted ? [] : [url], files: [], text: pasted ? text : "", browser: false });
   if (!added.ok) return added;
   return { ok: true, data: { offerId } };
 }

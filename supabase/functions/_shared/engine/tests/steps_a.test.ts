@@ -4,7 +4,7 @@
  */
 import { assert, assertEquals, assertRejects, assertStringIncludes } from "@std/assert";
 import { getFormat } from "../formats/index.ts";
-import { type callModel, TruncatedError } from "../llm.ts";
+import { type callModel, InvalidOutputError, TruncatedError } from "../llm.ts";
 import argumentPrompt from "../prompts/argument.v22.ts";
 import { CACHE_BREAK } from "../prompts/types.ts";
 import intakePrompt, { neutralizeTags, renderClaims, renderDossier, xml } from "../prompts/intake.v18.ts";
@@ -911,4 +911,33 @@ Deno.test("argument step: the model returning only excluded candidates is an err
     Error,
     "no usable candidates",
   );
+});
+
+Deno.test("intake step: an answer in the wrong shape is rerun once with the fields named; a second miss fails", async () => {
+  const briefShape = fakeCall((_rec, n) => {
+    if (n === 1) throw new InvalidOutputError(["brief.price.amount: Expected number, received string"], "{}");
+    return INTAKE_OUTPUT;
+  });
+  const ctx = fakeCtx();
+  const res = await makeIntakeStep({ call: briefShape.call, loadSources: () => Promise.resolve([]) })(ctx);
+  assertEquals(briefShape.calls.map((c) => [c.purpose, c.effort]), [["intake.brief_config_questions", "medium"], ["intake.brief_config_questions.retry_shape", "medium"], ["intake.ledger", "low"]]);
+  assertStringIncludes(briefShape.calls[1].user, "<retry>");
+  assertStringIncludes(briefShape.calls[1].user, "brief.price.amount: Expected number, received string");
+  assert(!briefShape.calls[0].user.includes("<retry>"));
+  assertEquals(res.output, INTAKE_OUTPUT);
+  assertStringIncludes(ctx.messages.join("\n"), "came back in the wrong shape");
+
+  const ledgerShape = fakeCall((rec) => {
+    if (rec.purpose === "intake.ledger") throw new InvalidOutputError(["claims.0.claim_type: Invalid enum value"], "{}");
+    return INTAKE_OUTPUT;
+  });
+  await makeIntakeStep({ call: ledgerShape.call, loadSources: () => Promise.resolve([]) })(fakeCtx());
+  assertEquals(ledgerShape.calls.map((c) => c.purpose), ["intake.brief_config_questions", "intake.ledger", "intake.ledger.retry_shape"]);
+
+  const twice = fakeCall((rec) => {
+    if (rec.purpose.startsWith("intake.brief")) throw new InvalidOutputError(["brief: Required"], "{}");
+    return INTAKE_OUTPUT;
+  });
+  await assertRejects(() => makeIntakeStep({ call: twice.call, loadSources: () => Promise.resolve([]) })(fakeCtx()), InvalidOutputError);
+  assertEquals(twice.calls.length, 2);
 });

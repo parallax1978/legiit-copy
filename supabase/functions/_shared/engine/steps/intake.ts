@@ -7,8 +7,8 @@
  * questions from the effects.
  */
 import { lowerEffort, MAX_TOKENS_PER_CALL, STEP_DEFAULTS } from "../config.ts";
-import { callModel, TruncatedError } from "../llm.ts";
-import intakePrompt, { type IntakeSource } from "../prompts/intake.v22.ts";
+import { callModel, InvalidOutputError, TruncatedError } from "../llm.ts";
+import intakePrompt, { shapeRetryNote, type IntakeSource } from "../prompts/intake.v23.ts";
 import { resolvePrompt } from "../prompts/types.ts";
 import { type ClaimRowInput, IntakeBriefOutput, IntakeLedgerOutput, IntakeOutput, type Provenance } from "../schemas/brief.ts";
 import { remainingBudgetMs } from "./budget.ts";
@@ -201,29 +201,34 @@ export function makeIntakeStep(deps: Partial<IntakeDeps> = {}): StepFn {
     const n = `${sources.length} source${sources.length === 1 ? "" : "s"}`;
 
     // Call 1: brief, config, questions.
-    const runBrief = (retry: boolean) =>
+    const runBrief = (retry: boolean, retryNote: string | null = null) =>
       call({
         ...base,
         effort: retry ? lowerEffort(effort) : effort,
         timeoutMs: remainingBudgetMs(ctx),
-        user: intakePrompt.user(ctx, { phase: "brief", sources, truncatedCount }),
+        user: intakePrompt.user(ctx, { phase: "brief", sources, truncatedCount, retryNote }),
         schema: IntakeBriefOutput,
-        log: log(retry ? "intake.brief_config_questions.retry" : "intake.brief_config_questions"),
+        log: log(retryNote ? "intake.brief_config_questions.retry_shape" : retry ? "intake.brief_config_questions.retry" : "intake.brief_config_questions"),
       });
     await ctx.progress(`Building the brief from ${n}`);
     let briefRes;
     try {
       briefRes = await runBrief(false);
     } catch (e) {
-      if (!(e instanceof TruncatedError)) throw e;
-      await ctx.progress("The brief ran past the output budget; retrying with less thinking");
-      briefRes = await runBrief(true);
+      if (e instanceof InvalidOutputError) {
+        // one malformed field must not cost the whole brief: rerun once with the fields named
+        await ctx.progress("The brief came back in the wrong shape; writing it again");
+        briefRes = await runBrief(false, shapeRetryNote(e.issues));
+      } else if (e instanceof TruncatedError) {
+        await ctx.progress("The brief ran past the output budget; retrying with less thinking");
+        briefRes = await runBrief(true);
+      } else throw e;
     }
     const head = IntakeBriefOutput.parse(briefRes.output);
 
     // Call 2: the ledger, with the budget to itself. Reading, not reasoning: one rung less thinking.
     const ledgerEffort = lowerEffort(effort);
-    const runLedger = (retry: boolean) =>
+    const runLedger = (retry: boolean, retryNote: string | null = null) =>
       call({
         ...base,
         effort: retry ? lowerEffort(ledgerEffort) : ledgerEffort,
@@ -234,18 +239,23 @@ export function makeIntakeStep(deps: Partial<IntakeDeps> = {}): StepFn {
           truncatedCount,
           brief: head.brief,
           compact: retry ? { rowCap: INTAKE_RETRY_ROW_CAP, quoteWords: INTAKE_RETRY_QUOTE_WORDS, retry: true } : { rowCap: INTAKE_ROW_CAP, quoteWords: INTAKE_QUOTE_WORDS, retry: false },
+          retryNote,
         }),
         schema: IntakeLedgerOutput,
-        log: log(retry ? "intake.ledger.retry_compact" : "intake.ledger"),
+        log: log(retryNote ? "intake.ledger.retry_shape" : retry ? "intake.ledger.retry_compact" : "intake.ledger"),
       });
     await ctx.progress(`Building the claims ledger from ${n}`);
     let ledgerRes;
     try {
       ledgerRes = await runLedger(false);
     } catch (e) {
-      if (!(e instanceof TruncatedError)) throw e;
-      await ctx.progress(`The ledger ran past the output budget; retrying with at most ${INTAKE_RETRY_ROW_CAP} rows`);
-      ledgerRes = await runLedger(true);
+      if (e instanceof InvalidOutputError) {
+        await ctx.progress("The ledger came back in the wrong shape; writing it again");
+        ledgerRes = await runLedger(false, shapeRetryNote(e.issues));
+      } else if (e instanceof TruncatedError) {
+        await ctx.progress(`The ledger ran past the output budget; retrying with at most ${INTAKE_RETRY_ROW_CAP} rows`);
+        ledgerRes = await runLedger(true);
+      } else throw e;
     }
     const res = ledgerRes;
     // where a fact comes from (docs/04 8.1): one run's facts never become the product's, the terms never its proof

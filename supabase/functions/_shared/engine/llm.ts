@@ -61,6 +61,12 @@ export class TruncatedError extends Error {
     super("output hit max_tokens");
   }
 }
+/** The answer arrived whole but does not fit the schema: a step can rerun it once with the issues named. */
+export class InvalidOutputError extends Error {
+  constructor(public issues: string[], public text: string) {
+    super(`structured output failed validation: ${issues.slice(0, 5).join("; ")}`);
+  }
+}
 
 let _client: Anthropic | null = null;
 export function anthropic(): Anthropic {
@@ -172,23 +178,24 @@ export async function callModel<T extends z.ZodTypeAny | undefined = undefined>(
   const latencyMs = Date.now() - started;
   const requestId = (response as unknown as { _request_id?: string })._request_id ?? null;
 
-  await logCall(opts, { model: response.model, usage, costUsd: cost, latencyMs, stopReason: response.stop_reason, requestId, error: null });
+  // the answer is checked before the call is logged, so a format failure is on the call's row, not lost in a console
+  let output: unknown = text;
+  let invalid: InvalidOutputError | null = null;
+  if (opts.schema && response.stop_reason !== "refusal" && response.stop_reason !== "max_tokens") {
+    const parsed = safeJson(text);
+    const result = opts.schema.safeParse(parsed);
+    if (result.success) output = result.data;
+    else invalid = new InvalidOutputError(result.error.issues.slice(0, 12).map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`), text);
+  }
+
+  await logCall(opts, { model: response.model, usage, costUsd: cost, latencyMs, stopReason: response.stop_reason, requestId, error: invalid ? invalid.message.slice(0, 1000) : null });
 
   if (response.stop_reason === "refusal") {
     const sd = (response as unknown as { stop_details?: { category?: string | null; explanation?: string | null } }).stop_details;
     throw new RefusalError(sd?.category ?? null, sd?.explanation ?? null);
   }
   if (response.stop_reason === "max_tokens") throw new TruncatedError(text);
-
-  let output: unknown = text;
-  if (opts.schema) {
-    const parsed = safeJson(text);
-    const result = opts.schema.safeParse(parsed);
-    if (!result.success) {
-      throw new Error(`structured output failed validation: ${result.error.issues.slice(0, 5).map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
-    }
-    output = result.data;
-  }
+  if (invalid) throw invalid;
   return { output: output as Infer<T>, text, model: response.model, usage, costUsd: cost, latencyMs, stopReason: response.stop_reason, requestId, sources: dedupeSources(sources) };
 }
 
