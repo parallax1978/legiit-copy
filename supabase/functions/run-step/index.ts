@@ -411,6 +411,9 @@ function resumePartial(thisPass: StepRowLite[]): unknown | null {
   return null;
 }
 
+/** An offer marked "extracting" this long after its last write, with no source still being read, is not being built. */
+export const STALE_EXTRACTING_MS = 4 * 60_000;
+
 // ---------- failure ----------
 interface FailArgs {
   tag: string;
@@ -446,8 +449,14 @@ async function failAttempt(db: Db, a: FailArgs, e: unknown): Promise<void> {
       // the offer has no brief: build it now (intake), so the retry has something to read; an offer still being
       // read is left to finish, and a failed intake leaves the next attempt to report it
       if (plainReason(e) === "the offer has no brief yet") {
-        const { data: offer } = await db.from("offers").select("status").eq("id", a.gen.offer_id).maybeSingle();
-        if (offer && offer.status !== "extracting") {
+        const [{ data: offer }, { data: busy }] = await Promise.all([
+          db.from("offers").select("status, updated_at").eq("id", a.gen.offer_id).maybeSingle(),
+          db.from("offer_sources").select("id").eq("offer_id", a.gen.offer_id).in("extraction_status", ["pending", "processing"]).limit(1),
+        ]);
+        // "extracting" with every source read and nothing written for minutes is a brief build that died (its
+        // background task ended without leaving the status): it is built again here, as a draft would be
+        const stale = !!offer && offer.status === "extracting" && !busy?.length && Date.now() - Date.parse(offer.updated_at) > STALE_EXTRACTING_MS;
+        if (offer && (offer.status !== "extracting" || stale)) {
           await db.from("generations").update({ progress_message: "Building the offer's brief from its sources first." }).eq("id", a.gen.id);
           await runIntake(db, a.gen.offer_id).catch((err) => console.error(`${a.tag} intake before ${a.step} failed`, errorMessage(err).slice(0, 500)));
         }
